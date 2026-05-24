@@ -148,8 +148,8 @@ function Hero({
     const hiW = phone ? 120 : tablet ? 160 : large ? 260 : 210
     const hiH = Math.round(hiW / 1.615)
 
-    const headSize = phone ? "24px" : tablet ? "30px" : "36px"
-    const headMaxW = phone ? "100%" : tablet ? "520px" : large ? "860px" : "720px"
+    const headSize = phone ? "22px" : tablet ? "28px" : "33px"
+    const headMaxW = "100%"
 
     return (
         <section
@@ -193,11 +193,11 @@ function Hero({
                 >
                     <span style={{ display: "block" }}>
                         I design digital products by balancing{" "}
-                        <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 400 }}>Creativity</span>
+                        <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 700 }}>Creativity</span>
                         {" "}
-                        <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 400 }}>&amp;</span>
+                        <span style={{ fontFamily: Z, fontStyle: "normal", fontWeight: 400 }}>&amp;</span>
                         {" "}
-                        <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 400 }}>Insights;</span>
+                        <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 700 }}>Insights;</span>
                     </span>
                     <span style={{ display: "block" }}>
                         always grounded in{" "}
@@ -240,7 +240,7 @@ function Hero({
                     viewBox="0 0 48 48"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    style={{ flexShrink: 0 }}
+                    style={{ flexShrink: 0, transform: "scaleY(-1)" }}
                 >
                     {/* Curve: upper-left to lower-right */}
                     <path
