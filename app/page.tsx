@@ -165,12 +165,14 @@ function Hero({
                 minHeight: phone ? "auto" : `calc(100vh - ${navH}px)`,
                 display: "flex",
                 flexDirection: "column",
+                alignItems: "center",
                 justifyContent: "space-between",
                 padding: `${sp.heroTop}px ${px}px ${sp.heroBottom}px`,
                 boxSizing: "border-box",
+                textAlign: "center",
             }}
         >
-            <div style={{ maxWidth: maxW, width: "100%" }}>
+            <div style={{ maxWidth: maxW, width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
                 <img
                     src="https://framerusercontent.com/images/hK0bLjY9spx6qo44Ua9QOr0NQ7Y.png"
                     alt="Hi"
@@ -195,26 +197,58 @@ function Hero({
                     }}
                 >
                     I design digital products by balancing{" "}
-                    <em style={{ fontStyle: "italic", fontWeight: 700 }}>
-                        Creativity &amp; Insights;
-                    </em>{" "}
+                    <em style={{ fontStyle: "italic", fontWeight: 700, fontFamily: YB }}>Creativity</em>
+                    {" & "}
+                    <em style={{ fontStyle: "italic", fontWeight: 700, fontFamily: YB }}>Insights;</em>{" "}
                     always grounded in{" "}
-                    <em style={{ fontStyle: "italic" }}>how</em> people experience them
+                    <em style={{ fontStyle: "italic", fontFamily: YB }}>how</em> people experience them
                 </h1>
             </div>
-            <p
+            <div
                 style={{
-                    fontFamily: Z,
-                    fontStyle: "italic",
-                    fontSize: phone ? 13 : 15,
-                    color: C.muted,
-                    margin: 0,
-                    letterSpacing: "-0.01em",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 6,
                     paddingTop: phone ? 32 : 0,
                 }}
             >
-                Here&apos;s a closer look at what that means ↓
-            </p>
+                <p
+                    style={{
+                        fontFamily: Z,
+                        fontStyle: "italic",
+                        fontSize: phone ? 13 : 15,
+                        color: "#E8B4C8",
+                        margin: 0,
+                        letterSpacing: "-0.01em",
+                    }}
+                >
+                    Here&apos;s a closer look at what that means
+                </p>
+                <svg
+                    width={phone ? 36 : 48}
+                    height={phone ? 36 : 48}
+                    viewBox="0 0 48 48"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M16 10 C16 10, 10 24, 24 36"
+                        stroke="#E8B4C8"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        fill="none"
+                    />
+                    <path
+                        d="M20 32 L24 38 L30 34"
+                        stroke="#E8B4C8"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        fill="none"
+                    />
+                </svg>
+            </div>
         </section>
     )
 }
