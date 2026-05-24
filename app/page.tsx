@@ -182,7 +182,7 @@ function Hero({
                         fontFamily: Z,
                         fontWeight: 400,
                         fontSize: headSize,
-                        lineHeight: 1.15,
+                        lineHeight: 1.4,
                         letterSpacing: "-0.02em",
                         color: C.ink,
                         margin: 0,
@@ -238,7 +238,7 @@ function Hero({
                     viewBox="0 0 48 48"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    style={{ flexShrink: 0 }}
+                    style={{ flexShrink: 0, display: "block" }}
                 >
                     {/* Body: begins going right, curves down so endpoint is approached from above */}
                     <path
