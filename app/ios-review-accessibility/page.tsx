@@ -1636,17 +1636,19 @@ export default function IOSCaseStudy() {
                             </p>
                         </div>
                     </div>
-                    <img
-                        src="/slides/ios-original.png"
-                        alt="iOS original review experience"
-                        style={{
-                            width: "100%",
-                            height: "auto",
-                            display: "block",
-                            borderRadius: 14,
-                            boxShadow: "0 4px 32px rgba(0,0,0,0.09)",
-                        }}
-                    />
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                        <img
+                            src="/slides/ios-original.png"
+                            alt="iOS original review experience"
+                            style={{
+                                width: "60%",
+                                height: "auto",
+                                display: "block",
+                                borderRadius: 14,
+                                boxShadow: "0 4px 32px rgba(0,0,0,0.09)",
+                            }}
+                        />
+                    </div>
                 </div>
 
                 {/* ── 03 FRICTION POINTS ── */}
