@@ -1644,8 +1644,6 @@ export default function IOSCaseStudy() {
                                 width: "60%",
                                 height: "auto",
                                 display: "block",
-                                borderRadius: 14,
-                                boxShadow: "0 4px 32px rgba(0,0,0,0.09)",
                             }}
                         />
                     </div>
