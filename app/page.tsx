@@ -233,26 +233,28 @@ function Hero({
                 >
                     Here&apos;s a closer look at what that means
                 </p>
-                {/* Arrow curves down-right, sitting inline to the right of text */}
+                {/* Curved arrow pointing down-right */}
                 <svg
-                    width={28}
-                    height={28}
-                    viewBox="0 0 48 48"
+                    width={32}
+                    height={32}
+                    viewBox="0 0 32 32"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    style={{ flexShrink: 0, marginTop: 4 }}
+                    style={{ flexShrink: 0 }}
                 >
+                    {/* Curve: top-left → bottom-right */}
                     <path
-                        d="M6 8 C6 24, 22 36, 38 42"
+                        d="M5 4 C3 13 10 22 24 26"
                         stroke="#E8B4C8"
-                        strokeWidth="1.8"
+                        strokeWidth="1.5"
                         strokeLinecap="round"
                         fill="none"
                     />
+                    {/* Arrowhead tip at (24,26), wings at (17,22) and (28,18) */}
                     <path
-                        d="M30 38 L38 44 L42 36"
+                        d="M17 22 L24 27 L28 19"
                         stroke="#E8B4C8"
-                        strokeWidth="1.8"
+                        strokeWidth="1.5"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         fill="none"
