@@ -1522,7 +1522,7 @@ export default function IOSCaseStudy() {
                     </div>
                 </div>
                 <img
-                    src="/ios-hero.png"
+                    src="/slides/ios-hero.png"
                     alt="iOS Review Translation"
                     style={{
                         width: "100%",
@@ -1566,7 +1566,7 @@ export default function IOSCaseStudy() {
                         interact with the apps in multiple languages.
                     </p>
                     <img
-                        src="/ios-ecosystem.png"
+                        src="/slides/ios-ecosystem.png"
                         alt="URBN Global Ecosystem"
                         style={{
                             width: "100%",
