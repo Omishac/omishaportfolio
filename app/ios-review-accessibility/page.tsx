@@ -1611,37 +1611,42 @@ export default function IOSCaseStudy() {
                         all adapt accordingly — <strong>EXCEPT</strong> for
                         product reviews, which remained in English only.
                     </p>
-                    <div style={{ display: "flex", justifyContent: "center", margin: "40px 0 8px" }}>
+                    <div style={{ display: "flex", justifyContent: "center", margin: "40px 0 32px" }}>
                         <div
                             style={{
-                                display: "flex",
+                                display: "inline-flex",
                                 alignItems: "center",
-                                gap: 20,
+                                gap: 10,
                                 backgroundColor: "#FFF2D6",
-                                borderRadius: 16,
-                                padding: "32px 48px",
-                                border: "1.5px solid rgba(0,0,0,0.07)",
-                                maxWidth: 720,
-                                width: "100%",
-                                justifyContent: "center",
+                                borderRadius: 10,
+                                padding: "12px 18px",
                             }}
                         >
-                            <span style={{ fontSize: 36, flexShrink: 0 }}>⚠️</span>
+                            <span style={{ fontSize: 16 }}>⚠️</span>
                             <p
                                 style={{
                                     fontFamily: Z,
-                                    fontWeight: 700,
-                                    fontSize: "clamp(18px, 2.5vw, 26px)",
+                                    fontStyle: "italic",
+                                    fontSize: 15,
                                     color: C.ink,
                                     margin: 0,
-                                    lineHeight: 1.3,
-                                    letterSpacing: "-0.02em",
                                 }}
                             >
                                 English-Only Reviews + Global Audience = Accessibility Gap
                             </p>
                         </div>
                     </div>
+                    <img
+                        src="/slides/ios-original.png"
+                        alt="iOS original review experience"
+                        style={{
+                            width: "100%",
+                            height: "auto",
+                            display: "block",
+                            borderRadius: 14,
+                            boxShadow: "0 4px 32px rgba(0,0,0,0.09)",
+                        }}
+                    />
                 </div>
 
                 {/* ── 03 FRICTION POINTS ── */}
