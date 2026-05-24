@@ -1641,7 +1641,7 @@ export default function IOSCaseStudy() {
                             src="/slides/ios-original.png"
                             alt="iOS original review experience"
                             style={{
-                                width: "60%",
+                                width: "75%",
                                 height: "auto",
                                 display: "block",
                             }}
