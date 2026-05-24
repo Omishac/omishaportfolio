@@ -626,16 +626,17 @@ function RecRow({ num, title, body, detail, img, open, onClick }: any) {
             <div
                 style={{
                     overflow: "hidden",
-                    maxHeight: open ? "500px" : "0",
+                    maxHeight: open ? "640px" : "0",
                     transition: "max-height 0.5s cubic-bezier(0.22,1,0.36,1)",
                 }}
             >
                 <div
                     style={{
                         display: "flex",
-                        gap: "24px",
+                        gap: "28px",
                         paddingBottom: "40px",
                         paddingLeft: "92px",
+                        alignItems: "flex-start",
                     }}
                 >
                     <p
@@ -651,13 +652,13 @@ function RecRow({ num, title, body, detail, img, open, onClick }: any) {
                     </p>
                     <div
                         style={{
-                            width: "240px",
+                            width: "300px",
                             flexShrink: 0,
                             borderRadius: "10px",
                             overflow: "hidden",
                             border: `1px solid ${C.border}`,
-                            minHeight: "180px",
                             backgroundColor: C.surface,
+                            boxShadow: "0 4px 20px rgba(0,0,0,0.07)",
                         }}
                     >
                         <img
@@ -665,8 +666,8 @@ function RecRow({ num, title, body, detail, img, open, onClick }: any) {
                             alt={title}
                             style={{
                                 width: "100%",
-                                height: "100%",
-                                objectFit: "cover",
+                                height: "auto",
+                                objectFit: "contain",
                                 display: "block",
                             }}
                         />
@@ -740,16 +741,20 @@ function ReflRow({ text }: { text: string }) {
 const IMGS = {
     mobile1:
         "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&q=80",
-    checkout:
-        "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&q=80",
-    ar: "https://images.unsplash.com/photo-1633493702341-4d04841df53b?w=600&q=80",
+    checkout: "/slides/app-gestures.png",
+    ar:       "/slides/mobile-trends.png",
     chatbot:
         "https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=600&q=80",
     omni: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=600&q=80",
     sephora:
         "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&q=80",
     nike: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80",
-    app1: "https://images.unsplash.com/photo-1592890288564-76628a30a657?w=400&q=80",
+    app1:              "/slides/mobile-trends.png",
+    trends:            "/slides/mobile-trends.png",
+    homepageBenchmark: "/slides/homepage-benchmark.png",
+    checkoutBenchmark: "/slides/checkout-benchmark.png",
+    abTest:            "/slides/ab-test.png",
+    appGestures:       "/slides/app-gestures.png",
 }
 
 // ── Nav bar ────────────────────────────────────────────────────────────────────
@@ -1271,6 +1276,30 @@ export default function AnthropologieCaseStudy() {
                             why="Entices app downloads and drives customer loyalty — Nike Member Rewards is a strong model"
                         />
                     </div>
+                    <div style={{ marginTop: "8px", marginBottom: "16px" }}>
+                        <img
+                            src={IMGS.trends}
+                            alt="Mobile trends slide"
+                            style={{
+                                width: "100%",
+                                borderRadius: "12px",
+                                display: "block",
+                                border: `1px solid ${C.border}`,
+                                boxShadow: "0 4px 28px rgba(0,0,0,0.08)",
+                            }}
+                        />
+                        <p style={{
+                            fontFamily: INTER,
+                            fontSize: "11px",
+                            color: C.muted,
+                            marginTop: "10px",
+                            textAlign: "center",
+                            letterSpacing: "0.04em",
+                            margin: "10px 0 0",
+                        }}>
+                            From the original competitive analysis presentation
+                        </p>
+                    </div>
                 </FadeIn>
 
                 {/* ── 03 BENCHMARKING ── */}
@@ -1434,6 +1463,54 @@ export default function AnthropologieCaseStudy() {
                             ]}
                         />
                     </div>
+                    <div style={{ display: "flex", gap: "16px", marginTop: "8px", marginBottom: "16px" }}>
+                        <div style={{ flex: 1 }}>
+                            <img
+                                src={IMGS.homepageBenchmark}
+                                alt="Homepage benchmarking"
+                                style={{
+                                    width: "100%",
+                                    borderRadius: "12px",
+                                    display: "block",
+                                    border: `1px solid ${C.border}`,
+                                    boxShadow: "0 4px 28px rgba(0,0,0,0.08)",
+                                }}
+                            />
+                            <p style={{
+                                fontFamily: INTER,
+                                fontSize: "11px",
+                                color: C.muted,
+                                margin: "10px 0 0",
+                                textAlign: "center",
+                                letterSpacing: "0.04em",
+                            }}>
+                                Homepage benchmarking
+                            </p>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                            <img
+                                src={IMGS.checkoutBenchmark}
+                                alt="Checkout benchmarking"
+                                style={{
+                                    width: "100%",
+                                    borderRadius: "12px",
+                                    display: "block",
+                                    border: `1px solid ${C.border}`,
+                                    boxShadow: "0 4px 28px rgba(0,0,0,0.08)",
+                                }}
+                            />
+                            <p style={{
+                                fontFamily: INTER,
+                                fontSize: "11px",
+                                color: C.muted,
+                                margin: "10px 0 0",
+                                textAlign: "center",
+                                letterSpacing: "0.04em",
+                            }}>
+                                Checkout benchmarking
+                            </p>
+                        </div>
+                    </div>
                 </FadeIn>
 
                 {/* ── 04 A/B TESTS ── */}
@@ -1477,12 +1554,58 @@ export default function AnthropologieCaseStudy() {
                             bg="#D8D6CF"
                         />
                     </div>
+                    <div style={{ marginBottom: "32px" }}>
+                        <img
+                            src={IMGS.abTest}
+                            alt="A/B test variants"
+                            style={{
+                                width: "100%",
+                                borderRadius: "12px",
+                                display: "block",
+                                border: `1px solid ${C.border}`,
+                                boxShadow: "0 4px 28px rgba(0,0,0,0.08)",
+                            }}
+                        />
+                        <p style={{
+                            fontFamily: INTER,
+                            fontSize: "11px",
+                            color: C.muted,
+                            margin: "10px 0 0",
+                            textAlign: "center",
+                            letterSpacing: "0.04em",
+                        }}>
+                            Mobile homepage redesign — Control, v1: New Layout, Stacked, and Slider variants
+                        </p>
+                    </div>
                     <Body>
                         For category pages, I tested hiding the topper image to
                         bring products above the fold faster — benchmarking
                         against Mango and Everlane, which both lead directly
                         with product grids.
                     </Body>
+                    <div style={{ marginTop: "8px", marginBottom: "16px" }}>
+                        <img
+                            src={IMGS.appGestures}
+                            alt="App-friendly gestures benchmarking"
+                            style={{
+                                width: "100%",
+                                borderRadius: "12px",
+                                display: "block",
+                                border: `1px solid ${C.border}`,
+                                boxShadow: "0 4px 28px rgba(0,0,0,0.08)",
+                            }}
+                        />
+                        <p style={{
+                            fontFamily: INTER,
+                            fontSize: "11px",
+                            color: C.muted,
+                            margin: "10px 0 0",
+                            textAlign: "center",
+                            letterSpacing: "0.04em",
+                        }}>
+                            App-friendly gesture benchmarking — Anthropologie basket vs. J.Crew and Mango swipe-to-delete
+                        </p>
+                    </div>
                 </FadeIn>
 
                 {/* ── 05 FINDINGS ── */}
