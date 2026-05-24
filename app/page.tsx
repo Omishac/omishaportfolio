@@ -209,11 +209,7 @@ function Hero({
             <div
                 style={{
                     width: "100%",
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 6,
+                    textAlign: "center",
                     paddingTop: phone ? 40 : 0,
                 }}
             >
@@ -226,33 +222,31 @@ function Hero({
                         color: C.ink,
                         margin: 0,
                         letterSpacing: "-0.01em",
-                        whiteSpace: "nowrap",
+                        display: "inline",
                     }}
                 >
                     Here&apos;s a closer look at what that means
                 </p>
-                {/* Curved arrow: starts top-left, sweeps right then down to bottom-right */}
+                {/* SVG inline with text — verticalAlign:middle snaps to text midline */}
                 <svg
-                    width={36}
-                    height={36}
+                    width={24}
+                    height={24}
                     viewBox="0 0 48 48"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    style={{ flexShrink: 0, display: "block" }}
+                    style={{ display: "inline-block", verticalAlign: "middle", marginLeft: 6 }}
                 >
-                    {/* Body: begins going right, curves down so endpoint is approached from above */}
                     <path
                         d="M 8 6 C 12 6, 40 14, 40 40"
                         stroke="#E8B4C8"
-                        strokeWidth="2.5"
+                        strokeWidth="3"
                         strokeLinecap="round"
                         fill="none"
                     />
-                    {/* Arrowhead: tip at curve end (40,40), wings up-left and up-right = pointing down */}
                     <path
                         d="M 33 32 L 40 42 L 47 32"
                         stroke="#E8B4C8"
-                        strokeWidth="2.5"
+                        strokeWidth="3"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         fill="none"
