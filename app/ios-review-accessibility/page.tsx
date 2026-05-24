@@ -1636,16 +1636,29 @@ export default function IOSCaseStudy() {
                             </p>
                         </div>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
                         <img
                             src="/slides/ios-original.png"
                             alt="iOS original review experience"
                             style={{
-                                width: "75%",
+                                width: "88%",
                                 height: "auto",
                                 display: "block",
                             }}
                         />
+                        <p style={{
+                            fontFamily: Z,
+                            fontStyle: "italic",
+                            fontWeight: 300,
+                            fontSize: 14,
+                            color: C.ink3,
+                            textAlign: "center",
+                            maxWidth: 520,
+                            lineHeight: 1.6,
+                            margin: 0,
+                        }}>
+                            The original experience — everything in the app translates to a user's language settings, except for product reviews, which remained in English only.
+                        </p>
                     </div>
                 </div>
 
