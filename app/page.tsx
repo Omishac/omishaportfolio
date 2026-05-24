@@ -237,7 +237,7 @@ function Hero({
                     viewBox="0 0 48 48"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    style={{ display: "block", flexShrink: 0 }}
+                    style={{ display: "block", flexShrink: 0, verticalAlign: "middle", marginTop: "-12px" }}
                 >
                     <path
                         d="M 8 6 C 12 6, 40 14, 40 40"
