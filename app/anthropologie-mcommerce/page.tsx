@@ -346,6 +346,62 @@ function TrendCard({
     )
 }
 
+// ── Phone frame mockup ────────────────────────────────────────────────────────
+function PhoneFrame({ src, alt, label, width = 180 }: {
+    src: string
+    alt: string
+    label?: string
+    width?: number
+}) {
+    const BORDER = 7
+    const RADIUS = Math.round(width * 0.13)
+    const NOTCH_W = Math.round(width * 0.31)
+    return (
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "14px", flexShrink: 0 }}>
+            <div style={{
+                width: width + BORDER * 2,
+                borderRadius: RADIUS + BORDER,
+                border: `${BORDER}px solid #1c1c1e`,
+                overflow: "hidden",
+                backgroundColor: C.surface,
+                boxShadow: "0 24px 56px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.10)",
+                position: "relative",
+            }}>
+                <div style={{
+                    position: "absolute",
+                    top: 9,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: NOTCH_W,
+                    height: 15,
+                    backgroundColor: "#1c1c1e",
+                    borderRadius: 20,
+                    zIndex: 2,
+                }} />
+                <img
+                    src={src}
+                    alt={alt}
+                    style={{ width: "100%", display: "block", minHeight: Math.round(width * 1.8) }}
+                />
+            </div>
+            {label && (
+                <p style={{
+                    fontFamily: INTER,
+                    fontSize: "11px",
+                    fontWeight: 500,
+                    color: C.muted,
+                    textAlign: "center",
+                    margin: 0,
+                    letterSpacing: "0.02em",
+                    lineHeight: 1.4,
+                }}>
+                    {label}
+                </p>
+            )}
+        </div>
+    )
+}
+
 // ── Comp table row ─────────────────────────────────────────────────────────────
 function CompRow({
     label,
@@ -626,14 +682,14 @@ function RecRow({ num, title, body, detail, img, open, onClick }: any) {
             <div
                 style={{
                     overflow: "hidden",
-                    maxHeight: open ? "640px" : "0",
+                    maxHeight: open ? "700px" : "0",
                     transition: "max-height 0.5s cubic-bezier(0.22,1,0.36,1)",
                 }}
             >
                 <div
                     style={{
                         display: "flex",
-                        gap: "28px",
+                        gap: "40px",
                         paddingBottom: "40px",
                         paddingLeft: "92px",
                         alignItems: "flex-start",
@@ -650,28 +706,7 @@ function RecRow({ num, title, body, detail, img, open, onClick }: any) {
                     >
                         {detail}
                     </p>
-                    <div
-                        style={{
-                            width: "300px",
-                            flexShrink: 0,
-                            borderRadius: "10px",
-                            overflow: "hidden",
-                            border: `1px solid ${C.border}`,
-                            backgroundColor: C.surface,
-                            boxShadow: "0 4px 20px rgba(0,0,0,0.07)",
-                        }}
-                    >
-                        <img
-                            src={img}
-                            alt={title}
-                            style={{
-                                width: "100%",
-                                height: "auto",
-                                objectFit: "contain",
-                                display: "block",
-                            }}
-                        />
-                    </div>
+                    {img && <PhoneFrame src={img} alt={title} width={180} />}
                 </div>
             </div>
             <div
@@ -739,22 +774,29 @@ function ReflRow({ text }: { text: string }) {
 }
 
 const IMGS = {
-    mobile1:
-        "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&q=80",
-    checkout: "/slides/app-gestures.png",
-    ar:       "/slides/mobile-trends.png",
-    chatbot:
-        "https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=600&q=80",
-    omni: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=600&q=80",
-    sephora:
-        "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&q=80",
-    nike: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80",
-    app1:              "/slides/mobile-trends.png",
-    trends:            "/slides/mobile-trends.png",
-    homepageBenchmark: "/slides/homepage-benchmark.png",
-    checkoutBenchmark: "/slides/checkout-benchmark.png",
-    abTest:            "/slides/ab-test.png",
-    appGestures:       "/slides/app-gestures.png",
+    // Trends — competitive examples (source from Sephora / Nike app screenshots)
+    sephoraBeautyPrefs: "/screenshots/sephora-beauty-prefs.png",
+    nikeAR:             "/screenshots/nike-ar-foot.png",
+    nikeMemberRewards:  "/screenshots/nike-member-rewards.png",
+    // Benchmarking — homepage (crop each phone from your homepage benchmark slide)
+    anthroHome:     "/screenshots/anthro-home.png",
+    everlaneHome:   "/screenshots/everlane-home.png",
+    lululemonHome:  "/screenshots/lululemon-home.png",
+    madewellHome:   "/screenshots/madewell-home.png",
+    // Benchmarking — checkout (crop each phone from your checkout benchmark slide)
+    anthroCheckout:    "/screenshots/anthro-checkout.png",
+    everlaneCheckout:  "/screenshots/everlane-checkout.png",
+    lululemonCheckout: "/screenshots/lululemon-checkout.png",
+    madewellCheckout:  "/screenshots/madewell-checkout.png",
+    // A/B test variants (crop each phone from your homepage redesign slide)
+    abControl:   "/screenshots/ab-control.png",
+    abNewLayout: "/screenshots/ab-new-layout.png",
+    abStacked:   "/screenshots/ab-stacked.png",
+    abSlider:    "/screenshots/ab-slider.png",
+    // App gestures (crop each phone from your gestures slide)
+    anthroBasket: "/screenshots/anthro-basket.png",
+    jcrewSwipe:   "/screenshots/jcrew-swipe.png",
+    mangoSwipe:   "/screenshots/mango-swipe.png",
 }
 
 // ── Nav bar ────────────────────────────────────────────────────────────────────
@@ -920,35 +962,33 @@ export default function AnthropologieCaseStudy() {
             title: "Reduce Friction in Micro-Interactions",
             body: "Introduce swipe-to-delete in cart to align with native mobile behavior.",
             detail: "Currently, Anthropologie's app requires pressing a 'Remove' CTA to delete cart items. J.Crew and Mango both support swipe-to-delete — a common iOS gesture used for notifications, emails, and alarms.",
-            img: IMGS.checkout,
+            img: IMGS.anthroBasket,
         },
         {
             num: "02",
             title: "Unify the Customer Journey",
             body: `Expand "Order History" into "Purchase History" to include in-store and online transactions.`,
             detail: "Triggered via Anthroperks QR scan or phone number. Sephora and H&M both surface in-store purchases in their apps. This also reduces return friction by eliminating missing receipt issues.",
-            img: IMGS.omni,
         },
         {
             num: "03",
             title: "Drive App Engagement with Exclusive Perks",
             body: "Introduce app-exclusive incentives such as early access drops and loyalty rewards.",
             detail: "Nike's member rewards in-app create strong retention loops. App-only perks entice customers to download and consistently return to the app.",
-            img: IMGS.app1,
+            img: IMGS.nikeMemberRewards,
         },
         {
             num: "04",
             title: "Recreate In-Store Guidance Digitally",
             body: "Develop a virtual stylist chatbot for real-time, personalized recommendations.",
             detail: "Levi's StyleBot and ASOS FashionBot demonstrate how guided chatbots increase product discovery. Anthropologie's current chatbot is limited to order support — expanding to styling advice mirrors the in-store experience.",
-            img: IMGS.chatbot,
         },
         {
             num: "05",
             title: "Increase Purchase Confidence with AR",
             body: "Explore AR try-on features to reduce uncertainty and improve decision-making.",
             detail: "Nike's foot-scanning AR feature reduced sizing uncertainty. AR overlays digital content in real time through smartphones, allowing customers to engage with products before buying — directly reducing return rates.",
-            img: IMGS.ar,
+            img: IMGS.nikeAR,
         },
     ]
 
@@ -1276,29 +1316,35 @@ export default function AnthropologieCaseStudy() {
                             why="Entices app downloads and drives customer loyalty — Nike Member Rewards is a strong model"
                         />
                     </div>
-                    <div style={{ marginTop: "8px", marginBottom: "16px" }}>
-                        <img
-                            src={IMGS.trends}
-                            alt="Mobile trends slide"
-                            style={{
-                                width: "100%",
-                                borderRadius: "12px",
-                                display: "block",
-                                border: `1px solid ${C.border}`,
-                                boxShadow: "0 4px 28px rgba(0,0,0,0.08)",
-                            }}
-                        />
-                        <p style={{
-                            fontFamily: INTER,
-                            fontSize: "11px",
-                            color: C.muted,
-                            marginTop: "10px",
-                            textAlign: "center",
-                            letterSpacing: "0.04em",
-                            margin: "10px 0 0",
-                        }}>
-                            From the original competitive analysis presentation
-                        </p>
+                    <p style={{
+                        fontFamily: INTER,
+                        fontSize: "10px",
+                        fontWeight: 700,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.1em",
+                        color: C.muted,
+                        margin: "48px 0 32px",
+                    }}>
+                        Competitive Examples
+                    </p>
+                    <div style={{
+                        display: "flex",
+                        gap: "24px",
+                        justifyContent: "space-between",
+                        marginBottom: "16px",
+                    }}>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "24px", flex: 1 }}>
+                            <p style={{ fontFamily: INTER, fontSize: "10px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.09em", color: C.ink3, margin: 0 }}>Zero-Party Data</p>
+                            <PhoneFrame src={IMGS.sephoraBeautyPrefs} alt="Sephora Beauty Preferences" label="Sephora — Beauty Preferences" width={190} />
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "24px", flex: 1 }}>
+                            <p style={{ fontFamily: INTER, fontSize: "10px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.09em", color: C.ink3, margin: 0 }}>AR Try-Ons</p>
+                            <PhoneFrame src={IMGS.nikeAR} alt="Nike AR Foot Scanner" label="Nike — AR Foot Scanner" width={190} />
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "24px", flex: 1 }}>
+                            <p style={{ fontFamily: INTER, fontSize: "10px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.09em", color: C.ink3, margin: 0 }}>App-Exclusive Perks</p>
+                            <PhoneFrame src={IMGS.nikeMemberRewards} alt="Nike Member Rewards" label="Nike — Member Rewards" width={190} />
+                        </div>
                     </div>
                 </FadeIn>
 
@@ -1463,52 +1509,44 @@ export default function AnthropologieCaseStudy() {
                             ]}
                         />
                     </div>
-                    <div style={{ display: "flex", gap: "16px", marginTop: "8px", marginBottom: "16px" }}>
-                        <div style={{ flex: 1 }}>
-                            <img
-                                src={IMGS.homepageBenchmark}
-                                alt="Homepage benchmarking"
-                                style={{
-                                    width: "100%",
-                                    borderRadius: "12px",
-                                    display: "block",
-                                    border: `1px solid ${C.border}`,
-                                    boxShadow: "0 4px 28px rgba(0,0,0,0.08)",
-                                }}
-                            />
-                            <p style={{
-                                fontFamily: INTER,
-                                fontSize: "11px",
-                                color: C.muted,
-                                margin: "10px 0 0",
-                                textAlign: "center",
-                                letterSpacing: "0.04em",
-                            }}>
-                                Homepage benchmarking
-                            </p>
+                    {/* Homepage phone row */}
+                    <div style={{ marginTop: "48px" }}>
+                        <p style={{
+                            fontFamily: INTER,
+                            fontSize: "10px",
+                            fontWeight: 700,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.1em",
+                            color: C.muted,
+                            marginBottom: "32px",
+                        }}>
+                            Homepage
+                        </p>
+                        <div style={{ display: "flex", gap: "16px", justifyContent: "space-between" }}>
+                            <PhoneFrame src={IMGS.anthroHome}    alt="Anthropologie homepage" label="Anthropologie" width={165} />
+                            <PhoneFrame src={IMGS.everlaneHome}  alt="Everlane homepage"       label="Everlane"      width={165} />
+                            <PhoneFrame src={IMGS.lululemonHome} alt="Lululemon homepage"      label="Lululemon"     width={165} />
+                            <PhoneFrame src={IMGS.madewellHome}  alt="Madewell homepage"       label="Madewell"      width={165} />
                         </div>
-                        <div style={{ flex: 1 }}>
-                            <img
-                                src={IMGS.checkoutBenchmark}
-                                alt="Checkout benchmarking"
-                                style={{
-                                    width: "100%",
-                                    borderRadius: "12px",
-                                    display: "block",
-                                    border: `1px solid ${C.border}`,
-                                    boxShadow: "0 4px 28px rgba(0,0,0,0.08)",
-                                }}
-                            />
-                            <p style={{
-                                fontFamily: INTER,
-                                fontSize: "11px",
-                                color: C.muted,
-                                margin: "10px 0 0",
-                                textAlign: "center",
-                                letterSpacing: "0.04em",
-                            }}>
-                                Checkout benchmarking
-                            </p>
+                    </div>
+                    {/* Checkout phone row */}
+                    <div style={{ marginTop: "56px", marginBottom: "16px" }}>
+                        <p style={{
+                            fontFamily: INTER,
+                            fontSize: "10px",
+                            fontWeight: 700,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.1em",
+                            color: C.muted,
+                            marginBottom: "32px",
+                        }}>
+                            Checkout
+                        </p>
+                        <div style={{ display: "flex", gap: "16px", justifyContent: "space-between" }}>
+                            <PhoneFrame src={IMGS.anthroCheckout}    alt="Anthropologie checkout" label="Anthropologie" width={165} />
+                            <PhoneFrame src={IMGS.everlaneCheckout}  alt="Everlane checkout"       label="Everlane"      width={165} />
+                            <PhoneFrame src={IMGS.lululemonCheckout} alt="Lululemon checkout"      label="Lululemon"     width={165} />
+                            <PhoneFrame src={IMGS.madewellCheckout}  alt="Madewell checkout"       label="Madewell"      width={165} />
                         </div>
                     </div>
                 </FadeIn>
@@ -1554,28 +1592,12 @@ export default function AnthropologieCaseStudy() {
                             bg="#D8D6CF"
                         />
                     </div>
-                    <div style={{ marginBottom: "32px" }}>
-                        <img
-                            src={IMGS.abTest}
-                            alt="A/B test variants"
-                            style={{
-                                width: "100%",
-                                borderRadius: "12px",
-                                display: "block",
-                                border: `1px solid ${C.border}`,
-                                boxShadow: "0 4px 28px rgba(0,0,0,0.08)",
-                            }}
-                        />
-                        <p style={{
-                            fontFamily: INTER,
-                            fontSize: "11px",
-                            color: C.muted,
-                            margin: "10px 0 0",
-                            textAlign: "center",
-                            letterSpacing: "0.04em",
-                        }}>
-                            Mobile homepage redesign — Control, v1: New Layout, Stacked, and Slider variants
-                        </p>
+                    {/* A/B variant phone screens */}
+                    <div style={{ display: "flex", gap: "16px", justifyContent: "space-between", padding: "40px 0 8px" }}>
+                        <PhoneFrame src={IMGS.abControl}   alt="Control variant"     label="Control"        width={170} />
+                        <PhoneFrame src={IMGS.abNewLayout} alt="V1: New Layout"       label="V1: New Layout" width={170} />
+                        <PhoneFrame src={IMGS.abStacked}   alt="Stacked variant"      label="Stacked"        width={170} />
+                        <PhoneFrame src={IMGS.abSlider}    alt="Slider variant"       label="Slider"         width={170} />
                     </div>
                     <Body>
                         For category pages, I tested hiding the topper image to
@@ -1583,28 +1605,22 @@ export default function AnthropologieCaseStudy() {
                         against Mango and Everlane, which both lead directly
                         with product grids.
                     </Body>
-                    <div style={{ marginTop: "8px", marginBottom: "16px" }}>
-                        <img
-                            src={IMGS.appGestures}
-                            alt="App-friendly gestures benchmarking"
-                            style={{
-                                width: "100%",
-                                borderRadius: "12px",
-                                display: "block",
-                                border: `1px solid ${C.border}`,
-                                boxShadow: "0 4px 28px rgba(0,0,0,0.08)",
-                            }}
-                        />
-                        <p style={{
-                            fontFamily: INTER,
-                            fontSize: "11px",
-                            color: C.muted,
-                            margin: "10px 0 0",
-                            textAlign: "center",
-                            letterSpacing: "0.04em",
-                        }}>
-                            App-friendly gesture benchmarking — Anthropologie basket vs. J.Crew and Mango swipe-to-delete
-                        </p>
+                    {/* Swipe gesture comparison */}
+                    <p style={{
+                        fontFamily: INTER,
+                        fontSize: "10px",
+                        fontWeight: 700,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.1em",
+                        color: C.muted,
+                        margin: "32px 0 24px",
+                    }}>
+                        Gesture Benchmarking
+                    </p>
+                    <div style={{ display: "flex", gap: "40px", justifyContent: "center", marginBottom: "16px" }}>
+                        <PhoneFrame src={IMGS.anthroBasket} alt="Anthropologie basket"      label="Anthropologie — basket (current)" width={190} />
+                        <PhoneFrame src={IMGS.jcrewSwipe}   alt="J.Crew swipe to delete"   label="J.Crew — swipe to delete"         width={190} />
+                        <PhoneFrame src={IMGS.mangoSwipe}   alt="Mango swipe to delete"    label="Mango — swipe to delete"          width={190} />
                     </div>
                 </FadeIn>
 
