@@ -184,6 +184,7 @@ function Hero({
                         fontSize: headSize,
                         lineHeight: 1.4,
                         letterSpacing: "-0.02em",
+                        wordSpacing: "4px",
                         color: C.ink,
                         margin: 0,
                         maxWidth: headMaxW,
@@ -192,10 +193,9 @@ function Hero({
                     }}
                 >
                     <span style={{ display: "block" }}>
-                        I design digital products by{" "}
-                        <span style={{ marginRight: 6 }}>balancing</span>
+                        I design digital products by balancing{" "}
                         <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 700 }}>Creativity</span>
-                        <span style={{ fontFamily: Z, fontStyle: "normal", fontWeight: 400, marginLeft: 6, marginRight: 6 }}>&amp;</span>
+                        {" "}<span style={{ fontFamily: Z, fontStyle: "normal", fontWeight: 400 }}>&amp;</span>{" "}
                         <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 700 }}>Insights;</span>
                     </span>
                     <span style={{ display: "block" }}>
