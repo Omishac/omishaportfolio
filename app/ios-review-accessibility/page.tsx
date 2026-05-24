@@ -686,14 +686,7 @@ function FrictionCard({
             >
                 {label}
             </p>
-            <div
-                style={{
-                    marginTop: 2,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                }}
-            >
+            <div style={{ marginTop: 2 }}>
                 <span
                     style={{
                         fontFamily: I,
@@ -705,19 +698,6 @@ function FrictionCard({
                     }}
                 >
                     {tag}
-                </span>
-                <span
-                    style={{
-                        fontFamily: Z,
-                        fontSize: 15,
-                        color: t.accent,
-                        opacity: hov ? 0.7 : 0.25,
-                        transform: hov ? "translateX(4px)" : "none",
-                        transition: "transform 0.25s, opacity 0.25s",
-                        display: "inline-block",
-                    }}
-                >
-                    →
                 </span>
             </div>
         </div>
@@ -846,12 +826,12 @@ function ProcessSection() {
                         <p
                             style={{
                                 fontFamily: Z,
-                                fontStyle: "italic",
-                                fontWeight: 300,
-                                fontSize: 19,
-                                lineHeight: 1.5,
-                                color: "rgba(255,255,255,0.92)",
+                                fontWeight: 700,
+                                fontSize: "clamp(17px, 1.8vw, 22px)",
+                                lineHeight: 1.55,
+                                color: "rgba(255,255,255,0.96)",
                                 margin: 0,
+                                letterSpacing: "-0.015em",
                             }}
                         >
                             Three translation paths were translated into low-fidelity concepts and discussed in design critiques with Senior Designers and Product partners, allowing the team to validate assumptions and refine the direction.
@@ -1412,14 +1392,6 @@ function ResultCard({ num, label }: { num: string; label: string }) {
 }
 
 export default function IOSCaseStudy() {
-    const heroImage = undefined
-    const ecosystemImage = undefined
-    const researchImage = undefined
-    const constraintImage1 = undefined
-    const constraintImage2 = undefined
-    const constraintImage3 = undefined
-    const sketchesImage = undefined
-    const flowImage = undefined
     const phoneOriginalImage = undefined
     const phoneTranslatedImage = undefined
     const phoneDiscoveryImage = undefined
@@ -1549,11 +1521,16 @@ export default function IOSCaseStudy() {
                         ))}
                     </div>
                 </div>
-                <Slot
-                    src={heroImage}
-                    label="Add your hero image — app screenshots, brand context, or overview visual"
-                    height={480}
-                    radius={18}
+                <img
+                    src="/ios-hero.png"
+                    alt="iOS Review Translation"
+                    style={{
+                        width: "100%",
+                        height: "auto",
+                        display: "block",
+                        borderRadius: 18,
+                        boxShadow: "0 8px 40px rgba(0,0,0,0.10)",
+                    }}
                 />
 
                 {/* ── 01 ECOSYSTEM ── */}
@@ -1588,49 +1565,17 @@ export default function IOSCaseStudy() {
                         serving diverse international markets where mobile users
                         interact with the apps in multiple languages.
                     </p>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
-                        <div
-                            style={{
-                                width: 390,
-                                height: 480,
-                                borderRadius: 32,
-                                border: "2px solid #1a1a1a",
-                                backgroundColor: "#f5f5f3",
-                                display: "flex",
-                                flexDirection: "column" as const,
-                                overflow: "hidden",
-                                boxShadow: "0 24px 48px rgba(0,0,0,0.18)",
-                            }}
-                        >
-                            <div
-                                style={{
-                                    height: 40,
-                                    backgroundColor: "#1a1a1a",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    gap: 6,
-                                    flexShrink: 0,
-                                }}
-                            >
-                                <div style={{ width: 60, height: 6, borderRadius: 3, backgroundColor: "rgba(255,255,255,0.15)" }} />
-                                <div style={{ width: 8, height: 8, borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.2)" }} />
-                            </div>
-                            <div
-                                style={{
-                                    flex: 1,
-                                    backgroundColor: "#f5f5f3",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                }}
-                            >
-                                <p style={{ fontFamily: "Inter, sans-serif", fontSize: 13, color: "rgba(0,0,0,0.35)", fontStyle: "italic" }}>
-                                    iOS App Preview
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    <img
+                        src="/ios-ecosystem.png"
+                        alt="URBN Global Ecosystem"
+                        style={{
+                            width: "100%",
+                            height: "auto",
+                            display: "block",
+                            borderRadius: 14,
+                            boxShadow: "0 4px 32px rgba(0,0,0,0.09)",
+                        }}
+                    />
                 </div>
 
                 {/* ── 02 PROBLEM ── */}
@@ -1666,75 +1611,56 @@ export default function IOSCaseStudy() {
                         all adapt accordingly — <strong>EXCEPT</strong> for
                         product reviews, which remained in English only.
                     </p>
-                    <div
-                        style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: 10,
-                            backgroundColor: "#FFF2D6",
-                            borderRadius: 10,
-                            padding: "12px 18px",
-                            marginBottom: 32,
-                        }}
-                    >
-                        <span style={{ fontSize: 16 }}>⚠️</span>
-                        <p
+                    <div style={{ display: "flex", justifyContent: "center", margin: "40px 0 8px" }}>
+                        <div
                             style={{
-                                fontFamily: Z,
-                                fontStyle: "italic",
-                                fontSize: 15,
-                                color: C.ink,
-                                margin: 0,
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 20,
+                                backgroundColor: "#FFF2D6",
+                                borderRadius: 16,
+                                padding: "32px 48px",
+                                border: "1.5px solid rgba(0,0,0,0.07)",
+                                maxWidth: 720,
+                                width: "100%",
+                                justifyContent: "center",
                             }}
                         >
-                            English-Only Reviews + Global Audience =
-                            Accessibility Gap
-                        </p>
+                            <span style={{ fontSize: 36, flexShrink: 0 }}>⚠️</span>
+                            <p
+                                style={{
+                                    fontFamily: Z,
+                                    fontWeight: 700,
+                                    fontSize: "clamp(18px, 2.5vw, 26px)",
+                                    color: C.ink,
+                                    margin: 0,
+                                    lineHeight: 1.3,
+                                    letterSpacing: "-0.02em",
+                                }}
+                            >
+                                English-Only Reviews + Global Audience = Accessibility Gap
+                            </p>
+                        </div>
                     </div>
-                    <Slot
-                        src={researchImage}
-                        label="Add research image — user interviews, complaint evidence, or survey data"
-                        height={360}
-                        radius={14}
-                    />
                 </div>
 
                 {/* ── 03 FRICTION POINTS ── */}
                 <Divider />
                 <div ref={friction.ref} style={friction.style}>
-                    <div
-                        style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "flex-end",
-                            marginBottom: 28,
-                        }}
-                    >
-                        <div>
-                            <Pill label="03 — Friction Points" />
-                            <p
-                                style={{
-                                    fontFamily: Z,
-                                    fontStyle: "italic",
-                                    fontWeight: 300,
-                                    fontSize: 21,
-                                    color: C.ink3,
-                                    margin: 0,
-                                }}
-                            >
-                                Leading to friction points like…
-                            </p>
-                        </div>
-                        <span
+                    <div style={{ marginBottom: 28 }}>
+                        <Pill label="03 — Friction Points" />
+                        <p
                             style={{
-                                fontFamily: I,
-                                fontSize: 11,
-                                color: C.muted,
-                                letterSpacing: "0.07em",
+                                fontFamily: Z,
+                                fontStyle: "italic",
+                                fontWeight: 300,
+                                fontSize: 21,
+                                color: C.ink3,
+                                margin: 0,
                             }}
                         >
-                            4 POINTS
-                        </span>
+                            Leading to friction points like…
+                        </p>
                     </div>
                     <div
                         style={{
@@ -2046,24 +1972,6 @@ export default function IOSCaseStudy() {
                             emoji="🪡"
                             body="Ensure the feature feels like a natural extension of the existing review UI — not a bolt-on."
                         />
-                    </div>
-                    <div style={{ display: "flex", gap: 14 }}>
-                        <div style={{ flex: 2 }}>
-                            <Slot
-                                src={sketchesImage}
-                                label="Add sketches / early Figma explorations / wireframes here"
-                                height={320}
-                                radius={12}
-                            />
-                        </div>
-                        <div style={{ flex: 1 }}>
-                            <Slot
-                                src={flowImage}
-                                label="Decision flow / annotation / spec"
-                                height={320}
-                                radius={12}
-                            />
-                        </div>
                     </div>
                 </div>
 
