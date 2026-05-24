@@ -212,59 +212,79 @@ function Pill({ label }: { label: string }) {
 // ── Nav ────────────────────────────────────────────────────────────────────────
 function CaseStudyNav() {
     const [scrolled, setScrolled] = useState(false)
+    const [phone, setPhone] = useState(false)
     useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 20)
+        const onScroll = () => setScrolled(window.scrollY > 12)
+        const onResize = () => setPhone(window.innerWidth < 540)
+        onResize()
         window.addEventListener("scroll", onScroll, { passive: true })
-        return () => window.removeEventListener("scroll", onScroll)
+        window.addEventListener("resize", onResize, { passive: true })
+        return () => {
+            window.removeEventListener("scroll", onScroll)
+            window.removeEventListener("resize", onResize)
+        }
     }, [])
+    const F = "Inter, system-ui, sans-serif"
+    const links = phone
+        ? [
+              { label: "Work", href: "/#work" },
+              { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
+              { label: "Resume", href: "#" },
+          ]
+        : [
+              { label: "Work", href: "/#work" },
+              { label: "Playground", href: "/playground" },
+              { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
+              { label: "Resume", href: "#" },
+          ]
     return (
-        <nav
-            style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "0 80px",
-                height: 64,
-                borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : C.border}`,
-                boxSizing: "border-box",
-                backgroundColor: scrolled ? "rgba(255,255,255,0.96)" : "#fff",
-                backdropFilter: scrolled ? "blur(16px)" : "none",
-                position: "sticky",
-                top: 0,
-                zIndex: 100,
-                transition: "background 0.3s, border-color 0.3s",
-            }}
-        >
-            <a
-                href="/#work"
-                style={{
-                    fontFamily: I,
-                    fontSize: 13,
-                    fontWeight: 500,
-                    color: C.muted,
-                    textDecoration: "none",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    letterSpacing: "-0.01em",
-                    transition: "color 0.18s",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = C.ink)}
-                onMouseLeave={(e) => (e.currentTarget.style.color = C.muted)}
-            >
-                ← Back to work
+        <nav style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 100,
+            width: "100%",
+            height: phone ? 54 : 64,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: `0 ${phone ? 20 : 80}px`,
+            boxSizing: "border-box",
+            backgroundColor: scrolled ? "rgba(255,255,255,0.96)" : C.bg,
+            backdropFilter: scrolled ? "blur(20px)" : "none",
+            WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
+            borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : C.border}`,
+            transition: "background 0.25s, border-color 0.25s",
+        }}>
+            <a href="/" style={{ display: "block", lineHeight: 0 }}>
+                <img
+                    src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
+                    alt="OC"
+                    style={{ width: phone ? 38 : 46, height: phone ? 38 : 46, objectFit: "contain", display: "block" }}
+                />
             </a>
-            <p
-                style={{
-                    fontFamily: I,
-                    fontSize: 12,
-                    color: C.muted,
-                    margin: 0,
-                }}
-            >
-                iOS Review Accessibility · URBN
-            </p>
+            <div style={{ display: "flex", gap: phone ? 16 : 32, alignItems: "center" }}>
+                {links.map(({ label, href, ext }) => (
+                    <a
+                        key={label}
+                        href={href}
+                        target={ext ? "_blank" : "_self"}
+                        rel="noreferrer"
+                        style={{
+                            fontFamily: F,
+                            fontSize: phone ? 13 : 14,
+                            fontWeight: 500,
+                            color: C.ink3,
+                            textDecoration: "none",
+                            letterSpacing: "-0.01em",
+                            transition: "color 0.18s",
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = C.ink)}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = C.ink3)}
+                    >
+                        {label}
+                    </a>
+                ))}
+            </div>
         </nav>
     )
 }
