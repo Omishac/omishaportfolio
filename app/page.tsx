@@ -148,15 +148,8 @@ function Hero({
     const hiW = phone ? 120 : tablet ? 160 : large ? 260 : 210
     const hiH = Math.round(hiW / 1.615)
 
-    const headSize = phone
-        ? "clamp(26px, 7.5vw, 34px)"
-        : tablet
-          ? "clamp(30px, 4.5vw, 40px)"
-          : large
-            ? "clamp(52px, 4vw, 64px)"
-            : "clamp(44px, 4vw, 56px)"
-
-    const headMaxW = phone ? "100%" : tablet ? "520px" : large ? "920px" : "780px"
+    const headSize = phone ? "24px" : tablet ? "30px" : "36px"
+    const headMaxW = phone ? "100%" : tablet ? "520px" : large ? "860px" : "720px"
 
     return (
         <section
@@ -189,40 +182,45 @@ function Hero({
                         fontFamily: Z,
                         fontWeight: 400,
                         fontSize: headSize,
-                        lineHeight: 1.08,
-                        letterSpacing: "-0.025em",
+                        lineHeight: 1.15,
+                        letterSpacing: "-0.02em",
                         color: C.ink,
                         margin: 0,
                         maxWidth: headMaxW,
                         textAlign: "left",
+                        fontStyle: "normal",
                     }}
                 >
                     I design digital products by balancing{" "}
-                    <em style={{ fontStyle: "italic", fontFamily: YB }}>Creativity</em>
-                    {" & "}
-                    <em style={{ fontStyle: "italic", fontFamily: YB }}>Insights;</em>{" "}
+                    <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 400 }}>Creativity</span>
+                    {" "}
+                    <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 400 }}>&amp;</span>
+                    {" "}
+                    <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 400 }}>Insights;</span>{" "}
                     always grounded in{" "}
-                    <em style={{ fontStyle: "italic", fontFamily: YB }}>how</em> people experience them
+                    <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 700 }}>how</span>{" "}
+                    people experience them
                 </h1>
             </div>
 
-            {/* Centered pink arrow block */}
+            {/* Centered label + pink arrow */}
             <div
                 style={{
                     width: "100%",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    gap: 6,
-                    paddingTop: phone ? 32 : 0,
+                    gap: 8,
+                    paddingTop: phone ? 40 : 0,
                 }}
             >
                 <p
                     style={{
                         fontFamily: Z,
-                        fontStyle: "italic",
-                        fontSize: phone ? 13 : 15,
-                        color: "#E8B4C8",
+                        fontStyle: "normal",
+                        fontWeight: 300,
+                        fontSize: 16,
+                        color: C.ink,
                         margin: 0,
                         letterSpacing: "-0.01em",
                     }}
@@ -230,21 +228,21 @@ function Hero({
                     Here&apos;s a closer look at what that means
                 </p>
                 <svg
-                    width={phone ? 36 : 48}
-                    height={phone ? 36 : 48}
+                    width={phone ? 36 : 44}
+                    height={phone ? 36 : 44}
                     viewBox="0 0 48 48"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                 >
                     <path
-                        d="M16 10 C16 10, 10 24, 24 36"
+                        d="M16 8 C14 20, 10 28, 24 40"
                         stroke="#E8B4C8"
                         strokeWidth="1.5"
                         strokeLinecap="round"
                         fill="none"
                     />
                     <path
-                        d="M20 32 L24 38 L30 34"
+                        d="M18 34 L24 42 L31 36"
                         stroke="#E8B4C8"
                         strokeWidth="1.5"
                         strokeLinecap="round"
