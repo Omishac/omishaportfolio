@@ -194,9 +194,7 @@ function Hero({
                     <span style={{ display: "block" }}>
                         I design digital products by balancing{" "}
                         <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 700 }}>Creativity</span>
-                        {" "}
-                        <span style={{ fontFamily: Z, fontStyle: "normal", fontWeight: 400 }}>&amp;</span>
-                        {" "}
+                        <span style={{ fontFamily: Z, fontStyle: "normal", fontWeight: 400 }}> &amp; </span>
                         <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 700 }}>Insights;</span>
                     </span>
                     <span style={{ display: "block" }}>
@@ -233,26 +231,26 @@ function Hero({
                 >
                     Here&apos;s a closer look at what that means
                 </p>
-                {/* Curved arrow pointing down-right */}
+                {/* Curved arrow: starts top-left, sweeps right then down to bottom-right */}
                 <svg
                     width={36}
                     height={36}
                     viewBox="0 0 48 48"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    style={{ flexShrink: 0, transform: "scaleY(-1)" }}
+                    style={{ flexShrink: 0 }}
                 >
-                    {/* Curve: upper-left to lower-right */}
+                    {/* Body: begins going right, curves down so endpoint is approached from above */}
                     <path
-                        d="M 8 6 C 6 20, 22 32, 38 38"
+                        d="M 8 6 C 12 6, 40 14, 40 40"
                         stroke="#E8B4C8"
                         strokeWidth="2.5"
                         strokeLinecap="round"
                         fill="none"
                     />
-                    {/* Arrowhead aligned to curve endpoint direction */}
+                    {/* Arrowhead: tip at curve end (40,40), wings up-left and up-right = pointing down */}
                     <path
-                        d="M 29 28 L 38 38 L 25 39"
+                        d="M 33 32 L 40 42 L 47 32"
                         stroke="#E8B4C8"
                         strokeWidth="2.5"
                         strokeLinecap="round"
