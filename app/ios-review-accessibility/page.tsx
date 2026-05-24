@@ -845,58 +845,17 @@ function ProcessSection() {
                     <div>
                         <p
                             style={{
-                                fontFamily: I,
-                                fontSize: 10,
-                                fontWeight: 700,
-                                letterSpacing: "0.12em",
-                                textTransform: "uppercase" as const,
-                                color: "rgba(255,255,255,0.28)",
-                                marginBottom: 12,
-                            }}
-                        >
-                            Key decision
-                        </p>
-                        <p
-                            style={{
                                 fontFamily: Z,
                                 fontStyle: "italic",
                                 fontWeight: 300,
                                 fontSize: 19,
                                 lineHeight: 1.5,
                                 color: "rgba(255,255,255,0.92)",
-                                margin: "0 0 18px",
+                                margin: 0,
                             }}
                         >
-                            User-triggered translation won — preserving
-                            authenticity while removing the language barrier on
-                            demand.
+                            Three translation paths were translated into low-fidelity concepts and discussed in design critiques with Senior Designers and Product partners, allowing the team to validate assumptions and refine the direction.
                         </p>
-                        <div
-                            style={{
-                                display: "flex",
-                                gap: 7,
-                                flexWrap: "wrap" as const,
-                            }}
-                        >
-                            {["On-demand", "Toggle to original", "iOS 18+"].map(
-                                (t) => (
-                                    <span
-                                        key={t}
-                                        style={{
-                                            fontFamily: I,
-                                            fontSize: 11,
-                                            color: "rgba(255,255,255,0.4)",
-                                            backgroundColor:
-                                                "rgba(255,255,255,0.06)",
-                                            borderRadius: 20,
-                                            padding: "4px 12px",
-                                        }}
-                                    >
-                                        {t}
-                                    </span>
-                                )
-                            )}
-                        </div>
                     </div>
                 </div>
             </div>
