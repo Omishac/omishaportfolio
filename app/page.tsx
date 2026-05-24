@@ -235,26 +235,26 @@ function Hero({
                 </p>
                 {/* Curved arrow pointing down-right */}
                 <svg
-                    width={32}
-                    height={32}
-                    viewBox="0 0 32 32"
+                    width={36}
+                    height={36}
+                    viewBox="0 0 48 48"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                     style={{ flexShrink: 0 }}
                 >
-                    {/* Curve: top-left → bottom-right */}
+                    {/* Curve: upper-left to lower-right */}
                     <path
-                        d="M5 4 C3 13 10 22 24 26"
+                        d="M 8 6 C 6 20, 22 32, 38 38"
                         stroke="#E8B4C8"
-                        strokeWidth="1.5"
+                        strokeWidth="2.5"
                         strokeLinecap="round"
                         fill="none"
                     />
-                    {/* Arrowhead tip at (24,26), wings at (17,22) and (28,18) */}
+                    {/* Arrowhead aligned to curve endpoint direction */}
                     <path
-                        d="M17 22 L24 27 L28 19"
+                        d="M 29 28 L 38 38 L 25 39"
                         stroke="#E8B4C8"
-                        strokeWidth="1.5"
+                        strokeWidth="2.5"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         fill="none"
