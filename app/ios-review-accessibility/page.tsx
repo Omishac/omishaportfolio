@@ -237,7 +237,7 @@ function CaseStudyNav() {
             }}
         >
             <a
-                href="/"
+                href="/#work"
                 style={{
                     fontFamily: I,
                     fontSize: 13,
