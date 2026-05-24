@@ -196,21 +196,23 @@ function Hero({
                     {" "}
                     <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 400 }}>&amp;</span>
                     {" "}
-                    <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 400 }}>Insights;</span>{" "}
+                    <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 400 }}>Insights;</span>
+                    <br />
                     always grounded in{" "}
                     <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 700 }}>how</span>{" "}
                     people experience them
                 </h1>
             </div>
 
-            {/* Centered label + pink arrow */}
+            {/* Centered label + inline pink arrow to the right */}
             <div
                 style={{
                     width: "100%",
                     display: "flex",
-                    flexDirection: "column",
+                    flexDirection: "row",
                     alignItems: "center",
-                    gap: 8,
+                    justifyContent: "center",
+                    gap: 6,
                     paddingTop: phone ? 40 : 0,
                 }}
             >
@@ -223,28 +225,31 @@ function Hero({
                         color: C.ink,
                         margin: 0,
                         letterSpacing: "-0.01em",
+                        whiteSpace: "nowrap",
                     }}
                 >
                     Here&apos;s a closer look at what that means
                 </p>
+                {/* Arrow curves down-right, sitting inline to the right of text */}
                 <svg
-                    width={phone ? 36 : 44}
-                    height={phone ? 36 : 44}
+                    width={28}
+                    height={28}
                     viewBox="0 0 48 48"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
+                    style={{ flexShrink: 0, marginTop: 4 }}
                 >
                     <path
-                        d="M16 8 C14 20, 10 28, 24 40"
+                        d="M6 8 C6 24, 22 36, 38 42"
                         stroke="#E8B4C8"
-                        strokeWidth="1.5"
+                        strokeWidth="1.8"
                         strokeLinecap="round"
                         fill="none"
                     />
                     <path
-                        d="M18 34 L24 42 L31 36"
+                        d="M30 38 L38 44 L42 36"
                         stroke="#E8B4C8"
-                        strokeWidth="1.5"
+                        strokeWidth="1.8"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         fill="none"
