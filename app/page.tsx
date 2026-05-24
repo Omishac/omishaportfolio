@@ -191,16 +191,19 @@ function Hero({
                         fontStyle: "normal",
                     }}
                 >
-                    I design digital products by balancing{" "}
-                    <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 400 }}>Creativity</span>
-                    {" "}
-                    <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 400 }}>&amp;</span>
-                    {" "}
-                    <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 400 }}>Insights;</span>
-                    <br />
-                    always grounded in{" "}
-                    <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 700 }}>how</span>{" "}
-                    people experience them
+                    <span style={{ display: "block" }}>
+                        I design digital products by balancing{" "}
+                        <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 400 }}>Creativity</span>
+                        {" "}
+                        <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 400 }}>&amp;</span>
+                        {" "}
+                        <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 400 }}>Insights;</span>
+                    </span>
+                    <span style={{ display: "block" }}>
+                        always grounded in{" "}
+                        <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 700 }}>how</span>{" "}
+                        people experience them
+                    </span>
                 </h1>
             </div>
 
