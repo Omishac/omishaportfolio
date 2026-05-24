@@ -42,7 +42,7 @@ function useBP() {
         cardColGap: phone ? 0 : tablet ? 20 : 24,
         cardH: phone ? 220 : tablet ? 260 : large ? 460 : 390,
         heroTop: phone ? 48 : tablet ? 64 : 96,
-        heroBottom: phone ? 48 : tablet ? 64 : 80,
+        heroBottom: phone ? 80 : tablet ? 100 : 120,
         colOffset: tablet ? 0 : 80,
     }
 
@@ -155,7 +155,7 @@ function Hero({
         <section
             style={{
                 width: "100%",
-                minHeight: phone ? "auto" : `calc(100vh - ${navH}px)`,
+                minHeight: "100vh",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-start",
@@ -192,9 +192,10 @@ function Hero({
                     }}
                 >
                     <span style={{ display: "block" }}>
-                        I design digital products by balancing{" "}
+                        I design digital products by{" "}
+                        <span style={{ marginRight: 6 }}>balancing</span>
                         <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 700 }}>Creativity</span>
-                        <span style={{ fontFamily: Z, fontStyle: "normal", fontWeight: 400 }}> &amp; </span>
+                        <span style={{ fontFamily: Z, fontStyle: "normal", fontWeight: 400, marginLeft: 6, marginRight: 6 }}>&amp;</span>
                         <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 700 }}>Insights;</span>
                     </span>
                     <span style={{ display: "block" }}>
