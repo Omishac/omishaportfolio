@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react"
 
 const I = "Inter, system-ui, sans-serif"
 const Z = "Zodiak, 'Times New Roman', serif"
-const YB = "'Yuji Boku', serif"
+const YB = "var(--font-yuji-boku), serif"
 
 const C = {
     ink: "#111111",
@@ -165,14 +165,14 @@ function Hero({
                 minHeight: phone ? "auto" : `calc(100vh - ${navH}px)`,
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "center",
+                alignItems: "flex-start",
                 justifyContent: "space-between",
                 padding: `${sp.heroTop}px ${px}px ${sp.heroBottom}px`,
                 boxSizing: "border-box",
-                textAlign: "center",
             }}
         >
-            <div style={{ maxWidth: maxW, width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            {/* Left-aligned heading block */}
+            <div style={{ maxWidth: maxW, width: "100%", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
                 <img
                     src="https://framerusercontent.com/images/hK0bLjY9spx6qo44Ua9QOr0NQ7Y.png"
                     alt="Hi"
@@ -187,25 +187,29 @@ function Hero({
                 <h1
                     style={{
                         fontFamily: Z,
-                        fontWeight: 700,
+                        fontWeight: 400,
                         fontSize: headSize,
                         lineHeight: 1.08,
                         letterSpacing: "-0.025em",
                         color: C.ink,
                         margin: 0,
                         maxWidth: headMaxW,
+                        textAlign: "left",
                     }}
                 >
                     I design digital products by balancing{" "}
-                    <em style={{ fontStyle: "italic", fontWeight: 700, fontFamily: YB }}>Creativity</em>
+                    <em style={{ fontStyle: "italic", fontFamily: YB }}>Creativity</em>
                     {" & "}
-                    <em style={{ fontStyle: "italic", fontWeight: 700, fontFamily: YB }}>Insights;</em>{" "}
+                    <em style={{ fontStyle: "italic", fontFamily: YB }}>Insights;</em>{" "}
                     always grounded in{" "}
                     <em style={{ fontStyle: "italic", fontFamily: YB }}>how</em> people experience them
                 </h1>
             </div>
+
+            {/* Centered pink arrow block */}
             <div
                 style={{
+                    width: "100%",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",

@@ -28,6 +28,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${yujiBoku.variable}`}>
+      <head>
+        <link rel="preconnect" href="https://api.fontshare.com" />
+        <link
+          rel="stylesheet"
+          href="https://api.fontshare.com/v2/css?f[]=zodiak@700,400,300&display=swap"
+        />
+      </head>
       <body>{children}</body>
     </html>
   )
