@@ -209,7 +209,11 @@ function Hero({
             <div
                 style={{
                     width: "100%",
-                    textAlign: "center",
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 6,
                     paddingTop: phone ? 40 : 0,
                 }}
             >
@@ -219,22 +223,21 @@ function Hero({
                         fontStyle: "normal",
                         fontWeight: 300,
                         fontSize: 16,
+                        lineHeight: 1,
                         color: C.ink,
                         margin: 0,
                         letterSpacing: "-0.01em",
-                        display: "inline",
                     }}
                 >
                     Here&apos;s a closer look at what that means
                 </p>
-                {/* SVG inline with text — verticalAlign:middle snaps to text midline */}
                 <svg
                     width={24}
                     height={24}
                     viewBox="0 0 48 48"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    style={{ display: "inline-block", verticalAlign: "middle", marginLeft: 6 }}
+                    style={{ display: "block", flexShrink: 0 }}
                 >
                     <path
                         d="M 8 6 C 12 6, 40 14, 40 40"
