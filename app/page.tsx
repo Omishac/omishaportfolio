@@ -95,8 +95,8 @@ function Nav({ phone, tablet, px }: { phone: boolean; tablet: boolean; px: numbe
                     src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
                     alt="OC"
                     style={{
-                        width: phone ? 38 : 46,
-                        height: phone ? 38 : 46,
+                        width: phone ? 48 : 58,
+                        height: phone ? 48 : 58,
                         objectFit: "contain",
                         display: "block",
                     }}
@@ -686,7 +686,7 @@ function Footer({
     px: number
     maxW: number
 }) {
-    const logoW = phone ? 60 : tablet ? 68 : 72
+    const logoW = phone ? 75 : tablet ? 85 : 90
     return (
         <footer
             style={{

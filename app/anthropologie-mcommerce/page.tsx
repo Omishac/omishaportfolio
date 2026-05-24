@@ -802,7 +802,7 @@ function CaseStudyNav() {
                 <img
                     src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
                     alt="OC"
-                    style={{ width: phone ? 38 : 46, height: phone ? 38 : 46, objectFit: "contain", display: "block" }}
+                    style={{ width: phone ? 48 : 58, height: phone ? 48 : 58, objectFit: "contain", display: "block" }}
                 />
             </a>
             <div style={{ display: "flex", gap: phone ? 16 : 32, alignItems: "center" }}>
