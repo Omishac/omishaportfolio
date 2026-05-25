@@ -1123,224 +1123,73 @@ function SolutionCard({
     )
 }
 
-function Phone({
-    state,
-    bg,
-    image,
+function PhoneCard({
+    src,
+    label,
+    num,
+    desc,
+    index,
+    visible,
 }: {
-    state: "original" | "translated" | "discovery"
-    bg: string
-    image?: string
+    src: string
+    label: string
+    num: string
+    desc: string
+    index: number
+    visible: boolean
 }) {
     const [hov, setHov] = useState(false)
-    const shimmer =
-        bg === "rgb(232,231,228)"
-            ? "#D4D3D0"
-            : bg === "rgb(218,217,212)"
-              ? "#C4C3BE"
-              : "#B2B1AC"
+    const spring = "cubic-bezier(0.34,1.56,0.64,1)"
+    const ease = "cubic-bezier(0.22,1,0.36,1)"
+    const delay = index * 150
     return (
         <div
-            onMouseEnter={() => setHov(true)}
-            onMouseLeave={() => setHov(false)}
             style={{
-                width: "100%",
-                minHeight: 440,
-                backgroundColor: bg,
-                borderRadius: 22,
+                flex: 1,
                 display: "flex",
                 flexDirection: "column" as const,
                 alignItems: "center",
-                justifyContent: "center",
-                gap: 14,
-                padding: "24px 18px",
-                transform: hov ? "translateY(-6px)" : "none",
-                boxShadow: hov
-                    ? "0 22px 52px rgba(0,0,0,0.16)"
-                    : "0 4px 14px rgba(0,0,0,0.07)",
-                transition:
-                    "transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease",
-                cursor: "default",
+                gap: 24,
+                opacity: visible ? 1 : 0,
+                transform: visible ? "none" : "translateY(36px)",
+                transition: `opacity 0.6s ${ease} ${delay}ms, transform 0.7s ${ease} ${delay}ms`,
             }}
         >
             <div
+                onMouseEnter={() => setHov(true)}
+                onMouseLeave={() => setHov(false)}
                 style={{
-                    width: 165,
-                    height: 310,
-                    backgroundColor: "white",
-                    borderRadius: 26,
-                    overflow: "hidden",
-                    display: "flex",
-                    flexDirection: "column" as const,
-                    boxShadow:
-                        "0 6px 20px rgba(0,0,0,0.12), inset 0 0 0 1.5px rgba(0,0,0,0.09)",
+                    width: "100%",
+                    transform: hov
+                        ? "translateY(-12px) scale(1.03)"
+                        : "translateY(0) scale(1)",
+                    boxShadow: hov
+                        ? "0 32px 64px rgba(0,0,0,0.18), 0 8px 24px rgba(0,0,0,0.09)"
+                        : "0 4px 16px rgba(0,0,0,0.05)",
+                    transition: `transform 0.5s ${spring}, box-shadow 0.5s ${ease}`,
+                    cursor: "default",
                 }}
             >
-                <div
-                    style={{
-                        height: 24,
-                        backgroundColor: shimmer,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "0 10px",
-                        flexShrink: 0,
-                    }}
-                >
-                    <div
-                        style={{
-                            width: 32,
-                            height: 4,
-                            backgroundColor: "rgba(0,0,0,0.14)",
-                            borderRadius: 2,
-                        }}
-                    />
-                    <div
-                        style={{
-                            width: 14,
-                            height: 4,
-                            backgroundColor: "rgba(0,0,0,0.09)",
-                            borderRadius: 2,
-                        }}
-                    />
-                </div>
-                {image ? (
-                    <img
-                        src={image}
-                        alt={state}
-                        style={{
-                            flex: 1,
-                            objectFit: "cover",
-                            display: "block",
-                        }}
-                    />
-                ) : (
-                    <div
-                        style={{
-                            flex: 1,
-                            padding: "9px 9px 7px",
-                            display: "flex",
-                            flexDirection: "column" as const,
-                            gap: 6,
-                        }}
-                    >
-                        {state === "translated" && (
-                            <div
-                                style={{
-                                    width: 84,
-                                    height: 17,
-                                    backgroundColor: "rgba(0,0,0,0.05)",
-                                    borderRadius: 8,
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    flexShrink: 0,
-                                }}
-                            >
-                                <span
-                                    style={{
-                                        fontFamily: I,
-                                        fontSize: 8,
-                                        color: "rgba(0,0,0,0.38)",
-                                    }}
-                                >
-                                    Translated
-                                </span>
-                            </div>
-                        )}
-                        <div
-                            style={{
-                                width: "85%",
-                                height: 6,
-                                backgroundColor: shimmer,
-                                borderRadius: 3,
-                            }}
-                        />
-                        <div
-                            style={{
-                                width: "65%",
-                                height: 6,
-                                backgroundColor: shimmer,
-                                borderRadius: 3,
-                            }}
-                        />
-                        <div
-                            style={{
-                                width: "90%",
-                                height: 6,
-                                backgroundColor: shimmer,
-                                borderRadius: 3,
-                            }}
-                        />
-                        <div
-                            style={{
-                                width: "100%",
-                                height: 1,
-                                backgroundColor: "rgba(0,0,0,0.04)",
-                                margin: "3px 0",
-                            }}
-                        />
-                        <div
-                            style={{
-                                width: "72%",
-                                height: 6,
-                                backgroundColor: shimmer,
-                                borderRadius: 3,
-                            }}
-                        />
-                        <div
-                            style={{
-                                width: "55%",
-                                height: 6,
-                                backgroundColor: shimmer,
-                                borderRadius: 3,
-                            }}
-                        />
-                        {state === "original" && (
-                            <div
-                                style={{
-                                    width: 82,
-                                    height: 22,
-                                    backgroundColor: C.ink,
-                                    borderRadius: 11,
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    marginTop: 3,
-                                    flexShrink: 0,
-                                }}
-                            >
-                                <span
-                                    style={{
-                                        fontFamily: I,
-                                        fontSize: 9,
-                                        fontWeight: 600,
-                                        color: "rgba(255,255,255,0.8)",
-                                        letterSpacing: "0.05em",
-                                    }}
-                                >
-                                    Translate
-                                </span>
-                            </div>
-                        )}
-                    </div>
-                )}
+                <img
+                    src={src}
+                    alt={label}
+                    style={{ width: "100%", height: "auto", display: "block" }}
+                />
             </div>
-            <p
+            <div
                 style={{
-                    fontFamily: Z,
-                    fontStyle: "italic",
-                    fontSize: 11,
-                    color: "rgba(0,0,0,0.35)",
-                    textAlign: "center" as const,
+                    width: "100%",
+                    transform: hov ? "translateY(-5px)" : "translateY(0)",
+                    opacity: hov ? 1 : 0.68,
+                    transition: `transform 0.45s ${spring}, opacity 0.3s ease`,
                 }}
             >
-                {state === "original"
-                    ? "Before — English only"
-                    : state === "translated"
-                      ? "After — Translated on tap"
-                      : "Discovery — inline CTAs"}
-            </p>
+                <div style={{ display: "flex", gap: 8, alignItems: "baseline", marginBottom: 6 }}>
+                    <span style={{ fontFamily: Z, fontStyle: "italic", fontSize: 11, color: C.muted }}>{num}</span>
+                    <p style={{ fontFamily: Z, fontWeight: 700, fontSize: 14, color: C.ink, margin: 0 }}>{label}</p>
+                </div>
+                <p style={{ fontFamily: I, fontSize: 12.5, lineHeight: 1.65, color: C.ink3, margin: 0 }}>{desc}</p>
+            </div>
         </div>
     )
 }
@@ -1405,6 +1254,24 @@ export default function IOSCaseStudy() {
                 }
             },
             { threshold: 0.2 }
+        )
+        obs.observe(el)
+        return () => obs.disconnect()
+    }, [])
+
+    const phonesRef = useRef<HTMLDivElement>(null)
+    const [phonesVis, setPhonesVis] = useState(false)
+    useEffect(() => {
+        const el = phonesRef.current
+        if (!el) return
+        const obs = new IntersectionObserver(
+            ([e]) => {
+                if (e.isIntersecting) {
+                    setPhonesVis(true)
+                    obs.disconnect()
+                }
+            },
+            { threshold: 0.1 }
         )
         obs.observe(el)
         return () => obs.disconnect()
@@ -2079,7 +1946,15 @@ export default function IOSCaseStudy() {
                     >
                         Three states of the feature — from the untranslated review, through a single-tap translation, to the full list view with translation available on every review.
                     </p>
-                    <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
+                    <div
+                        ref={phonesRef}
+                        style={{
+                            display: "flex",
+                            gap: 28,
+                            alignItems: "flex-start",
+                            margin: "0 -40px",
+                        }}
+                    >
                         {[
                             {
                                 src: "/slides/ios-og.png",
@@ -2099,34 +1974,13 @@ export default function IOSCaseStudy() {
                                 num: "03",
                                 desc: "Translation CTAs appear across every review — the feature scales naturally to the full list.",
                             },
-                        ].map((m) => (
-                            <div
+                        ].map((m, i) => (
+                            <PhoneCard
                                 key={m.label}
-                                style={{
-                                    flex: 1,
-                                    display: "flex",
-                                    flexDirection: "column" as const,
-                                    alignItems: "center",
-                                    gap: 20,
-                                }}
-                            >
-                                <img
-                                    src={m.src}
-                                    alt={m.label}
-                                    style={{
-                                        width: "100%",
-                                        height: "auto",
-                                        display: "block",
-                                    }}
-                                />
-                                <div style={{ width: "100%", paddingTop: 4 }}>
-                                    <div style={{ display: "flex", gap: 8, alignItems: "baseline", marginBottom: 6 }}>
-                                        <span style={{ fontFamily: Z, fontStyle: "italic", fontSize: 11, color: C.muted }}>{m.num}</span>
-                                        <p style={{ fontFamily: Z, fontWeight: 700, fontSize: 14, color: C.ink, margin: 0 }}>{m.label}</p>
-                                    </div>
-                                    <p style={{ fontFamily: I, fontSize: 12.5, lineHeight: 1.65, color: C.ink3, margin: 0 }}>{m.desc}</p>
-                                </div>
-                            </div>
+                                {...m}
+                                index={i}
+                                visible={phonesVis}
+                            />
                         ))}
                     </div>
                 </div>
