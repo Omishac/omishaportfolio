@@ -1139,58 +1139,127 @@ function PhoneCard({
     visible: boolean
 }) {
     const [hov, setHov] = useState(false)
-    const spring = "cubic-bezier(0.34,1.56,0.64,1)"
-    const ease = "cubic-bezier(0.22,1,0.36,1)"
+    const [open, setOpen] = useState(false)
+    const spring = "cubic-bezier(0.22,1,0.36,1)"
     const delay = index * 150
     return (
-        <div
-            style={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "column" as const,
-                alignItems: "center",
-                gap: 24,
-                opacity: visible ? 1 : 0,
-                transform: visible ? "none" : "translateY(36px)",
-                transition: `opacity 0.6s ${ease} ${delay}ms, transform 0.7s ${ease} ${delay}ms`,
-            }}
-        >
-            <div
-                onMouseEnter={() => setHov(true)}
-                onMouseLeave={() => setHov(false)}
-                style={{
-                    width: "100%",
-                    transform: hov
-                        ? "translateY(-12px) scale(1.03)"
-                        : "translateY(0) scale(1)",
-                    boxShadow: hov
-                        ? "0 32px 64px rgba(0,0,0,0.18), 0 8px 24px rgba(0,0,0,0.09)"
-                        : "0 4px 16px rgba(0,0,0,0.05)",
-                    transition: `transform 0.5s ${spring}, box-shadow 0.5s ${ease}`,
-                    cursor: "default",
-                }}
-            >
-                <img
+        <>
+            {open && (
+                <Lightbox
                     src={src}
-                    alt={label}
-                    style={{ width: "100%", height: "auto", display: "block" }}
+                    title={label}
+                    caption={desc}
+                    onClose={() => setOpen(false)}
                 />
-            </div>
+            )}
             <div
                 style={{
-                    width: "100%",
-                    transform: hov ? "translateY(-5px)" : "translateY(0)",
-                    opacity: hov ? 1 : 0.68,
-                    transition: `transform 0.45s ${spring}, opacity 0.3s ease`,
+                    flex: 1,
+                    display: "flex",
+                    flexDirection: "column" as const,
+                    gap: 14,
+                    opacity: visible ? 1 : 0,
+                    transform: visible ? "none" : "translateY(36px)",
+                    transition: `opacity 0.6s ${spring} ${delay}ms, transform 0.7s ${spring} ${delay}ms`,
                 }}
             >
-                <div style={{ display: "flex", gap: 8, alignItems: "baseline", marginBottom: 6 }}>
-                    <span style={{ fontFamily: Z, fontStyle: "italic", fontSize: 11, color: C.muted }}>{num}</span>
-                    <p style={{ fontFamily: Z, fontWeight: 700, fontSize: 14, color: C.ink, margin: 0 }}>{label}</p>
+                <div
+                    onMouseEnter={() => setHov(true)}
+                    onMouseLeave={() => setHov(false)}
+                    onClick={() => setOpen(true)}
+                    style={{
+                        position: "relative" as const,
+                        transform: hov ? "translateY(-5px)" : "none",
+                        boxShadow: hov
+                            ? "0 16px 44px rgba(0,0,0,0.1)"
+                            : "0 1px 6px rgba(0,0,0,0.04)",
+                        transition: `transform 0.35s ${spring}, box-shadow 0.35s ${spring}`,
+                        cursor: "zoom-in",
+                    }}
+                >
+                    <img
+                        src={src}
+                        alt={label}
+                        style={{
+                            width: "100%",
+                            height: "auto",
+                            display: "block",
+                            transform: hov ? "scale(1.02)" : "scale(1)",
+                            transition: `transform 0.5s ${spring}`,
+                            transformOrigin: "top center",
+                        }}
+                    />
+                    <div
+                        style={{
+                            position: "absolute" as const,
+                            top: 10,
+                            right: 10,
+                            backgroundColor: "rgba(0,0,0,0.5)",
+                            borderRadius: 6,
+                            padding: "4px 9px",
+                            opacity: hov ? 1 : 0,
+                            transition: "opacity 0.2s",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 4,
+                            pointerEvents: "none" as const,
+                        }}
+                    >
+                        <span
+                            style={{
+                                fontFamily: I,
+                                fontSize: 10,
+                                fontWeight: 600,
+                                color: "rgba(255,255,255,0.9)",
+                                letterSpacing: "0.04em",
+                            }}
+                        >
+                            Expand
+                        </span>
+                    </div>
                 </div>
-                <p style={{ fontFamily: I, fontSize: 12.5, lineHeight: 1.65, color: C.ink3, margin: 0 }}>{desc}</p>
+                <div style={{ display: "flex", gap: 12, alignItems: "flex-start", paddingLeft: 2 }}>
+                    <span
+                        style={{
+                            fontFamily: Z,
+                            fontStyle: "italic",
+                            fontSize: 12,
+                            color: C.muted,
+                            flexShrink: 0,
+                            marginTop: 1,
+                        }}
+                    >
+                        {num}
+                    </span>
+                    <div>
+                        <p
+                            style={{
+                                fontFamily: I,
+                                fontSize: 12,
+                                fontWeight: 700,
+                                color: C.ink,
+                                letterSpacing: "0.04em",
+                                textTransform: "uppercase" as const,
+                                marginBottom: 3,
+                            }}
+                        >
+                            {label}
+                        </p>
+                        <p
+                            style={{
+                                fontFamily: I,
+                                fontSize: 12.5,
+                                lineHeight: 1.6,
+                                color: C.ink3,
+                                margin: 0,
+                            }}
+                        >
+                            {desc}
+                        </p>
+                    </div>
+                </div>
             </div>
-        </div>
+        </>
     )
 }
 
@@ -1502,16 +1571,14 @@ export default function IOSCaseStudy() {
                             </p>
                         </div>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 20, padding: "8px 0" }}>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20, padding: "8px 0" }}>
                         <img
                             src="/slides/ios-original.png"
                             alt="iOS original review experience showing English reviews in a Spanish-language app"
                             style={{
-                                width: "100%",
+                                width: "70%",
                                 height: "auto",
                                 display: "block",
-                                borderRadius: 18,
-                                boxShadow: "0 8px 48px rgba(0,0,0,0.10), 0 2px 12px rgba(0,0,0,0.06)",
                             }}
                         />
                         <p style={{
@@ -1521,11 +1588,11 @@ export default function IOSCaseStudy() {
                             fontSize: 14,
                             color: C.ink3,
                             textAlign: "center",
-                            maxWidth: 560,
+                            maxWidth: 520,
                             lineHeight: 1.65,
-                            margin: "0 auto",
+                            margin: 0,
                         }}>
-                            The original state — product reviews appeared in English even when users had Spanish set as their preferred app language, breaking the consistent localized experience.
+                            Urban Outfitters app showing reviews in Spanish — a non-English speaking user sees English reviews with no way to translate them
                         </p>
                     </div>
                 </div>
@@ -1960,19 +2027,19 @@ export default function IOSCaseStudy() {
                                 src: "/slides/ios-og.png",
                                 label: "Original State",
                                 num: "01",
-                                desc: "Review shown with 'Translate review to Spanish' CTA — user sees English text, translation is optional.",
+                                desc: "The review appears in English only — no translation option visible to Spanish-speaking users",
                             },
                             {
                                 src: "/slides/ios-translated.png",
                                 label: "After Translation",
                                 num: "02",
-                                desc: "One tap translates inline via Apple's API. 'Ver original' lets users toggle back to the source text.",
+                                desc: "One tap translates the review inline — the user sees 'Ver original' to switch back",
                             },
                             {
                                 src: "/slides/ios-discovery.png",
                                 label: "Review List View",
                                 num: "03",
-                                desc: "Translation CTAs appear across every review — the feature scales naturally to the full list.",
+                                desc: "Translation CTAs appear across all reviews giving users full control over every review on the page",
                             },
                         ].map((m, i) => (
                             <PhoneCard
