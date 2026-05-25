@@ -1038,14 +1038,17 @@ export default function AnthropologieCaseStudy() {
                                 fontStyle: "italic",
                                 fontWeight: 300,
                                 fontSize: "19px",
-                                marginBottom: "48px",
+                                marginBottom: "40px",
                                 color: C.ink3,
                                 maxWidth: "640px",
                                 lineHeight: 1.6,
                             }}
                         >
-                            Designing for faster decisions, stronger engagement,
-                            and connected retail experiences
+                            Mobile commerce is projected to reach $856B by 2027.
+                            I led a data-driven audit of Anthropologie's mobile
+                            experience — identifying conversion gaps and
+                            delivering five strategic recommendations to the
+                            digital analytics team.
                         </p>
                         <div
                             style={{
@@ -1353,12 +1356,14 @@ export default function AnthropologieCaseStudy() {
                 <FadeIn>
                     <SectionLabel
                         step="03 — Benchmarking"
-                        title="How Anthropologie compares on mobile web"
+                        title="Where Anthropologie was falling behind on mobile"
                         sub="Homepage and checkout benchmarked against Everlane, Lululemon, and Madewell"
                     />
                     <Body>
                         I benchmarked Anthropologie's mobile web experience
-                        across two critical journeys against three competitors.
+                        across two critical journeys — homepage and checkout —
+                        against three direct competitors to identify specific
+                        capability gaps.
                     </Body>
                     <div
                         style={{
@@ -1629,7 +1634,7 @@ export default function AnthropologieCaseStudy() {
                 <FadeIn>
                     <SectionLabel
                         step="05 — Findings"
-                        title="Patterns that shaped the direction of recommendations"
+                        title="What the data revealed about mobile drop-off"
                         sub="Click each card to highlight"
                     />
                     <div style={{ display: "flex", gap: "10px" }}>
@@ -1648,8 +1653,8 @@ export default function AnthropologieCaseStudy() {
                 <Divider />
                 <FadeIn>
                     <SectionLabel
-                        step="06 — Insight"
-                        title="Mobile friction wasn't just a usability issue"
+                        step="06 — Strategic Insight"
+                        title="Mobile friction is a revenue problem"
                     />
                     <div
                         style={{
@@ -1670,10 +1675,11 @@ export default function AnthropologieCaseStudy() {
                                 margin: 0,
                             }}
                         >
-                            Mobile friction wasn't just a usability issue — it
-                            was slowing down decision-making. Every extra step,
-                            unclear interaction, or disconnected touchpoint
-                            reduced confidence and momentum toward purchase.
+                            Mobile friction isn't just a usability issue — it's
+                            a conversion problem. Every extra step, unclear
+                            interaction, or missing payment option reduces
+                            purchase confidence and pushes users toward
+                            competitors who've solved it.
                         </p>
                     </div>
                 </FadeIn>
@@ -1710,18 +1716,21 @@ export default function AnthropologieCaseStudy() {
                 <FadeIn>
                     <SectionLabel
                         step="08 — Impact"
-                        title="Positioning mobile as a driver of conversion and loyalty"
+                        title="Positioning mobile as a strategic growth lever"
                         sub="Delivered to Anthropologie's digital analytics team"
                     />
                     <Body>
-                        I presented these recommendations to Anthropologie's
-                        digital team, supported by A/B testing results,
-                        behavioral data, and competitive insights.
+                        I delivered these recommendations to Anthropologie's
+                        digital analytics team, backed by A/B testing results,
+                        competitive benchmarking data, and behavioral insights.
+                        The five changes I proposed addressed both immediate
+                        conversion friction and longer-term loyalty drivers.
                     </Body>
                     <Body>
-                        The work positioned mobile optimization as a driver of
-                        both conversion and long-term customer loyalty — not
-                        just a usability improvement.
+                        The framing I drove throughout was that mobile
+                        optimization isn't a UX nice-to-have — it's a
+                        revenue decision. In a channel growing toward $856B,
+                        every point of friction is measurable loss.
                     </Body>
                 </FadeIn>
 
@@ -1730,13 +1739,15 @@ export default function AnthropologieCaseStudy() {
                 <FadeIn>
                     <SectionLabel
                         step="09 — Reflection"
-                        title="Translating data into decisions that move the business"
+                        title="What I learned about connecting UX to business outcomes"
                     />
                     <Body>
-                        This project strengthened my ability to translate data
-                        into actionable product decisions, connect UX
-                        improvements to business outcomes, and communicate
-                        insights clearly across cross-functional teams.
+                        This project sharpened my ability to translate data
+                        into decisions that actually move the business —
+                        not just improve the experience. I learned to frame
+                        UX work in terms of conversion, retention, and revenue
+                        so that recommendations land with product and analytics
+                        teams, not just designers.
                     </Body>
                     <div
                         style={{
@@ -1747,9 +1758,9 @@ export default function AnthropologieCaseStudy() {
                         }}
                     />
                     {[
-                        "Translate data into actionable product decisions",
-                        "Connect UX improvements to business outcomes",
-                        "Communicate insights clearly across cross-functional teams",
+                        "I defined hypotheses before testing — not after — which made the A/B results defensible, not post-hoc",
+                        "I tied every UX recommendation to a business metric: Apple Pay adoption, checkout drop-off, scroll depth",
+                        "I learned that the most persuasive design argument isn't 'it looks better' — it's 'here's what it costs us not to fix this'",
                     ].map((t, i) => (
                         <ReflRow key={i} text={t} />
                     ))}

@@ -204,6 +204,19 @@ function Hero({
                         people experience them
                     </span>
                 </h1>
+                <p
+                    style={{
+                        fontFamily: I,
+                        fontSize: phone ? 12 : 13,
+                        fontWeight: 500,
+                        color: C.muted,
+                        letterSpacing: "0.06em",
+                        textTransform: "uppercase",
+                        marginTop: phone ? 20 : 28,
+                    }}
+                >
+                    UX &amp; Digital Strategy &nbsp;·&nbsp; Turning user insights into product decisions
+                </p>
             </div>
 
             {/* Centered label + inline pink arrow to the right */}
@@ -534,7 +547,7 @@ function WorkSection({
         >
             <div style={{ maxWidth: maxW, width: "100%" }}>
                 <SectionLabel
-                    tag="Projects, process & outcomes"
+                    tag="UX Strategy · Research · Digital Commerce"
                     title="Inside My Work"
                     phone={phone}
                     tablet={tablet}
@@ -729,7 +742,7 @@ function Footer({
                             target={ext ? "_blank" : "_self"}
                             rel="noreferrer"
                             style={{
-                                fontFamily: YB,
+                                fontFamily: I,
                                 fontSize: phone ? 13 : 14,
                                 color: C.ink3,
                                 textDecoration: "none",

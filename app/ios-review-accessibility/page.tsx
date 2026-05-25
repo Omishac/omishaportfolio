@@ -1395,7 +1395,6 @@ export default function IOSCaseStudy() {
     const phoneOriginalImage = undefined
     const phoneTranslatedImage = undefined
     const phoneDiscoveryImage = undefined
-    const finalImage = undefined
     const statsRef = useRef<HTMLDivElement>(null)
     const [statsVis, setStatsVis] = useState(false)
     useEffect(() => {
@@ -1471,11 +1470,13 @@ export default function IOSCaseStudy() {
                             color: C.ink3,
                             lineHeight: 1.55,
                             maxWidth: 640,
-                            marginBottom: 44,
+                            marginBottom: 32,
                         }}
                     >
-                        Designing an on-demand translation experience using
-                        Apple's Translation API
+                        Non-English speakers are 3× more likely to abandon
+                        a purchase when reviews aren't in their language. I
+                        designed an on-demand translation feature using
+                        Apple's API to close that gap across URBN's global apps.
                     </p>
                     <div
                         style={{
@@ -1536,7 +1537,7 @@ export default function IOSCaseStudy() {
                 {/* ── 01 ECOSYSTEM ── */}
                 <Divider />
                 <div ref={eco.ref} style={eco.style}>
-                    <Pill label="01 — The Ecosystem" />
+                    <Pill label="01 — Business Context" />
                     <h2
                         style={{
                             fontFamily: Z,
@@ -1548,7 +1549,7 @@ export default function IOSCaseStudy() {
                             lineHeight: 1.1,
                         }}
                     >
-                        Designing for a Global Retail Ecosystem
+                        Why URBN's global scale created a localization gap
                     </h2>
                     <p
                         style={{
@@ -1560,10 +1561,11 @@ export default function IOSCaseStudy() {
                             marginBottom: 40,
                         }}
                     >
-                        URBN is a global lifestyle retail company operating
-                        Anthropologie, Free People, and Urban Outfitters —
-                        serving diverse international markets where mobile users
-                        interact with the apps in multiple languages.
+                        URBN operates Anthropologie, Free People, and Urban
+                        Outfitters across international markets — serving
+                        millions of shoppers who use the apps in their native
+                        language. The apps were built to be multilingual, but
+                        one critical surface wasn't: product reviews.
                     </p>
                     <img
                         src="/slides/ios-ecosystem.png"
@@ -1870,7 +1872,7 @@ export default function IOSCaseStudy() {
                             lineHeight: 1.1,
                         }}
                     >
-                        Designing within platform & performance limits
+                        How technical constraints shaped every design decision
                     </h2>
                     <p
                         style={{
@@ -1882,8 +1884,9 @@ export default function IOSCaseStudy() {
                             marginBottom: 24,
                         }}
                     >
-                        Integrating Apple's Translation API came with real
-                        constraints that shaped every design decision:
+                        Integrating Apple's Translation API wasn't just a
+                        technical task — each constraint directly influenced
+                        the UX strategy and interaction model I designed:
                     </p>
                     <div style={{ display: "flex", gap: 10, marginBottom: 28 }}>
                         {[
@@ -2008,7 +2011,7 @@ export default function IOSCaseStudy() {
                             lineHeight: 1.1,
                         }}
                     >
-                        On-Demand Review Translation via Apple's API
+                        User-controlled translation that respects platform limits
                     </h2>
                     <p
                         style={{
@@ -2020,9 +2023,10 @@ export default function IOSCaseStudy() {
                             marginBottom: 24,
                         }}
                     >
-                        An on-demand translation system embedded directly within
-                        product reviews — keeping the experience lightweight,
-                        intentional, and user-driven.
+                        I designed an on-demand translation system embedded
+                        directly within product reviews — giving users
+                        control while working within Apple's API constraints
+                        to keep the experience lightweight and native.
                     </p>
                     <div style={{ display: "flex", gap: 10, marginBottom: 28 }}>
                         {[
@@ -2182,7 +2186,7 @@ export default function IOSCaseStudy() {
                             lineHeight: 1.1,
                         }}
                     >
-                        A more inclusive, consistent global experience
+                        Closing the accessibility gap for millions of global shoppers
                     </h2>
                     <p
                         style={{
@@ -2227,21 +2231,6 @@ export default function IOSCaseStudy() {
                             <ResultCard key={r.num} {...r} />
                         ))}
                     </div>
-                    <div
-                        style={{
-                            backgroundColor: C.ink,
-                            borderRadius: 18,
-                            padding: "28px 36px",
-                        }}
-                    >
-                        <Slot
-                            src={finalImage}
-                            label="Add your final deliverable — before/after comparison, prototype screenshot, or hero handoff visual"
-                            height={400}
-                            radius={12}
-                            dark
-                        />
-                    </div>
                 </div>
 
                 {/* ── 11 REFLECTION ── */}
@@ -2259,7 +2248,7 @@ export default function IOSCaseStudy() {
                             lineHeight: 1.1,
                         }}
                     >
-                        Designing within constraints to remove friction
+                        Constraint-driven design is still good design
                     </h2>
                     <p
                         style={{
@@ -2271,8 +2260,13 @@ export default function IOSCaseStudy() {
                             marginBottom: 32,
                         }}
                     >
-                        This project reinforced that good UX lives in the
-                        constraints — not despite them.
+                        This project reinforced that the best design decisions
+                        often emerge from working within limits. iOS 18-only
+                        support and the no-bulk-translation constraint weren't
+                        obstacles — they defined the user experience. By leaning
+                        into on-demand, user-triggered translation, I delivered
+                        a solution that felt native and intentional, not
+                        bolted-on. The constraint became the strategy.
                     </p>
                     <div
                         style={{
@@ -2307,8 +2301,9 @@ export default function IOSCaseStudy() {
                                 margin: 0,
                             }}
                         >
-                            Good UX isn't just about adding features — it's
-                            about removing friction at exactly the right moment.
+                            Accessibility isn't a feature you add at the
+                            end — it's a signal of how seriously a product
+                            takes its global users.
                         </p>
                     </div>
                 </div>

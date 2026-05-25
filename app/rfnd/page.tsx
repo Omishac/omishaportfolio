@@ -82,7 +82,7 @@ function SectionLabel({
     sub?: string
 }) {
     return (
-        <div style={{ marginBottom: "8px" }}>
+        <div style={{ marginBottom: "24px" }}>
             <p
                 style={{
                     fontFamily: INTER,
@@ -100,7 +100,7 @@ function SectionLabel({
                 style={{
                     fontFamily: Z,
                     fontSize: "30px",
-                    fontWeight: 400,
+                    fontWeight: 700,
                     letterSpacing: "-0.025em",
                     color: C.ink,
                     marginBottom: "6px",
@@ -974,16 +974,37 @@ export default function RFNDCaseStudy() {
                                 fontStyle: "italic",
                                 fontWeight: 300,
                                 fontSize: "21px",
-                                marginBottom: "52px",
+                                marginBottom: "40px",
                                 color: C.ink3,
                                 maxWidth: "720px",
                                 lineHeight: 1.6,
                             }}
                         >
-                            How can digital shopping feel more human, intuitive,
-                            emotionally engaging, and personalized — without
-                            overwhelming users?
+                            A UX strategy capstone exploring why emotional
+                            engagement is a business problem — and how
+                            mood-aware design drives loyalty beyond the transaction.
                         </p>
+                        <div style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "32px",
+                            backgroundColor: C.surface,
+                            borderRadius: "10px",
+                            padding: "20px 28px",
+                            marginBottom: "52px",
+                            border: `1px solid ${C.border}`,
+                        }}>
+                            {[
+                                { stat: "9 months", label: "of research & design" },
+                                { stat: "4 features", label: "designed & validated" },
+                                { stat: "2 modes", label: "intent + discovery" },
+                            ].map(({ stat, label }) => (
+                                <div key={stat} style={{ textAlign: "center" }}>
+                                    <p style={{ fontFamily: Z, fontWeight: 700, fontSize: "22px", color: C.ink, margin: "0 0 4px", letterSpacing: "-0.02em" }}>{stat}</p>
+                                    <p style={{ fontFamily: INTER, fontSize: "10px", color: C.muted, margin: 0, letterSpacing: "0.05em", textTransform: "uppercase" }}>{label}</p>
+                                </div>
+                            ))}
+                        </div>
                         <div
                             style={{
                                 display: "flex",
@@ -1039,24 +1060,23 @@ export default function RFNDCaseStudy() {
                 <Divider />
                 <FadeIn>
                     <SectionLabel
-                        step="01 — Context"
-                        title="The state of modern e-commerce"
-                        sub="Optimized for speed and scale—not emotional experience"
+                        step="01 — Business Problem"
+                        title="Emotional engagement is a commerce problem, not just a design problem"
+                        sub="E-commerce platforms optimize for efficiency at the expense of connection"
                     />
                     <Body>
-                        Modern e-commerce platforms optimize for efficiency, but
-                        often create experiences that feel transactional,
-                        overwhelming, and emotionally disconnected. Consumers
-                        face decision fatigue from endless scrolling, generic
-                        recommendations, overloaded product pages, and weak
-                        emotional connection with brands.
+                        Modern e-commerce is losing the emotional dimension of
+                        retail. Platforms optimize for speed and conversion, but
+                        the result is experiences that feel transactional,
+                        overwhelming, and forgettable — driving decision fatigue,
+                        weak brand loyalty, and high return rates.
                     </Body>
                     <Body>
-                        At the same time, physical retail environments still
-                        create emotional experiences through discovery,
-                        atmosphere, storytelling, and human interaction. RFND
-                        explores how digital commerce can thoughtfully
-                        reintroduce those emotional and experiential elements.
+                        Physical retail creates emotional experiences through
+                        discovery, atmosphere, and human interaction. The
+                        business question RFND set out to answer: how do you
+                        reintroduce those elements digitally — without
+                        sacrificing the efficiency that makes e-commerce work?
                     </Body>
                 </FadeIn>
 
@@ -1064,15 +1084,15 @@ export default function RFNDCaseStudy() {
                 <FadeIn>
                     <SectionLabel
                         step="02 — Research Question"
-                        title="Exploring emotion in digital commerce"
+                        title="Defining the strategic question"
                     />
                     <InsightQuote text="How do emotional responses elicited by e-commerce design and interactive features influence consumer purchasing decisions, impulse buying behavior, and brand loyalty?" />
                     <Body>
-                        This central question guided the entire project,
-                        exploring whether shopping interfaces could adapt to
-                        emotional intent rather than only transactional intent,
-                        and how personalization could feel more emotionally
-                        intelligent rather than algorithmic.
+                        This question reframed the problem from a UX challenge
+                        into a business opportunity: if shopping interfaces
+                        could adapt to emotional intent rather than only
+                        transactional intent, personalization could drive
+                        deeper loyalty — not just higher click-through rates.
                     </Body>
                 </FadeIn>
 
@@ -1090,19 +1110,21 @@ export default function RFNDCaseStudy() {
                 <FadeIn>
                     <SectionLabel
                         step="04 — Key Insight"
-                        title="Users shop in two distinct emotional modes"
+                        title="Users shop in two distinct modes — and most platforms serve neither well"
                     />
                     <Body>
-                        Research revealed that users often shop in two distinct
-                        emotional modes—intent shopping (users know exactly what
-                        they need) and exploratory shopping (users browse
-                        emotionally). Most platforms force both types of users
-                        into the same experience.
+                        Research revealed that users shop in two fundamentally
+                        different emotional modes: intent mode (goal-driven,
+                        efficiency-focused) and discovery mode (exploratory,
+                        emotionally engaged). Most platforms force both types
+                        into an identical experience — over-serving one and
+                        frustrating the other.
                     </Body>
                     <Body>
-                        RFND aimed to adapt the interface based on shopping
-                        intention, creating context-aware experiences that match
-                        user mindset.
+                        The strategic decision was to design a context-aware
+                        interface that adapts to shopping intention — reducing
+                        friction for intent shoppers while deepening engagement
+                        for discovery shoppers.
                     </Body>
                     <ShoppingModeToggle />
                 </FadeIn>
@@ -1110,17 +1132,18 @@ export default function RFNDCaseStudy() {
                 <Divider />
                 <FadeIn>
                     <SectionLabel
-                        step="05 — Mood-Based Personalization"
-                        title="Shopping based on emotional state"
+                        step="05 — Design Decision"
+                        title="Mood-based personalization over algorithmic tracking"
                         sub="Swipe through different mood categories"
                     />
-                    <InsightQuote text="Personalization should feel emotionally aware—not algorithmically invasive." />
+                    <InsightQuote text="Personalization should feel emotionally aware — not algorithmically invasive." />
                     <Body>
-                        Instead of relying only on behavioral tracking, RFND
-                        explored personalization through mood, occasion,
-                        aesthetic intent, lifestyle values, and emotional
-                        context. Users could browse based on how they feel—not
-                        just what they want.
+                        I designed a mood-first personalization system driven
+                        by what users voluntarily share, not what's inferred
+                        from behavioral data. Instead of recommending based on
+                        browsing history alone, RFND lets users define their
+                        emotional context — occasion, mood, aesthetic intent —
+                        and adapts the experience accordingly.
                     </Body>
                     <MoodCarousel />
                 </FadeIn>
@@ -1128,8 +1151,8 @@ export default function RFNDCaseStudy() {
                 <Divider />
                 <FadeIn>
                     <SectionLabel
-                        step="06 — Core Features"
-                        title="Building emotionally intelligent commerce"
+                        step="06 — Feature Strategy"
+                        title="Four features designed to drive engagement and loyalty"
                         sub="Click each feature to explore"
                     />
                     <FeatureCarousel />
@@ -1138,14 +1161,16 @@ export default function RFNDCaseStudy() {
                 <Divider />
                 <FadeIn>
                     <SectionLabel
-                        step="07 — UX Strategy"
-                        title="Balancing functional and emotional design"
+                        step="07 — Strategic Framework"
+                        title="Dual-mode design: functional efficiency meets emotional depth"
                     />
                     <Body>
-                        The UX strategy behind RFND focused on balancing
-                        functional efficiency with emotional engagement,
-                        creating experiences that felt both useful and
-                        meaningful.
+                        The core strategic challenge was avoiding a false choice
+                        between utility and engagement. I defined a dual-mode
+                        framework where neither function compromises the other —
+                        functional UX reduces friction and drives conversion,
+                        while emotional UX builds the brand affinity that keeps
+                        users coming back.
                     </Body>
                     <div
                         style={{
@@ -1233,20 +1258,21 @@ export default function RFNDCaseStudy() {
                 <FadeIn>
                     <SectionLabel
                         step="08 — Reflection"
-                        title="Designing for emotion, intentionality, and connection"
+                        title="What this project taught me about strategy-first design"
                     />
                     <Body>
-                        RFND ultimately explored a larger question: What happens
-                        when e-commerce is designed not only for
-                        transactions—but for emotion, intentionality, and human
-                        connection?
+                        RFND pushed me to think about design as a business
+                        lever, not just a craft. Every feature decision was
+                        evaluated against two questions: does this reduce a
+                        real user friction, and does it move a metric that
+                        matters — retention, basket size, return rate?
                     </Body>
                     <Body>
-                        The project challenged me to think beyond screens and
-                        interfaces, and instead design for how people feel while
-                        shopping. It reinforced my belief that the future of
-                        commerce lies at the intersection of data, design,
-                        psychology, technology, and human emotion.
+                        The project reinforced a conviction I carry into every
+                        engagement: the future of commerce lies at the
+                        intersection of data, psychology, and design — and the
+                        most durable products are the ones that understand
+                        how people feel, not just what they click.
                     </Body>
                     <div
                         style={{
@@ -1262,14 +1288,14 @@ export default function RFNDCaseStudy() {
                         <span
                             style={{
                                 fontFamily: Z,
-                                fontSize: "28px",
-                                lineHeight: "1",
-                                color: "#fff",
-                                opacity: 0.35,
+                                fontSize: "48px",
+                                lineHeight: "0.8",
+                                color: "rgba(255,255,255,0.12)",
                                 marginTop: "4px",
+                                flexShrink: 0,
                             }}
                         >
-                            *
+                            "
                         </span>
                         <p
                             style={{
