@@ -740,6 +740,124 @@ function ReflectionRow({ text }: { text: string }) {
 }
 
 
+function InstaPhoneCard({ src, label, filename }: { src?: string; label: string; filename: string }) {
+    return (
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
+            <div
+                style={{
+                    width: "100%",
+                    maxWidth: 220,
+                    backgroundColor: "#0E0E0E",
+                    borderRadius: 36,
+                    padding: "10px 7px 18px",
+                    boxShadow: "0 24px 64px rgba(0,0,0,0.22), inset 0 0 0 1px rgba(255,255,255,0.07)",
+                }}
+            >
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: 8 }}>
+                    <div style={{ width: 52, height: 4, backgroundColor: "rgba(255,255,255,0.1)", borderRadius: 2 }} />
+                </div>
+                <div style={{ backgroundColor: "#FAFAFA", borderRadius: 20, overflow: "hidden" }}>
+                    <div
+                        style={{
+                            padding: "8px 10px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            backgroundColor: "#fff",
+                            borderBottom: "1px solid rgba(0,0,0,0.05)",
+                        }}
+                    >
+                        <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                            <div
+                                style={{
+                                    width: 24,
+                                    height: 24,
+                                    borderRadius: "50%",
+                                    background: "linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7)",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                }}
+                            >
+                                <div style={{ width: 18, height: 18, borderRadius: "50%", backgroundColor: "#fff" }} />
+                            </div>
+                            <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 8, color: "#111" }}>boardandbrew</span>
+                        </div>
+                        <span style={{ fontFamily: INTER, fontSize: 11, color: "#111", letterSpacing: "0.08em" }}>···</span>
+                    </div>
+                    {src ? (
+                        <img src={src} alt={label} style={{ width: "100%", aspectRatio: "1/1", objectFit: "cover", display: "block" }} />
+                    ) : (
+                        <div
+                            style={{
+                                width: "100%",
+                                aspectRatio: "1/1",
+                                backgroundColor: C.surface,
+                                display: "flex",
+                                flexDirection: "column" as const,
+                                alignItems: "center",
+                                justifyContent: "center",
+                                gap: 8,
+                            }}
+                        >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.16)" strokeWidth="1.5">
+                                <rect x="3" y="3" width="18" height="18" rx="3" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <path d="M21 15l-5-5L5 21" />
+                            </svg>
+                            <span
+                                style={{
+                                    fontFamily: INTER,
+                                    fontSize: 7,
+                                    color: "rgba(0,0,0,0.22)",
+                                    textAlign: "center" as const,
+                                    lineHeight: 1.4,
+                                    maxWidth: 80,
+                                }}
+                            >
+                                {filename}
+                            </span>
+                        </div>
+                    )}
+                    <div style={{ padding: "8px 10px 10px", backgroundColor: "#fff" }}>
+                        <div style={{ display: "flex", gap: 8, marginBottom: 5, alignItems: "center" }}>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                            </svg>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                            </svg>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: "auto" }}>
+                                <line x1="22" y1="2" x2="11" y2="13" />
+                                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                            </svg>
+                        </div>
+                        <p style={{ fontFamily: INTER, fontSize: 7.5, fontWeight: 700, color: "#111", margin: "0 0 2px" }}>boardandbrew</p>
+                        <p style={{ fontFamily: INTER, fontSize: 7.5, color: "#555", margin: 0, lineHeight: 1.3 }}>Happy hour vibes ✨</p>
+                    </div>
+                </div>
+                <div style={{ display: "flex", justifyContent: "center", marginTop: 10 }}>
+                    <div style={{ width: 40, height: 3, backgroundColor: "rgba(255,255,255,0.12)", borderRadius: 2 }} />
+                </div>
+            </div>
+            <p
+                style={{
+                    fontFamily: INTER,
+                    fontWeight: 700,
+                    fontSize: 10,
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase" as const,
+                    color: C.ink,
+                    textAlign: "center" as const,
+                    margin: 0,
+                }}
+            >
+                {label}
+            </p>
+        </div>
+    )
+}
+
 export default function BoardAndBrewCaseStudy() {
     const { ref: metricsRef, visible: metricsVisible } = useInView(0.2)
     const [activeRec, setActiveRec] = useState<number | null>(null)
@@ -778,7 +896,7 @@ export default function BoardAndBrewCaseStudy() {
                 style={{
                     maxWidth: 1040,
                     margin: "0 auto",
-                    padding: "0 80px 160px",
+                    padding: "0 80px 80px",
                 }}
             >
                 {/* ── HERO ── */}
@@ -1085,6 +1203,127 @@ export default function BoardAndBrewCaseStudy() {
                     </Body>
                 </FadeIn>
 
+                {/* ── ORGANIC CONTENT ── */}
+                <Divider />
+                <FadeIn>
+                    <SectionLabel
+                        step="03 — Organic Content"
+                        title="Three posts published before launching paid ads to build credibility"
+                    />
+                    <Body>
+                        Before running paid ads, I revived The Board & Brew's
+                        Instagram presence with three organic posts — establishing
+                        social proof so new users discovering the account through
+                        ads would trust what they saw.
+                    </Body>
+                    <div
+                        style={{
+                            display: "flex",
+                            gap: 28,
+                            marginTop: 36,
+                            justifyContent: "center",
+                        }}
+                    >
+                        <InstaPhoneCard
+                            label="Post 01 — Food & Drinks"
+                            filename="brew-post-1.png"
+                        />
+                        <InstaPhoneCard
+                            label="Post 02 — Board Game Culture"
+                            filename="brew-post-2.png"
+                        />
+                        <InstaPhoneCard
+                            label="Post 03 — Atmosphere"
+                            filename="brew-post-3.png"
+                        />
+                    </div>
+                    <p
+                        style={{
+                            fontFamily: INTER,
+                            fontStyle: "italic",
+                            fontSize: 13,
+                            color: C.muted,
+                            textAlign: "center",
+                            marginTop: 24,
+                            marginBottom: 0,
+                        }}
+                    >
+                        Published November 2–11 to establish social proof before paid promotion
+                    </p>
+                </FadeIn>
+
+                {/* ── THE AD ── */}
+                <Divider />
+                <FadeIn>
+                    <SectionLabel
+                        step="04 — The Ad Creative"
+                        title="The hero ad — Happy Hour promotion"
+                    />
+                    <Body>
+                        The primary paid creative featured a Happy Hour promotion
+                        offering 25% off beer, wine & cocktails. It ran as both
+                        an Instagram Story and Feed placement, designed to be
+                        eye-catching and immediately legible while scrolling.
+                    </Body>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: 24,
+                            marginTop: 32,
+                        }}
+                    >
+                        <div
+                            style={{
+                                width: "55%",
+                                backgroundColor: C.surface,
+                                borderRadius: 20,
+                                border: `1.5px dashed ${C.border}`,
+                                aspectRatio: "4/5",
+                                display: "flex",
+                                flexDirection: "column" as const,
+                                alignItems: "center",
+                                justifyContent: "center",
+                                gap: 12,
+                                boxShadow: "0 8px 48px rgba(0,0,0,0.07)",
+                            }}
+                        >
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.14)" strokeWidth="1.5">
+                                <rect x="3" y="3" width="18" height="18" rx="3" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <path d="M21 15l-5-5L5 21" />
+                            </svg>
+                            <p
+                                style={{
+                                    fontFamily: INTER,
+                                    fontSize: 11,
+                                    color: "rgba(0,0,0,0.22)",
+                                    textAlign: "center",
+                                    margin: 0,
+                                }}
+                            >
+                                brew-ad.png
+                            </p>
+                        </div>
+                        <p
+                            style={{
+                                fontFamily: Z,
+                                fontStyle: "italic",
+                                fontWeight: 300,
+                                fontSize: 14,
+                                color: C.ink3,
+                                textAlign: "center",
+                                maxWidth: 520,
+                                lineHeight: 1.65,
+                                margin: 0,
+                            }}
+                        >
+                            Happy Hour promotion ad — 25% off beer, wine & cocktails — designed for Instagram Story and Feed placements
+                        </p>
+                    </div>
+                </FadeIn>
+
                 {/* ── 06 RESULTS ── */}
                 <Divider />
                 <FadeIn>
@@ -1285,6 +1524,96 @@ export default function BoardAndBrewCaseStudy() {
                     </div>
                 </FadeIn>
             </div>
+
+            {/* ── FINAL PRESENTATION ── */}
+            <FadeIn>
+                <div
+                    style={{
+                        backgroundColor: C.ink,
+                        padding: "100px 80px 120px",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: 48,
+                    }}
+                >
+                    <div style={{ textAlign: "center" }}>
+                        <p
+                            style={{
+                                fontFamily: INTER,
+                                fontSize: 10,
+                                fontWeight: 700,
+                                letterSpacing: "0.12em",
+                                textTransform: "uppercase",
+                                color: "rgba(255,255,255,0.28)",
+                                marginBottom: 16,
+                            }}
+                        >
+                            Final Deliverable
+                        </p>
+                        <h2
+                            style={{
+                                fontFamily: Z,
+                                fontSize: "clamp(32px,4vw,48px)",
+                                fontWeight: 700,
+                                letterSpacing: "-0.03em",
+                                color: "#fff",
+                                margin: 0,
+                                lineHeight: 1.06,
+                            }}
+                        >
+                            Full Campaign Presentation
+                        </h2>
+                    </div>
+                    <div
+                        style={{
+                            width: "100%",
+                            maxWidth: 800,
+                            backgroundColor: "rgba(255,255,255,0.04)",
+                            borderRadius: 16,
+                            border: "1.5px dashed rgba(255,255,255,0.1)",
+                            aspectRatio: "16/9",
+                            display: "flex",
+                            flexDirection: "column" as const,
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: 14,
+                        }}
+                    >
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth="1.5">
+                            <rect x="3" y="3" width="18" height="18" rx="3" />
+                            <circle cx="8.5" cy="8.5" r="1.5" />
+                            <path d="M21 15l-5-5L5 21" />
+                        </svg>
+                        <p
+                            style={{
+                                fontFamily: INTER,
+                                fontSize: 12,
+                                color: "rgba(255,255,255,0.22)",
+                                textAlign: "center",
+                                margin: 0,
+                            }}
+                        >
+                            brew-presentation.png
+                        </p>
+                    </div>
+                    <p
+                        style={{
+                            fontFamily: Z,
+                            fontStyle: "italic",
+                            fontWeight: 300,
+                            fontSize: 17,
+                            color: "rgba(255,255,255,0.4)",
+                            textAlign: "center",
+                            maxWidth: 540,
+                            lineHeight: 1.65,
+                            margin: 0,
+                        }}
+                    >
+                        Complete campaign strategy, creative assets, and performance analysis
+                    </p>
+                </div>
+            </FadeIn>
         </div>
     )
 }
