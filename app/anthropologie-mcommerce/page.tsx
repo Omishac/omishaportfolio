@@ -254,11 +254,13 @@ function TrendCard({
     what,
     why,
     icon,
+    img,
 }: {
     title: string
     what: string
     why: string
     icon: string
+    img?: string
 }) {
     const [open, setOpen] = useState(false)
     const [hov, setHov] = useState(false)
@@ -291,12 +293,25 @@ function TrendCard({
                     fontSize: "16px",
                     fontWeight: 700,
                     color: open ? "#fff" : C.ink,
-                    marginBottom: "12px",
+                    marginBottom: img ? "16px" : "12px",
                     lineHeight: 1.3,
                 }}
             >
                 {title}
             </p>
+            {img && (
+                <img
+                    src={img}
+                    alt={title}
+                    style={{
+                        width: "100%",
+                        height: "auto",
+                        display: "block",
+                        borderRadius: 8,
+                        marginBottom: 14,
+                    }}
+                />
+            )}
             <div
                 style={{
                     overflow: "hidden",
@@ -1297,12 +1312,14 @@ export default function AnthropologieCaseStudy() {
                             icon="📱"
                             what="AR overlays digital content in the real world through smartphones, tablets, and AR glasses"
                             why="Allows customers to engage with products and reduces return rates — Nike's foot scanner is a benchmark"
+                            img="/slides/ARtryon.png"
                         />
                         <TrendCard
                             title="App-Exclusive Perks"
                             icon="⭐"
                             what="Special benefits and incentives available only to app customers"
                             why="Entices app downloads and drives customer loyalty — Nike Member Rewards is a strong model"
+                            img="/slides/appxclusive.png"
                         />
                     </div>
                     <p style={{
@@ -1479,25 +1496,33 @@ export default function AnthropologieCaseStudy() {
                         />
 
                     </div>
-                    {/* Homepage phone row */}
+                    {/* Homepage benchmarking image */}
                     <div style={{ marginTop: "48px" }}>
-                        <p style={{
-                            fontFamily: INTER,
-                            fontSize: "10px",
-                            fontWeight: 700,
-                            textTransform: "uppercase",
-                            letterSpacing: "0.1em",
-                            color: C.muted,
-                            marginBottom: "32px",
-                        }}>
-                            Homepage
+                        <img
+                            src="/slides/homepage.png"
+                            alt="Homepage benchmarking across Anthropologie, Everlane, Lululemon, and Madewell"
+                            style={{
+                                width: "100%",
+                                height: "auto",
+                                display: "block",
+                                borderRadius: 14,
+                                boxShadow: "0 4px 32px rgba(0,0,0,0.09)",
+                            }}
+                        />
+                        <p
+                            style={{
+                                fontFamily: Z,
+                                fontStyle: "italic",
+                                fontWeight: 300,
+                                fontSize: 13,
+                                color: C.ink3,
+                                textAlign: "center",
+                                margin: "14px 0 0",
+                                lineHeight: 1.6,
+                            }}
+                        >
+                            Homepage benchmarking — Anthropologie vs Everlane, Lululemon, and Madewell
                         </p>
-                        <div style={{ display: "flex", gap: "16px", justifyContent: "space-between" }}>
-                            <PhoneFrame src={IMGS.anthroHome}    alt="Anthropologie homepage" label="Anthropologie" width={165} />
-                            <PhoneFrame src={IMGS.everlaneHome}  alt="Everlane homepage"       label="Everlane"      width={165} />
-                            <PhoneFrame src={IMGS.lululemonHome} alt="Lululemon homepage"      label="Lululemon"     width={165} />
-                            <PhoneFrame src={IMGS.madewellHome}  alt="Madewell homepage"       label="Madewell"      width={165} />
-                        </div>
                     </div>
                     {/* Checkout phone row */}
                     <div style={{ marginTop: "56px", marginBottom: "16px" }}>
