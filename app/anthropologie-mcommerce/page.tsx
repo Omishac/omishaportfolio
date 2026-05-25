@@ -551,10 +551,12 @@ function ABCard({
 }
 
 // ── Finding card ───────────────────────────────────────────────────────────────
-function FindingCard({ num, title, body, icon, active, onClick }: any) {
+function FindingCard({ num, title, body, icon, active, onClick, onMouseEnter, onMouseLeave }: any) {
     return (
         <div
             onClick={onClick}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
             style={{
                 flex: 1,
                 borderRadius: "10px",
@@ -943,6 +945,13 @@ function StatCell({ pct, lbl, i, total }: { pct: string; lbl: string; i: number;
 export default function AnthropologieCaseStudy() {
     const [activeFinding, setActiveFinding] = useState(0)
     const [activeRec, setActiveRec] = useState<number | null>(null)
+    const [isDesktop, setIsDesktop] = useState(true)
+    useEffect(() => {
+        const check = () => setIsDesktop(window.innerWidth >= 768)
+        check()
+        window.addEventListener("resize", check, { passive: true })
+        return () => window.removeEventListener("resize", check)
+    }, [])
 
     const findings = [
         {
@@ -977,19 +986,21 @@ export default function AnthropologieCaseStudy() {
             title: "Reduce Friction in Micro-Interactions",
             body: "Introduce swipe-to-delete in cart to align with native mobile behavior.",
             detail: "Drawing from our homepage redesign A/B test, which showed a positive lift in engagement when category content was less cluttered and products were surfaced faster, I recommended applying the same principle to micro-interactions in the cart. Past test data showed that reducing visual noise and simplifying user actions directly improved conversion — the same logic applies here. By introducing swipe-to-delete in the cart, we align with a native iOS gesture users already know, reducing friction at a critical drop-off point. Bringing analytical data from previous tests to back new design decisions is how we move fast with confidence.",
-            img: IMGS.anthroBasket,
+            img: "/rec1.gif",
         },
         {
             num: "02",
             title: "Unify the Customer Journey",
             body: `Expand "Order History" into "Purchase History" to include in-store and online transactions.`,
             detail: "Triggered via Anthroperks QR scan or phone number. Sephora and H&M both surface in-store purchases in their apps. This also reduces return friction by eliminating missing receipt issues.",
+            img: "/rec2.png",
         },
         {
-            num: "04",
+            num: "03",
             title: "Recreate In-Store Guidance Digitally",
             body: "Develop a virtual stylist chatbot for real-time, personalized recommendations.",
             detail: "Levi's StyleBot and ASOS FashionBot demonstrate how guided chatbots increase product discovery. Anthropologie's current chatbot is limited to order support — expanding to styling advice mirrors the in-store experience.",
+            img: "/rec3.png",
         },
     ]
 
@@ -1322,6 +1333,19 @@ export default function AnthropologieCaseStudy() {
                             img="/slides/appxclusive.png"
                         />
                     </div>
+                    <div style={{ marginTop: "40px", marginBottom: "40px" }}>
+                        <img
+                            src="/zeroparty.gif"
+                            alt="Zero-party data personalization in practice"
+                            style={{
+                                width: "100%",
+                                height: "auto",
+                                display: "block",
+                                borderRadius: 12,
+                                boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
+                            }}
+                        />
+                    </div>
                     <p style={{
                         fontFamily: INTER,
                         fontSize: "10px",
@@ -1329,7 +1353,7 @@ export default function AnthropologieCaseStudy() {
                         textTransform: "uppercase",
                         letterSpacing: "0.1em",
                         color: C.muted,
-                        margin: "48px 0 32px",
+                        margin: "0 0 32px",
                     }}>
                         Competitive Examples
                     </p>
@@ -1496,8 +1520,36 @@ export default function AnthropologieCaseStudy() {
                         />
 
                     </div>
+                    {/* Checkout benchmarking image */}
+                    <div style={{ marginTop: "32px", marginBottom: "48px" }}>
+                        <img
+                            src="/checkout.png"
+                            alt="Checkout benchmarking across competitors"
+                            style={{
+                                width: "100%",
+                                height: "auto",
+                                display: "block",
+                                borderRadius: 14,
+                                boxShadow: "0 4px 32px rgba(0,0,0,0.09)",
+                            }}
+                        />
+                        <p
+                            style={{
+                                fontFamily: Z,
+                                fontStyle: "italic",
+                                fontWeight: 300,
+                                fontSize: 13,
+                                color: C.ink3,
+                                textAlign: "center",
+                                margin: "14px 0 0",
+                                lineHeight: 1.6,
+                            }}
+                        >
+                            Checkout benchmarking — key capability gaps identified
+                        </p>
+                    </div>
                     {/* Homepage benchmarking image */}
-                    <div style={{ marginTop: "48px" }}>
+                    <div style={{ marginTop: "0" }}>
                         <img
                             src="/slides/homepage.png"
                             alt="Homepage benchmarking across Anthropologie, Everlane, Lululemon, and Madewell"
@@ -1559,40 +1611,18 @@ export default function AnthropologieCaseStudy() {
                         the mobile homepage layout and category page navigation
                         structure.
                     </Body>
-                    <div
-                        style={{
-                            display: "flex",
-                            gap: "6px",
-                            marginBottom: "24px",
-                        }}
-                    >
-                        <ABCard
-                            label="Control"
-                            desc="Existing layout with category pills and stacked hero banner"
-                            bg={C.surface}
-                        />
-                        <ABCard
-                            label="V1: New Layout"
-                            desc="Full-bleed stacked images with embedded category labels, no pills"
-                            bg={C.surface2}
-                        />
-                        <ABCard
-                            label="Stacked"
-                            desc="Tall editorial images stacked vertically — maximizes scroll engagement"
-                            bg={C.surface3}
-                        />
-                        <ABCard
-                            label="Slider"
-                            desc="Two-column grid of images with horizontal swipe — increases density"
-                            bg="#D8D6CF"
-                        />
-                    </div>
-                    {/* A/B variant phone screens */}
-                    <div style={{ display: "flex", gap: "16px", justifyContent: "space-between", padding: "40px 0 8px" }}>
-                        <PhoneFrame src={IMGS.abControl}   alt="Control variant"     label="Control"        width={170} />
-                        <PhoneFrame src={IMGS.abNewLayout} alt="V1: New Layout"       label="V1: New Layout" width={170} />
-                        <PhoneFrame src={IMGS.abStacked}   alt="Stacked variant"      label="Stacked"        width={170} />
-                        <PhoneFrame src={IMGS.abSlider}    alt="Slider variant"       label="Slider"         width={170} />
+                    <div style={{ display: "flex", gap: "10px", marginBottom: "32px", alignItems: "flex-start" }}>
+                        {([
+                            { label: "Control",      desc: "Existing layout with category pills and stacked hero banner",                         bg: C.surface,  src: "/control.png", alt: "Control variant"    },
+                            { label: "V1: New Layout", desc: "Full-bleed stacked images with embedded category labels, no pills",                 bg: C.surface2, src: "/v1.png",      alt: "V1: New Layout"     },
+                            { label: "Stacked",      desc: "Tall editorial images stacked vertically — maximizes scroll engagement",              bg: C.surface3, src: "/stack.png",   alt: "Stacked variant"    },
+                            { label: "Slider",       desc: "Two-column grid of images with horizontal swipe — increases density",                 bg: "#D8D6CF",  src: "/slider.png",  alt: "Slider variant"     },
+                        ] as { label: string; desc: string; bg: string; src: string; alt: string }[]).map(({ label, desc, bg, src, alt }) => (
+                            <div key={label} style={{ flex: 1, display: "flex", flexDirection: "column", gap: "16px", alignItems: "center" }}>
+                                <ABCard label={label} desc={desc} bg={bg} />
+                                <PhoneFrame src={src} alt={alt} width={160} />
+                            </div>
+                        ))}
                     </div>
                     <Body>
                         For category pages, I tested hiding the topper image to
@@ -1600,23 +1630,6 @@ export default function AnthropologieCaseStudy() {
                         against Mango and Everlane, which both lead directly
                         with product grids.
                     </Body>
-                    {/* Swipe gesture comparison */}
-                    <p style={{
-                        fontFamily: INTER,
-                        fontSize: "10px",
-                        fontWeight: 700,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.1em",
-                        color: C.muted,
-                        margin: "32px 0 24px",
-                    }}>
-                        Gesture Benchmarking
-                    </p>
-                    <div style={{ display: "flex", gap: "40px", justifyContent: "center", marginBottom: "16px" }}>
-                        <PhoneFrame src={IMGS.anthroBasket} alt="Anthropologie basket"      label="Anthropologie — basket (current)" width={190} />
-                        <PhoneFrame src={IMGS.jcrewSwipe}   alt="J.Crew swipe to delete"   label="J.Crew — swipe to delete"         width={190} />
-                        <PhoneFrame src={IMGS.mangoSwipe}   alt="Mango swipe to delete"    label="Mango — swipe to delete"          width={190} />
-                    </div>
                 </FadeIn>
 
                 {/* ── 05 FINDINGS ── */}
@@ -1625,15 +1638,18 @@ export default function AnthropologieCaseStudy() {
                     <SectionLabel
                         step="05 — Findings"
                         title="What the data revealed about mobile drop-off"
-                        sub="Click each card to highlight"
                     />
-                    <div style={{ display: "flex", gap: "10px" }}>
+                    <div
+                        style={{ display: "flex", gap: "10px" }}
+                        onMouseLeave={() => isDesktop && setActiveFinding(0)}
+                    >
                         {findings.map((f, i) => (
                             <FindingCard
                                 key={i}
                                 {...f}
                                 active={activeFinding === i}
-                                onClick={() => setActiveFinding(i)}
+                                onClick={() => !isDesktop && setActiveFinding(i)}
+                                onMouseEnter={isDesktop ? () => setActiveFinding(i) : undefined}
                             />
                         ))}
                     </div>
