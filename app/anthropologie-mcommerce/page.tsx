@@ -986,21 +986,21 @@ export default function AnthropologieCaseStudy() {
             title: "Reduce Friction in Micro-Interactions",
             body: "Introduce swipe-to-delete in cart to align with native mobile behavior.",
             detail: "Drawing from our homepage redesign A/B test, which showed a positive lift in engagement when category content was less cluttered and products were surfaced faster, I recommended applying the same principle to micro-interactions in the cart. Past test data showed that reducing visual noise and simplifying user actions directly improved conversion — the same logic applies here. By introducing swipe-to-delete in the cart, we align with a native iOS gesture users already know, reducing friction at a critical drop-off point. Bringing analytical data from previous tests to back new design decisions is how we move fast with confidence.",
-            img: "/rec1.gif",
+            img: "/slides/rec1.gif",
         },
         {
             num: "02",
             title: "Unify the Customer Journey",
             body: `Expand "Order History" into "Purchase History" to include in-store and online transactions.`,
             detail: "Triggered via Anthroperks QR scan or phone number. Sephora and H&M both surface in-store purchases in their apps. This also reduces return friction by eliminating missing receipt issues.",
-            img: "/rec2.png",
+            img: "/slides/rec2.png",
         },
         {
             num: "03",
             title: "Recreate In-Store Guidance Digitally",
             body: "Develop a virtual stylist chatbot for real-time, personalized recommendations.",
             detail: "Levi's StyleBot and ASOS FashionBot demonstrate how guided chatbots increase product discovery. Anthropologie's current chatbot is limited to order support — expanding to styling advice mirrors the in-store experience.",
-            img: "/rec3.png",
+            img: "/slides/rec3.png",
         },
     ]
 
@@ -1334,7 +1334,7 @@ export default function AnthropologieCaseStudy() {
                     {/* Trend image gallery */}
                     <div style={{ display: "flex", gap: "16px", marginTop: "40px" }}>
                         {([
-                            { src: "/zeroparty.gif",         alt: "Zero-party data — Sephora",       caption: "Zero-Party Data — Sephora"   },
+                            { src: "/slides/zeroparty.gif",         alt: "Zero-party data — Sephora",       caption: "Zero-Party Data — Sephora"   },
                             { src: "/slides/ARtryon.png",    alt: "Augmented Reality try-on — Nike", caption: "Augmented Reality — Nike"    },
                             { src: "/slides/appxclusive.png",alt: "App-exclusive perks — Nike",      caption: "App-Exclusive Perks — Nike"  },
                         ] as { src: string; alt: string; caption: string }[]).map(({ src, alt, caption }) => (
@@ -1513,7 +1513,7 @@ export default function AnthropologieCaseStudy() {
                     {/* Checkout benchmarking image */}
                     <div style={{ marginTop: "32px", marginBottom: "48px" }}>
                         <img
-                            src="/checkout.png"
+                            src="/slides/checkout.png"
                             alt="Checkout benchmarking across competitors"
                             style={{
                                 width: "100%",
@@ -1603,10 +1603,10 @@ export default function AnthropologieCaseStudy() {
                     </Body>
                     <div style={{ display: "flex", gap: "10px", marginBottom: "32px", alignItems: "flex-start" }}>
                         {([
-                            { label: "Control",      desc: "Existing layout with category pills and stacked hero banner",                         bg: C.surface,  src: "/control.png", alt: "Control variant"    },
-                            { label: "V1: New Layout", desc: "Full-bleed stacked images with embedded category labels, no pills",                 bg: C.surface2, src: "/v1.png",      alt: "V1: New Layout"     },
-                            { label: "Stacked",      desc: "Tall editorial images stacked vertically — maximizes scroll engagement",              bg: C.surface3, src: "/stack.png",   alt: "Stacked variant"    },
-                            { label: "Slider",       desc: "Two-column grid of images with horizontal swipe — increases density",                 bg: "#D8D6CF",  src: "/slider.png",  alt: "Slider variant"     },
+                            { label: "Control",      desc: "Existing layout with category pills and stacked hero banner",                         bg: C.surface,  src: "/slides/control.png", alt: "Control variant"    },
+                            { label: "V1: New Layout", desc: "Full-bleed stacked images with embedded category labels, no pills",                 bg: C.surface2, src: "/slides/v1.png",      alt: "V1: New Layout"     },
+                            { label: "Stacked",      desc: "Tall editorial images stacked vertically — maximizes scroll engagement",              bg: C.surface3, src: "/slides/stack.png",   alt: "Stacked variant"    },
+                            { label: "Slider",       desc: "Two-column grid of images with horizontal swipe — increases density",                 bg: "#D8D6CF",  src: "/slides/slider.png",  alt: "Slider variant"     },
                         ] as { label: string; desc: string; bg: string; src: string; alt: string }[]).map(({ label, desc, bg, src, alt }) => (
                             <div key={label} style={{ flex: 1, display: "flex", flexDirection: "column", gap: "16px", alignItems: "center" }}>
                                 <ABCard label={label} desc={desc} bg={bg} />
