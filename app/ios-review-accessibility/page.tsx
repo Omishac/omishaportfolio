@@ -1392,9 +1392,6 @@ function ResultCard({ num, label }: { num: string; label: string }) {
 }
 
 export default function IOSCaseStudy() {
-    const phoneOriginalImage = undefined
-    const phoneTranslatedImage = undefined
-    const phoneDiscoveryImage = undefined
     const statsRef = useRef<HTMLDivElement>(null)
     const [statsVis, setStatsVis] = useState(false)
     useEffect(() => {
@@ -1638,14 +1635,16 @@ export default function IOSCaseStudy() {
                             </p>
                         </div>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 20, padding: "8px 0" }}>
                         <img
                             src="/slides/ios-original.png"
-                            alt="iOS original review experience"
+                            alt="iOS original review experience showing English reviews in a Spanish-language app"
                             style={{
-                                width: "88%",
+                                width: "100%",
                                 height: "auto",
                                 display: "block",
+                                borderRadius: 18,
+                                boxShadow: "0 8px 48px rgba(0,0,0,0.10), 0 2px 12px rgba(0,0,0,0.06)",
                             }}
                         />
                         <p style={{
@@ -1655,11 +1654,11 @@ export default function IOSCaseStudy() {
                             fontSize: 14,
                             color: C.ink3,
                             textAlign: "center",
-                            maxWidth: 520,
-                            lineHeight: 1.6,
-                            margin: 0,
+                            maxWidth: 560,
+                            lineHeight: 1.65,
+                            margin: "0 auto",
                         }}>
-                            The original experience — everything in the app translates to a user's language settings, except for product reviews, which remained in English only.
+                            The original state — product reviews appeared in English even when users had Spanish set as their preferred app language, breaking the consistent localized experience.
                         </p>
                     </div>
                 </div>
@@ -2075,96 +2074,57 @@ export default function IOSCaseStudy() {
                             lineHeight: 1.8,
                             color: C.ink2,
                             maxWidth: 680,
-                            marginBottom: 32,
+                            marginBottom: 40,
                         }}
                     >
-                        Hover over the phones to explore each state of the
-                        feature.
+                        Three states of the feature — from the untranslated review, through a single-tap translation, to the full list view with translation available on every review.
                     </p>
-                    <div style={{ display: "flex", gap: 18 }}>
+                    <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
                         {[
                             {
-                                state: "original" as const,
-                                bg: "rgb(232,231,228)",
-                                img: phoneOriginalImage,
-                                title: "Original Review",
-                                desc: "The review appears in its original language — exactly as submitted.",
+                                src: "/slides/ios-og.png",
+                                label: "Original State",
                                 num: "01",
+                                desc: "Review shown with 'Translate review to Spanish' CTA — user sees English text, translation is optional.",
                             },
                             {
-                                state: "translated" as const,
-                                bg: "rgb(218,217,212)",
-                                img: phoneTranslatedImage,
-                                title: "Translated on Tap",
-                                desc: "One tap translates the review inline using Apple's API — no page reload.",
+                                src: "/slides/ios-translated.png",
+                                label: "After Translation",
                                 num: "02",
+                                desc: "One tap translates inline via Apple's API. 'Ver original' lets users toggle back to the source text.",
                             },
                             {
-                                state: "discovery" as const,
-                                bg: "rgb(200,199,194)",
-                                img: phoneDiscoveryImage,
-                                title: "Discovery at Scale",
-                                desc: "Translate CTAs appear across all reviews — the feature scales naturally.",
+                                src: "/slides/ios-discovery.png",
+                                label: "Review List View",
                                 num: "03",
+                                desc: "Translation CTAs appear across every review — the feature scales naturally to the full list.",
                             },
                         ].map((m) => (
                             <div
-                                key={m.title}
+                                key={m.label}
                                 style={{
                                     flex: 1,
                                     display: "flex",
                                     flexDirection: "column" as const,
-                                    gap: 14,
+                                    alignItems: "center",
+                                    gap: 20,
                                 }}
                             >
-                                <Phone
-                                    state={m.state}
-                                    bg={m.bg}
-                                    image={m.img}
-                                />
-                                <div
+                                <img
+                                    src={m.src}
+                                    alt={m.label}
                                     style={{
-                                        display: "flex",
-                                        gap: 10,
-                                        alignItems: "flex-start",
+                                        width: "100%",
+                                        height: "auto",
+                                        display: "block",
                                     }}
-                                >
-                                    <span
-                                        style={{
-                                            fontFamily: Z,
-                                            fontStyle: "italic",
-                                            fontSize: 12,
-                                            color: C.muted,
-                                            flexShrink: 0,
-                                            marginTop: 2,
-                                        }}
-                                    >
-                                        {m.num}
-                                    </span>
-                                    <div>
-                                        <p
-                                            style={{
-                                                fontFamily: Z,
-                                                fontWeight: 700,
-                                                fontSize: 15,
-                                                color: C.ink,
-                                                marginBottom: 4,
-                                            }}
-                                        >
-                                            {m.title}
-                                        </p>
-                                        <p
-                                            style={{
-                                                fontFamily: I,
-                                                fontSize: 12.5,
-                                                lineHeight: 1.6,
-                                                color: C.ink3,
-                                                margin: 0,
-                                            }}
-                                        >
-                                            {m.desc}
-                                        </p>
+                                />
+                                <div style={{ width: "100%", paddingTop: 4 }}>
+                                    <div style={{ display: "flex", gap: 8, alignItems: "baseline", marginBottom: 6 }}>
+                                        <span style={{ fontFamily: Z, fontStyle: "italic", fontSize: 11, color: C.muted }}>{m.num}</span>
+                                        <p style={{ fontFamily: Z, fontWeight: 700, fontSize: 14, color: C.ink, margin: 0 }}>{m.label}</p>
                                     </div>
+                                    <p style={{ fontFamily: I, fontSize: 12.5, lineHeight: 1.65, color: C.ink3, margin: 0 }}>{m.desc}</p>
                                 </div>
                             </div>
                         ))}
