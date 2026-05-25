@@ -961,7 +961,7 @@ export default function AnthropologieCaseStudy() {
             num: "01",
             title: "Reduce Friction in Micro-Interactions",
             body: "Introduce swipe-to-delete in cart to align with native mobile behavior.",
-            detail: "Currently, Anthropologie's app requires pressing a 'Remove' CTA to delete cart items. J.Crew and Mango both support swipe-to-delete — a common iOS gesture used for notifications, emails, and alarms.",
+            detail: "Drawing from our homepage redesign A/B test, which showed a positive lift in engagement when category content was less cluttered and products were surfaced faster, I recommended applying the same principle to micro-interactions in the cart. Past test data showed that reducing visual noise and simplifying user actions directly improved conversion — the same logic applies here. By introducing swipe-to-delete in the cart, we align with a native iOS gesture users already know, reducing friction at a critical drop-off point. Bringing analytical data from previous tests to back new design decisions is how we move fast with confidence.",
             img: IMGS.anthroBasket,
         },
         {
@@ -971,24 +971,10 @@ export default function AnthropologieCaseStudy() {
             detail: "Triggered via Anthroperks QR scan or phone number. Sephora and H&M both surface in-store purchases in their apps. This also reduces return friction by eliminating missing receipt issues.",
         },
         {
-            num: "03",
-            title: "Drive App Engagement with Exclusive Perks",
-            body: "Introduce app-exclusive incentives such as early access drops and loyalty rewards.",
-            detail: "Nike's member rewards in-app create strong retention loops. App-only perks entice customers to download and consistently return to the app.",
-            img: IMGS.nikeMemberRewards,
-        },
-        {
             num: "04",
             title: "Recreate In-Store Guidance Digitally",
             body: "Develop a virtual stylist chatbot for real-time, personalized recommendations.",
             detail: "Levi's StyleBot and ASOS FashionBot demonstrate how guided chatbots increase product discovery. Anthropologie's current chatbot is limited to order support — expanding to styling advice mirrors the in-store experience.",
-        },
-        {
-            num: "05",
-            title: "Increase Purchase Confidence with AR",
-            body: "Explore AR try-on features to reduce uncertainty and improve decision-making.",
-            detail: "Nike's foot-scanning AR feature reduced sizing uncertainty. AR overlays digital content in real time through smartphones, allowing customers to engage with products before buying — directly reducing return rates.",
-            img: IMGS.nikeAR,
         },
     ]
 
@@ -1047,7 +1033,7 @@ export default function AnthropologieCaseStudy() {
                             Mobile commerce is projected to reach $856B by 2027.
                             I led a data-driven audit of Anthropologie's mobile
                             experience — identifying conversion gaps and
-                            delivering five strategic recommendations to the
+                            delivering three strategic recommendations to the
                             digital analytics team.
                         </p>
                         <div
