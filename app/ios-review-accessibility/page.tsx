@@ -1123,6 +1123,62 @@ function SolutionCard({
     )
 }
 
+function CascadeLabel({ text }: { text: string }) {
+    return (
+        <p
+            style={{
+                fontFamily: I,
+                fontSize: 10,
+                fontWeight: 700,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase" as const,
+                color: C.muted,
+                marginBottom: 16,
+            }}
+        >
+            {text}
+        </p>
+    )
+}
+
+function CascadeConnector({ text }: { text: string }) {
+    return (
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column" as const,
+                alignItems: "center",
+                padding: "28px 0 22px",
+                gap: 8,
+            }}
+        >
+            <div style={{ width: 1, height: 28, backgroundColor: "rgba(0,0,0,0.1)" }} />
+            <svg width={12} height={8} viewBox="0 0 12 8" fill="none">
+                <path
+                    d="M1 1L6 7L11 1"
+                    stroke="rgba(0,0,0,0.22)"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                />
+            </svg>
+            <p
+                style={{
+                    fontFamily: Z,
+                    fontStyle: "italic",
+                    fontWeight: 300,
+                    fontSize: 15,
+                    color: C.ink3,
+                    margin: 0,
+                    textAlign: "center" as const,
+                }}
+            >
+                {text}
+            </p>
+        </div>
+    )
+}
+
 function PhoneCard({
     src,
     label,
@@ -1352,8 +1408,6 @@ export default function IOSCaseStudy() {
     const friction = useInView()
     const why = useInView()
     const constraints = useInView()
-    const design = useInView()
-    const solution = useInView()
     const experience = useInView()
     const outcome = useInView()
     const reflection = useInView()
@@ -1790,10 +1844,10 @@ export default function IOSCaseStudy() {
                     </div>
                 </div>
 
-                {/* ── 06 CONSTRAINTS ── */}
+                {/* ── 06 FROM CONSTRAINTS TO SOLUTION ── */}
                 <Divider />
                 <div ref={constraints.ref} style={constraints.style}>
-                    <Pill label="06 — Constraints" />
+                    <Pill label="06 — From Constraints to Solution" />
                     <h2
                         style={{
                             fontFamily: Z,
@@ -1805,7 +1859,7 @@ export default function IOSCaseStudy() {
                             lineHeight: 1.1,
                         }}
                     >
-                        How technical constraints shaped every design decision
+                        Designing Within Constraints to Build the Right Solution
                     </h2>
                     <p
                         style={{
@@ -1814,14 +1868,17 @@ export default function IOSCaseStudy() {
                             lineHeight: 1.8,
                             color: C.ink2,
                             maxWidth: 760,
-                            marginBottom: 24,
+                            marginBottom: 40,
                         }}
                     >
-                        Integrating Apple's Translation API wasn't just a
-                        technical task — each constraint directly influenced
-                        the UX strategy and interaction model I designed:
+                        Every design decision in this project started with a
+                        real technical constraint. Rather than designing around
+                        them, I let them shape the strategy — from how
+                        translation is triggered, to what the UI communicates.
                     </p>
-                    <div style={{ display: "flex", gap: 10, marginBottom: 28 }}>
+
+                    <CascadeLabel text="Constraints" />
+                    <div style={{ display: "flex", gap: 10 }}>
                         {[
                             {
                                 icon: "⚡",
@@ -1876,38 +1933,11 @@ export default function IOSCaseStudy() {
                             </div>
                         ))}
                     </div>
-                </div>
 
-                {/* ── 07 DESIGN APPROACH ── */}
-                <Divider />
-                <div ref={design.ref} style={design.style}>
-                    <Pill label="07 — Design Approach" />
-                    <p
-                        style={{
-                            fontFamily: Z,
-                            fontStyle: "italic",
-                            fontWeight: 300,
-                            fontSize: 24,
-                            color: C.ink3,
-                            marginBottom: 8,
-                            lineHeight: 1.4,
-                        }}
-                    >
-                        "Translate what matters, when it matters"
-                    </p>
-                    <p
-                        style={{
-                            fontFamily: I,
-                            fontSize: 14.5,
-                            lineHeight: 1.8,
-                            color: C.ink2,
-                            maxWidth: 680,
-                            marginBottom: 28,
-                        }}
-                    >
-                        The experience was guided by three core principles:
-                    </p>
-                    <div style={{ display: "flex", gap: 12, marginBottom: 32 }}>
+                    <CascadeConnector text="These constraints shaped three core design principles —" />
+
+                    <CascadeLabel text="Principles" />
+                    <div style={{ display: "flex", gap: 12 }}>
                         <PrincipleCard
                             num="01"
                             title="User Control"
@@ -1927,40 +1957,10 @@ export default function IOSCaseStudy() {
                             body="Ensure the feature feels like a natural extension of the existing review UI — not a bolt-on."
                         />
                     </div>
-                </div>
 
-                {/* ── 08 SOLUTION ── */}
-                <Divider />
-                <div ref={solution.ref} style={solution.style}>
-                    <Pill label="08 — The Solution" />
-                    <h2
-                        style={{
-                            fontFamily: Z,
-                            fontWeight: 700,
-                            fontSize: "clamp(24px,3vw,34px)",
-                            letterSpacing: "-0.025em",
-                            color: C.ink,
-                            marginBottom: 12,
-                            lineHeight: 1.1,
-                        }}
-                    >
-                        User-controlled translation that respects platform limits
-                    </h2>
-                    <p
-                        style={{
-                            fontFamily: I,
-                            fontSize: 14.5,
-                            lineHeight: 1.8,
-                            color: C.ink2,
-                            maxWidth: 720,
-                            marginBottom: 24,
-                        }}
-                    >
-                        I designed an on-demand translation system embedded
-                        directly within product reviews — giving users
-                        control while working within Apple's API constraints
-                        to keep the experience lightweight and native.
-                    </p>
+                    <CascadeConnector text="Which led to a single, focused solution —" />
+
+                    <CascadeLabel text="Solution" />
                     <div style={{ display: "flex", gap: 10, marginBottom: 28 }}>
                         {[
                             {
@@ -1984,10 +1984,10 @@ export default function IOSCaseStudy() {
                     </div>
                 </div>
 
-                {/* ── 09 EXPERIENCE ── */}
+                {/* ── 07 EXPERIENCE ── */}
                 <Divider />
                 <div ref={experience.ref} style={experience.style}>
-                    <Pill label="09 — The Experience" />
+                    <Pill label="07 — The Experience" />
                     <h2
                         style={{
                             fontFamily: Z,
@@ -2052,10 +2052,10 @@ export default function IOSCaseStudy() {
                     </div>
                 </div>
 
-                {/* ── 10 OUTCOME ── */}
+                {/* ── 08 OUTCOME ── */}
                 <Divider />
                 <div ref={outcome.ref} style={outcome.style}>
-                    <Pill label="10 — Outcome" />
+                    <Pill label="08 — Outcome" />
                     <h2
                         style={{
                             fontFamily: Z,
@@ -2114,10 +2114,10 @@ export default function IOSCaseStudy() {
                     </div>
                 </div>
 
-                {/* ── 11 REFLECTION ── */}
+                {/* ── 09 REFLECTION ── */}
                 <Divider />
                 <div ref={reflection.ref} style={reflection.style}>
-                    <Pill label="11 — Reflection" />
+                    <Pill label="09 — Reflection" />
                     <h2
                         style={{
                             fontFamily: Z,
