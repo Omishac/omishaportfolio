@@ -1028,6 +1028,17 @@ export default function BoardAndBrewCaseStudy() {
                         </div>
                     </div>
                 </FadeIn>
+                <img
+                    src="/slides/brew-hero.jpg"
+                    alt="Board and Brew campaign"
+                    style={{
+                        width: "100%",
+                        height: "auto",
+                        display: "block",
+                        borderRadius: 18,
+                        boxShadow: "0 8px 40px rgba(0,0,0,0.12)",
+                    }}
+                />
 
                 {/* ── 01 PROBLEM ── */}
                 <Divider />
@@ -1216,40 +1227,107 @@ export default function BoardAndBrewCaseStudy() {
                         social proof so new users discovering the account through
                         ads would trust what they saw.
                     </Body>
-                    <div
-                        style={{
-                            display: "flex",
-                            gap: 28,
-                            marginTop: 36,
-                            justifyContent: "center",
-                        }}
-                    >
-                        <InstaPhoneCard
-                            label="Post 01 — Food & Drinks"
-                            filename="brew-post-1.png"
-                        />
-                        <InstaPhoneCard
-                            label="Post 02 — Board Game Culture"
-                            filename="brew-post-2.png"
-                        />
-                        <InstaPhoneCard
-                            label="Post 03 — Atmosphere"
-                            filename="brew-post-3.png"
-                        />
+                    <div style={{ display: "flex", gap: 20, marginTop: 36, alignItems: "flex-start" }}>
+                        {[
+                            {
+                                src: "/slides/bb1.png",
+                                caption: "Explore the Forbidden Jungle, where every sip is an adventure! 🌴✨ Come grab this seasonal delight and let the good times roll. Who's in for a round? #CocktailOClock",
+                            },
+                            {
+                                src: "/slides/bb2.png",
+                                caption: "Meet your new favorite lunch: our Chicken Pesto Sandwich paired with a fresh side salad! 🥪🥗 What's your go-to order when you visit Board and Brew? Let us know!",
+                            },
+                            {
+                                src: "/slides/bb3.png",
+                                caption: "Building settlements and devouring nachos—now that's our kind of multitasking! 🏗️🧀 What's your favorite board game to pair with good food? Let's hear your picks!",
+                            },
+                        ].map((post, i) => (
+                            <div
+                                key={i}
+                                style={{
+                                    flex: 1,
+                                    backgroundColor: "#fff",
+                                    borderRadius: 12,
+                                    border: `1px solid ${C.border}`,
+                                    overflow: "hidden",
+                                    boxShadow: "0 2px 16px rgba(0,0,0,0.07)",
+                                }}
+                            >
+                                <div style={{ padding: "10px 14px", display: "flex", alignItems: "center", gap: 10, borderBottom: `1px solid ${C.border}` }}>
+                                    <div
+                                        style={{
+                                            width: 32,
+                                            height: 32,
+                                            borderRadius: "50%",
+                                            background: "linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7)",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            flexShrink: 0,
+                                            padding: 2,
+                                        }}
+                                    >
+                                        <div style={{ width: "100%", height: "100%", borderRadius: "50%", backgroundColor: "#fff" }} />
+                                    </div>
+                                    <div>
+                                        <p style={{ fontFamily: INTER, fontWeight: 700, fontSize: 12, color: C.ink, margin: 0, lineHeight: 1.3 }}>boardandbrew</p>
+                                        <p style={{ fontFamily: INTER, fontSize: 10, color: C.muted, margin: 0 }}>Philadelphia, PA</p>
+                                    </div>
+                                    <span style={{ marginLeft: "auto", fontFamily: INTER, fontSize: 14, color: C.ink, letterSpacing: "0.1em" }}>···</span>
+                                </div>
+                                <div style={{ width: "100%", aspectRatio: "1/1", overflow: "hidden" }}>
+                                    <img
+                                        src={post.src}
+                                        alt={`Board and Brew post ${i + 1}`}
+                                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                                    />
+                                </div>
+                                <div style={{ padding: "10px 14px 14px" }}>
+                                    <div style={{ display: "flex", gap: 10, marginBottom: 9, alignItems: "center" }}>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.ink} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                        </svg>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.ink} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                        </svg>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.ink} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: "auto" }}>
+                                            <line x1="22" y1="2" x2="11" y2="13" />
+                                            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                                        </svg>
+                                    </div>
+                                    <p style={{ fontFamily: Z, fontSize: 11.5, lineHeight: 1.6, color: C.ink3, margin: 0, fontStyle: "italic" }}>
+                                        <span style={{ fontFamily: INTER, fontWeight: 700, fontStyle: "normal", fontSize: 11.5, color: C.ink, marginRight: 5 }}>boardandbrew</span>
+                                        {post.caption}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                    <p
-                        style={{
-                            fontFamily: INTER,
-                            fontStyle: "italic",
-                            fontSize: 13,
-                            color: C.muted,
-                            textAlign: "center",
-                            marginTop: 24,
-                            marginBottom: 0,
-                        }}
-                    >
-                        Published November 2–11 to establish social proof before paid promotion
-                    </p>
+                    <div style={{ display: "flex", justifyContent: "center", marginTop: 24 }}>
+                        <a
+                            href="https://www.instagram.com/theboardandbrewpa?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                                fontFamily: INTER,
+                                fontSize: 13,
+                                fontWeight: 600,
+                                color: C.ink,
+                                textDecoration: "none",
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: 6,
+                                padding: "8px 18px",
+                                borderRadius: 20,
+                                border: `1px solid ${C.border}`,
+                                transition: "background 0.18s, border-color 0.18s",
+                            }}
+                            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = C.surface; e.currentTarget.style.borderColor = "rgba(0,0,0,0.15)"; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.borderColor = C.border; }}
+                        >
+                            View on Instagram →
+                        </a>
+                    </div>
                 </FadeIn>
 
                 {/* ── THE AD ── */}
@@ -1274,38 +1352,19 @@ export default function BoardAndBrewCaseStudy() {
                             marginTop: 32,
                         }}
                     >
-                        <div
+                        <video
+                            src="/slides/bb-vid.mp4"
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
                             style={{
-                                width: "55%",
-                                backgroundColor: C.surface,
+                                width: "60%",
+                                display: "block",
                                 borderRadius: 20,
-                                border: `1.5px dashed ${C.border}`,
-                                aspectRatio: "4/5",
-                                display: "flex",
-                                flexDirection: "column" as const,
-                                alignItems: "center",
-                                justifyContent: "center",
-                                gap: 12,
-                                boxShadow: "0 8px 48px rgba(0,0,0,0.07)",
+                                boxShadow: "0 8px 48px rgba(0,0,0,0.14)",
                             }}
-                        >
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.14)" strokeWidth="1.5">
-                                <rect x="3" y="3" width="18" height="18" rx="3" />
-                                <circle cx="8.5" cy="8.5" r="1.5" />
-                                <path d="M21 15l-5-5L5 21" />
-                            </svg>
-                            <p
-                                style={{
-                                    fontFamily: INTER,
-                                    fontSize: 11,
-                                    color: "rgba(0,0,0,0.22)",
-                                    textAlign: "center",
-                                    margin: 0,
-                                }}
-                            >
-                                brew-ad.png
-                            </p>
-                        </div>
+                        />
                         <p
                             style={{
                                 fontFamily: Z,
@@ -1568,35 +1627,64 @@ export default function BoardAndBrewCaseStudy() {
                     <div
                         style={{
                             width: "100%",
-                            maxWidth: 800,
-                            backgroundColor: "rgba(255,255,255,0.04)",
+                            maxWidth: 860,
                             borderRadius: 16,
-                            border: "1.5px dashed rgba(255,255,255,0.1)",
-                            aspectRatio: "16/9",
-                            display: "flex",
-                            flexDirection: "column" as const,
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: 14,
+                            overflow: "hidden",
+                            boxShadow: "0 24px 72px rgba(0,0,0,0.45)",
                         }}
                     >
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth="1.5">
-                            <rect x="3" y="3" width="18" height="18" rx="3" />
-                            <circle cx="8.5" cy="8.5" r="1.5" />
-                            <path d="M21 15l-5-5L5 21" />
-                        </svg>
-                        <p
-                            style={{
-                                fontFamily: INTER,
-                                fontSize: 12,
-                                color: "rgba(255,255,255,0.22)",
-                                textAlign: "center",
-                                margin: 0,
-                            }}
+                        <object
+                            data="/slides/boardbrew-finalppt.pdf"
+                            type="application/pdf"
+                            style={{ width: "100%", height: 560, display: "block", border: "none" }}
                         >
-                            brew-presentation.png
-                        </p>
+                            <div
+                                style={{
+                                    width: "100%",
+                                    height: 560,
+                                    backgroundColor: "rgba(255,255,255,0.04)",
+                                    display: "flex",
+                                    flexDirection: "column" as const,
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    gap: 12,
+                                }}
+                            >
+                                <p style={{ fontFamily: INTER, fontSize: 13, color: "rgba(255,255,255,0.35)", margin: 0 }}>PDF preview unavailable in this browser.</p>
+                                <a
+                                    href="/slides/boardbrew-finalppt.pdf"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    style={{ fontFamily: INTER, fontSize: 12, color: "rgba(255,255,255,0.5)", textDecoration: "underline" }}
+                                >
+                                    Open PDF directly →
+                                </a>
+                            </div>
+                        </object>
                     </div>
+                    <a
+                        href="/slides/boardbrew-finalppt.pdf"
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{
+                            fontFamily: INTER,
+                            fontSize: 14,
+                            fontWeight: 600,
+                            color: "rgba(255,255,255,0.9)",
+                            textDecoration: "none",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 8,
+                            padding: "12px 28px",
+                            borderRadius: 8,
+                            border: "1px solid rgba(255,255,255,0.2)",
+                            transition: "background 0.2s, border-color 0.2s",
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.35)"; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)"; }}
+                    >
+                        View Full Presentation →
+                    </a>
                     <p
                         style={{
                             fontFamily: Z,
