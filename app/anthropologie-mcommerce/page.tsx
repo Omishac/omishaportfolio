@@ -1477,28 +1477,7 @@ export default function AnthropologieCaseStudy() {
                                 },
                             ]}
                         />
-                        <CompRow
-                            label="Payment"
-                            data={[
-                                {
-                                    brand: "Anthropologie",
-                                    value: "Klarna, Afterpay",
-                                    highlight: true,
-                                },
-                                {
-                                    brand: "Everlane",
-                                    value: "Apple Pay + standard",
-                                },
-                                {
-                                    brand: "Lululemon",
-                                    value: "Apple Pay + standard",
-                                },
-                                {
-                                    brand: "Madewell",
-                                    value: "Afterpay + PayPal + Apple Pay",
-                                },
-                            ]}
-                        />
+
                     </div>
                     {/* Homepage phone row */}
                     <div style={{ marginTop: "48px" }}>
