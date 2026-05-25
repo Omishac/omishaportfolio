@@ -1323,58 +1323,48 @@ export default function AnthropologieCaseStudy() {
                             icon="📱"
                             what="AR overlays digital content in the real world through smartphones, tablets, and AR glasses"
                             why="Allows customers to engage with products and reduces return rates — Nike's foot scanner is a benchmark"
-                            img="/slides/ARtryon.png"
                         />
                         <TrendCard
                             title="App-Exclusive Perks"
                             icon="⭐"
                             what="Special benefits and incentives available only to app customers"
                             why="Entices app downloads and drives customer loyalty — Nike Member Rewards is a strong model"
-                            img="/slides/appxclusive.png"
                         />
                     </div>
-                    <div style={{ marginTop: "40px", marginBottom: "40px" }}>
-                        <img
-                            src="/zeroparty.gif"
-                            alt="Zero-party data personalization in practice"
-                            style={{
-                                width: "100%",
-                                height: "auto",
-                                display: "block",
-                                borderRadius: 12,
-                                boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
-                            }}
-                        />
-                    </div>
-                    <p style={{
-                        fontFamily: INTER,
-                        fontSize: "10px",
-                        fontWeight: 700,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.1em",
-                        color: C.muted,
-                        margin: "0 0 32px",
-                    }}>
-                        Competitive Examples
-                    </p>
-                    <div style={{
-                        display: "flex",
-                        gap: "24px",
-                        justifyContent: "space-between",
-                        marginBottom: "16px",
-                    }}>
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "24px", flex: 1 }}>
-                            <p style={{ fontFamily: INTER, fontSize: "10px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.09em", color: C.ink3, margin: 0 }}>Zero-Party Data</p>
-                            <PhoneFrame src={IMGS.sephoraBeautyPrefs} alt="Sephora Beauty Preferences" label="Sephora — Beauty Preferences" width={190} />
-                        </div>
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "24px", flex: 1 }}>
-                            <p style={{ fontFamily: INTER, fontSize: "10px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.09em", color: C.ink3, margin: 0 }}>AR Try-Ons</p>
-                            <PhoneFrame src={IMGS.nikeAR} alt="Nike AR Foot Scanner" label="Nike — AR Foot Scanner" width={190} />
-                        </div>
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "24px", flex: 1 }}>
-                            <p style={{ fontFamily: INTER, fontSize: "10px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.09em", color: C.ink3, margin: 0 }}>App-Exclusive Perks</p>
-                            <PhoneFrame src={IMGS.nikeMemberRewards} alt="Nike Member Rewards" label="Nike — Member Rewards" width={190} />
-                        </div>
+                    {/* Trend image gallery */}
+                    <div style={{ display: "flex", gap: "16px", marginTop: "40px" }}>
+                        {([
+                            { src: "/zeroparty.gif",         alt: "Zero-party data — Sephora",       caption: "Zero-Party Data — Sephora"   },
+                            { src: "/slides/ARtryon.png",    alt: "Augmented Reality try-on — Nike", caption: "Augmented Reality — Nike"    },
+                            { src: "/slides/appxclusive.png",alt: "App-exclusive perks — Nike",      caption: "App-Exclusive Perks — Nike"  },
+                        ] as { src: string; alt: string; caption: string }[]).map(({ src, alt, caption }) => (
+                            <div key={caption} style={{ flex: 1, display: "flex", flexDirection: "column", gap: "10px" }}>
+                                <div style={{ borderRadius: 10, overflow: "hidden", lineHeight: 0 }}>
+                                    <img
+                                        src={src}
+                                        alt={alt}
+                                        style={{
+                                            width: "100%",
+                                            height: "260px",
+                                            display: "block",
+                                            objectFit: "cover",
+                                        }}
+                                    />
+                                </div>
+                                <p style={{
+                                    fontFamily: INTER,
+                                    fontSize: "11px",
+                                    fontWeight: 500,
+                                    color: C.muted,
+                                    margin: 0,
+                                    textAlign: "center",
+                                    letterSpacing: "0.02em",
+                                    lineHeight: 1.4,
+                                }}>
+                                    {caption}
+                                </p>
+                            </div>
+                        ))}
                     </div>
                 </FadeIn>
 
