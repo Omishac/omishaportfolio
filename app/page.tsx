@@ -44,11 +44,13 @@ const CURSOR_STYLES = `
     animation-play-state: paused;
   }
   .logo-img {
-    filter: grayscale(100%) opacity(0.5);
-    transition: filter 0.35s ease;
+    filter: none;
+    opacity: 0.85;
+    transition: opacity 0.3s ease, transform 0.3s ease;
   }
   .logo-img:hover {
-    filter: grayscale(0%) opacity(1);
+    opacity: 1;
+    transform: scale(1.06);
   }
 `
 
@@ -886,7 +888,7 @@ function LogoTicker({ phone }: { phone: boolean }) {
                                 alt={alt}
                                 className="logo-img"
                                 style={{
-                                    height: 40,
+                                    height: 52,
                                     width: "auto",
                                     display: "block",
                                     flexShrink: 0,
