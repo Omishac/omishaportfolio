@@ -94,9 +94,10 @@ function TopNav() {
             <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
                 {[
                     { label: "Work", href: "/" },
+                    { label: "Playground", href: "/playground", active: true },
                     { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", external: true },
                     { label: "Resume", href: "#" },
-                ].map(({ label, href, external }) => (
+                ].map(({ label, href, external, active }) => (
                     <a
                         key={label}
                         href={href}
@@ -105,14 +106,14 @@ function TopNav() {
                         style={{
                             fontFamily: I,
                             fontSize: 14,
-                            fontWeight: 500,
-                            color: T.ink3,
+                            fontWeight: active ? 600 : 500,
+                            color: active ? T.ink : T.ink3,
                             textDecoration: "none",
                             letterSpacing: "-0.01em",
                             transition: "color 0.18s",
                         }}
                         onMouseEnter={(e) => (e.currentTarget.style.color = T.ink)}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = T.ink3)}
+                        onMouseLeave={(e) => { if (!active) e.currentTarget.style.color = T.ink3 }}
                     >
                         {label}
                     </a>

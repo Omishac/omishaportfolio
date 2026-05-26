@@ -2,6 +2,31 @@
 
 import { useState, useRef, useEffect, useCallback } from "react"
 
+const CURSOR_STYLES = `
+  * { cursor: none !important; }
+  @keyframes hi-float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes hi-wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    20% { transform: rotate(-4deg); }
+    40% { transform: rotate(4deg); }
+    60% { transform: rotate(-3deg); }
+    80% { transform: rotate(3deg); }
+  }
+  @keyframes hi-pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.08); }
+    65% { transform: scale(0.96); }
+    100% { transform: scale(1); }
+  }
+  @keyframes bubble-rise {
+    0% { transform: translate(0, 0) scale(1); opacity: 0.9; }
+    100% { transform: translate(var(--bx), -60px) scale(0); opacity: 0; }
+  }
+`
+
 const I = "Inter, system-ui, sans-serif"
 const Z = "Zodiak, 'Times New Roman', serif"
 const YB = "var(--font-yuji-boku), serif"
@@ -47,6 +72,60 @@ function useBP() {
     }
 
     return { ref, w, phone, tablet, desktop, large, px, maxW, sp }
+}
+
+function CustomCursor() {
+    const lagRef = useRef({ x: -200, y: -200 })
+    const posRef = useRef({ x: -200, y: -200 })
+    const [lag, setLag] = useState({ x: -200, y: -200 })
+    const [hovered, setHovered] = useState(false)
+    const [visible, setVisible] = useState(false)
+
+    useEffect(() => {
+        const onMove = (e: MouseEvent) => {
+            posRef.current = { x: e.clientX, y: e.clientY }
+            if (!visible) setVisible(true)
+        }
+        const onOver = (e: MouseEvent) => {
+            const t = e.target as Element
+            setHovered(!!t.closest("a, button, [role='button']"))
+        }
+        let raf: number
+        const tick = () => {
+            lagRef.current.x += (posRef.current.x - lagRef.current.x) * 0.14
+            lagRef.current.y += (posRef.current.y - lagRef.current.y) * 0.14
+            setLag({ x: lagRef.current.x, y: lagRef.current.y })
+            raf = requestAnimationFrame(tick)
+        }
+        raf = requestAnimationFrame(tick)
+        window.addEventListener("mousemove", onMove, { passive: true })
+        window.addEventListener("mouseover", onOver, { passive: true })
+        return () => {
+            cancelAnimationFrame(raf)
+            window.removeEventListener("mousemove", onMove)
+            window.removeEventListener("mouseover", onOver)
+        }
+    }, [visible])
+
+    if (!visible) return null
+    return (
+        <div
+            style={{
+                position: "fixed",
+                left: lag.x,
+                top: lag.y,
+                width: hovered ? 32 : 12,
+                height: hovered ? 32 : 12,
+                borderRadius: "50%",
+                backgroundColor: hovered ? "transparent" : "#E8B4C8",
+                border: hovered ? "2px solid #E8B4C8" : "none",
+                transform: "translate(-50%, -50%)",
+                pointerEvents: "none",
+                zIndex: 99999,
+                transition: "width 0.22s cubic-bezier(0.22,1,0.36,1), height 0.22s cubic-bezier(0.22,1,0.36,1), background-color 0.22s, border 0.22s",
+            }}
+        />
+    )
 }
 
 function Nav({ phone, tablet, px }: { phone: boolean; tablet: boolean; px: number }) {
@@ -148,6 +227,30 @@ function Hero({
     const hiW = phone ? 120 : tablet ? 160 : large ? 260 : 210
     const hiH = Math.round(hiW / 1.615)
 
+    type Particle = { id: number; color: string; x: number; angle: number; size: number }
+    const [hiAnim, setHiAnim] = useState<"idle" | "hover" | "pop">("idle")
+    const [particles, setParticles] = useState<Particle[]>([])
+    const popTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const BUBBLE_COLORS = ["#E8B4C8", "#D4AEDD", "#F4C6D8", "#C9B8E4", "#EAD4F0", "#F9B8CF", "#D8BEF8"]
+
+    const triggerPop = () => {
+        if (hiAnim === "pop") return
+        setHiAnim("pop")
+        const newParticles: Particle[] = Array.from({ length: 7 }, (_, i) => ({
+            id: Date.now() + i,
+            color: BUBBLE_COLORS[i % BUBBLE_COLORS.length],
+            x: (Math.random() - 0.5) * 80,
+            angle: Math.random() * 360,
+            size: 6 + Math.random() * 8,
+        }))
+        setParticles(newParticles)
+        if (popTimeout.current) clearTimeout(popTimeout.current)
+        popTimeout.current = setTimeout(() => {
+            setHiAnim("idle")
+            setParticles([])
+        }, 700)
+    }
+
     const headSize = phone ? "22px" : tablet ? "28px" : "33px"
     const headMaxW = "100%"
 
@@ -166,17 +269,44 @@ function Hero({
         >
             {/* Left-aligned heading block */}
             <div style={{ maxWidth: maxW, width: "100%", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                <img
-                    src="https://framerusercontent.com/images/hK0bLjY9spx6qo44Ua9QOr0NQ7Y.png"
-                    alt="Hi"
-                    style={{
-                        width: hiW,
-                        height: hiH,
-                        objectFit: "contain",
-                        display: "block",
-                        marginBottom: phone ? 24 : tablet ? 32 : 40,
-                    }}
-                />
+                <div
+                    style={{ position: "relative", marginBottom: phone ? 24 : tablet ? 32 : 40, display: "inline-block" }}
+                    onMouseEnter={() => { if (hiAnim === "idle") setHiAnim("hover") }}
+                    onMouseLeave={() => { if (hiAnim === "hover") setHiAnim("idle") }}
+                    onClick={triggerPop}
+                >
+                    <img
+                        src="https://framerusercontent.com/images/hK0bLjY9spx6qo44Ua9QOr0NQ7Y.png"
+                        alt="Hi"
+                        style={{
+                            width: hiW,
+                            height: hiH,
+                            objectFit: "contain",
+                            display: "block",
+                            animation:
+                                hiAnim === "pop" ? "hi-pop 0.55s cubic-bezier(0.34,1.56,0.64,1) forwards" :
+                                hiAnim === "hover" ? "hi-wiggle 0.5s cubic-bezier(0.22,1,0.36,1) forwards" :
+                                "hi-float 3s ease-in-out infinite",
+                        }}
+                    />
+                    {particles.map((p) => (
+                        <div
+                            key={p.id}
+                            style={{
+                                position: "absolute",
+                                left: "50%",
+                                top: "40%",
+                                width: p.size,
+                                height: p.size,
+                                borderRadius: "50%",
+                                backgroundColor: p.color,
+                                pointerEvents: "none",
+                                "--bx": `${p.x}px`,
+                                animation: "bubble-rise 0.65s cubic-bezier(0.22,1,0.36,1) forwards",
+                            } as React.CSSProperties}
+                        />
+                    ))}
+                </div>
                 <h1
                     style={{
                         fontFamily: Z,
@@ -774,6 +904,8 @@ export default function ResponsiveHome() {
                 alignItems: "center",
             }}
         >
+            <style>{CURSOR_STYLES}</style>
+            <CustomCursor />
             <div style={{ width: "100%" }}>
                 <Nav phone={phone} tablet={tablet} px={px} />
                 <Hero phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
