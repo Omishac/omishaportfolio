@@ -699,8 +699,8 @@ function RecRow({ num, title, body, detail, img, open, onClick }: any) {
             <div
                 style={{
                     overflow: "hidden",
-                    maxHeight: open ? "700px" : "0",
-                    transition: "max-height 0.5s cubic-bezier(0.22,1,0.36,1)",
+                    maxHeight: open ? "960px" : "0",
+                    transition: "max-height 0.55s cubic-bezier(0.22,1,0.36,1)",
                 }}
             >
                 <div
@@ -723,7 +723,21 @@ function RecRow({ num, title, body, detail, img, open, onClick }: any) {
                     >
                         {detail}
                     </p>
-                    {img && <PhoneFrame src={img} alt={title} width={180} />}
+                    {img && (
+                        <div style={{ flexShrink: 0, width: "240px" }}>
+                            <img
+                                src={img}
+                                alt={title}
+                                style={{
+                                    width: "100%",
+                                    height: "auto",
+                                    display: "block",
+                                    borderRadius: 10,
+                                    boxShadow: "0 4px 24px rgba(0,0,0,0.09)",
+                                }}
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
             <div
@@ -1334,20 +1348,29 @@ export default function AnthropologieCaseStudy() {
                     {/* Trend image gallery */}
                     <div style={{ display: "flex", gap: "16px", marginTop: "40px" }}>
                         {([
-                            { src: "/slides/zeroparty.gif",         alt: "Zero-party data — Sephora",       caption: "Zero-Party Data — Sephora"   },
-                            { src: "/slides/ARtryon.png",    alt: "Augmented Reality try-on — Nike", caption: "Augmented Reality — Nike"    },
-                            { src: "/slides/appxclusive.png",alt: "App-exclusive perks — Nike",      caption: "App-Exclusive Perks — Nike"  },
+                            { src: "/slides/zeroparty.gif",          alt: "Zero-party data — Sephora",       caption: "Zero-Party Data — Sephora"  },
+                            { src: "/slides/ARtryon.png",            alt: "Augmented Reality try-on — Nike", caption: "Augmented Reality — Nike"   },
+                            { src: "/slides/appxclusive.png",        alt: "App-exclusive perks — Nike",      caption: "App-Exclusive Perks — Nike" },
                         ] as { src: string; alt: string; caption: string }[]).map(({ src, alt, caption }) => (
                             <div key={caption} style={{ flex: 1, display: "flex", flexDirection: "column", gap: "10px" }}>
-                                <div style={{ borderRadius: 10, overflow: "hidden", lineHeight: 0 }}>
+                                <div style={{
+                                    borderRadius: 10,
+                                    overflow: "hidden",
+                                    lineHeight: 0,
+                                    backgroundColor: C.surface,
+                                    height: "280px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                }}>
                                     <img
                                         src={src}
                                         alt={alt}
                                         style={{
                                             width: "100%",
-                                            height: "260px",
+                                            height: "100%",
                                             display: "block",
-                                            objectFit: "cover",
+                                            objectFit: "contain",
                                         }}
                                     />
                                 </div>
@@ -1486,32 +1509,9 @@ export default function AnthropologieCaseStudy() {
                                 },
                             ]}
                         />
-                        <CompRow
-                            label="Cart Gestures"
-                            data={[
-                                {
-                                    brand: "Anthropologie",
-                                    value: "Button-only delete",
-                                    highlight: true,
-                                },
-                                {
-                                    brand: "Everlane",
-                                    value: "Standard remove CTA",
-                                },
-                                {
-                                    brand: "Lululemon",
-                                    value: "Standard remove CTA",
-                                },
-                                {
-                                    brand: "Madewell",
-                                    value: "Swipe-friendly interactions",
-                                },
-                            ]}
-                        />
-
                     </div>
                     {/* Checkout benchmarking image */}
-                    <div style={{ marginTop: "32px", marginBottom: "48px" }}>
+                    <div style={{ marginTop: "40px" }}>
                         <img
                             src="/slides/checkout.png"
                             alt="Checkout benchmarking across competitors"
@@ -1523,68 +1523,18 @@ export default function AnthropologieCaseStudy() {
                                 boxShadow: "0 4px 32px rgba(0,0,0,0.09)",
                             }}
                         />
-                        <p
-                            style={{
-                                fontFamily: Z,
-                                fontStyle: "italic",
-                                fontWeight: 300,
-                                fontSize: 13,
-                                color: C.ink3,
-                                textAlign: "center",
-                                margin: "14px 0 0",
-                                lineHeight: 1.6,
-                            }}
-                        >
+                        <p style={{
+                            fontFamily: Z,
+                            fontStyle: "italic",
+                            fontWeight: 300,
+                            fontSize: 13,
+                            color: C.ink3,
+                            textAlign: "center",
+                            margin: "14px 0 0",
+                            lineHeight: 1.6,
+                        }}>
                             Checkout benchmarking — key capability gaps identified
                         </p>
-                    </div>
-                    {/* Homepage benchmarking image */}
-                    <div style={{ marginTop: "0" }}>
-                        <img
-                            src="/slides/homepage.png"
-                            alt="Homepage benchmarking across Anthropologie, Everlane, Lululemon, and Madewell"
-                            style={{
-                                width: "100%",
-                                height: "auto",
-                                display: "block",
-                                borderRadius: 14,
-                                boxShadow: "0 4px 32px rgba(0,0,0,0.09)",
-                            }}
-                        />
-                        <p
-                            style={{
-                                fontFamily: Z,
-                                fontStyle: "italic",
-                                fontWeight: 300,
-                                fontSize: 13,
-                                color: C.ink3,
-                                textAlign: "center",
-                                margin: "14px 0 0",
-                                lineHeight: 1.6,
-                            }}
-                        >
-                            Homepage benchmarking — Anthropologie vs Everlane, Lululemon, and Madewell
-                        </p>
-                    </div>
-                    {/* Checkout phone row */}
-                    <div style={{ marginTop: "56px", marginBottom: "16px" }}>
-                        <p style={{
-                            fontFamily: INTER,
-                            fontSize: "10px",
-                            fontWeight: 700,
-                            textTransform: "uppercase",
-                            letterSpacing: "0.1em",
-                            color: C.muted,
-                            marginBottom: "32px",
-                        }}>
-                            Checkout
-                        </p>
-                        <div style={{ display: "flex", gap: "16px", justifyContent: "space-between" }}>
-                            <PhoneFrame src={IMGS.anthroCheckout}    alt="Anthropologie checkout" label="Anthropologie" width={165} />
-                            <PhoneFrame src={IMGS.everlaneCheckout}  alt="Everlane checkout"       label="Everlane"      width={165} />
-                            <PhoneFrame src={IMGS.lululemonCheckout} alt="Lululemon checkout"      label="Lululemon"     width={165} />
-                            <PhoneFrame src={IMGS.madewellCheckout}  alt="Madewell checkout"       label="Madewell"      width={165} />
-                        </div>
                     </div>
                 </FadeIn>
 
@@ -1601,16 +1551,48 @@ export default function AnthropologieCaseStudy() {
                         the mobile homepage layout and category page navigation
                         structure.
                     </Body>
-                    <div style={{ display: "flex", gap: "10px", marginBottom: "32px", alignItems: "flex-start" }}>
-                        {([
-                            { label: "Control",      desc: "Existing layout with category pills and stacked hero banner",                         bg: C.surface,  src: "/slides/control.png", alt: "Control variant"    },
-                            { label: "V1: New Layout", desc: "Full-bleed stacked images with embedded category labels, no pills",                 bg: C.surface2, src: "/slides/v1.png",      alt: "V1: New Layout"     },
-                            { label: "Stacked",      desc: "Tall editorial images stacked vertically — maximizes scroll engagement",              bg: C.surface3, src: "/slides/stack.png",   alt: "Stacked variant"    },
-                            { label: "Slider",       desc: "Two-column grid of images with horizontal swipe — increases density",                 bg: "#D8D6CF",  src: "/slides/slider.png",  alt: "Slider variant"     },
-                        ] as { label: string; desc: string; bg: string; src: string; alt: string }[]).map(({ label, desc, bg, src, alt }) => (
-                            <div key={label} style={{ flex: 1, display: "flex", flexDirection: "column", gap: "16px", alignItems: "center" }}>
-                                <ABCard label={label} desc={desc} bg={bg} />
-                                <PhoneFrame src={src} alt={alt} width={160} />
+                    {/* Comparison 1: Control vs V1 */}
+                    <p style={{
+                        fontFamily: INTER, fontSize: "10px", fontWeight: 700,
+                        textTransform: "uppercase", letterSpacing: "0.1em",
+                        color: C.muted, margin: "0 0 20px",
+                    }}>
+                        Comparison 01 — Control vs. V1: New Layout
+                    </p>
+                    <div style={{ display: "flex", gap: "10px", marginBottom: "16px" }}>
+                        <ABCard label="Control"       desc="Existing layout with category pills and stacked hero banner"                bg={C.surface}  />
+                        <ABCard label="V1: New Layout" desc="Full-bleed stacked images with embedded category labels, no pills"         bg={C.surface2} />
+                    </div>
+                    <div style={{ display: "flex", gap: "10px", marginBottom: "56px" }}>
+                        {[
+                            { src: "/slides/control.png", alt: "Control variant",  lbl: "Control"        },
+                            { src: "/slides/v1.png",      alt: "V1: New Layout",   lbl: "V1: New Layout" },
+                        ].map(({ src, alt, lbl }) => (
+                            <div key={lbl} style={{ flex: 1 }}>
+                                <img src={src} alt={alt} style={{ width: "100%", height: "auto", display: "block", borderRadius: 10, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }} />
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Comparison 2: Stack vs Slider */}
+                    <p style={{
+                        fontFamily: INTER, fontSize: "10px", fontWeight: 700,
+                        textTransform: "uppercase", letterSpacing: "0.1em",
+                        color: C.muted, margin: "0 0 20px",
+                    }}>
+                        Comparison 02 — Stack vs. Slider
+                    </p>
+                    <div style={{ display: "flex", gap: "10px", marginBottom: "16px" }}>
+                        <ABCard label="Stacked" desc="Tall editorial images stacked vertically — maximizes scroll engagement"      bg={C.surface3} />
+                        <ABCard label="Slider"  desc="Two-column grid of images with horizontal swipe — increases density"         bg="#D8D6CF"    />
+                    </div>
+                    <div style={{ display: "flex", gap: "10px", marginBottom: "16px" }}>
+                        {[
+                            { src: "/slides/stack.png",  alt: "Stacked variant", lbl: "Stacked" },
+                            { src: "/slides/slider.png", alt: "Slider variant",  lbl: "Slider"  },
+                        ].map(({ src, alt, lbl }) => (
+                            <div key={lbl} style={{ flex: 1 }}>
+                                <img src={src} alt={alt} style={{ width: "100%", height: "auto", display: "block", borderRadius: 10, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }} />
                             </div>
                         ))}
                     </div>
