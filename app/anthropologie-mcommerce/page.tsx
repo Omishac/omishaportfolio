@@ -706,37 +706,34 @@ function RecRow({ num, title, body, detail, img, open, onClick }: any) {
                 <div
                     style={{
                         display: "flex",
-                        gap: "40px",
+                        flexDirection: "column",
+                        gap: "28px",
                         paddingBottom: "40px",
                         paddingLeft: "92px",
-                        alignItems: "flex-start",
                     }}
                 >
                     <p
                         style={{
-                            flex: 1,
                             fontFamily: INTER,
                             fontSize: "13.5px",
                             lineHeight: "1.8",
                             color: C.ink3,
+                            margin: 0,
                         }}
                     >
                         {detail}
                     </p>
                     {img && (
-                        <div style={{ flexShrink: 0, width: "240px" }}>
-                            <img
-                                src={img}
-                                alt={title}
-                                style={{
-                                    width: "100%",
-                                    height: "auto",
-                                    display: "block",
-                                    borderRadius: 10,
-                                    boxShadow: "0 4px 24px rgba(0,0,0,0.09)",
-                                }}
-                            />
-                        </div>
+                        <img
+                            src={img}
+                            alt={title}
+                            style={{
+                                width: "100%",
+                                height: "auto",
+                                display: "block",
+                                borderRadius: 10,
+                            }}
+                        />
                     )}
                 </div>
             </div>
@@ -1348,10 +1345,10 @@ export default function AnthropologieCaseStudy() {
                     {/* Trend image gallery */}
                     <div style={{ display: "flex", gap: "16px", marginTop: "40px" }}>
                         {([
-                            { src: "/slides/zeroparty.gif",          alt: "Zero-party data — Sephora",       caption: "Zero-Party Data — Sephora"  },
-                            { src: "/slides/ARtryon.png",            alt: "Augmented Reality try-on — Nike", caption: "Augmented Reality — Nike"   },
-                            { src: "/slides/appxclusive.png",        alt: "App-exclusive perks — Nike",      caption: "App-Exclusive Perks — Nike" },
-                        ] as { src: string; alt: string; caption: string }[]).map(({ src, alt, caption }) => (
+                            { src: "/slides/zeroparty.gif",   alt: "Zero-party data — Sephora",       caption: "Zero-Party Data — Sephora",  clip: true  },
+                            { src: "/slides/ARtryon.png",     alt: "Augmented Reality try-on — Nike", caption: "Augmented Reality — Nike",   clip: false },
+                            { src: "/slides/appxclusive.png", alt: "App-exclusive perks — Nike",      caption: "App-Exclusive Perks — Nike", clip: false },
+                        ] as { src: string; alt: string; caption: string; clip: boolean }[]).map(({ src, alt, caption, clip }) => (
                             <div key={caption} style={{ flex: 1, display: "flex", flexDirection: "column", gap: "10px" }}>
                                 <div style={{
                                     borderRadius: 10,
@@ -1370,7 +1367,8 @@ export default function AnthropologieCaseStudy() {
                                             width: "100%",
                                             height: "100%",
                                             display: "block",
-                                            objectFit: "contain",
+                                            objectFit: clip ? "cover" : "contain",
+                                            transform: clip ? "scale(1.12)" : "none",
                                         }}
                                     />
                                 </div>
@@ -1405,113 +1403,56 @@ export default function AnthropologieCaseStudy() {
                         against three direct competitors to identify specific
                         capability gaps.
                     </Body>
-                    <div
-                        style={{
-                            borderRadius: "10px",
-                            overflow: "hidden",
-                            border: `1px solid ${C.border}`,
-                            marginBottom: "32px",
-                        }}
-                    >
-                        <div
+                    {/* Homepage benchmarking image */}
+                    <div style={{ marginTop: "16px", marginBottom: "48px" }}>
+                        <p style={{
+                            fontFamily: INTER,
+                            fontSize: "10px",
+                            fontWeight: 700,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.1em",
+                            color: C.muted,
+                            margin: "0 0 16px",
+                        }}>
+                            Homepage
+                        </p>
+                        <img
+                            src="/slides/homepage.png"
+                            alt="Homepage benchmarking — Anthropologie vs Everlane, Lululemon, and Madewell"
                             style={{
-                                display: "flex",
-                                backgroundColor: C.surface,
-                                borderBottom: `1px solid ${C.border}`,
+                                width: "100%",
+                                height: "auto",
+                                display: "block",
+                                borderRadius: 14,
+                                boxShadow: "0 4px 32px rgba(0,0,0,0.09)",
                             }}
-                        >
-                            <div
-                                style={{
-                                    width: "130px",
-                                    padding: "11px 14px",
-                                    flexShrink: 0,
-                                    borderRight: `1px solid ${C.border}`,
-                                }}
-                            />
-                            {[
-                                "Anthropologie",
-                                "Everlane",
-                                "Lululemon",
-                                "Madewell",
-                            ].map((b, i) => (
-                                <div
-                                    key={b}
-                                    style={{
-                                        flex: 1,
-                                        padding: "11px 14px",
-                                        borderRight:
-                                            i < 3
-                                                ? `1px solid ${C.border}`
-                                                : "none",
-                                        backgroundColor:
-                                            i === 0
-                                                ? C.surface2
-                                                : "transparent",
-                                    }}
-                                >
-                                    <p
-                                        style={{
-                                            fontFamily: INTER,
-                                            fontSize: "10px",
-                                            fontWeight: 700,
-                                            color: i === 0 ? C.ink : C.muted,
-                                            textTransform: "uppercase",
-                                            letterSpacing: "0.06em",
-                                            margin: 0,
-                                        }}
-                                    >
-                                        {b}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-                        <CompRow
-                            label="Homepage"
-                            data={[
-                                {
-                                    brand: "Anthropologie",
-                                    value: "App banner + category pills",
-                                    highlight: true,
-                                },
-                                {
-                                    brand: "Everlane",
-                                    value: "Full-bleed hero, clean CTA",
-                                },
-                                {
-                                    brand: "Lululemon",
-                                    value: "Search bar front-and-center",
-                                },
-                                {
-                                    brand: "Madewell",
-                                    value: "Icon nav + editorial hero",
-                                },
-                            ]}
                         />
-                        <CompRow
-                            label="Checkout"
-                            data={[
-                                {
-                                    brand: "Anthropologie",
-                                    value: "Scrollable bag, Remove CTA",
-                                    highlight: true,
-                                },
-                                {
-                                    brand: "Everlane",
-                                    value: "Shipping banner + Apple Pay",
-                                },
-                                {
-                                    brand: "Lululemon",
-                                    value: "Urgency nudge + 1-tap checkout",
-                                },
-                                {
-                                    brand: "Madewell",
-                                    value: "Afterpay + PayPal + Apple Pay",
-                                },
-                            ]}
-                        />
+                        <p style={{
+                            fontFamily: Z,
+                            fontStyle: "italic",
+                            fontWeight: 300,
+                            fontSize: 13,
+                            color: C.ink3,
+                            textAlign: "center",
+                            margin: "14px 0 0",
+                            lineHeight: 1.6,
+                        }}>
+                            Homepage benchmarking — Anthropologie vs Everlane, Lululemon, and Madewell
+                        </p>
                     </div>
                     {/* Checkout benchmarking image */}
-                    <div style={{ marginTop: "40px" }}>
+                    <div>
+                        <p style={{
+                            fontFamily: INTER,
+                            fontSize: "10px",
+                            fontWeight: 700,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.1em",
+                            color: C.muted,
+                            margin: "0 0 16px",
+                        }}>
+                            Checkout
+                        </p>
                         <img
                             src="/slides/checkout.png"
                             alt="Checkout benchmarking across competitors"
@@ -1569,7 +1510,7 @@ export default function AnthropologieCaseStudy() {
                             { src: "/slides/v1.png",      alt: "V1: New Layout",   lbl: "V1: New Layout" },
                         ].map(({ src, alt, lbl }) => (
                             <div key={lbl} style={{ flex: 1 }}>
-                                <img src={src} alt={alt} style={{ width: "100%", height: "auto", display: "block", borderRadius: 10, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }} />
+                                <img src={src} alt={alt} style={{ width: "100%", height: "180px", objectFit: "contain", objectPosition: "top", display: "block", borderRadius: 10, boxShadow: "0 4px 20px rgba(0,0,0,0.08)", backgroundColor: C.surface }} />
                             </div>
                         ))}
                     </div>
@@ -1592,7 +1533,7 @@ export default function AnthropologieCaseStudy() {
                             { src: "/slides/slider.png", alt: "Slider variant",  lbl: "Slider"  },
                         ].map(({ src, alt, lbl }) => (
                             <div key={lbl} style={{ flex: 1 }}>
-                                <img src={src} alt={alt} style={{ width: "100%", height: "auto", display: "block", borderRadius: 10, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }} />
+                                <img src={src} alt={alt} style={{ width: "100%", height: "180px", objectFit: "contain", objectPosition: "top", display: "block", borderRadius: 10, boxShadow: "0 4px 20px rgba(0,0,0,0.08)", backgroundColor: C.surface }} />
                             </div>
                         ))}
                     </div>
