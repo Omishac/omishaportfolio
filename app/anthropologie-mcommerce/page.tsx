@@ -617,7 +617,7 @@ function FindingCard({ num, title, body, icon, active, onClick, onMouseEnter, on
 }
 
 // ── Recommendation accordion ───────────────────────────────────────────────────
-function RecRow({ num, title, body, detail, img, open, onClick }: any) {
+function RecRow({ num, title, body, detail, img, clip, open, onClick }: any) {
     return (
         <div>
             <div
@@ -724,16 +724,24 @@ function RecRow({ num, title, body, detail, img, open, onClick }: any) {
                         {detail}
                     </p>
                     {img && (
-                        <div style={{ borderRadius: 10, overflow: "hidden", lineHeight: 0 }}>
+                        <div style={{
+                            borderRadius: 10,
+                            overflow: "hidden",
+                            lineHeight: 0,
+                            height: "460px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}>
                             <img
                                 src={img}
                                 alt={title}
                                 style={{
                                     width: "100%",
-                                    height: "auto",
+                                    height: "100%",
                                     display: "block",
-                                    marginTop: "-8%",
-                                    marginBottom: "-8%",
+                                    objectFit: clip ? "cover" : "contain",
+                                    objectPosition: "center",
                                 }}
                             />
                         </div>
@@ -1001,6 +1009,7 @@ export default function AnthropologieCaseStudy() {
             body: "Introduce swipe-to-delete in cart to align with native mobile behavior.",
             detail: "Drawing from our homepage redesign A/B test, which showed a positive lift in engagement when category content was less cluttered and products were surfaced faster, I recommended applying the same principle to micro-interactions in the cart. Past test data showed that reducing visual noise and simplifying user actions directly improved conversion — the same logic applies here. By introducing swipe-to-delete in the cart, we align with a native iOS gesture users already know, reducing friction at a critical drop-off point. Bringing analytical data from previous tests to back new design decisions is how we move fast with confidence.",
             img: "/slides/rec1.gif",
+            clip: true,
         },
         {
             num: "02",
@@ -1008,6 +1017,7 @@ export default function AnthropologieCaseStudy() {
             body: `Expand "Order History" into "Purchase History" to include in-store and online transactions.`,
             detail: "Triggered via Anthroperks QR scan or phone number. Sephora and H&M both surface in-store purchases in their apps. This also reduces return friction by eliminating missing receipt issues.",
             img: "/slides/rec2.png",
+            clip: false,
         },
         {
             num: "03",
@@ -1015,6 +1025,7 @@ export default function AnthropologieCaseStudy() {
             body: "Develop a virtual stylist chatbot for real-time, personalized recommendations.",
             detail: "Levi's StyleBot and ASOS FashionBot demonstrate how guided chatbots increase product discovery. Anthropologie's current chatbot is limited to order support — expanding to styling advice mirrors the in-store experience.",
             img: "/slides/rec3.png",
+            clip: true,
         },
     ]
 
