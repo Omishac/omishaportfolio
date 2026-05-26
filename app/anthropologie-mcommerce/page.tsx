@@ -1519,11 +1519,11 @@ export default function AnthropologieCaseStudy() {
                     </div>
                     <div style={{ display: "flex", gap: "10px", marginBottom: "56px" }}>
                         {[
-                            { src: "/slides/control.png", alt: "Control variant",  lbl: "Control",        cover: false },
-                            { src: "/slides/v1.png",      alt: "V1: New Layout",   lbl: "V1: New Layout", cover: true  },
-                        ].map(({ src, alt, lbl, cover }) => (
+                            { src: "/slides/control.png", alt: "Control variant",  lbl: "Control"        },
+                            { src: "/slides/v1.png",      alt: "V1: New Layout",   lbl: "V1: New Layout" },
+                        ].map(({ src, alt, lbl }) => (
                             <div key={lbl} style={{ flex: 1 }}>
-                                <img src={src} alt={alt} style={{ width: "100%", height: "250px", objectFit: cover ? "cover" : "contain", objectPosition: "top", display: "block", borderRadius: 10 }} />
+                                <img src={src} alt={alt} style={{ width: "100%", height: "250px", objectFit: "contain", objectPosition: "top", display: "block", borderRadius: 10 }} />
                             </div>
                         ))}
                     </div>
