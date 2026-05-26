@@ -1056,6 +1056,21 @@ export default function RFNDCaseStudy() {
                         <DisciplinePills />
                     </div>
                 </FadeIn>
+                <FadeIn delay={120}>
+                    <div style={{ marginTop: "48px" }}>
+                        <img
+                            src="/slides/rfnd-hero.png"
+                            alt="RFND — Reimagining Emotional E-Commerce"
+                            style={{
+                                width: "100%",
+                                height: "auto",
+                                display: "block",
+                                borderRadius: 16,
+                                boxShadow: "0 8px 56px rgba(0,0,0,0.13)",
+                            }}
+                        />
+                    </div>
+                </FadeIn>
 
                 <Divider />
                 <FadeIn>
@@ -1156,6 +1171,111 @@ export default function RFNDCaseStudy() {
                         sub="Click each feature to explore"
                     />
                     <FeatureCarousel />
+                </FadeIn>
+
+                <Divider />
+                <FadeIn>
+                    <p style={{
+                        fontFamily: INTER,
+                        fontSize: "10px",
+                        fontWeight: 700,
+                        letterSpacing: "0.14em",
+                        textTransform: "uppercase",
+                        color: C.muted,
+                        marginBottom: "40px",
+                    }}>
+                        — Design Explorations
+                    </p>
+                    <img
+                        src="/slides/homepgexplorations.png"
+                        alt="Homepage design explorations"
+                        style={{
+                            width: "100%",
+                            height: "auto",
+                            display: "block",
+                            borderRadius: 14,
+                            boxShadow: "0 4px 48px rgba(0,0,0,0.10)",
+                        }}
+                    />
+                    <p style={{
+                        fontFamily: Z,
+                        fontStyle: "italic",
+                        fontWeight: 300,
+                        fontSize: 13,
+                        color: C.ink3,
+                        textAlign: "center",
+                        margin: "18px 0 0",
+                        lineHeight: 1.6,
+                    }}>
+                        Homepage design explorations — iterating on layout, hierarchy, and visual direction
+                    </p>
+                </FadeIn>
+
+                <Divider />
+                <FadeIn>
+                    <p style={{
+                        fontFamily: INTER,
+                        fontSize: "10px",
+                        fontWeight: 700,
+                        letterSpacing: "0.14em",
+                        textTransform: "uppercase",
+                        color: C.muted,
+                        marginBottom: "40px",
+                    }}>
+                        — Key Screens
+                    </p>
+                    <div style={{ display: "flex", gap: "20px" }}>
+                        {[
+                            {
+                                src: "/slides/discover.png",
+                                label: "Discover",
+                                desc: "Mood-aware product discovery tailored to emotional intent",
+                            },
+                            {
+                                src: "/slides/profile.png",
+                                label: "Profile",
+                                desc: "Personal style hub with digital closet and saved preferences",
+                            },
+                        ].map(({ src, label, desc }) => (
+                            <div key={label} style={{ flex: 1, display: "flex", flexDirection: "column", gap: "16px" }}>
+                                <img
+                                    src={src}
+                                    alt={label}
+                                    style={{
+                                        width: "100%",
+                                        height: "auto",
+                                        display: "block",
+                                        borderRadius: 14,
+                                        boxShadow: "0 4px 48px rgba(0,0,0,0.10)",
+                                    }}
+                                />
+                                <div>
+                                    <p style={{
+                                        fontFamily: INTER,
+                                        fontWeight: 700,
+                                        fontSize: "11px",
+                                        letterSpacing: "0.08em",
+                                        textTransform: "uppercase",
+                                        color: C.ink,
+                                        margin: "0 0 5px",
+                                    }}>
+                                        {label}
+                                    </p>
+                                    <p style={{
+                                        fontFamily: Z,
+                                        fontStyle: "italic",
+                                        fontWeight: 300,
+                                        fontSize: "13px",
+                                        color: C.ink3,
+                                        margin: 0,
+                                        lineHeight: 1.55,
+                                    }}>
+                                        {desc}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </FadeIn>
 
                 <Divider />
