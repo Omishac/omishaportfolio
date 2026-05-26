@@ -25,6 +25,26 @@ const CURSOR_STYLES = `
     0% { transform: translate(0, 0) scale(1); opacity: 0.9; }
     100% { transform: translate(var(--bx), -60px) scale(0); opacity: 0; }
   }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .logo-track {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    animation: marquee 28s linear infinite;
+  }
+  .logo-track:hover {
+    animation-play-state: paused;
+  }
+  .logo-img {
+    filter: grayscale(100%) opacity(0.5);
+    transition: filter 0.35s ease;
+  }
+  .logo-img:hover {
+    filter: grayscale(0%) opacity(1);
+  }
 `
 
 const I = "Inter, system-ui, sans-serif"
@@ -714,6 +734,60 @@ function WorkSection({
     )
 }
 
+const LOGOS = [
+    { src: "/slides/anthro.png",    alt: "Anthropologie" },
+    { src: "/slides/budweiser.png", alt: "Budweiser" },
+    { src: "/slides/drexel.png",    alt: "Drexel University" },
+    { src: "/slides/jnj.png",       alt: "Johnson & Johnson" },
+    { src: "/slides/lakme.png",     alt: "Lakmé" },
+    { src: "/slides/urbn.png",      alt: "URBN" },
+]
+
+function LogoTicker({ phone }: { phone: boolean }) {
+    const gap = phone ? 52 : 80
+    return (
+        <div style={{
+            width: "100%",
+            borderTop: `1px solid ${C.border}`,
+            borderBottom: `1px solid ${C.border}`,
+            padding: `${phone ? 28 : 40}px 0`,
+        }}>
+            <div style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 5,
+                justifyContent: "center",
+                marginBottom: phone ? 22 : 32,
+            }}>
+                <span style={{ fontFamily: I, fontSize: 12, color: C.muted }}>[</span>
+                <span style={{ fontFamily: Z, fontWeight: 700, fontSize: 12, color: C.ink, letterSpacing: "-0.01em" }}>
+                    Industry Experience
+                </span>
+                <span style={{ fontFamily: I, fontSize: 12, color: C.muted }}>]</span>
+            </div>
+            <div style={{ overflow: "hidden", width: "100%" }}>
+                <div className="logo-track">
+                    {[...LOGOS, ...LOGOS].map(({ src, alt }, i) => (
+                        <img
+                            key={i}
+                            src={src}
+                            alt={alt}
+                            className="logo-img"
+                            style={{
+                                height: 40,
+                                width: "auto",
+                                display: "block",
+                                flexShrink: 0,
+                                marginRight: gap,
+                            }}
+                        />
+                    ))}
+                </div>
+            </div>
+        </div>
+    )
+}
+
 const SKILLS = [
     { num: "01", title: "Data Analytics & AI", sub: "Google Analytics · Excel · Confluence · LLMs · Prompt Engineering" },
     { num: "02", title: "User Experience Design", sub: "Research · UX/UI · Design Systems" },
@@ -910,6 +984,7 @@ export default function ResponsiveHome() {
                 <Nav phone={phone} tablet={tablet} px={px} />
                 <Hero phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
                 <WorkSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
+                <LogoTicker phone={phone} />
                 <SkillsSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
                 <Footer phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
             </div>
