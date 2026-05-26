@@ -724,16 +724,19 @@ function RecRow({ num, title, body, detail, img, open, onClick }: any) {
                         {detail}
                     </p>
                     {img && (
-                        <img
-                            src={img}
-                            alt={title}
-                            style={{
-                                width: "100%",
-                                height: "auto",
-                                display: "block",
-                                borderRadius: 10,
-                            }}
-                        />
+                        <div style={{ borderRadius: 10, overflow: "hidden", lineHeight: 0 }}>
+                            <img
+                                src={img}
+                                alt={title}
+                                style={{
+                                    width: "100%",
+                                    height: "auto",
+                                    display: "block",
+                                    transform: "scale(1.1)",
+                                    transformOrigin: "center center",
+                                }}
+                            />
+                        </div>
                     )}
                 </div>
             </div>
@@ -1345,16 +1348,15 @@ export default function AnthropologieCaseStudy() {
                     {/* Trend image gallery */}
                     <div style={{ display: "flex", gap: "16px", marginTop: "40px" }}>
                         {([
-                            { src: "/slides/zeroparty.gif",   alt: "Zero-party data — Sephora",       caption: "Zero-Party Data — Sephora",  clip: true  },
-                            { src: "/slides/ARtryon.png",     alt: "Augmented Reality try-on — Nike", caption: "Augmented Reality — Nike",   clip: false },
-                            { src: "/slides/appxclusive.png", alt: "App-exclusive perks — Nike",      caption: "App-Exclusive Perks — Nike", clip: false },
-                        ] as { src: string; alt: string; caption: string; clip: boolean }[]).map(({ src, alt, caption, clip }) => (
-                            <div key={caption} style={{ flex: 1, display: "flex", flexDirection: "column", gap: "10px" }}>
+                            { src: "/slides/zeroparty.gif",   alt: "Zero-party data — Sephora",       caption: "Zero-Party Data — Sephora",  clip: true,  size: 1.18 },
+                            { src: "/slides/ARtryon.png",     alt: "Augmented Reality try-on — Nike", caption: "Augmented Reality — Nike",   clip: false, size: 1    },
+                            { src: "/slides/appxclusive.png", alt: "App-exclusive perks — Nike",      caption: "App-Exclusive Perks — Nike", clip: false, size: 1    },
+                        ] as { src: string; alt: string; caption: string; clip: boolean; size: number }[]).map(({ src, alt, caption, clip, size }) => (
+                            <div key={caption} style={{ flex: size, display: "flex", flexDirection: "column", gap: "10px" }}>
                                 <div style={{
                                     borderRadius: 10,
                                     overflow: "hidden",
                                     lineHeight: 0,
-                                    backgroundColor: C.surface,
                                     height: "280px",
                                     display: "flex",
                                     alignItems: "center",
@@ -1510,7 +1512,7 @@ export default function AnthropologieCaseStudy() {
                             { src: "/slides/v1.png",      alt: "V1: New Layout",   lbl: "V1: New Layout" },
                         ].map(({ src, alt, lbl }) => (
                             <div key={lbl} style={{ flex: 1 }}>
-                                <img src={src} alt={alt} style={{ width: "100%", height: "180px", objectFit: "contain", objectPosition: "top", display: "block", borderRadius: 10, boxShadow: "0 4px 20px rgba(0,0,0,0.08)", backgroundColor: C.surface }} />
+                                <img src={src} alt={alt} style={{ width: "100%", height: "210px", objectFit: "contain", objectPosition: "top", display: "block", borderRadius: 10 }} />
                             </div>
                         ))}
                     </div>
@@ -1533,7 +1535,7 @@ export default function AnthropologieCaseStudy() {
                             { src: "/slides/slider.png", alt: "Slider variant",  lbl: "Slider"  },
                         ].map(({ src, alt, lbl }) => (
                             <div key={lbl} style={{ flex: 1 }}>
-                                <img src={src} alt={alt} style={{ width: "100%", height: "180px", objectFit: "contain", objectPosition: "top", display: "block", borderRadius: 10, boxShadow: "0 4px 20px rgba(0,0,0,0.08)", backgroundColor: C.surface }} />
+                                <img src={src} alt={alt} style={{ width: "100%", height: "210px", objectFit: "contain", objectPosition: "top", display: "block", borderRadius: 10 }} />
                             </div>
                         ))}
                     </div>
