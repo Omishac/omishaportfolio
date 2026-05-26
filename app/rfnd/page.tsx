@@ -64,22 +64,6 @@ function Divider() {
     )
 }
 
-function Body({ children }: { children: React.ReactNode }) {
-    return (
-        <p style={{
-            fontFamily: INTER,
-            fontSize: "15px",
-            lineHeight: "1.82",
-            color: C.ink2,
-            maxWidth: "780px",
-            marginBottom: "20px",
-            letterSpacing: "-0.003em",
-        }}>
-            {children}
-        </p>
-    )
-}
-
 // ── Editorial components ───────────────────────────────────────────────────────
 function ChapterLabel({ index, title }: { index: string; title: string }) {
     return (
@@ -111,9 +95,42 @@ function ChapterLabel({ index, title }: { index: string; title: string }) {
     )
 }
 
+function Body({ children }: { children: React.ReactNode }) {
+    return (
+        <p style={{
+            fontFamily: INTER,
+            fontSize: "15px",
+            lineHeight: "1.78",
+            color: C.ink2,
+            maxWidth: "720px",
+            marginBottom: "16px",
+            letterSpacing: "-0.003em",
+        }}>
+            {children}
+        </p>
+    )
+}
+
+function BoldLine({ children }: { children: React.ReactNode }) {
+    return (
+        <p style={{
+            fontFamily: Z,
+            fontWeight: 700,
+            fontSize: "clamp(20px, 2.4vw, 24px)",
+            color: C.ink,
+            lineHeight: 1.3,
+            letterSpacing: "-0.02em",
+            margin: "32px 0",
+            maxWidth: "760px",
+        }}>
+            {children}
+        </p>
+    )
+}
+
 function PullQuote({ text }: { text: string }) {
     return (
-        <div style={{ margin: "56px 0" }}>
+        <div style={{ margin: "52px 0" }}>
             <p style={{
                 fontFamily: Z,
                 fontStyle: "italic",
@@ -126,6 +143,36 @@ function PullQuote({ text }: { text: string }) {
             }}>
                 "{text}"
             </p>
+        </div>
+    )
+}
+
+function BulletList({ items }: { items: string[] }) {
+    return (
+        <div style={{ margin: "20px 0 24px" }}>
+            {items.map((item, i) => (
+                <div key={i} style={{ display: "flex", gap: "14px", marginBottom: "10px", alignItems: "flex-start" }}>
+                    <span style={{
+                        fontFamily: Z,
+                        fontSize: "14px",
+                        color: C.muted,
+                        flexShrink: 0,
+                        marginTop: "1px",
+                        lineHeight: 1.65,
+                    }}>
+                        —
+                    </span>
+                    <p style={{
+                        fontFamily: INTER,
+                        fontSize: "14px",
+                        color: C.ink2,
+                        lineHeight: 1.65,
+                        margin: 0,
+                    }}>
+                        {item}
+                    </p>
+                </div>
+            ))}
         </div>
     )
 }
@@ -179,8 +226,8 @@ function Callout({ type, title, body }: {
             backgroundColor: s.bg,
             borderLeft: s.border,
             borderRadius: s.br,
-            padding: "36px 40px",
-            margin: "44px 0",
+            padding: "32px 36px",
+            margin: "40px 0",
         }}>
             <p style={{
                 fontFamily: INTER,
@@ -189,24 +236,24 @@ function Callout({ type, title, body }: {
                 letterSpacing: "0.15em",
                 textTransform: "uppercase",
                 color: s.labelColor,
-                marginBottom: "14px",
+                marginBottom: "12px",
             }}>
                 {s.label}
             </p>
             <p style={{
                 fontFamily: Z,
-                fontSize: "20px",
+                fontSize: "19px",
                 fontWeight: 700,
                 color: s.titleColor,
-                marginBottom: "12px",
+                marginBottom: "10px",
                 lineHeight: 1.35,
             }}>
                 {title}
             </p>
             <p style={{
                 fontFamily: INTER,
-                fontSize: "14px",
-                lineHeight: 1.74,
+                fontSize: "13.5px",
+                lineHeight: 1.7,
                 color: s.bodyColor,
                 margin: 0,
             }}>
@@ -243,7 +290,7 @@ function FullImage({ src, alt, caption, radius = 14 }: {
                     fontSize: 13,
                     color: C.ink3,
                     textAlign: "center",
-                    margin: "18px 0 0",
+                    margin: "16px 0 0",
                     lineHeight: 1.6,
                 }}>
                     {caption}
@@ -263,7 +310,7 @@ function Transition({ text }: { text: string }) {
             color: C.ink3,
             marginTop: "40px",
             lineHeight: 1.7,
-            maxWidth: "680px",
+            maxWidth: "660px",
             borderTop: `1px solid ${C.border}`,
             paddingTop: "28px",
         }}>
@@ -313,7 +360,7 @@ function ShoppingModeToggle() {
                 padding: "32px", borderRadius: "10px",
                 transition: "background 0.5s cubic-bezier(0.22,1,0.36,1)",
             }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "14px" }}>
                     <span style={{ fontSize: "32px" }}>{modes[mode].icon}</span>
                     <p style={{ fontFamily: Z, fontSize: "20px", fontWeight: 600, color: C.ink, margin: 0 }}>
                         {modes[mode].title}
@@ -396,7 +443,7 @@ function MoodCarousel() {
                 }}>→</button>
             </div>
             <p style={{ fontFamily: INTER, fontSize: "13px", color: C.ink3, textAlign: "center", marginTop: "24px", lineHeight: 1.6 }}>
-                Browse products based on your current mood and emotional state
+                Envisioned interaction — mood-first entry point for the discovery experience
             </p>
         </div>
     )
@@ -486,7 +533,7 @@ export default function RFNDCaseStudy() {
                             letterSpacing: "0.14em", textTransform: "uppercase",
                             color: C.muted, marginBottom: "24px",
                         }}>
-                            Capstone · UX Strategy · E-Commerce Innovation
+                            Conceptual Capstone · UX Strategy · E-Commerce Innovation
                         </p>
                         <h1 style={{
                             fontFamily: Z, fontWeight: 700,
@@ -499,9 +546,9 @@ export default function RFNDCaseStudy() {
                         <p style={{
                             fontFamily: Z, fontStyle: "italic", fontWeight: 300,
                             fontSize: "20px", marginBottom: "52px", color: C.ink3,
-                            maxWidth: "680px", lineHeight: 1.62,
+                            maxWidth: "660px", lineHeight: 1.6,
                         }}>
-                            A nine-month design strategy capstone exploring why emotional engagement is a commerce problem — and how mood-aware design drives loyalty beyond the transaction.
+                            A self-initiated conceptual exploration into why emotional engagement is a commerce problem — and what mood-aware design could look like as a solution.
                         </p>
                         <div style={{
                             display: "flex", gap: "56px",
@@ -510,7 +557,7 @@ export default function RFNDCaseStudy() {
                             {[
                                 ["Role", "Product Strategist · UX Designer · Researcher"],
                                 ["Timeline", "9 Months"],
-                                ["Focus", "UX Strategy · Personalization · Consumer Psychology"],
+                                ["Type", "Speculative Design · Conceptual Exploration"],
                             ].map(([k, v]) => (
                                 <div key={k}>
                                     <p style={{
@@ -546,16 +593,19 @@ export default function RFNDCaseStudy() {
                         index="01 — Context"
                         title="The industry was leaving money on the table"
                     />
+                    <BoldLine>
+                        Fashion e-commerce generates $700B+ annually. It returns $100–300B of that inventory every year.
+                    </BoldLine>
                     <Body>
-                        Fashion e-commerce generates over $700 billion annually — and returns somewhere between $100 and $300 billion of that same inventory every year. I started RFND with a conviction that these two figures are not coincidental. The industry had optimized relentlessly for speed of transaction at the direct cost of the emotional experiences that make people feel confident about what they buy.
+                        Not a logistics problem. An emotional one.
                     </Body>
-                    <Body>
-                        Platforms got faster. Checkout got easier. Recommendations got smarter. But the rate of buyer's remorse — and the volume of product shipped back — kept climbing. Something was being missed. And it wasn't a feature.
-                    </Body>
-                    <Body>
-                        It was a feeling.
-                    </Body>
-                    <Transition text="To understand what was missing, I needed to stop looking at the interface and start looking at the person using it." />
+                    <BulletList items={[
+                        "The industry optimized for transaction speed — and sacrificed emotional connection in the process",
+                        "Faster checkout did not reduce buyer's remorse",
+                        "Smarter algorithms did not reduce return rates",
+                        "Something was missing — and it wasn't a feature",
+                    ]} />
+                    <Transition text="I started this conceptual exploration with one question: what would it look like if a commerce product finally understood how someone felt when they showed up?" />
                 </FadeIn>
 
                 {/* ── 02 THE PROBLEM ── */}
@@ -563,24 +613,21 @@ export default function RFNDCaseStudy() {
                 <FadeIn>
                     <ChapterLabel
                         index="02 — The Problem"
-                        title="I reframed the question before writing a single line of design"
+                        title="I reframed the question before sketching a single screen"
                     />
                     <Body>
-                        Most UX briefs frame shopping as an efficiency problem — how do we help users find what they want faster? That framing produces useful products, but it quietly assumes users always know what they want. In fashion, they rarely do.
-                    </Body>
-                    <Body>
-                        The research question I defined for RFND deliberately avoided solutions:
+                        Most UX briefs frame shopping as an efficiency problem. I reframed it as a psychology problem.
                     </Body>
                     <PullQuote text="How do emotional responses elicited by e-commerce design influence purchasing decisions, impulse behavior, and long-term brand loyalty?" />
                     <Body>
-                        This reframing changed the entire scope. I wasn't designing a better filter. I was investigating the psychology of desire — and whether a digital product could meet that psychology with the same nuance a great in-store experience does.
+                        This wasn't about designing better filters. It was about investigating the psychology of desire — and whether a digital product could meet that psychology with the same nuance a great in-store experience does.
                     </Body>
                     <Callout
                         type="constraint"
-                        title="I was designing without a product to iterate on"
-                        body="RFND was greenfield strategy work — no existing interface to test against, no live users to observe, no product team to pressure-test decisions with. Every insight had to be grounded in primary research, behavioral psychology literature, and analogous products. This constraint forced me to be more rigorous about evidence than I'd ever been before."
+                        title="This was greenfield conceptual work — no existing product to iterate on"
+                        body="No live interface, no behavioral data, no product team. Every proposed direction had to be grounded in primary research, behavioral psychology, and analogous product analysis."
                     />
-                    <Transition text="Which meant I needed to go deep on research before I could go anywhere on design." />
+                    <Transition text="Which meant research had to come before design — and that turned out to be the right call." />
                 </FadeIn>
 
                 {/* ── 03 RESEARCH & DISCOVERY ── */}
@@ -588,33 +635,36 @@ export default function RFNDCaseStudy() {
                 <FadeIn>
                     <ChapterLabel
                         index="03 — Research & Discovery"
-                        title="I needed to understand the person before I could design the product"
+                        title="Understanding the person before designing the product"
                     />
                     <Body>
-                        I spent the first two months doing something that felt counterproductive but turned out to be essential: not designing. I conducted interviews with frequent online shoppers, ran diary studies to capture real-time shopping behavior, and synthesized findings from behavioral economics research on consumer decision-making.
+                        I spent the first two months not designing. I needed to understand the emotional arc of a shopping session before proposing any solution.
                     </Body>
-                    <Body>
-                        What I was looking for wasn't a pain point in the traditional sense. I wanted to understand the emotional arc of a shopping session — how users arrived, how they moved through a store, and what made them leave with either confidence or regret.
-                    </Body>
+                    <BulletList items={[
+                        "Interviews with frequent online shoppers about browsing and buying behavior",
+                        "Diary studies capturing real-time emotional states during shopping sessions",
+                        "Behavioral economics research on consumer decision-making and cognitive load",
+                        "Analysis of physical retail experiences and what made them emotionally resonant",
+                    ]} />
                 </FadeIn>
                 <FadeIn delay={80}>
                     <FullImage
-                        src="/slides/persona.jpg"
+                        src="/slides/Persona.jpg"
                         alt="RFND user persona"
-                        caption="User persona synthesized from interviews and behavioral research — the emotionally-driven, discovery-oriented modern shopper"
+                        caption="Synthesized persona — the emotionally-driven, discovery-oriented modern shopper this concept was designed for"
                     />
                 </FadeIn>
                 <FadeIn>
+                    <BoldLine>
+                        She wasn't failing because the product was hard to use. She was failing because the product didn't know who she was that day.
+                    </BoldLine>
                     <Body>
-                        The user I was designing for wasn't failing because the product was hard to use. She was failing because the product didn't understand her emotional state when she arrived. She showed up differently on a Sunday afternoon browsing for inspiration than she did on a Tuesday lunch break looking for a specific dress for a specific event. And every app she used treated her exactly the same way.
-                    </Body>
-                    <Body>
-                        That gap — between who a user is in the moment and who the product assumes they are — became the central design problem I committed to solving.
+                        The user this concept was designed for showed up differently on a Sunday afternoon than she did on a Tuesday lunch break. Every existing app treated her exactly the same both times.
                     </Body>
                     <Callout
                         type="insight"
-                        title="Users don't shop in one mode — they oscillate between two fundamentally different emotional states"
-                        body="Intent mode is goal-driven: the user knows what they want and needs efficiency. Discovery mode is exploratory: the user wants inspiration, connection, or surprise. Most platforms serve neither mode well because they're built on the assumption that both are the same person with the same need."
+                        title="People don't shop in one mode — they oscillate between two distinct emotional states"
+                        body="Intent mode: goal-driven, efficiency-focused, knows what they want. Discovery mode: exploratory, emotionally open, looking for inspiration or surprise. Most platforms serve neither mode well because they assume both are the same person with the same need."
                     />
                     <Transition text="Once I could name the two modes, the design direction became clear — but getting there required a creative exploration that challenged almost every assumption I started with." />
                 </FadeIn>
@@ -624,43 +674,46 @@ export default function RFNDCaseStudy() {
                 <FadeIn>
                     <ChapterLabel
                         index="04 — Exploration"
-                        title="Before designing screens, I found a visual and emotional language"
+                        title="Before designing screens, I found an emotional language"
                     />
                     <Body>
-                        One of the deliberate choices I made early was to resist the pull toward wireframes. It's tempting to start designing UI the moment you have a direction — but with RFND, I knew the product's success would depend on its emotional register as much as its functionality. So before touching a frame, I spent several weeks in visual territory.
+                        I deliberately resisted wireframes early. RFND's success as a concept would depend on its emotional register — not just its information architecture.
                     </Body>
-                    <Body>
-                        I built moodboards, studied how luxury fashion brands use negative space and pacing, and analyzed the sensory language of physical retail — the deliberate lighting, the curated music, the way good stores slow you down on purpose. I was trying to understand what "emotional design" felt like at a craft level, not just what it meant conceptually.
-                    </Body>
+                    <BulletList items={[
+                        "Built moodboards to define tonal and aesthetic direction",
+                        "Studied how luxury brands use negative space, pacing, and atmosphere",
+                        "Analyzed the sensory language of physical retail — what slows you down on purpose",
+                        "Explored analogous products that created emotional connection without sacrificing utility",
+                    ]} />
                 </FadeIn>
                 <FadeIn delay={80}>
                     <FullImage
-                        src="/slides/moodboard.png"
+                        src="/slides/Mood%20board.png"
                         alt="RFND moodboard"
-                        caption="Visual and emotional territory — tonal direction, aesthetic reference, and the feeling RFND was designed to evoke"
+                        caption="Visual and emotional territory — tonal direction and aesthetic reference for the envisioned RFND experience"
                     />
                 </FadeIn>
                 <FadeIn>
+                    <BoldLine>
+                        The most resonant retail experiences share one thing: they create space. They don't rush you toward a decision. They let you arrive at one.
+                    </BoldLine>
                     <Body>
-                        The moodboard revealed something I hadn't expected: the most emotionally resonant retail experiences share a common quality — they create space. Not just whitespace in the design sense, but cognitive space. They don't rush you toward a decision. They let you arrive at one.
-                    </Body>
-                    <Body>
-                        That insight became a design principle that ran through every screen and interaction I built: the interface should feel less like a store directory and more like a room you want to stay in.
+                        That became the organizing design principle: the proposed interface should feel less like a store directory and more like a room.
                     </Body>
                     <Callout
                         type="tradeoff"
-                        title="Emotional depth vs. functional speed"
-                        body="Designing for atmosphere is in direct tension with the efficiency metrics that drive most e-commerce KPIs — session length, click-through rate, conversion per visit. I had to be deliberate about where RFND accepted this tradeoff — and where it absolutely couldn't afford to. Intent mode had to be fast. Discovery mode could be slow. The product lived in the tension between both."
+                        title="Emotional atmosphere vs. functional speed"
+                        body="Designing for feeling is in direct tension with the efficiency metrics that drive e-commerce KPIs. The proposed solution accepted this tradeoff deliberately — Intent mode stays fast, Discovery mode slows down. The concept lives in the tension between both."
                     />
                     <p style={{
                         fontFamily: INTER, fontSize: "10px", fontWeight: 700,
                         letterSpacing: "0.12em", textTransform: "uppercase",
                         color: C.muted, margin: "52px 0 16px",
                     }}>
-                        Interactive Demo — Mood-Based Personalization
+                        Concept Demo — Proposed Mood-Based Entry Point
                     </p>
                     <MoodCarousel />
-                    <Transition text="With a creative direction established, I moved into the hardest part of the project: making actual product decisions." />
+                    <Transition text="With a creative direction established, the harder work began: making actual product decisions." />
                 </FadeIn>
 
                 {/* ── 05 DECISION MAKING ── */}
@@ -668,25 +721,30 @@ export default function RFNDCaseStudy() {
                 <FadeIn>
                     <ChapterLabel
                         index="05 — Decision Making"
-                        title="The decision that shaped everything else"
+                        title="The one decision that shaped everything else"
                     />
                     <Body>
-                        The key product decision in RFND was one I almost didn't make. My instinct was to build a smarter recommendation algorithm — something that infers emotional intent from behavioral data and personalizes accordingly. It was technically credible and commercially defensible. Most companies are already building it.
+                        The core product decision in this concept was one I almost didn't make.
                     </Body>
-                    <Body>
-                        But the research kept pulling me in a different direction. Users didn't want to be understood by an algorithm. They wanted to be understood by the product in a way they could see and control. The difference between "we noticed you like this" and "you told us you're in this mood tonight" isn't just philosophical — it's the difference between surveillance and conversation.
-                    </Body>
+                    <BulletList items={[
+                        "Option A: Smarter algorithm — infer emotional intent from past behavioral data",
+                        "Option B: Explicit mood input — let the user define their context before browsing",
+                        "I chose Option B",
+                    ]} />
+                    <BoldLine>
+                        The difference between "we noticed you like this" and "you told us how you feel tonight" is the difference between surveillance and conversation.
+                    </BoldLine>
                     <Callout
                         type="decision"
-                        title="Mood-first personalization: voluntary signal over behavioral inference"
-                        body="I designed a system where users actively define their emotional context before browsing — occasion, mood, aesthetic intent — rather than having it inferred from past behavior. This makes personalization feel like a conversation, not a mirror. It also means the experience adapts to who they are today, not who they were last Tuesday. And critically: users trust a system they feel in control of."
+                        title="Voluntary signal over behavioral inference"
+                        body="The envisioned system asks users to set their emotional context before browsing — occasion, mood, aesthetic intent — rather than inferring it. Personalization feels like a conversation. It also adapts to who they are today, not last Tuesday. People trust systems they feel in control of."
                     />
                     <p style={{
                         fontFamily: INTER, fontSize: "10px", fontWeight: 700,
                         letterSpacing: "0.12em", textTransform: "uppercase",
                         color: C.muted, margin: "52px 0 16px",
                     }}>
-                        Interactive Demo — Try Switching Modes
+                        Concept Demo — Proposed Dual-Mode Experience
                     </p>
                     <ShoppingModeToggle />
                 </FadeIn>
@@ -694,11 +752,11 @@ export default function RFNDCaseStudy() {
                     <FullImage
                         src="/slides/homepgexplorations.png"
                         alt="Homepage design explorations"
-                        caption="Homepage layout explorations — iterating on visual hierarchy, mode entry points, and the first decision a user makes when they open the app"
+                        caption="Homepage explorations — iterating on hierarchy, mode entry points, and the first decision a user makes when they open the app"
                     />
                 </FadeIn>
                 <FadeIn>
-                    <Transition text="Having made the core product decision, I needed to validate that the features built on top of it would actually hold up — not just conceptually, but behaviorally." />
+                    <Transition text="With the core concept defined, I needed to validate that the features built on top of it would hold — not just as ideas, but as behavioral propositions." />
                 </FadeIn>
 
                 {/* ── 06 TESTING & VALIDATION ── */}
@@ -706,23 +764,30 @@ export default function RFNDCaseStudy() {
                 <FadeIn>
                     <ChapterLabel
                         index="06 — Testing & Validation"
-                        title="I validated every feature against two questions, not one"
+                        title="Every proposed feature was evaluated against two questions"
                     />
+                    <BulletList items={[
+                        "Does this solve a real behavioral friction I documented in research?",
+                        "Does this create lasting value — or just novelty?",
+                    ]} />
+                    <BoldLine>
+                        Novelty drives short-term engagement. Genuine value drives return behavior.
+                    </BoldLine>
                     <Body>
-                        Most product teams validate against a single criterion: does this feature solve a user problem? I added a second filter throughout RFND: does this feature create genuine value, or does it create novelty?
+                        For a concept competing on emotional loyalty, every feature needed to pass both filters.
                     </Body>
-                    <Body>
-                        The distinction matters more than it sounds. Novelty drives short-term engagement. Genuine value drives return behavior. For a product competing on emotional loyalty, I needed features users would still want six months in — not just six minutes in.
-                    </Body>
-                    <Body>
-                        I stress-tested four features against this framework. Conversational filtering — natural language prompts replacing rigid category trees — passed both tests: it reduced real friction and added durable value by making the experience feel less mechanical. The digital closet passed on similar grounds. The gamified discovery mechanic required the most rethinking — the slot-machine interaction tested well for novelty but needed a clearer behavioral payoff before I felt confident it could hold.
-                    </Body>
+                    <BulletList items={[
+                        "Conversational filtering — passed both: reduced decision paralysis, made the experience feel less mechanical",
+                        "Digital closet — passed both: addressed fragmented wishlist behavior and style continuity over time",
+                        "Mood-based entry point — passed both: made personalization feel like consent, not surveillance",
+                        "Gamified discovery mechanic — passed novelty only; required significant rethinking before inclusion",
+                    ]} />
                     <Callout
                         type="insight"
-                        title="The features that survived were the ones rooted in behavior, not delight"
-                        body="Every feature in the final recommendation addressed a specific behavioral gap I'd documented in research: the paralysis of too many choices, the cognitive cost of managing a fragmented wishlist, the emotional friction of returning something because it didn't match how you felt the day you bought it. Delight was a byproduct — not the strategy."
+                        title="The proposed features that survived were rooted in behavior, not delight"
+                        body="Every feature in the final concept addressed a specific gap documented in research — too many choices causing paralysis, fragmented wishlists creating friction, purchases misaligned with how someone felt the day they bought. Delight was a byproduct, not the strategy."
                     />
-                    <Transition text="With the features validated, I could finally define what RFND looked and felt like as a complete product experience." />
+                    <Transition text="With the feature set validated against research, the concept was ready to be presented as a complete proposed experience." />
                 </FadeIn>
 
                 {/* ── 07 FINAL RECOMMENDATION ── */}
@@ -730,31 +795,33 @@ export default function RFNDCaseStudy() {
                 <FadeIn>
                     <ChapterLabel
                         index="07 — Final Recommendation"
-                        title="A product that meets you where you are"
+                        title="A proposed product that meets you where you are"
                     />
                     <Body>
-                        The final recommendation I brought to my capstone committee was a dual-mode e-commerce platform built on a single organizing principle: the interface should adapt to the user's emotional intent — not force the user to adapt to the interface.
+                        The concept I proposed was a dual-mode commerce platform built on one principle:
                     </Body>
-                    <Body>
-                        In practice: two distinct but unified experiences. Intent mode strips away everything except what a goal-directed user needs — fast filtering, direct navigation, reduced visual density, frictionless checkout. Discovery mode leans into exploration — editorial curation, mood-based recommendations, conversational filtering, and a digital closet that helps users build toward a personal aesthetic over time.
-                    </Body>
-                    <PullQuote text="The best retail experience doesn't ask you what you want to buy. It asks you how you want to feel." />
-                    <Body>
-                        The key screens were designed to embody this duality — each making the user's current mode legible through layout, density, and pacing rather than through explicit labels or onboarding flows. The mode you're in should feel obvious without being stated.
-                    </Body>
+                    <BoldLine>
+                        The interface should adapt to the user's emotional intent — not force the user to adapt to the interface.
+                    </BoldLine>
+                    <BulletList items={[
+                        "Intent mode — fast filtering, direct navigation, reduced density, frictionless checkout",
+                        "Discovery mode — editorial curation, mood-based recommendations, conversational filtering, digital closet",
+                        "The mode you're in feels legible through layout and pacing — never through a label or onboarding prompt",
+                    ]} />
+                    <PullQuote text="The best retail experience doesn't ask what you want to buy. It asks how you want to feel." />
                 </FadeIn>
                 <FadeIn delay={80}>
                     <div style={{ display: "flex", gap: "20px", margin: "44px 0" }}>
                         {[
                             {
                                 src: "/slides/discover.png",
-                                label: "Discover",
-                                desc: "Mood-aware product discovery — editorial curation tailored to emotional intent and occasion",
+                                label: "Discover Screen",
+                                desc: "Proposed mood-aware discovery — editorial curation adapting to emotional intent and occasion",
                             },
                             {
                                 src: "/slides/profile.png",
-                                label: "Profile",
-                                desc: "Personal style hub — digital closet, style history, and preference memory across sessions",
+                                label: "Profile Screen",
+                                desc: "Proposed style hub — digital closet, style history, and preference memory across sessions",
                             },
                         ].map(({ src, label, desc }) => (
                             <div key={label} style={{ flex: 1, display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -794,22 +861,25 @@ export default function RFNDCaseStudy() {
                 <Divider />
                 <FadeIn>
                     <ChapterLabel
-                        index="08 — Reflection & Impact"
-                        title="What RFND taught me about the relationship between strategy and design"
+                        index="08 — Reflection"
+                        title="What this conceptual project taught me"
                     />
                     <Body>
-                        RFND is the project that clarified how I think at a strategic level. Not design as a craft exercise — though the craft mattered — but design as a discipline that sits at the intersection of business, psychology, and human behavior. Every visual decision I made was downstream of a strategic question. Every interaction was in service of an emotional outcome.
+                        RFND clarified how I think about design at a strategic level — as a discipline that sits at the intersection of business, psychology, and behavior.
                     </Body>
-                    <Body>
-                        I also learned something harder: knowing what to build is only half the work. The other half is knowing what not to build — which features to reject, which directions to abandon, which instincts to override because the research doesn't support them. Some of the ideas I was most excited about early in the project didn't survive contact with user research. That's not failure. That's the process working correctly.
-                    </Body>
-                    <Body>
-                        If I were running this with a real product team, I'd prioritize two things I couldn't fully address in a solo capstone: behavioral testing at scale over time, and the transition design between modes. The moment a user shifts from intent to discovery is where the product either earns or loses the emotional contract it's trying to establish. That seam is where I'd spend the next six months.
-                    </Body>
+                    <BulletList items={[
+                        "Knowing what to build is half the work — knowing what not to build is the other half",
+                        "Several early concepts didn't survive contact with the research. That's not failure — that's process working correctly",
+                        "The transition between modes is where this concept would be stress-tested most with a real team",
+                        "Behavioral testing at scale, over time, would be the immediate next step if this were to move beyond a conceptual exploration",
+                    ]} />
+                    <BoldLine>
+                        Every feature decision was downstream of a strategic question. Every visual choice was in service of an emotional outcome.
+                    </BoldLine>
                     <Callout
                         type="insight"
                         title="The future of commerce is emotional intelligence — not just artificial intelligence"
-                        body="Personalization at scale is already a commodity. What the next generation of commerce products needs to build is something harder to replicate: the ability to understand not just what a user is looking for, but what kind of experience they need in that moment — and respond accordingly. That's the space RFND was designed to occupy."
+                        body="Personalization at scale is already a commodity. What the next generation of commerce concepts needs to explore is harder to replicate: understanding not just what a user is looking for, but what kind of experience they need in that moment. That's the space RFND was designed to occupy."
                     />
                     <div style={{
                         marginTop: "64px",
@@ -832,7 +902,7 @@ export default function RFNDCaseStudy() {
                             lineHeight: "1.55", maxWidth: "680px",
                             color: "rgba(255,255,255,0.92)", margin: 0,
                         }}>
-                            Digital experiences can still feel meaningful when designed thoughtfully — when the interface listens before it speaks, and adapts before it assumes.
+                            Digital experiences can still feel meaningful — when the interface listens before it speaks, and adapts before it assumes.
                         </p>
                     </div>
                 </FadeIn>
