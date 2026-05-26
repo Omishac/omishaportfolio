@@ -732,8 +732,8 @@ function RecRow({ num, title, body, detail, img, open, onClick }: any) {
                                     width: "100%",
                                     height: "auto",
                                     display: "block",
-                                    transform: "scale(1.1)",
-                                    transformOrigin: "center center",
+                                    marginTop: "-8%",
+                                    marginBottom: "-8%",
                                 }}
                             />
                         </div>
@@ -1370,7 +1370,7 @@ export default function AnthropologieCaseStudy() {
                                             height: "100%",
                                             display: "block",
                                             objectFit: clip ? "cover" : "contain",
-                                            transform: clip ? "scale(1.12)" : "none",
+                                            transform: clip ? "scale(1.08)" : "none",
                                         }}
                                     />
                                 </div>
@@ -1508,11 +1508,11 @@ export default function AnthropologieCaseStudy() {
                     </div>
                     <div style={{ display: "flex", gap: "10px", marginBottom: "56px" }}>
                         {[
-                            { src: "/slides/control.png", alt: "Control variant",  lbl: "Control"        },
-                            { src: "/slides/v1.png",      alt: "V1: New Layout",   lbl: "V1: New Layout" },
-                        ].map(({ src, alt, lbl }) => (
+                            { src: "/slides/control.png", alt: "Control variant",  lbl: "Control",        cover: false },
+                            { src: "/slides/v1.png",      alt: "V1: New Layout",   lbl: "V1: New Layout", cover: true  },
+                        ].map(({ src, alt, lbl, cover }) => (
                             <div key={lbl} style={{ flex: 1 }}>
-                                <img src={src} alt={alt} style={{ width: "100%", height: "210px", objectFit: "contain", objectPosition: "top", display: "block", borderRadius: 10 }} />
+                                <img src={src} alt={alt} style={{ width: "100%", height: "250px", objectFit: cover ? "cover" : "contain", objectPosition: "top", display: "block", borderRadius: 10 }} />
                             </div>
                         ))}
                     </div>
@@ -1535,7 +1535,7 @@ export default function AnthropologieCaseStudy() {
                             { src: "/slides/slider.png", alt: "Slider variant",  lbl: "Slider"  },
                         ].map(({ src, alt, lbl }) => (
                             <div key={lbl} style={{ flex: 1 }}>
-                                <img src={src} alt={alt} style={{ width: "100%", height: "210px", objectFit: "contain", objectPosition: "top", display: "block", borderRadius: 10 }} />
+                                <img src={src} alt={alt} style={{ width: "100%", height: "250px", objectFit: "contain", objectPosition: "top", display: "block", borderRadius: 10 }} />
                             </div>
                         ))}
                     </div>
