@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect, useCallback } from "react"
+import { useState, useRef, useEffect, useCallback, Fragment } from "react"
 
 const CURSOR_STYLES = `
   * { cursor: none !important; }
@@ -25,6 +25,11 @@ const CURSOR_STYLES = `
     0% { transform: translate(0, 0) scale(1); opacity: 0.9; }
     100% { transform: translate(var(--bx), -60px) scale(0); opacity: 0; }
   }
+  @keyframes word-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  html { scroll-behavior: smooth; }
   @keyframes marquee {
     from { transform: translateX(0); }
     to   { transform: translateX(-50%); }
@@ -228,6 +233,18 @@ function Nav({ phone, tablet, px }: { phone: boolean; tablet: boolean; px: numbe
     )
 }
 
+type WordDef = { text: string; yb?: boolean }
+const HERO_LINE1: WordDef[] = [
+    { text: "I" }, { text: "design" }, { text: "digital" }, { text: "products" },
+    { text: "by" }, { text: "balancing" },
+    { text: "Creativity", yb: true }, { text: "&" }, { text: "Insights;", yb: true },
+]
+const HERO_LINE2: WordDef[] = [
+    { text: "always" }, { text: "grounded" }, { text: "in" },
+    { text: "how", yb: true },
+    { text: "people" }, { text: "experience" }, { text: "them" },
+]
+
 function Hero({
     phone,
     tablet,
@@ -252,6 +269,15 @@ function Hero({
     const [particles, setParticles] = useState<Particle[]>([])
     const popTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
     const BUBBLE_COLORS = ["#E8B4C8", "#D4AEDD", "#F4C6D8", "#C9B8E4", "#EAD4F0", "#F9B8CF", "#D8BEF8"]
+
+    const [revealed, setRevealed] = useState(false)
+    const [heroScrollY, setHeroScrollY] = useState(0)
+    useEffect(() => {
+        const t = setTimeout(() => setRevealed(true), 60)
+        const onScroll = () => setHeroScrollY(window.scrollY)
+        window.addEventListener("scroll", onScroll, { passive: true })
+        return () => { clearTimeout(t); window.removeEventListener("scroll", onScroll) }
+    }, [])
 
     const triggerPop = () => {
         if (hiAnim === "pop") return
@@ -289,43 +315,58 @@ function Hero({
         >
             {/* Left-aligned heading block */}
             <div style={{ maxWidth: maxW, width: "100%", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                <div
-                    style={{ position: "relative", marginBottom: phone ? 24 : tablet ? 32 : 40, display: "inline-block" }}
-                    onMouseEnter={() => { if (hiAnim === "idle") setHiAnim("hover") }}
-                    onMouseLeave={() => { if (hiAnim === "hover") setHiAnim("idle") }}
-                    onClick={triggerPop}
-                >
-                    <img
-                        src="https://framerusercontent.com/images/hK0bLjY9spx6qo44Ua9QOr0NQ7Y.png"
-                        alt="Hi"
-                        style={{
-                            width: hiW,
-                            height: hiH,
-                            objectFit: "contain",
-                            display: "block",
-                            animation:
-                                hiAnim === "pop" ? "hi-pop 0.55s cubic-bezier(0.34,1.56,0.64,1) forwards" :
-                                hiAnim === "hover" ? "hi-wiggle 0.5s cubic-bezier(0.22,1,0.36,1) forwards" :
-                                "hi-float 3s ease-in-out infinite",
-                        }}
-                    />
-                    {particles.map((p) => (
+                {/* Parallax wrapper — moves slower than page scroll */}
+                <div style={{
+                    marginBottom: phone ? 24 : tablet ? 32 : 40,
+                    display: "inline-block",
+                    transform: `translateY(${heroScrollY * 0.3}px)`,
+                    willChange: "transform",
+                }}>
+                    {/* Reveal fade-in on mount */}
+                    <div style={{
+                        opacity: revealed ? 1 : 0,
+                        transition: "opacity 0.65s cubic-bezier(0.22,1,0.36,1)",
+                    }}>
+                        {/* Interaction + particles */}
                         <div
-                            key={p.id}
-                            style={{
-                                position: "absolute",
-                                left: "50%",
-                                top: "40%",
-                                width: p.size,
-                                height: p.size,
-                                borderRadius: "50%",
-                                backgroundColor: p.color,
-                                pointerEvents: "none",
-                                "--bx": `${p.x}px`,
-                                animation: "bubble-rise 0.65s cubic-bezier(0.22,1,0.36,1) forwards",
-                            } as React.CSSProperties}
-                        />
-                    ))}
+                            style={{ position: "relative", display: "inline-block" }}
+                            onMouseEnter={() => { if (hiAnim === "idle") setHiAnim("hover") }}
+                            onMouseLeave={() => { if (hiAnim === "hover") setHiAnim("idle") }}
+                            onClick={triggerPop}
+                        >
+                            <img
+                                src="https://framerusercontent.com/images/hK0bLjY9spx6qo44Ua9QOr0NQ7Y.png"
+                                alt="Hi"
+                                style={{
+                                    width: hiW,
+                                    height: hiH,
+                                    objectFit: "contain",
+                                    display: "block",
+                                    animation:
+                                        hiAnim === "pop" ? "hi-pop 0.55s cubic-bezier(0.34,1.56,0.64,1) forwards" :
+                                        hiAnim === "hover" ? "hi-wiggle 0.5s cubic-bezier(0.22,1,0.36,1) forwards" :
+                                        "hi-float 3s ease-in-out infinite",
+                                }}
+                            />
+                            {particles.map((p) => (
+                                <div
+                                    key={p.id}
+                                    style={{
+                                        position: "absolute",
+                                        left: "50%",
+                                        top: "40%",
+                                        width: p.size,
+                                        height: p.size,
+                                        borderRadius: "50%",
+                                        backgroundColor: p.color,
+                                        pointerEvents: "none",
+                                        "--bx": `${p.x}px`,
+                                        animation: "bubble-rise 0.65s cubic-bezier(0.22,1,0.36,1) forwards",
+                                    } as React.CSSProperties}
+                                />
+                            ))}
+                        </div>
+                    </div>
                 </div>
                 <h1
                     style={{
@@ -343,15 +384,42 @@ function Hero({
                     }}
                 >
                     <span style={{ display: "block" }}>
-                        I design digital products by balancing{" "}
-                        <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 700 }}>Creativity</span>
-                        {" "}<span style={{ fontFamily: Z, fontStyle: "normal", fontWeight: 400 }}>&amp;</span>{" "}
-                        <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 700 }}>Insights;</span>
+                        {HERO_LINE1.map((w, j) => (
+                            <Fragment key={j}>
+                                <span style={{
+                                    display: "inline-block",
+                                    fontFamily: w.yb ? YB : Z,
+                                    fontStyle: w.yb ? "italic" : "normal",
+                                    fontWeight: w.yb ? 700 : 400,
+                                    opacity: 0,
+                                    animation: revealed
+                                        ? `word-in 0.65s cubic-bezier(0.22,1,0.36,1) ${200 + j * 60}ms forwards`
+                                        : "none",
+                                }}>
+                                    {w.text === "&" ? <>&amp;</> : w.text}
+                                </span>
+                                {" "}
+                            </Fragment>
+                        ))}
                     </span>
                     <span style={{ display: "block" }}>
-                        always grounded in{" "}
-                        <span style={{ fontFamily: YB, fontStyle: "italic", fontWeight: 700 }}>how</span>{" "}
-                        people experience them
+                        {HERO_LINE2.map((w, j) => (
+                            <Fragment key={j}>
+                                <span style={{
+                                    display: "inline-block",
+                                    fontFamily: w.yb ? YB : Z,
+                                    fontStyle: w.yb ? "italic" : "normal",
+                                    fontWeight: w.yb ? 700 : 400,
+                                    opacity: 0,
+                                    animation: revealed
+                                        ? `word-in 0.65s cubic-bezier(0.22,1,0.36,1) ${200 + (HERO_LINE1.length + j) * 60}ms forwards`
+                                        : "none",
+                                }}>
+                                    {w.text}
+                                </span>
+                                {" "}
+                            </Fragment>
+                        ))}
                     </span>
                 </h1>
                 <p
@@ -401,7 +469,7 @@ function Hero({
                     viewBox="0 0 48 48"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    style={{ display: "block", flexShrink: 0, verticalAlign: "middle", marginTop: "-12px" }}
+                    style={{ display: "block", flexShrink: 0, verticalAlign: "middle", marginTop: "28px" }}
                 >
                     <path
                         d="M 8 6 C 12 6, 40 14, 40 40"
@@ -686,8 +754,28 @@ function WorkSection({
     sp: ReturnType<typeof useBP>["sp"]
 }) {
     const cardTitleSize = phone ? 16 : tablet ? 17 : large ? 21 : 19
+    const sectionRef = useRef<HTMLElement>(null)
+    const [cardsShown, setCardsShown] = useState(false)
+    useEffect(() => {
+        const el = sectionRef.current
+        if (!el) return
+        const obs = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) { setCardsShown(true); obs.disconnect() }
+        }, { threshold: 0.05 })
+        obs.observe(el)
+        return () => obs.disconnect()
+    }, [])
+
+    // Reveal order: left-col-1 (0), right-col-1 (1), left-col-2 (2), right-col-2 (3)
+    const reveal = (idx: number) => ({
+        opacity: cardsShown ? 1 : 0,
+        transform: cardsShown ? "translateY(0)" : "translateY(40px)",
+        transition: `opacity 0.72s cubic-bezier(0.22,1,0.36,1) ${idx * 120}ms, transform 0.72s cubic-bezier(0.22,1,0.36,1) ${idx * 120}ms`,
+    })
+
     return (
         <section
+            ref={sectionRef}
             id="work"
             style={{
                 width: "100%",
@@ -706,7 +794,9 @@ function WorkSection({
                 {phone ? (
                     <div style={{ display: "flex", flexDirection: "column", gap: sp.cardRowGap }}>
                         {CARDS.map((c, i) => (
-                            <Card key={i} {...c} cardH={sp.cardH} titleSize={cardTitleSize} />
+                            <div key={i} style={reveal(i)}>
+                                <Card {...c} cardH={sp.cardH} titleSize={cardTitleSize} />
+                            </div>
                         ))}
                     </div>
                 ) : (
@@ -720,12 +810,12 @@ function WorkSection({
                                 paddingTop: sp.colOffset,
                             }}
                         >
-                            <Card {...CARDS[0]} cardH={sp.cardH} titleSize={cardTitleSize} />
-                            <Card {...CARDS[2]} cardH={sp.cardH} titleSize={cardTitleSize} />
+                            <div style={reveal(0)}><Card {...CARDS[0]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
+                            <div style={reveal(2)}><Card {...CARDS[2]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
                         </div>
                         <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: sp.cardRowGap }}>
-                            <Card {...CARDS[1]} cardH={sp.cardH} titleSize={cardTitleSize} />
-                            <Card {...CARDS[3]} cardH={sp.cardH} titleSize={cardTitleSize} />
+                            <div style={reveal(1)}><Card {...CARDS[1]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
+                            <div style={reveal(3)}><Card {...CARDS[3]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
                         </div>
                     </div>
                 )}
@@ -745,43 +835,66 @@ const LOGOS = [
 
 function LogoTicker({ phone }: { phone: boolean }) {
     const gap = phone ? 52 : 80
+    const outerRef = useRef<HTMLDivElement>(null)
+    const [tickerY, setTickerY] = useState(0)
+    useEffect(() => {
+        const onScroll = () => {
+            const el = outerRef.current
+            if (!el) return
+            const rect = el.getBoundingClientRect()
+            const elMid = rect.top + rect.height / 2
+            const vMid = window.innerHeight / 2
+            const progress = (vMid - elMid) / window.innerHeight
+            setTickerY(Math.max(-12, Math.min(12, progress * 80)))
+        }
+        window.addEventListener("scroll", onScroll, { passive: true })
+        onScroll()
+        return () => window.removeEventListener("scroll", onScroll)
+    }, [])
+
     return (
-        <div style={{
-            width: "100%",
-            borderTop: `1px solid ${C.border}`,
-            borderBottom: `1px solid ${C.border}`,
-            padding: `${phone ? 28 : 40}px 0`,
-        }}>
-            <div style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 5,
-                justifyContent: "center",
-                marginBottom: phone ? 22 : 32,
-            }}>
-                <span style={{ fontFamily: I, fontSize: 12, color: C.muted }}>[</span>
-                <span style={{ fontFamily: Z, fontWeight: 700, fontSize: 12, color: C.ink, letterSpacing: "-0.01em" }}>
-                    Industry Experience
-                </span>
-                <span style={{ fontFamily: I, fontSize: 12, color: C.muted }}>]</span>
-            </div>
-            <div style={{ overflow: "hidden", width: "100%" }}>
-                <div className="logo-track">
-                    {[...LOGOS, ...LOGOS].map(({ src, alt }, i) => (
-                        <img
-                            key={i}
-                            src={src}
-                            alt={alt}
-                            className="logo-img"
-                            style={{
-                                height: 40,
-                                width: "auto",
-                                display: "block",
-                                flexShrink: 0,
-                                marginRight: gap,
-                            }}
-                        />
-                    ))}
+        <div
+            ref={outerRef}
+            style={{
+                width: "100%",
+                borderTop: `1px solid ${C.border}`,
+                borderBottom: `1px solid ${C.border}`,
+                padding: `${phone ? 28 : 40}px 0`,
+                overflow: "hidden",
+            }}
+        >
+            <div style={{ transform: `translateY(${tickerY}px)`, willChange: "transform" }}>
+                <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 5,
+                    justifyContent: "center",
+                    marginBottom: phone ? 22 : 32,
+                }}>
+                    <span style={{ fontFamily: I, fontSize: 12, color: C.muted }}>[</span>
+                    <span style={{ fontFamily: Z, fontWeight: 700, fontSize: 12, color: C.ink, letterSpacing: "-0.01em" }}>
+                        Industry Experience
+                    </span>
+                    <span style={{ fontFamily: I, fontSize: 12, color: C.muted }}>]</span>
+                </div>
+                <div style={{ overflow: "hidden", width: "100%" }}>
+                    <div className="logo-track">
+                        {[...LOGOS, ...LOGOS].map(({ src, alt }, i) => (
+                            <img
+                                key={i}
+                                src={src}
+                                alt={alt}
+                                className="logo-img"
+                                style={{
+                                    height: 40,
+                                    width: "auto",
+                                    display: "block",
+                                    flexShrink: 0,
+                                    marginRight: gap,
+                                }}
+                            />
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>
