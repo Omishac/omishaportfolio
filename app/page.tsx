@@ -182,7 +182,6 @@ function Hero({
     maxW: number
     sp: ReturnType<typeof useBP>["sp"]
 }) {
-    const navH = phone ? 54 : 64
     const hiW = phone ? 120 : tablet ? 160 : large ? 260 : 210
     const hiH = Math.round(hiW / 1.615)
 
@@ -223,26 +222,65 @@ function Hero({
         <section
             style={{
                 width: "100%",
+                minHeight: "100vh",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-start",
+                justifyContent: "space-between",
                 padding: `${sp.heroTop}px ${px}px ${sp.heroBottom}px`,
                 boxSizing: "border-box",
-                gap: phone ? 40 : 60,
             }}
         >
-            {/* Hero content row: text left, Hi! image right */}
-            <div style={{
-                maxWidth: maxW,
-                width: "100%",
-                display: "flex",
-                flexDirection: phone ? "column" : "row",
-                alignItems: phone ? "flex-start" : "center",
-                justifyContent: "space-between",
-                gap: phone ? 0 : 48,
-            }}>
-                {/* Text block — left */}
-                <div style={{ flex: 1, minWidth: 0 }}>
+            {/* Left-aligned heading block */}
+            <div style={{ maxWidth: maxW, width: "100%", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                {/* Reveal fade-in on mount */}
+                <div style={{
+                    marginBottom: phone ? 24 : tablet ? 32 : 40,
+                    display: "inline-block",
+                    opacity: revealed ? 1 : 0,
+                    transition: "opacity 0.65s cubic-bezier(0.22,1,0.36,1)",
+                }}>
+                    {/* Interaction + particles */}
+                    <div
+                        style={{ position: "relative", display: "inline-block" }}
+                        onMouseEnter={() => { if (hiAnim === "idle") setHiAnim("hover") }}
+                        onMouseLeave={() => { if (hiAnim === "hover") setHiAnim("idle") }}
+                        onClick={triggerPop}
+                    >
+                        <img
+                            src="https://framerusercontent.com/images/hK0bLjY9spx6qo44Ua9QOr0NQ7Y.png"
+                            alt="Hi"
+                            style={{
+                                width: hiW,
+                                height: hiH,
+                                objectFit: "contain",
+                                display: "block",
+                                filter: "saturate(1.6) brightness(1.05)",
+                                animation:
+                                    hiAnim === "pop" ? "hi-pop 0.55s cubic-bezier(0.34,1.56,0.64,1) forwards" :
+                                    hiAnim === "hover" ? "hi-wiggle 0.5s cubic-bezier(0.22,1,0.36,1) forwards" :
+                                    "hi-float 3s ease-in-out infinite",
+                            }}
+                        />
+                        {particles.map((p) => (
+                            <div
+                                key={p.id}
+                                style={{
+                                    position: "absolute",
+                                    left: "50%",
+                                    top: "40%",
+                                    width: p.size,
+                                    height: p.size,
+                                    borderRadius: "50%",
+                                    backgroundColor: p.color,
+                                    pointerEvents: "none",
+                                    "--bx": `${p.x}px`,
+                                    animation: "bubble-rise 0.65s cubic-bezier(0.22,1,0.36,1) forwards",
+                                } as React.CSSProperties}
+                            />
+                        ))}
+                    </div>
+                </div>
                 <h1
                     style={{
                         fontFamily: Z,
@@ -310,58 +348,6 @@ function Hero({
                 >
                     UX &amp; Digital Strategy &nbsp;·&nbsp; Turning user insights into product decisions
                 </p>
-                </div>
-
-                {/* Hi! image — right */}
-                <div style={{
-                    flexShrink: 0,
-                    marginTop: phone ? 32 : 0,
-                }}>
-                    <div style={{
-                        opacity: revealed ? 1 : 0,
-                        transition: "opacity 0.65s cubic-bezier(0.22,1,0.36,1)",
-                    }}>
-                        <div
-                            style={{ position: "relative", display: "inline-block" }}
-                            onMouseEnter={() => { if (hiAnim === "idle") setHiAnim("hover") }}
-                            onMouseLeave={() => { if (hiAnim === "hover") setHiAnim("idle") }}
-                            onClick={triggerPop}
-                        >
-                            <img
-                                src="https://framerusercontent.com/images/hK0bLjY9spx6qo44Ua9QOr0NQ7Y.png"
-                                alt="Hi"
-                                style={{
-                                    width: hiW,
-                                    height: hiH,
-                                    objectFit: "contain",
-                                    display: "block",
-                                    filter: "saturate(1.6) brightness(1.05)",
-                                    animation:
-                                        hiAnim === "pop" ? "hi-pop 0.55s cubic-bezier(0.34,1.56,0.64,1) forwards" :
-                                        hiAnim === "hover" ? "hi-wiggle 0.5s cubic-bezier(0.22,1,0.36,1) forwards" :
-                                        "hi-float 3s ease-in-out infinite",
-                                }}
-                            />
-                            {particles.map((p) => (
-                                <div
-                                    key={p.id}
-                                    style={{
-                                        position: "absolute",
-                                        left: "50%",
-                                        top: "40%",
-                                        width: p.size,
-                                        height: p.size,
-                                        borderRadius: "50%",
-                                        backgroundColor: p.color,
-                                        pointerEvents: "none",
-                                        "--bx": `${p.x}px`,
-                                        animation: "bubble-rise 0.65s cubic-bezier(0.22,1,0.36,1) forwards",
-                                    } as React.CSSProperties}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                </div>
             </div>
 
             {/* Centered label + inline pink arrow to the right */}
@@ -373,6 +359,7 @@ function Hero({
                     alignItems: "center",
                     justifyContent: "center",
                     gap: 6,
+                    paddingTop: phone ? 40 : 0,
                 }}
             >
                 <p
@@ -693,7 +680,6 @@ function WorkSection({
         return () => obs.disconnect()
     }, [])
 
-    // Reveal order: left-col-1 (0), right-col-1 (1), left-col-2 (2), right-col-2 (3)
     const reveal = (idx: number) => ({
         opacity: cardsShown ? 1 : 0,
         transform: cardsShown ? "translateY(0)" : "translateY(40px)",
