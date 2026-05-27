@@ -49,7 +49,7 @@ export default function SharedNav() {
         { label: "Work",       href: isHome ? "#work" : "/#work" },
         { label: "Playground", href: "/playground" },
         { label: "LinkedIn",   href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-        { label: "Resume",     href: "#" },
+        { label: "Resume",     href: "/slides/resume.pdf", ext: true },
     ]
 
     const isPlayground = pathname?.startsWith("/playground")

@@ -972,7 +972,7 @@ function Footer({
                     {[
                         { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
                         { label: "Email", href: "mailto:omishachabria@gmail.com" },
-                        { label: "Resume", href: "/slides/Omisha Chabria Resume .docx (12)", ext: true },
+                        { label: "Resume", href: "/slides/resume.pdf", ext: true },
                     ].map(({ label, href, ext }) => (
                         <a
                             key={label}
