@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
+import SharedNav from "../../components/SharedNav"
 
 const Z = "Zodiak, 'Times New Roman', serif"
 const I = "Inter, system-ui, sans-serif"
@@ -58,70 +59,6 @@ const SECTIONS = [
     { num: "04", title: "Projects", desc: "Miscellaneous work made for the love of making." },
 ]
 
-function TopNav() {
-    const [scrolled, setScrolled] = useState(false)
-    useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 20)
-        window.addEventListener("scroll", onScroll, { passive: true })
-        return () => window.removeEventListener("scroll", onScroll)
-    }, [])
-    return (
-        <nav
-            style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "0 80px",
-                height: 64,
-                borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : "rgba(0,0,0,0.06)"}`,
-                boxSizing: "border-box",
-                backgroundColor: scrolled ? "rgba(255,255,255,0.96)" : "#fff",
-                backdropFilter: scrolled ? "blur(16px)" : "none",
-                position: "sticky",
-                top: 0,
-                zIndex: 100,
-                transition: "background 0.3s, border-color 0.3s",
-            }}
-        >
-            <a href="/" style={{ display: "block", lineHeight: 0 }}>
-                <img
-                    src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
-                    alt="OC"
-                    style={{ width: 46, height: 46, display: "block", objectFit: "contain" }}
-                />
-            </a>
-            <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
-                {[
-                    { label: "Work", href: "/" },
-                    { label: "Playground", href: "/playground", active: true },
-                    { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", external: true },
-                    { label: "Resume", href: "#" },
-                ].map(({ label, href, external, active }) => (
-                    <a
-                        key={label}
-                        href={href}
-                        target={external ? "_blank" : "_self"}
-                        rel="noreferrer"
-                        style={{
-                            fontFamily: I,
-                            fontSize: 14,
-                            fontWeight: active ? 600 : 500,
-                            color: active ? T.ink : T.ink3,
-                            textDecoration: "none",
-                            letterSpacing: "-0.01em",
-                            transition: "color 0.18s",
-                        }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = T.ink)}
-                        onMouseLeave={(e) => { if (!active) e.currentTarget.style.color = T.ink3 }}
-                    >
-                        {label}
-                    </a>
-                ))}
-            </div>
-        </nav>
-    )
-}
 
 function SectionHeader({ num, title, desc }: { num: string; title: string; desc: string }) {
     return (
@@ -263,7 +200,7 @@ export default function PlaygroundPage() {
 
     return (
         <div style={{ width: "100%", backgroundColor: "#fff", fontFamily: I }}>
-            <TopNav />
+            <SharedNav />
             <div style={{ maxWidth: 1120, margin: "0 auto", padding: "0 80px 160px" }}>
                 {/* Hero */}
                 <div style={{ paddingTop: 96, paddingBottom: 48 }}>

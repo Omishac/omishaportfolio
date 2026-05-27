@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect, useCallback, Fragment } from "react"
+import SharedNav from "../components/SharedNav"
 
 const CURSOR_STYLES = `
   * { cursor: none !important; }
@@ -44,13 +45,11 @@ const CURSOR_STYLES = `
     animation-play-state: paused;
   }
   .logo-img {
-    filter: none;
-    opacity: 0.85;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    filter: grayscale(100%) opacity(0.55);
+    transition: filter 0.35s ease;
   }
   .logo-img:hover {
-    opacity: 1;
-    transform: scale(1.06);
+    filter: grayscale(0%) opacity(1);
   }
 `
 
@@ -155,85 +154,6 @@ function CustomCursor() {
     )
 }
 
-function Nav({ phone, tablet, px }: { phone: boolean; tablet: boolean; px: number }) {
-    const [scrolled, setScrolled] = useState(false)
-    useEffect(() => {
-        const fn = () => setScrolled(window.scrollY > 12)
-        window.addEventListener("scroll", fn, { passive: true })
-        return () => window.removeEventListener("scroll", fn)
-    }, [])
-
-    const links = phone
-        ? [
-              { label: "Work", href: "#work" },
-              { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-              { label: "Resume", href: "#" },
-          ]
-        : [
-              { label: "Work", href: "#work" },
-              { label: "Playground", href: "/playground" },
-              { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-              { label: "Resume", href: "#" },
-          ]
-
-    return (
-        <nav
-            style={{
-                position: "sticky",
-                top: 0,
-                zIndex: 100,
-                width: "100%",
-                height: phone ? 54 : 64,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: `0 ${px}px`,
-                boxSizing: "border-box",
-                backgroundColor: scrolled ? "rgba(255,255,255,0.96)" : C.bg,
-                backdropFilter: scrolled ? "blur(20px)" : "none",
-                WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-                borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : C.border}`,
-                transition: "background 0.25s, border-color 0.25s",
-            }}
-        >
-            <a href="/" style={{ display: "block", lineHeight: 0 }}>
-                <img
-                    src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
-                    alt="OC"
-                    style={{
-                        width: phone ? 48 : 58,
-                        height: phone ? 48 : 58,
-                        objectFit: "contain",
-                        display: "block",
-                    }}
-                />
-            </a>
-            <div style={{ display: "flex", gap: phone ? 16 : tablet ? 24 : 32, alignItems: "center" }}>
-                {links.map(({ label, href, ext }) => (
-                    <a
-                        key={label}
-                        href={href}
-                        target={ext ? "_blank" : "_self"}
-                        rel="noreferrer"
-                        style={{
-                            fontFamily: I,
-                            fontSize: phone ? 13 : 14,
-                            fontWeight: 500,
-                            color: C.ink3,
-                            textDecoration: "none",
-                            letterSpacing: "-0.01em",
-                            transition: "color 0.18s",
-                        }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = C.ink)}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = C.ink3)}
-                    >
-                        {label}
-                    </a>
-                ))}
-            </div>
-        </nav>
-    )
-}
 
 type WordDef = { text: string; yb?: boolean }
 const HERO_LINE1: WordDef[] = [
@@ -835,8 +755,20 @@ const LOGOS = [
     { src: "/slides/urbn.png",      alt: "URBN" },
 ]
 
-function LogoTicker({ phone }: { phone: boolean }) {
-    const gap = phone ? 52 : 80
+function LogoTicker({
+    phone,
+    tablet,
+    large,
+    px,
+    maxW,
+}: {
+    phone: boolean
+    tablet: boolean
+    large: boolean
+    px: number
+    maxW: number
+}) {
+    const sectionPad = phone ? 64 : tablet ? 80 : large ? 120 : 100
     const outerRef = useRef<HTMLDivElement>(null)
     const [tickerY, setTickerY] = useState(0)
     useEffect(() => {
@@ -855,31 +787,25 @@ function LogoTicker({ phone }: { phone: boolean }) {
     }, [])
 
     return (
-        <div
+        <section
             ref={outerRef}
             style={{
                 width: "100%",
+                padding: `${sectionPad}px ${px}px`,
+                boxSizing: "border-box",
                 borderTop: `1px solid ${C.border}`,
-                borderBottom: `1px solid ${C.border}`,
-                padding: `${phone ? 28 : 40}px 0`,
                 overflow: "hidden",
             }}
         >
-            <div style={{ transform: `translateY(${tickerY}px)`, willChange: "transform" }}>
-                <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 5,
-                    justifyContent: "center",
-                    marginBottom: phone ? 22 : 32,
-                }}>
-                    <span style={{ fontFamily: I, fontSize: 12, color: C.muted }}>[</span>
-                    <span style={{ fontFamily: Z, fontWeight: 700, fontSize: 12, color: C.ink, letterSpacing: "-0.01em" }}>
-                        Industry Experience
-                    </span>
-                    <span style={{ fontFamily: I, fontSize: 12, color: C.muted }}>]</span>
-                </div>
-                <div style={{ overflow: "hidden", width: "100%" }}>
+            <div style={{ maxWidth: maxW, width: "100%", transform: `translateY(${tickerY}px)`, willChange: "transform" }}>
+                <SectionLabel
+                    tag="Application"
+                    title="Industry Experience:"
+                    phone={phone}
+                    tablet={tablet}
+                    large={large}
+                />
+                <div style={{ overflow: "hidden", width: "100%", marginTop: phone ? 8 : 16 }}>
                     <div className="logo-track">
                         {[...LOGOS, ...LOGOS].map(({ src, alt }, i) => (
                             <img
@@ -888,18 +814,18 @@ function LogoTicker({ phone }: { phone: boolean }) {
                                 alt={alt}
                                 className="logo-img"
                                 style={{
-                                    height: 52,
+                                    height: 40,
                                     width: "auto",
                                     display: "block",
                                     flexShrink: 0,
-                                    marginRight: gap,
+                                    marginRight: 80,
                                 }}
                             />
                         ))}
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     )
 }
 
@@ -1096,10 +1022,10 @@ export default function ResponsiveHome() {
             <style>{CURSOR_STYLES}</style>
             <CustomCursor />
             <div style={{ width: "100%" }}>
-                <Nav phone={phone} tablet={tablet} px={px} />
+                <SharedNav />
                 <Hero phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
                 <WorkSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
-                <LogoTicker phone={phone} />
+                <LogoTicker phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
                 <SkillsSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
                 <Footer phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
             </div>
