@@ -59,6 +59,21 @@ const SECTIONS = [
     { num: "04", title: "Projects", desc: "Miscellaneous work made for the love of making." },
 ]
 
+function useResponsive() {
+    const [phone, setPhone] = useState(false)
+    const [tablet, setTablet] = useState(false)
+    useEffect(() => {
+        const check = () => {
+            const w = window.innerWidth
+            setPhone(w < 768)
+            setTablet(w >= 768 && w < 1024)
+        }
+        check()
+        window.addEventListener("resize", check, { passive: true })
+        return () => window.removeEventListener("resize", check)
+    }, [])
+    return { phone, tablet }
+}
 
 function SectionHeader({ num, title, desc }: { num: string; title: string; desc: string }) {
     return (
@@ -90,7 +105,7 @@ function SectionHeader({ num, title, desc }: { num: string; title: string; desc:
                     style={{
                         fontFamily: Z,
                         fontWeight: 700,
-                        fontSize: 24,
+                        fontSize: "clamp(22px, 3vw, 36px)",
                         color: T.ink,
                         margin: "0 0 6px",
                         letterSpacing: "-0.02em",
@@ -99,7 +114,7 @@ function SectionHeader({ num, title, desc }: { num: string; title: string; desc:
                 >
                     {title}
                 </h2>
-                <p style={{ fontFamily: I, fontSize: 13, color: T.ink3, margin: 0, lineHeight: 1.5 }}>
+                <p style={{ fontFamily: I, fontSize: 14, color: T.ink3, margin: 0, lineHeight: 1.5 }}>
                     {desc}
                 </p>
             </div>
@@ -130,6 +145,7 @@ function PhotoCard({ src, aspectRatio = "3/2" }: { src: string; aspectRatio?: st
                     height: "100%",
                     objectFit: "cover",
                     display: "block",
+                    maxWidth: "100%",
                     transform: hov ? "scale(1.04)" : "scale(1)",
                     transition: "transform 0.55s cubic-bezier(0.22,1,0.36,1)",
                 }}
@@ -168,6 +184,8 @@ function EmbedFrame({ src, aspect = "16/9" }: { src: string; aspect?: string }) 
 }
 
 export default function PlaygroundPage() {
+    const { phone, tablet } = useResponsive()
+
     const ref0 = useRef<HTMLDivElement>(null)
     const ref1 = useRef<HTMLDivElement>(null)
     const ref2 = useRef<HTMLDivElement>(null)
@@ -176,6 +194,8 @@ export default function PlaygroundPage() {
 
     const [active, setActive] = useState(0)
     const [hovNav, setHovNav] = useState(-1)
+
+    const pad = phone ? "0 20px 80px" : tablet ? "0 40px 120px" : "0 80px 160px"
 
     useEffect(() => {
         const onScroll = () => {
@@ -201,9 +221,9 @@ export default function PlaygroundPage() {
     return (
         <div style={{ width: "100%", backgroundColor: "#fff", fontFamily: I }}>
             <SharedNav />
-            <div style={{ maxWidth: 1120, margin: "0 auto", padding: "0 80px 160px" }}>
+            <div style={{ maxWidth: 1120, margin: "0 auto", padding: pad }}>
                 {/* Hero */}
-                <div style={{ paddingTop: 96, paddingBottom: 48 }}>
+                <div style={{ paddingTop: phone ? 48 : 96, paddingBottom: 48 }}>
                     <p
                         style={{
                             fontFamily: I,
@@ -220,7 +240,7 @@ export default function PlaygroundPage() {
                         style={{
                             fontFamily: Z,
                             fontWeight: 700,
-                            fontSize: "clamp(36px, 4vw, 52px)",
+                            fontSize: "clamp(28px, 5vw, 52px)",
                             lineHeight: 1.06,
                             letterSpacing: "-0.025em",
                             color: T.ink,
@@ -230,7 +250,7 @@ export default function PlaygroundPage() {
                     >
                         Experiments, explorations, and creative work.
                     </h1>
-                    <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.7, color: T.ink3, margin: 0, maxWidth: 480 }}>
+                    <p style={{ fontFamily: I, fontSize: phone ? 14 : 15, lineHeight: 1.7, color: T.ink3, margin: 0, maxWidth: 480 }}>
                         Not case studies. Just things made for the love of making.
                     </p>
                 </div>
@@ -247,6 +267,10 @@ export default function PlaygroundPage() {
                             borderRadius: 40,
                             padding: "5px 6px",
                             boxShadow: "0 2px 16px rgba(0,0,0,0.09), 0 0 0 1px rgba(0,0,0,0.06)",
+                            overflowX: phone ? "auto" : "visible",
+                            flexWrap: "nowrap",
+                            WebkitOverflowScrolling: "touch" as any,
+                            maxWidth: "100%",
                         }}
                     >
                         {NAV_ITEMS.map((s, i) => (
@@ -271,6 +295,8 @@ export default function PlaygroundPage() {
                                     whiteSpace: "nowrap" as const,
                                     lineHeight: 1,
                                     letterSpacing: "-0.01em",
+                                    minHeight: 44,
+                                    flexShrink: 0,
                                 }}
                             >
                                 {s.num} — {s.label}
@@ -282,9 +308,9 @@ export default function PlaygroundPage() {
                 {/* [01] Visual Design */}
                 <div ref={ref0} style={{ paddingTop: 72, marginBottom: 80 }}>
                     <SectionHeader {...SECTIONS[0]} />
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                    <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: 14 }}>
                         <div style={{ display: "flex", flexDirection: "column" as const, gap: 14 }}>
-                            <div style={{ borderRadius: 10, overflow: "hidden", height: 380 }}>
+                            <div style={{ borderRadius: 10, overflow: "hidden", height: phone ? 240 : 380 }}>
                                 <iframe
                                     src="https://drive.google.com/file/d/17mAqwjd1149huegPzatDpfd9-PGleLLT/preview"
                                     width="100%"
@@ -292,7 +318,7 @@ export default function PlaygroundPage() {
                                     style={{ border: "none", display: "block" }}
                                 />
                             </div>
-                            <div style={{ borderRadius: 10, overflow: "hidden", height: 340, position: "relative" as const }}>
+                            <div style={{ borderRadius: 10, overflow: "hidden", height: phone ? 200 : 340, position: "relative" as const }}>
                                 <iframe
                                     loading="lazy"
                                     src="https://www.canva.com/design/DAHJZiSLxGs/h1POtcf2Rq5YpGXLhXy1eA/view?embed"
@@ -310,11 +336,11 @@ export default function PlaygroundPage() {
                         </div>
                         <div style={{ display: "flex", flexDirection: "column" as const, gap: 14 }}>
                             {VISUAL_IMAGES.map((src, i) => (
-                                <div key={i} style={{ borderRadius: 10, overflow: "hidden", flex: 1, minHeight: 0 }}>
+                                <div key={i} style={{ borderRadius: 10, overflow: "hidden", flex: phone ? "none" : 1, minHeight: phone ? 200 : 0 }}>
                                     <img
                                         src={src}
                                         alt=""
-                                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", maxWidth: "100%" }}
                                     />
                                 </div>
                             ))}
@@ -326,17 +352,17 @@ export default function PlaygroundPage() {
                 <div ref={ref1} style={{ paddingTop: 72, marginBottom: 80 }}>
                     <SectionHeader {...SECTIONS[1]} />
                     <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                        <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: 12 }}>
                             <PhotoCard src={PHOTOS[0]} aspectRatio="3/2" />
                             <PhotoCard src={PHOTOS[1]} aspectRatio="3/2" />
                         </div>
-                        <PhotoCard src={PHOTOS[2]} aspectRatio="16/7" />
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
+                        <PhotoCard src={PHOTOS[2]} aspectRatio={phone ? "3/2" : "16/7"} />
+                        <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr 1fr", gap: 12 }}>
                             <PhotoCard src={PHOTOS[3]} aspectRatio="3/2" />
                             <PhotoCard src={PHOTOS[4]} aspectRatio="3/2" />
                             <PhotoCard src={PHOTOS[5]} aspectRatio="3/2" />
                         </div>
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                        <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: 12 }}>
                             <PhotoCard src={PHOTOS[6]} aspectRatio="3/2" />
                             <PhotoCard src={PHOTOS[7]} aspectRatio="3/2" />
                         </div>
@@ -346,7 +372,7 @@ export default function PlaygroundPage() {
                 {/* [03] Motion */}
                 <div ref={ref2} style={{ paddingTop: 72, marginBottom: 80 }}>
                     <SectionHeader {...SECTIONS[2]} />
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14 }}>
+                    <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr 1fr", gap: 14 }}>
                         {MOTION_EMBEDS.map((src, i) => (
                             <EmbedFrame key={i} src={src} />
                         ))}
@@ -356,7 +382,7 @@ export default function PlaygroundPage() {
                 {/* [04] Projects */}
                 <div ref={ref3} style={{ paddingTop: 72, marginBottom: 80 }}>
                     <SectionHeader {...SECTIONS[3]} />
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                    <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: 14 }}>
                         {PROJECTS_EMBEDS.map((src, i) => (
                             <EmbedFrame key={i} src={src} />
                         ))}
@@ -371,6 +397,8 @@ export default function PlaygroundPage() {
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
+                        flexWrap: "wrap",
+                        gap: 12,
                     }}
                 >
                     <a
@@ -383,6 +411,9 @@ export default function PlaygroundPage() {
                             textDecoration: "none",
                             letterSpacing: "-0.01em",
                             transition: "color 0.18s",
+                            minHeight: 44,
+                            display: "flex",
+                            alignItems: "center",
                         }}
                         onMouseEnter={(e) => (e.currentTarget.style.color = T.ink)}
                         onMouseLeave={(e) => (e.currentTarget.style.color = T.ink3)}

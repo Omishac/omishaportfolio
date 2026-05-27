@@ -17,6 +17,23 @@ const C = {
     border: "rgba(28,28,26,0.1)",
 }
 
+// ── Responsive hook ────────────────────────────────────────────────────────────
+function useResponsive() {
+    const [phone, setPhone] = useState(false)
+    const [tablet, setTablet] = useState(false)
+    useEffect(() => {
+        const check = () => {
+            const w = window.innerWidth
+            setPhone(w < 768)
+            setTablet(w >= 768 && w < 1024)
+        }
+        check()
+        window.addEventListener("resize", check, { passive: true })
+        return () => window.removeEventListener("resize", check)
+    }, [])
+    return { phone, tablet }
+}
+
 // ── Utilities ──────────────────────────────────────────────────────────────────
 function useInView(threshold = 0.1) {
     const ref = useRef<HTMLDivElement>(null)
@@ -81,7 +98,7 @@ function ChapterLabel({ index, title }: { index: string; title: string }) {
             </p>
             <h2 style={{
                 fontFamily: Z,
-                fontSize: "clamp(26px, 3.2vw, 38px)",
+                fontSize: "clamp(22px, 3.2vw, 38px)",
                 fontWeight: 700,
                 letterSpacing: "-0.03em",
                 color: C.ink,
@@ -116,7 +133,7 @@ function BoldLine({ children }: { children: React.ReactNode }) {
         <p style={{
             fontFamily: Z,
             fontWeight: 700,
-            fontSize: "clamp(20px, 2.4vw, 24px)",
+            fontSize: "clamp(18px, 2.4vw, 24px)",
             color: C.ink,
             lineHeight: 1.3,
             letterSpacing: "-0.02em",
@@ -128,14 +145,14 @@ function BoldLine({ children }: { children: React.ReactNode }) {
     )
 }
 
-function PullQuote({ text }: { text: string }) {
+function PullQuote({ text, phone }: { text: string; phone?: boolean }) {
     return (
         <div style={{ margin: "52px 0" }}>
             <p style={{
                 fontFamily: Z,
                 fontStyle: "italic",
                 fontWeight: 300,
-                fontSize: "clamp(26px, 3.4vw, 38px)",
+                fontSize: "clamp(22px, 3.4vw, 38px)",
                 lineHeight: 1.38,
                 color: C.ink,
                 letterSpacing: "-0.025em",
@@ -280,6 +297,7 @@ function FullImage({ src, alt, caption, radius = 14 }: {
                     display: "block",
                     borderRadius: radius,
                     boxShadow: "0 4px 52px rgba(0,0,0,0.10)",
+                    maxWidth: "100%",
                 }}
             />
             {caption && (
@@ -349,6 +367,7 @@ function ShoppingModeToggle() {
                             backgroundColor: mode === m ? C.ink : "transparent",
                             color: mode === m ? "#fff" : C.ink2,
                             transition: "all 0.3s cubic-bezier(0.22,1,0.36,1)",
+                            minHeight: 44,
                         }}
                     >
                         {m === "intent" ? "Intent Shopping" : "Discovery Shopping"}
@@ -406,6 +425,7 @@ function MoodCarousel() {
                     border: `1px solid ${C.border}`, backgroundColor: "white",
                     cursor: "pointer", fontSize: "18px", display: "flex",
                     alignItems: "center", justifyContent: "center",
+                    minHeight: 44, minWidth: 44,
                 }}>←</button>
                 <div style={{ flex: 1, maxWidth: "400px", height: "200px", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
                     {moods.map((mood, i) => {
@@ -440,6 +460,7 @@ function MoodCarousel() {
                     border: `1px solid ${C.border}`, backgroundColor: "white",
                     cursor: "pointer", fontSize: "18px", display: "flex",
                     alignItems: "center", justifyContent: "center",
+                    minHeight: 44, minWidth: 44,
                 }}>→</button>
             </div>
             <p style={{ fontFamily: INTER, fontSize: "13px", color: C.ink3, textAlign: "center", marginTop: "24px", lineHeight: 1.6 }}>
@@ -453,9 +474,10 @@ function MoodCarousel() {
 function CaseStudyNav() {
     const [scrolled, setScrolled] = useState(false)
     const [phone, setPhone] = useState(false)
+    const [menuOpen, setMenuOpen] = useState(false)
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 12)
-        const onResize = () => setPhone(window.innerWidth < 540)
+        const onResize = () => setPhone(window.innerWidth < 768)
         onResize()
         window.addEventListener("scroll", onScroll, { passive: true })
         window.addEventListener("resize", onResize, { passive: true })
@@ -464,70 +486,167 @@ function CaseStudyNav() {
             window.removeEventListener("resize", onResize)
         }
     }, [])
-    const links = phone
-        ? [
-              { label: "Work", href: "/#work" },
-              { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-              { label: "Resume", href: "#" },
-          ]
-        : [
-              { label: "Work", href: "/#work" },
-              { label: "Playground", href: "/playground" },
-              { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-              { label: "Resume", href: "#" },
-          ]
+
+    const allLinks = [
+        { label: "Work", href: "/#work" },
+        { label: "Playground", href: "/playground" },
+        { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
+        { label: "Resume", href: "#" },
+    ]
+
     return (
-        <nav style={{
-            position: "sticky", top: 0, zIndex: 100, width: "100%",
-            height: phone ? 54 : 64, display: "flex", alignItems: "center",
-            justifyContent: "space-between", padding: `0 ${phone ? 20 : 80}px`,
-            boxSizing: "border-box",
-            backgroundColor: scrolled ? "rgba(255,255,255,0.96)" : C.bg,
-            backdropFilter: scrolled ? "blur(20px)" : "none",
-            WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-            borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : C.border}`,
-            transition: "background 0.25s, border-color 0.25s",
-        }}>
-            <a href="/" style={{ display: "block", lineHeight: 0 }}>
-                <img
-                    src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
-                    alt="OC"
-                    style={{ width: phone ? 48 : 58, height: phone ? 48 : 58, objectFit: "contain", display: "block" }}
-                />
-            </a>
-            <div style={{ display: "flex", gap: phone ? 16 : 32, alignItems: "center" }}>
-                {links.map(({ label, href, ext }) => (
-                    <a
-                        key={label}
-                        href={href}
-                        target={ext ? "_blank" : "_self"}
-                        rel="noreferrer"
+        <>
+            <nav style={{
+                position: "sticky", top: 0, zIndex: 100, width: "100%",
+                height: phone ? 54 : 64, display: "flex", alignItems: "center",
+                justifyContent: "space-between", padding: `0 ${phone ? 20 : 80}px`,
+                boxSizing: "border-box",
+                backgroundColor: scrolled ? "rgba(255,255,255,0.96)" : C.bg,
+                backdropFilter: scrolled ? "blur(20px)" : "none",
+                WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
+                borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : C.border}`,
+                transition: "background 0.25s, border-color 0.25s",
+            }}>
+                <a href="/" style={{ display: "block", lineHeight: 0 }}>
+                    <img
+                        src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
+                        alt="OC"
+                        style={{ width: phone ? 48 : 58, height: phone ? 48 : 58, objectFit: "contain", display: "block" }}
+                    />
+                </a>
+                {phone ? (
+                    <button
+                        onClick={() => setMenuOpen(true)}
                         style={{
-                            fontFamily: INTER, fontSize: phone ? 13 : 14, fontWeight: 500,
-                            color: C.ink3, textDecoration: "none", letterSpacing: "-0.01em",
-                            transition: "color 0.18s",
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            padding: 8,
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 5,
+                            minHeight: 44,
+                            minWidth: 44,
+                            alignItems: "center",
+                            justifyContent: "center",
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = C.ink)}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = C.ink3)}
+                        aria-label="Open menu"
                     >
-                        {label}
-                    </a>
-                ))}
-            </div>
-        </nav>
+                        <span style={{ width: 22, height: 2, backgroundColor: C.ink, borderRadius: 1, display: "block" }} />
+                        <span style={{ width: 22, height: 2, backgroundColor: C.ink, borderRadius: 1, display: "block" }} />
+                        <span style={{ width: 14, height: 2, backgroundColor: C.ink, borderRadius: 1, display: "block", alignSelf: "flex-end" }} />
+                    </button>
+                ) : (
+                    <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
+                        {allLinks.map(({ label, href, ext }) => (
+                            <a
+                                key={label}
+                                href={href}
+                                target={ext ? "_blank" : "_self"}
+                                rel="noreferrer"
+                                style={{
+                                    fontFamily: INTER, fontSize: 14, fontWeight: 500,
+                                    color: C.ink3, textDecoration: "none", letterSpacing: "-0.01em",
+                                    transition: "color 0.18s",
+                                    minHeight: 44,
+                                    display: "flex",
+                                    alignItems: "center",
+                                }}
+                                onMouseEnter={(e) => (e.currentTarget.style.color = C.ink)}
+                                onMouseLeave={(e) => (e.currentTarget.style.color = C.ink3)}
+                            >
+                                {label}
+                            </a>
+                        ))}
+                    </div>
+                )}
+            </nav>
+
+            {menuOpen && (
+                <div
+                    onClick={() => setMenuOpen(false)}
+                    style={{
+                        position: "fixed",
+                        inset: 0,
+                        zIndex: 999,
+                        backgroundColor: "rgba(255,255,255,0.98)",
+                        backdropFilter: "blur(16px)",
+                        WebkitBackdropFilter: "blur(16px)",
+                        display: "flex",
+                        flexDirection: "column",
+                        padding: "24px 20px",
+                    }}
+                >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 48 }}>
+                        <img
+                            src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
+                            alt="OC"
+                            style={{ width: 48, height: 48, objectFit: "contain" }}
+                        />
+                        <button
+                            onClick={() => setMenuOpen(false)}
+                            style={{
+                                background: "none",
+                                border: "none",
+                                cursor: "pointer",
+                                fontSize: 24,
+                                color: C.ink,
+                                minHeight: 44,
+                                minWidth: 44,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+                            ✕
+                        </button>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                        {allLinks.map(({ label, href, ext }) => (
+                            <a
+                                key={label}
+                                href={href}
+                                target={ext ? "_blank" : "_self"}
+                                rel="noreferrer"
+                                onClick={() => setMenuOpen(false)}
+                                style={{
+                                    fontFamily: INTER,
+                                    fontSize: 28,
+                                    fontWeight: 600,
+                                    color: C.ink,
+                                    textDecoration: "none",
+                                    letterSpacing: "-0.02em",
+                                    minHeight: 52,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    borderBottom: `1px solid ${C.border}`,
+                                    paddingBottom: 12,
+                                    paddingTop: 12,
+                                }}
+                            >
+                                {label}
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </>
     )
 }
 
 // ── Page ───────────────────────────────────────────────────────────────────────
 export default function RFNDCaseStudy() {
+    const { phone, tablet } = useResponsive()
+    const pad = phone ? 20 : tablet ? 40 : 80
+
     return (
         <div style={{ width: "100%", backgroundColor: C.bg }}>
             <CaseStudyNav />
-            <div style={{ maxWidth: 1040, margin: "0 auto", padding: "0 80px 160px" }}>
+            <div style={{ maxWidth: 1040, margin: "0 auto", padding: `0 ${pad}px 160px` }}>
 
                 {/* ── HERO ── */}
                 <FadeIn>
-                    <div style={{ paddingTop: "88px", paddingBottom: "0" }}>
+                    <div style={{ paddingTop: phone ? "48px" : "88px", paddingBottom: "0" }}>
                         <p style={{
                             fontFamily: INTER, fontSize: "10px", fontWeight: 700,
                             letterSpacing: "0.14em", textTransform: "uppercase",
@@ -537,7 +656,7 @@ export default function RFNDCaseStudy() {
                         </p>
                         <h1 style={{
                             fontFamily: Z, fontWeight: 700,
-                            fontSize: "clamp(40px, 5.5vw, 66px)",
+                            fontSize: "clamp(32px, 5.5vw, 66px)",
                             lineHeight: "1.02", letterSpacing: "-0.03em",
                             marginBottom: "22px", maxWidth: "880px", color: C.ink,
                         }}>
@@ -545,13 +664,15 @@ export default function RFNDCaseStudy() {
                         </h1>
                         <p style={{
                             fontFamily: Z, fontStyle: "italic", fontWeight: 300,
-                            fontSize: "20px", marginBottom: "52px", color: C.ink3,
+                            fontSize: phone ? "17px" : "20px", marginBottom: "52px", color: C.ink3,
                             maxWidth: "660px", lineHeight: 1.6,
                         }}>
                             A self-initiated conceptual exploration into why emotional engagement is a commerce problem — and what mood-aware design could look like as a solution.
                         </p>
                         <div style={{
-                            display: "flex", gap: "56px",
+                            display: "flex",
+                            flexWrap: "wrap",
+                            gap: phone ? 20 : "56px",
                             paddingBottom: "48px", borderBottom: `1px solid ${C.border}`,
                         }}>
                             {[
@@ -618,7 +739,7 @@ export default function RFNDCaseStudy() {
                     <Body>
                         Most UX briefs frame shopping as an efficiency problem. I reframed it as a psychology problem.
                     </Body>
-                    <PullQuote text="How do emotional responses elicited by e-commerce design influence purchasing decisions, impulse behavior, and long-term brand loyalty?" />
+                    <PullQuote text="How do emotional responses elicited by e-commerce design influence purchasing decisions, impulse behavior, and long-term brand loyalty?" phone={phone} />
                     <Body>
                         This wasn't about designing better filters. It was about investigating the psychology of desire — and whether a digital product could meet that psychology with the same nuance a great in-store experience does.
                     </Body>
@@ -808,10 +929,10 @@ export default function RFNDCaseStudy() {
                         "Discovery mode — editorial curation, mood-based recommendations, conversational filtering, digital closet",
                         "The mode you're in feels legible through layout and pacing — never through a label or onboarding prompt",
                     ]} />
-                    <PullQuote text="The best retail experience doesn't ask what you want to buy. It asks how you want to feel." />
+                    <PullQuote text="The best retail experience doesn't ask what you want to buy. It asks how you want to feel." phone={phone} />
                 </FadeIn>
                 <FadeIn delay={80}>
-                    <div style={{ display: "flex", gap: "20px", margin: "44px 0" }}>
+                    <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: "20px", margin: "44px 0" }}>
                         {[
                             {
                                 src: "/slides/discover.png",
@@ -834,6 +955,7 @@ export default function RFNDCaseStudy() {
                                         display: "block",
                                         borderRadius: 14,
                                         boxShadow: "0 4px 52px rgba(0,0,0,0.10)",
+                                        maxWidth: "100%",
                                     }}
                                 />
                                 <div>
@@ -886,7 +1008,7 @@ export default function RFNDCaseStudy() {
                         display: "flex",
                         gap: "24px",
                         alignItems: "flex-start",
-                        padding: "56px 60px",
+                        padding: phone ? "28px 24px" : "56px 60px",
                         backgroundColor: C.ink,
                         borderRadius: "16px",
                     }}>
@@ -898,7 +1020,7 @@ export default function RFNDCaseStudy() {
                         </span>
                         <p style={{
                             fontFamily: Z, fontStyle: "italic", fontWeight: 300,
-                            fontSize: "clamp(20px, 2.5vw, 26px)",
+                            fontSize: "clamp(18px, 2.5vw, 26px)",
                             lineHeight: "1.55", maxWidth: "680px",
                             color: "rgba(255,255,255,0.92)", margin: 0,
                         }}>
@@ -926,6 +1048,9 @@ export default function RFNDCaseStudy() {
                             textDecoration: "none",
                             letterSpacing: "-0.01em",
                             transition: "color 0.18s",
+                            minHeight: 44,
+                            display: "flex",
+                            alignItems: "center",
                         }}
                         onMouseEnter={(e) => (e.currentTarget.style.color = "#1C1C1A")}
                         onMouseLeave={(e) => (e.currentTarget.style.color = "#8A8A82")}

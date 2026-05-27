@@ -18,6 +18,23 @@ const C = {
     border: "rgba(0,0,0,0.07)",
 }
 
+// ── Responsive hook ────────────────────────────────────────────────────────────
+function useResponsive() {
+    const [phone, setPhone] = useState(false)
+    const [tablet, setTablet] = useState(false)
+    useEffect(() => {
+        const check = () => {
+            const w = window.innerWidth
+            setPhone(w < 768)
+            setTablet(w >= 768 && w < 1024)
+        }
+        check()
+        window.addEventListener("resize", check, { passive: true })
+        return () => window.removeEventListener("resize", check)
+    }, [])
+    return { phone, tablet }
+}
+
 // ── Utilities ─────────────────────────────────────────────────────────────────
 function useInView(threshold = 0.1) {
     const ref = useRef<HTMLDivElement>(null)
@@ -121,7 +138,7 @@ function SectionLabel({
             <h2
                 style={{
                     fontFamily: Z,
-                    fontSize: "clamp(24px,3vw,32px)",
+                    fontSize: "clamp(22px,3vw,32px)",
                     fontWeight: 700,
                     letterSpacing: "-0.025em",
                     color: C.ink,
@@ -250,13 +267,13 @@ function AnimStat({
 }
 
 
-
 function CaseStudyNav() {
     const [scrolled, setScrolled] = useState(false)
     const [phone, setPhone] = useState(false)
+    const [menuOpen, setMenuOpen] = useState(false)
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 12)
-        const onResize = () => setPhone(window.innerWidth < 540)
+        const onResize = () => setPhone(window.innerWidth < 768)
         onResize()
         window.addEventListener("scroll", onScroll, { passive: true })
         window.addEventListener("resize", onResize, { passive: true })
@@ -265,68 +282,162 @@ function CaseStudyNav() {
             window.removeEventListener("resize", onResize)
         }
     }, [])
+
+    const allLinks = [
+        { label: "Work", href: "/#work" },
+        { label: "Playground", href: "/playground" },
+        { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
+        { label: "Resume", href: "#" },
+    ]
+
     const F = "Inter, system-ui, sans-serif"
-    const links = phone
-        ? [
-              { label: "Work", href: "/#work" },
-              { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-              { label: "Resume", href: "#" },
-          ]
-        : [
-              { label: "Work", href: "/#work" },
-              { label: "Playground", href: "/playground" },
-              { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-              { label: "Resume", href: "#" },
-          ]
     return (
-        <nav style={{
-            position: "sticky",
-            top: 0,
-            zIndex: 100,
-            width: "100%",
-            height: phone ? 54 : 64,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: `0 ${phone ? 20 : 80}px`,
-            boxSizing: "border-box",
-            backgroundColor: scrolled ? "rgba(255,255,255,0.96)" : C.bg,
-            backdropFilter: scrolled ? "blur(20px)" : "none",
-            WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-            borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : C.border}`,
-            transition: "background 0.25s, border-color 0.25s",
-        }}>
-            <a href="/" style={{ display: "block", lineHeight: 0 }}>
-                <img
-                    src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
-                    alt="OC"
-                    style={{ width: phone ? 48 : 58, height: phone ? 48 : 58, objectFit: "contain", display: "block" }}
-                />
-            </a>
-            <div style={{ display: "flex", gap: phone ? 16 : 32, alignItems: "center" }}>
-                {links.map(({ label, href, ext }) => (
-                    <a
-                        key={label}
-                        href={href}
-                        target={ext ? "_blank" : "_self"}
-                        rel="noreferrer"
+        <>
+            <nav style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 100,
+                width: "100%",
+                height: phone ? 54 : 64,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: `0 ${phone ? 20 : 80}px`,
+                boxSizing: "border-box",
+                backgroundColor: scrolled ? "rgba(255,255,255,0.96)" : C.bg,
+                backdropFilter: scrolled ? "blur(20px)" : "none",
+                WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
+                borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : C.border}`,
+                transition: "background 0.25s, border-color 0.25s",
+            }}>
+                <a href="/" style={{ display: "block", lineHeight: 0 }}>
+                    <img
+                        src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
+                        alt="OC"
+                        style={{ width: phone ? 48 : 58, height: phone ? 48 : 58, objectFit: "contain", display: "block" }}
+                    />
+                </a>
+                {phone ? (
+                    <button
+                        onClick={() => setMenuOpen(true)}
                         style={{
-                            fontFamily: F,
-                            fontSize: phone ? 13 : 14,
-                            fontWeight: 500,
-                            color: C.ink3,
-                            textDecoration: "none",
-                            letterSpacing: "-0.01em",
-                            transition: "color 0.18s",
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            padding: 8,
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 5,
+                            minHeight: 44,
+                            minWidth: 44,
+                            alignItems: "center",
+                            justifyContent: "center",
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = C.ink)}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = C.ink3)}
+                        aria-label="Open menu"
                     >
-                        {label}
-                    </a>
-                ))}
-            </div>
-        </nav>
+                        <span style={{ width: 22, height: 2, backgroundColor: C.ink, borderRadius: 1, display: "block" }} />
+                        <span style={{ width: 22, height: 2, backgroundColor: C.ink, borderRadius: 1, display: "block" }} />
+                        <span style={{ width: 14, height: 2, backgroundColor: C.ink, borderRadius: 1, display: "block", alignSelf: "flex-end" }} />
+                    </button>
+                ) : (
+                    <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
+                        {allLinks.map(({ label, href, ext }) => (
+                            <a
+                                key={label}
+                                href={href}
+                                target={ext ? "_blank" : "_self"}
+                                rel="noreferrer"
+                                style={{
+                                    fontFamily: F,
+                                    fontSize: 14,
+                                    fontWeight: 500,
+                                    color: C.ink3,
+                                    textDecoration: "none",
+                                    letterSpacing: "-0.01em",
+                                    transition: "color 0.18s",
+                                    minHeight: 44,
+                                    display: "flex",
+                                    alignItems: "center",
+                                }}
+                                onMouseEnter={(e) => (e.currentTarget.style.color = C.ink)}
+                                onMouseLeave={(e) => (e.currentTarget.style.color = C.ink3)}
+                            >
+                                {label}
+                            </a>
+                        ))}
+                    </div>
+                )}
+            </nav>
+
+            {menuOpen && (
+                <div
+                    onClick={() => setMenuOpen(false)}
+                    style={{
+                        position: "fixed",
+                        inset: 0,
+                        zIndex: 999,
+                        backgroundColor: "rgba(255,255,255,0.98)",
+                        backdropFilter: "blur(16px)",
+                        WebkitBackdropFilter: "blur(16px)",
+                        display: "flex",
+                        flexDirection: "column",
+                        padding: "24px 20px",
+                    }}
+                >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 48 }}>
+                        <img
+                            src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
+                            alt="OC"
+                            style={{ width: 48, height: 48, objectFit: "contain" }}
+                        />
+                        <button
+                            onClick={() => setMenuOpen(false)}
+                            style={{
+                                background: "none",
+                                border: "none",
+                                cursor: "pointer",
+                                fontSize: 24,
+                                color: C.ink,
+                                minHeight: 44,
+                                minWidth: 44,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+                            ✕
+                        </button>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                        {allLinks.map(({ label, href, ext }) => (
+                            <a
+                                key={label}
+                                href={href}
+                                target={ext ? "_blank" : "_self"}
+                                rel="noreferrer"
+                                onClick={() => setMenuOpen(false)}
+                                style={{
+                                    fontFamily: F,
+                                    fontSize: 28,
+                                    fontWeight: 600,
+                                    color: C.ink,
+                                    textDecoration: "none",
+                                    letterSpacing: "-0.02em",
+                                    minHeight: 52,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    borderBottom: `1px solid ${C.border}`,
+                                    paddingBottom: 12,
+                                    paddingTop: 12,
+                                }}
+                            >
+                                {label}
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </>
     )
 }
 
@@ -575,7 +686,7 @@ function InsightCard({
 }
 
 // ── Recommendation accordion ───────────────────────────────────────────────────
-function RecommendationRow({ num, title, body, detail, open, onClick }: any) {
+function RecommendationRow({ num, title, body, detail, open, onClick, phone }: any) {
     return (
         <div>
             <div
@@ -583,7 +694,7 @@ function RecommendationRow({ num, title, body, detail, open, onClick }: any) {
                 style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "28px",
+                    gap: phone ? 14 : "28px",
                     padding: "28px 0",
                     cursor: "pointer",
                 }}
@@ -592,10 +703,10 @@ function RecommendationRow({ num, title, body, detail, open, onClick }: any) {
                     style={{
                         fontFamily: Z,
                         fontWeight: 400,
-                        fontSize: "44px",
+                        fontSize: phone ? "28px" : "44px",
                         lineHeight: "1",
                         color: open ? C.ink : "rgba(0,0,0,0.07)",
-                        minWidth: "64px",
+                        minWidth: phone ? "40px" : "64px",
                         userSelect: "none" as const,
                         transition: "color 0.25s",
                     }}
@@ -661,7 +772,7 @@ function RecommendationRow({ num, title, body, detail, open, onClick }: any) {
                     transition: "max-height 0.5s cubic-bezier(0.22,1,0.36,1)",
                 }}
             >
-                <div style={{ paddingBottom: "40px", paddingLeft: "92px" }}>
+                <div style={{ paddingBottom: "40px", paddingLeft: phone ? "0" : "92px" }}>
                     <p
                         style={{
                             fontFamily: INTER,
@@ -859,6 +970,9 @@ function InstaPhoneCard({ src, label, filename }: { src?: string; label: string;
 }
 
 export default function BoardAndBrewCaseStudy() {
+    const { phone, tablet } = useResponsive()
+    const pad = phone ? 20 : tablet ? 40 : 80
+
     const { ref: metricsRef, visible: metricsVisible } = useInView(0.2)
     const [activeRec, setActiveRec] = useState<number | null>(null)
 
@@ -896,12 +1010,12 @@ export default function BoardAndBrewCaseStudy() {
                 style={{
                     maxWidth: 1040,
                     margin: "0 auto",
-                    padding: "0 80px 80px",
+                    padding: `0 ${pad}px 80px`,
                 }}
             >
                 {/* ── HERO ── */}
                 <FadeIn>
-                    <div style={{ paddingTop: "80px", paddingBottom: "64px" }}>
+                    <div style={{ paddingTop: phone ? "48px" : "80px", paddingBottom: "64px" }}>
                         <p
                             style={{
                                 fontFamily: INTER,
@@ -919,7 +1033,7 @@ export default function BoardAndBrewCaseStudy() {
                             style={{
                                 fontFamily: Z,
                                 fontWeight: 700,
-                                fontSize: "clamp(36px, 5vw, 58px)",
+                                fontSize: "clamp(28px, 5vw, 58px)",
                                 lineHeight: "1.04",
                                 letterSpacing: "-0.03em",
                                 marginBottom: "18px",
@@ -949,7 +1063,8 @@ export default function BoardAndBrewCaseStudy() {
                         <div
                             style={{
                                 display: "flex",
-                                gap: "48px",
+                                flexWrap: "wrap",
+                                gap: phone ? 20 : "48px",
                                 paddingBottom: "40px",
                                 borderBottom: `1px solid ${C.border}`,
                             }}
@@ -996,7 +1111,8 @@ export default function BoardAndBrewCaseStudy() {
                         <div
                             ref={metricsRef}
                             style={{
-                                display: "flex",
+                                display: "grid",
+                                gridTemplateColumns: phone ? "1fr 1fr" : "repeat(4, 1fr)",
                                 gap: "10px",
                                 marginTop: 40,
                             }}
@@ -1037,6 +1153,7 @@ export default function BoardAndBrewCaseStudy() {
                         display: "block",
                         borderRadius: 18,
                         boxShadow: "0 8px 40px rgba(0,0,0,0.12)",
+                        maxWidth: "100%",
                     }}
                 />
 
@@ -1227,7 +1344,7 @@ export default function BoardAndBrewCaseStudy() {
                         social proof so new users discovering the account through
                         ads would trust what they saw.
                     </Body>
-                    <div style={{ display: "flex", gap: 20, marginTop: 36, alignItems: "flex-start" }}>
+                    <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: 20, marginTop: 36, alignItems: "flex-start" }}>
                         {[
                             {
                                 src: "/slides/bb1.png",
@@ -1321,6 +1438,7 @@ export default function BoardAndBrewCaseStudy() {
                                 borderRadius: 20,
                                 border: `1px solid ${C.border}`,
                                 transition: "background 0.18s, border-color 0.18s",
+                                minHeight: 44,
                             }}
                             onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = C.surface; e.currentTarget.style.borderColor = "rgba(0,0,0,0.15)"; }}
                             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.borderColor = C.border; }}
@@ -1359,10 +1477,11 @@ export default function BoardAndBrewCaseStudy() {
                             loop
                             playsInline
                             style={{
-                                width: "60%",
+                                width: phone ? "100%" : "60%",
                                 display: "block",
                                 borderRadius: 20,
                                 boxShadow: "0 8px 48px rgba(0,0,0,0.14)",
+                                maxWidth: "100%",
                             }}
                         />
                         <p
@@ -1394,6 +1513,7 @@ export default function BoardAndBrewCaseStudy() {
                     <div
                         style={{
                             display: "flex",
+                            flexDirection: phone ? "column" : "row",
                             gap: "10px",
                             marginBottom: "28px",
                         }}
@@ -1437,6 +1557,7 @@ export default function BoardAndBrewCaseStudy() {
                     <div
                         style={{
                             display: "flex",
+                            flexDirection: phone ? "column" : "row",
                             gap: "10px",
                             marginBottom: "10px",
                         }}
@@ -1504,6 +1625,7 @@ export default function BoardAndBrewCaseStudy() {
                         <RecommendationRow
                             key={i}
                             {...r}
+                            phone={phone}
                             open={activeRec === i}
                             onClick={() =>
                                 setActiveRec(activeRec === i ? null : i)
@@ -1547,7 +1669,7 @@ export default function BoardAndBrewCaseStudy() {
                             display: "flex",
                             gap: "24px",
                             alignItems: "flex-start",
-                            padding: "48px",
+                            padding: phone ? "24px 20px" : "48px",
                             backgroundColor: C.ink,
                             borderRadius: "12px",
                         }}
@@ -1569,7 +1691,7 @@ export default function BoardAndBrewCaseStudy() {
                                 fontFamily: Z,
                                 fontStyle: "italic",
                                 fontWeight: 300,
-                                fontSize: "22px",
+                                fontSize: phone ? "18px" : "22px",
                                 lineHeight: "1.55",
                                 maxWidth: "660px",
                                 color: "rgba(255,255,255,0.92)",
@@ -1589,7 +1711,7 @@ export default function BoardAndBrewCaseStudy() {
                 <div
                     style={{
                         backgroundColor: C.ink,
-                        padding: "100px 80px 120px",
+                        padding: phone ? "60px 20px 80px" : "100px 80px 120px",
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
@@ -1613,7 +1735,7 @@ export default function BoardAndBrewCaseStudy() {
                         <h2
                             style={{
                                 fontFamily: Z,
-                                fontSize: "clamp(32px,4vw,48px)",
+                                fontSize: "clamp(28px,4vw,48px)",
                                 fontWeight: 700,
                                 letterSpacing: "-0.03em",
                                 color: "#fff",
@@ -1636,12 +1758,12 @@ export default function BoardAndBrewCaseStudy() {
                         <object
                             data="/slides/boardbrew-finalppt.pdf"
                             type="application/pdf"
-                            style={{ width: "100%", height: 560, display: "block", border: "none" }}
+                            style={{ width: "100%", height: phone ? 300 : 560, display: "block", border: "none" }}
                         >
                             <div
                                 style={{
                                     width: "100%",
-                                    height: 560,
+                                    height: phone ? 300 : 560,
                                     backgroundColor: "rgba(255,255,255,0.04)",
                                     display: "flex",
                                     flexDirection: "column" as const,
@@ -1679,6 +1801,7 @@ export default function BoardAndBrewCaseStudy() {
                             borderRadius: 8,
                             border: "1px solid rgba(255,255,255,0.2)",
                             transition: "background 0.2s, border-color 0.2s",
+                            minHeight: 44,
                         }}
                         onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.35)"; }}
                         onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)"; }}
@@ -1705,13 +1828,12 @@ export default function BoardAndBrewCaseStudy() {
 
             {/* Back to work */}
             <div style={{
-                paddingTop: 64,
-                marginTop: 80,
                 borderTop: "1px solid rgba(0,0,0,0.08)",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                padding: "64px 80px 0",
+                padding: phone ? "48px 20px 0" : "64px 80px 0",
+                marginBottom: 80,
             }}>
                 <a
                     href="/#work"
@@ -1723,6 +1845,9 @@ export default function BoardAndBrewCaseStudy() {
                         textDecoration: "none",
                         letterSpacing: "-0.01em",
                         transition: "color 0.18s",
+                        minHeight: 44,
+                        display: "flex",
+                        alignItems: "center",
                     }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = "#111111")}
                     onMouseLeave={(e) => (e.currentTarget.style.color = "#8A8A82")}

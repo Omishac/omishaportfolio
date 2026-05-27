@@ -18,6 +18,23 @@ const C = {
     surface: "#F5F5F3",
 }
 
+// ── Responsive hook ────────────────────────────────────────────────────────────
+function useResponsive() {
+    const [phone, setPhone] = useState(false)
+    const [tablet, setTablet] = useState(false)
+    useEffect(() => {
+        const check = () => {
+            const w = window.innerWidth
+            setPhone(w < 768)
+            setTablet(w >= 768 && w < 1024)
+        }
+        check()
+        window.addEventListener("resize", check, { passive: true })
+        return () => window.removeEventListener("resize", check)
+    }, [])
+    return { phone, tablet }
+}
+
 function useInView(threshold = 0.1) {
     const ref = useRef<HTMLDivElement>(null)
     const [visible, setVisible] = useState(false)
@@ -213,9 +230,10 @@ function Pill({ label }: { label: string }) {
 function CaseStudyNav() {
     const [scrolled, setScrolled] = useState(false)
     const [phone, setPhone] = useState(false)
+    const [menuOpen, setMenuOpen] = useState(false)
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 12)
-        const onResize = () => setPhone(window.innerWidth < 540)
+        const onResize = () => setPhone(window.innerWidth < 768)
         onResize()
         window.addEventListener("scroll", onScroll, { passive: true })
         window.addEventListener("resize", onResize, { passive: true })
@@ -224,68 +242,164 @@ function CaseStudyNav() {
             window.removeEventListener("resize", onResize)
         }
     }, [])
+
+    const allLinks = [
+        { label: "Work", href: "/#work" },
+        { label: "Playground", href: "/playground" },
+        { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
+        { label: "Resume", href: "#" },
+    ]
+
     const F = "Inter, system-ui, sans-serif"
-    const links = phone
-        ? [
-              { label: "Work", href: "/#work" },
-              { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-              { label: "Resume", href: "#" },
-          ]
-        : [
-              { label: "Work", href: "/#work" },
-              { label: "Playground", href: "/playground" },
-              { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-              { label: "Resume", href: "#" },
-          ]
+
     return (
-        <nav style={{
-            position: "sticky",
-            top: 0,
-            zIndex: 100,
-            width: "100%",
-            height: phone ? 54 : 64,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: `0 ${phone ? 20 : 80}px`,
-            boxSizing: "border-box",
-            backgroundColor: scrolled ? "rgba(255,255,255,0.96)" : C.bg,
-            backdropFilter: scrolled ? "blur(20px)" : "none",
-            WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-            borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : C.border}`,
-            transition: "background 0.25s, border-color 0.25s",
-        }}>
-            <a href="/" style={{ display: "block", lineHeight: 0 }}>
-                <img
-                    src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
-                    alt="OC"
-                    style={{ width: phone ? 48 : 58, height: phone ? 48 : 58, objectFit: "contain", display: "block" }}
-                />
-            </a>
-            <div style={{ display: "flex", gap: phone ? 16 : 32, alignItems: "center" }}>
-                {links.map(({ label, href, ext }) => (
-                    <a
-                        key={label}
-                        href={href}
-                        target={ext ? "_blank" : "_self"}
-                        rel="noreferrer"
+        <>
+            <nav style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 100,
+                width: "100%",
+                height: phone ? 54 : 64,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: `0 ${phone ? 20 : 80}px`,
+                boxSizing: "border-box",
+                backgroundColor: scrolled ? "rgba(255,255,255,0.96)" : C.bg,
+                backdropFilter: scrolled ? "blur(20px)" : "none",
+                WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
+                borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : C.border}`,
+                transition: "background 0.25s, border-color 0.25s",
+            }}>
+                <a href="/" style={{ display: "block", lineHeight: 0 }}>
+                    <img
+                        src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
+                        alt="OC"
+                        style={{ width: phone ? 48 : 58, height: phone ? 48 : 58, objectFit: "contain", display: "block" }}
+                    />
+                </a>
+                {phone ? (
+                    <button
+                        onClick={() => setMenuOpen(true)}
                         style={{
-                            fontFamily: F,
-                            fontSize: phone ? 13 : 14,
-                            fontWeight: 500,
-                            color: C.ink3,
-                            textDecoration: "none",
-                            letterSpacing: "-0.01em",
-                            transition: "color 0.18s",
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            padding: 8,
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 5,
+                            minHeight: 44,
+                            minWidth: 44,
+                            alignItems: "center",
+                            justifyContent: "center",
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = C.ink)}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = C.ink3)}
+                        aria-label="Open menu"
                     >
-                        {label}
-                    </a>
-                ))}
-            </div>
-        </nav>
+                        <span style={{ width: 22, height: 2, backgroundColor: C.ink, borderRadius: 1, display: "block" }} />
+                        <span style={{ width: 22, height: 2, backgroundColor: C.ink, borderRadius: 1, display: "block" }} />
+                        <span style={{ width: 14, height: 2, backgroundColor: C.ink, borderRadius: 1, display: "block", alignSelf: "flex-end" }} />
+                    </button>
+                ) : (
+                    <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
+                        {allLinks.map(({ label, href, ext }) => (
+                            <a
+                                key={label}
+                                href={href}
+                                target={ext ? "_blank" : "_self"}
+                                rel="noreferrer"
+                                style={{
+                                    fontFamily: F,
+                                    fontSize: 14,
+                                    fontWeight: 500,
+                                    color: C.ink3,
+                                    textDecoration: "none",
+                                    letterSpacing: "-0.01em",
+                                    transition: "color 0.18s",
+                                    minHeight: 44,
+                                    display: "flex",
+                                    alignItems: "center",
+                                }}
+                                onMouseEnter={(e) => (e.currentTarget.style.color = C.ink)}
+                                onMouseLeave={(e) => (e.currentTarget.style.color = C.ink3)}
+                            >
+                                {label}
+                            </a>
+                        ))}
+                    </div>
+                )}
+            </nav>
+
+            {/* Mobile full-screen overlay */}
+            {menuOpen && (
+                <div
+                    onClick={() => setMenuOpen(false)}
+                    style={{
+                        position: "fixed",
+                        inset: 0,
+                        zIndex: 999,
+                        backgroundColor: "rgba(255,255,255,0.98)",
+                        backdropFilter: "blur(16px)",
+                        WebkitBackdropFilter: "blur(16px)",
+                        display: "flex",
+                        flexDirection: "column",
+                        padding: "24px 20px",
+                    }}
+                >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 48 }}>
+                        <img
+                            src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
+                            alt="OC"
+                            style={{ width: 48, height: 48, objectFit: "contain" }}
+                        />
+                        <button
+                            onClick={() => setMenuOpen(false)}
+                            style={{
+                                background: "none",
+                                border: "none",
+                                cursor: "pointer",
+                                fontSize: 24,
+                                color: C.ink,
+                                minHeight: 44,
+                                minWidth: 44,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+                            ✕
+                        </button>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                        {allLinks.map(({ label, href, ext }) => (
+                            <a
+                                key={label}
+                                href={href}
+                                target={ext ? "_blank" : "_self"}
+                                rel="noreferrer"
+                                onClick={() => setMenuOpen(false)}
+                                style={{
+                                    fontFamily: F,
+                                    fontSize: 28,
+                                    fontWeight: 600,
+                                    color: C.ink,
+                                    textDecoration: "none",
+                                    letterSpacing: "-0.02em",
+                                    minHeight: 52,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    borderBottom: `1px solid ${C.border}`,
+                                    paddingBottom: 12,
+                                    paddingTop: 12,
+                                }}
+                            >
+                                {label}
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </>
     )
 }
 
@@ -335,8 +449,8 @@ function Lightbox({
                     border: "none",
                     borderRadius: 20,
                     cursor: "pointer",
-                    width: 36,
-                    height: 36,
+                    width: 44,
+                    height: 44,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -365,6 +479,7 @@ function Lightbox({
                         objectFit: "contain",
                         display: "block",
                         maxHeight: "78vh",
+                        maxWidth: "100%",
                     }}
                 />
             </div>
@@ -475,6 +590,7 @@ function ArtifactCard({
                             width: "100%",
                             height: "auto",
                             display: "block",
+                            maxWidth: "100%",
                             transform: hov ? "scale(1.02)" : "scale(1)",
                             transition:
                                 "transform 0.5s cubic-bezier(0.22,1,0.36,1)",
@@ -705,7 +821,7 @@ function FrictionCard({
 }
 
 // ── Process section ────────────────────────────────────────────────────────────
-function ProcessSection() {
+function ProcessSection({ phone }: { phone: boolean }) {
     const fade = useInView()
     return (
         <div ref={fade.ref} style={fade.style}>
@@ -740,7 +856,7 @@ function ProcessSection() {
             <div
                 style={{
                     display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
+                    gridTemplateColumns: phone ? "1fr" : "1fr 1fr",
                     gap: 28,
                     marginBottom: 28,
                 }}
@@ -769,7 +885,7 @@ function ProcessSection() {
             <div
                 style={{
                     display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
+                    gridTemplateColumns: phone ? "1fr" : "1fr 1fr",
                     gap: 28,
                     marginBottom: 28,
                 }}
@@ -790,7 +906,7 @@ function ProcessSection() {
             <div
                 style={{
                     display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
+                    gridTemplateColumns: phone ? "1fr" : "1fr 1fr",
                     gap: 28,
                 }}
             >
@@ -1240,6 +1356,7 @@ function PhoneCard({
                             width: "100%",
                             height: "auto",
                             display: "block",
+                            maxWidth: "100%",
                             transform: hov ? "scale(1.02)" : "scale(1)",
                             transition: `transform 0.5s ${spring}`,
                             transformOrigin: "top center",
@@ -1366,6 +1483,9 @@ function ResultCard({ num, label }: { num: string; label: string }) {
 }
 
 export default function IOSCaseStudy() {
+    const { phone, tablet } = useResponsive()
+    const pad = phone ? 20 : tablet ? 40 : 80
+
     const statsRef = useRef<HTMLDivElement>(null)
     const [statsVis, setStatsVis] = useState(false)
     useEffect(() => {
@@ -1425,20 +1545,20 @@ export default function IOSCaseStudy() {
                 style={{
                     maxWidth: 1040,
                     margin: "0 auto",
-                    padding: "0 80px 160px",
+                    padding: `0 ${pad}px 160px`,
                 }}
             >
                 {/* ── HERO ── */}
                 <div
                     ref={hero.ref}
-                    style={{ ...hero.style, paddingTop: 88, paddingBottom: 56 }}
+                    style={{ ...hero.style, paddingTop: phone ? 48 : 88, paddingBottom: phone ? 36 : 56 }}
                 >
                     <Pill label="iOS · Mobile Experience · URBN" />
                     <h1
                         style={{
                             fontFamily: Z,
                             fontWeight: 700,
-                            fontSize: "clamp(36px, 5vw, 58px)",
+                            fontSize: "clamp(28px, 5vw, 58px)",
                             lineHeight: 1.04,
                             letterSpacing: "-0.03em",
                             color: C.ink,
@@ -1468,7 +1588,8 @@ export default function IOSCaseStudy() {
                     <div
                         style={{
                             display: "flex",
-                            gap: 48,
+                            flexWrap: "wrap",
+                            gap: phone ? 20 : 48,
                             paddingTop: 28,
                             borderTop: `1px solid ${C.border}`,
                         }}
@@ -1518,6 +1639,7 @@ export default function IOSCaseStudy() {
                         display: "block",
                         borderRadius: 18,
                         boxShadow: "0 8px 40px rgba(0,0,0,0.10)",
+                        maxWidth: "100%",
                     }}
                 />
 
@@ -1529,7 +1651,7 @@ export default function IOSCaseStudy() {
                         style={{
                             fontFamily: Z,
                             fontWeight: 700,
-                            fontSize: "clamp(24px,3vw,34px)",
+                            fontSize: "clamp(22px,3vw,34px)",
                             letterSpacing: "-0.025em",
                             color: C.ink,
                             marginBottom: 12,
@@ -1561,6 +1683,7 @@ export default function IOSCaseStudy() {
                             width: "100%",
                             height: "auto",
                             display: "block",
+                            maxWidth: "100%",
                             borderRadius: 14,
                             boxShadow: "0 4px 32px rgba(0,0,0,0.09)",
                         }}
@@ -1575,7 +1698,7 @@ export default function IOSCaseStudy() {
                         style={{
                             fontFamily: Z,
                             fontWeight: 700,
-                            fontSize: "clamp(24px,3vw,34px)",
+                            fontSize: "clamp(22px,3vw,34px)",
                             letterSpacing: "-0.025em",
                             color: C.ink,
                             marginBottom: 12,
@@ -1608,7 +1731,7 @@ export default function IOSCaseStudy() {
                                 gap: 10,
                                 backgroundColor: "#FFF2D6",
                                 borderRadius: 10,
-                                padding: "12px 18px",
+                                padding: phone ? "12px 14px" : "12px 18px",
                             }}
                         >
                             <span style={{ fontSize: 16 }}>⚠️</span>
@@ -1616,7 +1739,7 @@ export default function IOSCaseStudy() {
                                 style={{
                                     fontFamily: Z,
                                     fontStyle: "italic",
-                                    fontSize: 15,
+                                    fontSize: phone ? 13 : 15,
                                     color: C.ink,
                                     margin: 0,
                                 }}
@@ -1630,9 +1753,10 @@ export default function IOSCaseStudy() {
                             src="/slides/ios-original.png"
                             alt="iOS original review experience showing English reviews in a Spanish-language app"
                             style={{
-                                width: "70%",
+                                width: phone ? "100%" : "70%",
                                 height: "auto",
                                 display: "block",
+                                maxWidth: "100%",
                             }}
                         />
                         <p style={{
@@ -1672,7 +1796,7 @@ export default function IOSCaseStudy() {
                     <div
                         style={{
                             display: "grid",
-                            gridTemplateColumns: "1fr 1fr",
+                            gridTemplateColumns: phone ? "1fr" : "1fr 1fr",
                             gap: 10,
                         }}
                     >
@@ -1705,7 +1829,7 @@ export default function IOSCaseStudy() {
 
                 {/* ── 04 EXPLORATION PROCESS ── */}
                 <Divider />
-                <ProcessSection />
+                <ProcessSection phone={phone} />
 
                 {/* ── 05 WHY IT MATTERS ── */}
                 <Divider />
@@ -1715,7 +1839,7 @@ export default function IOSCaseStudy() {
                         style={{
                             fontFamily: Z,
                             fontWeight: 700,
-                            fontSize: "clamp(28px,4vw,40px)",
+                            fontSize: "clamp(22px,4vw,40px)",
                             letterSpacing: "-0.03em",
                             color: C.ink,
                             lineHeight: 1.08,
@@ -1749,7 +1873,7 @@ export default function IOSCaseStudy() {
                         product page can't — and they only work if users can
                         actually read them.
                     </p>
-                    <div style={{ display: "flex", gap: 10, marginBottom: 36 }}>
+                    <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: 10, marginBottom: 36 }}>
                         <BenefitCard
                             icon="✅"
                             title="Validate quality"
@@ -1768,7 +1892,7 @@ export default function IOSCaseStudy() {
                     </div>
                     <div
                         ref={statsRef}
-                        style={{ display: "flex", gap: 10, marginBottom: 36 }}
+                        style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: 10, marginBottom: 36 }}
                     >
                         <StatCard
                             num={74}
@@ -1793,7 +1917,7 @@ export default function IOSCaseStudy() {
                         style={{
                             backgroundColor: C.ink,
                             borderRadius: 16,
-                            padding: "32px 40px",
+                            padding: phone ? "24px 20px" : "32px 40px",
                             display: "flex",
                             gap: 22,
                             alignItems: "flex-start",
@@ -1816,7 +1940,7 @@ export default function IOSCaseStudy() {
                                     fontFamily: Z,
                                     fontStyle: "italic",
                                     fontWeight: 300,
-                                    fontSize: 21,
+                                    fontSize: phone ? 17 : 21,
                                     lineHeight: 1.55,
                                     color: "rgba(255,255,255,0.9)",
                                     margin: "0 0 14px",
@@ -1852,7 +1976,7 @@ export default function IOSCaseStudy() {
                         style={{
                             fontFamily: Z,
                             fontWeight: 700,
-                            fontSize: "clamp(24px,3vw,34px)",
+                            fontSize: "clamp(22px,3vw,34px)",
                             letterSpacing: "-0.025em",
                             color: C.ink,
                             marginBottom: 12,
@@ -1878,7 +2002,7 @@ export default function IOSCaseStudy() {
                     </p>
 
                     <CascadeLabel text="Constraints" />
-                    <div style={{ display: "flex", gap: 10 }}>
+                    <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: 10 }}>
                         {[
                             {
                                 icon: "⚡",
@@ -1937,7 +2061,7 @@ export default function IOSCaseStudy() {
                     <CascadeConnector text="These constraints shaped three core design principles —" />
 
                     <CascadeLabel text="Principles" />
-                    <div style={{ display: "flex", gap: 12 }}>
+                    <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: 12 }}>
                         <PrincipleCard
                             num="01"
                             title="User Control"
@@ -1961,7 +2085,7 @@ export default function IOSCaseStudy() {
                     <CascadeConnector text="Which led to a single, focused solution —" />
 
                     <CascadeLabel text="Solution" />
-                    <div style={{ display: "flex", gap: 10, marginBottom: 28 }}>
+                    <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: 10, marginBottom: 28 }}>
                         {[
                             {
                                 title: "Translate on Demand",
@@ -1992,7 +2116,7 @@ export default function IOSCaseStudy() {
                         style={{
                             fontFamily: Z,
                             fontWeight: 700,
-                            fontSize: "clamp(24px,3vw,34px)",
+                            fontSize: "clamp(22px,3vw,34px)",
                             letterSpacing: "-0.025em",
                             color: C.ink,
                             marginBottom: 8,
@@ -2017,9 +2141,10 @@ export default function IOSCaseStudy() {
                         ref={phonesRef}
                         style={{
                             display: "flex",
+                            flexDirection: phone ? "column" : "row",
                             gap: 28,
                             alignItems: "flex-start",
-                            margin: "0 -40px",
+                            margin: phone ? "0" : "0 -40px",
                         }}
                     >
                         {[
@@ -2060,7 +2185,7 @@ export default function IOSCaseStudy() {
                         style={{
                             fontFamily: Z,
                             fontWeight: 700,
-                            fontSize: "clamp(24px,3vw,34px)",
+                            fontSize: "clamp(22px,3vw,34px)",
                             letterSpacing: "-0.025em",
                             color: C.ink,
                             marginBottom: 12,
@@ -2086,7 +2211,7 @@ export default function IOSCaseStudy() {
                     <div
                         style={{
                             display: "grid",
-                            gridTemplateColumns: "1fr 1fr",
+                            gridTemplateColumns: phone ? "1fr" : "1fr 1fr",
                             gap: 10,
                             marginBottom: 32,
                         }}
@@ -2122,7 +2247,7 @@ export default function IOSCaseStudy() {
                         style={{
                             fontFamily: Z,
                             fontWeight: 700,
-                            fontSize: "clamp(24px,3vw,34px)",
+                            fontSize: "clamp(22px,3vw,34px)",
                             letterSpacing: "-0.025em",
                             color: C.ink,
                             marginBottom: 14,
@@ -2154,7 +2279,7 @@ export default function IOSCaseStudy() {
                             display: "flex",
                             gap: 20,
                             alignItems: "flex-start",
-                            padding: "48px 52px",
+                            padding: phone ? "24px 20px" : "48px 52px",
                             backgroundColor: C.ink,
                             borderRadius: 16,
                         }}
@@ -2176,7 +2301,7 @@ export default function IOSCaseStudy() {
                                 fontFamily: Z,
                                 fontStyle: "italic",
                                 fontWeight: 300,
-                                fontSize: 24,
+                                fontSize: phone ? 18 : 24,
                                 lineHeight: 1.5,
                                 color: "rgba(255,255,255,0.92)",
                                 margin: 0,
@@ -2208,6 +2333,9 @@ export default function IOSCaseStudy() {
                             textDecoration: "none",
                             letterSpacing: "-0.01em",
                             transition: "color 0.18s",
+                            minHeight: 44,
+                            display: "flex",
+                            alignItems: "center",
                         }}
                         onMouseEnter={(e) => (e.currentTarget.style.color = "#111111")}
                         onMouseLeave={(e) => (e.currentTarget.style.color = "#8A8A82")}

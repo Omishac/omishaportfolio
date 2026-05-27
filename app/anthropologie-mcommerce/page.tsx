@@ -17,6 +17,23 @@ const C = {
     border: "rgba(0,0,0,0.07)",
 }
 
+// ── Responsive hook ────────────────────────────────────────────────────────────
+function useResponsive() {
+    const [phone, setPhone] = useState(false)
+    const [tablet, setTablet] = useState(false)
+    useEffect(() => {
+        const check = () => {
+            const w = window.innerWidth
+            setPhone(w < 768)
+            setTablet(w >= 768 && w < 1024)
+        }
+        check()
+        window.addEventListener("resize", check, { passive: true })
+        return () => window.removeEventListener("resize", check)
+    }, [])
+    return { phone, tablet }
+}
+
 // ── Utilities ─────────────────────────────────────────────────────────────────
 function useInView(threshold = 0.1) {
     const ref = useRef<HTMLDivElement>(null)
@@ -120,7 +137,7 @@ function SectionLabel({
             <h2
                 style={{
                     fontFamily: Z,
-                    fontSize: "clamp(24px,3vw,32px)",
+                    fontSize: "clamp(22px,3vw,32px)",
                     fontWeight: 700,
                     letterSpacing: "-0.025em",
                     color: C.ink,
@@ -309,6 +326,7 @@ function TrendCard({
                         display: "block",
                         borderRadius: 8,
                         marginBottom: 14,
+                        maxWidth: "100%",
                     }}
                 />
             )}
@@ -396,7 +414,7 @@ function PhoneFrame({ src, alt, label, width = 180 }: {
                 <img
                     src={src}
                     alt={alt}
-                    style={{ width: "100%", display: "block", minHeight: Math.round(width * 1.8) }}
+                    style={{ width: "100%", display: "block", minHeight: Math.round(width * 1.8), maxWidth: "100%" }}
                 />
             </div>
             {label && (
@@ -617,7 +635,7 @@ function FindingCard({ num, title, body, icon, active, onClick, onMouseEnter, on
 }
 
 // ── Recommendation accordion ───────────────────────────────────────────────────
-function RecRow({ num, title, body, detail, img, clip, open, onClick }: any) {
+function RecRow({ num, title, body, detail, img, clip, open, onClick, phone }: any) {
     return (
         <div>
             <div
@@ -625,7 +643,7 @@ function RecRow({ num, title, body, detail, img, clip, open, onClick }: any) {
                 style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "28px",
+                    gap: phone ? 14 : "28px",
                     padding: "28px 0",
                     cursor: "pointer",
                 }}
@@ -634,10 +652,10 @@ function RecRow({ num, title, body, detail, img, clip, open, onClick }: any) {
                     style={{
                         fontFamily: Z,
                         fontWeight: 400,
-                        fontSize: "44px",
+                        fontSize: phone ? "28px" : "44px",
                         lineHeight: "1",
                         color: open ? C.ink : "rgba(0,0,0,0.07)",
-                        minWidth: "64px",
+                        minWidth: phone ? "40px" : "64px",
                         userSelect: "none" as const,
                         transition: "color 0.25s",
                     }}
@@ -709,7 +727,7 @@ function RecRow({ num, title, body, detail, img, clip, open, onClick }: any) {
                         flexDirection: "column",
                         gap: "28px",
                         paddingBottom: "40px",
-                        paddingLeft: "92px",
+                        paddingLeft: phone ? "0" : "92px",
                     }}
                 >
                     <p
@@ -742,6 +760,7 @@ function RecRow({ num, title, body, detail, img, clip, open, onClick }: any) {
                                     display: "block",
                                     objectFit: clip ? "cover" : "contain",
                                     objectPosition: "center",
+                                    maxWidth: "100%",
                                 }}
                             />
                         </div>
@@ -813,26 +832,21 @@ function ReflRow({ text }: { text: string }) {
 }
 
 const IMGS = {
-    // Trends — competitive examples (source from Sephora / Nike app screenshots)
     sephoraBeautyPrefs: "/screenshots/sephora-beauty-prefs.png",
     nikeAR:             "/screenshots/nike-ar-foot.png",
     nikeMemberRewards:  "/screenshots/nike-member-rewards.png",
-    // Benchmarking — homepage (crop each phone from your homepage benchmark slide)
     anthroHome:     "/screenshots/anthro-home.png",
     everlaneHome:   "/screenshots/everlane-home.png",
     lululemonHome:  "/screenshots/lululemon-home.png",
     madewellHome:   "/screenshots/madewell-home.png",
-    // Benchmarking — checkout (crop each phone from your checkout benchmark slide)
     anthroCheckout:    "/screenshots/anthro-checkout.png",
     everlaneCheckout:  "/screenshots/everlane-checkout.png",
     lululemonCheckout: "/screenshots/lululemon-checkout.png",
     madewellCheckout:  "/screenshots/madewell-checkout.png",
-    // A/B test variants (crop each phone from your homepage redesign slide)
     abControl:   "/screenshots/ab-control.png",
     abNewLayout: "/screenshots/ab-new-layout.png",
     abStacked:   "/screenshots/ab-stacked.png",
     abSlider:    "/screenshots/ab-slider.png",
-    // App gestures (crop each phone from your gestures slide)
     anthroBasket: "/screenshots/anthro-basket.png",
     jcrewSwipe:   "/screenshots/jcrew-swipe.png",
     mangoSwipe:   "/screenshots/mango-swipe.png",
@@ -842,9 +856,10 @@ const IMGS = {
 function CaseStudyNav() {
     const [scrolled, setScrolled] = useState(false)
     const [phone, setPhone] = useState(false)
+    const [menuOpen, setMenuOpen] = useState(false)
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 12)
-        const onResize = () => setPhone(window.innerWidth < 540)
+        const onResize = () => setPhone(window.innerWidth < 768)
         onResize()
         window.addEventListener("scroll", onScroll, { passive: true })
         window.addEventListener("resize", onResize, { passive: true })
@@ -853,73 +868,167 @@ function CaseStudyNav() {
             window.removeEventListener("resize", onResize)
         }
     }, [])
+
+    const allLinks = [
+        { label: "Work", href: "/#work" },
+        { label: "Playground", href: "/playground" },
+        { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
+        { label: "Resume", href: "#" },
+    ]
+
     const F = "Inter, system-ui, sans-serif"
-    const links = phone
-        ? [
-              { label: "Work", href: "/#work" },
-              { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-              { label: "Resume", href: "#" },
-          ]
-        : [
-              { label: "Work", href: "/#work" },
-              { label: "Playground", href: "/playground" },
-              { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-              { label: "Resume", href: "#" },
-          ]
     return (
-        <nav style={{
-            position: "sticky",
-            top: 0,
-            zIndex: 100,
-            width: "100%",
-            height: phone ? 54 : 64,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: `0 ${phone ? 20 : 80}px`,
-            boxSizing: "border-box",
-            backgroundColor: scrolled ? "rgba(255,255,255,0.96)" : C.bg,
-            backdropFilter: scrolled ? "blur(20px)" : "none",
-            WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-            borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : C.border}`,
-            transition: "background 0.25s, border-color 0.25s",
-        }}>
-            <a href="/" style={{ display: "block", lineHeight: 0 }}>
-                <img
-                    src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
-                    alt="OC"
-                    style={{ width: phone ? 48 : 58, height: phone ? 48 : 58, objectFit: "contain", display: "block" }}
-                />
-            </a>
-            <div style={{ display: "flex", gap: phone ? 16 : 32, alignItems: "center" }}>
-                {links.map(({ label, href, ext }) => (
-                    <a
-                        key={label}
-                        href={href}
-                        target={ext ? "_blank" : "_self"}
-                        rel="noreferrer"
+        <>
+            <nav style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 100,
+                width: "100%",
+                height: phone ? 54 : 64,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: `0 ${phone ? 20 : 80}px`,
+                boxSizing: "border-box",
+                backgroundColor: scrolled ? "rgba(255,255,255,0.96)" : C.bg,
+                backdropFilter: scrolled ? "blur(20px)" : "none",
+                WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
+                borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : C.border}`,
+                transition: "background 0.25s, border-color 0.25s",
+            }}>
+                <a href="/" style={{ display: "block", lineHeight: 0 }}>
+                    <img
+                        src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
+                        alt="OC"
+                        style={{ width: phone ? 48 : 58, height: phone ? 48 : 58, objectFit: "contain", display: "block" }}
+                    />
+                </a>
+                {phone ? (
+                    <button
+                        onClick={() => setMenuOpen(true)}
                         style={{
-                            fontFamily: F,
-                            fontSize: phone ? 13 : 14,
-                            fontWeight: 500,
-                            color: C.ink3,
-                            textDecoration: "none",
-                            letterSpacing: "-0.01em",
-                            transition: "color 0.18s",
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            padding: 8,
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 5,
+                            minHeight: 44,
+                            minWidth: 44,
+                            alignItems: "center",
+                            justifyContent: "center",
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = C.ink)}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = C.ink3)}
+                        aria-label="Open menu"
                     >
-                        {label}
-                    </a>
-                ))}
-            </div>
-        </nav>
+                        <span style={{ width: 22, height: 2, backgroundColor: C.ink, borderRadius: 1, display: "block" }} />
+                        <span style={{ width: 22, height: 2, backgroundColor: C.ink, borderRadius: 1, display: "block" }} />
+                        <span style={{ width: 14, height: 2, backgroundColor: C.ink, borderRadius: 1, display: "block", alignSelf: "flex-end" }} />
+                    </button>
+                ) : (
+                    <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
+                        {allLinks.map(({ label, href, ext }) => (
+                            <a
+                                key={label}
+                                href={href}
+                                target={ext ? "_blank" : "_self"}
+                                rel="noreferrer"
+                                style={{
+                                    fontFamily: F,
+                                    fontSize: 14,
+                                    fontWeight: 500,
+                                    color: C.ink3,
+                                    textDecoration: "none",
+                                    letterSpacing: "-0.01em",
+                                    transition: "color 0.18s",
+                                    minHeight: 44,
+                                    display: "flex",
+                                    alignItems: "center",
+                                }}
+                                onMouseEnter={(e) => (e.currentTarget.style.color = C.ink)}
+                                onMouseLeave={(e) => (e.currentTarget.style.color = C.ink3)}
+                            >
+                                {label}
+                            </a>
+                        ))}
+                    </div>
+                )}
+            </nav>
+
+            {menuOpen && (
+                <div
+                    onClick={() => setMenuOpen(false)}
+                    style={{
+                        position: "fixed",
+                        inset: 0,
+                        zIndex: 999,
+                        backgroundColor: "rgba(255,255,255,0.98)",
+                        backdropFilter: "blur(16px)",
+                        WebkitBackdropFilter: "blur(16px)",
+                        display: "flex",
+                        flexDirection: "column",
+                        padding: "24px 20px",
+                    }}
+                >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 48 }}>
+                        <img
+                            src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
+                            alt="OC"
+                            style={{ width: 48, height: 48, objectFit: "contain" }}
+                        />
+                        <button
+                            onClick={() => setMenuOpen(false)}
+                            style={{
+                                background: "none",
+                                border: "none",
+                                cursor: "pointer",
+                                fontSize: 24,
+                                color: C.ink,
+                                minHeight: 44,
+                                minWidth: 44,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+                            ✕
+                        </button>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                        {allLinks.map(({ label, href, ext }) => (
+                            <a
+                                key={label}
+                                href={href}
+                                target={ext ? "_blank" : "_self"}
+                                rel="noreferrer"
+                                onClick={() => setMenuOpen(false)}
+                                style={{
+                                    fontFamily: F,
+                                    fontSize: 28,
+                                    fontWeight: 600,
+                                    color: C.ink,
+                                    textDecoration: "none",
+                                    letterSpacing: "-0.02em",
+                                    minHeight: 52,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    borderBottom: `1px solid ${C.border}`,
+                                    paddingBottom: 12,
+                                    paddingTop: 12,
+                                }}
+                            >
+                                {label}
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </>
     )
 }
 
 
-function StatCell({ pct, lbl, i, total }: { pct: string; lbl: string; i: number; total: number }) {
+function StatCell({ pct, lbl, i, total, phone }: { pct: string; lbl: string; i: number; total: number; phone: boolean }) {
     const [hov, setHov] = useState(false)
     return (
         <div
@@ -927,7 +1036,7 @@ function StatCell({ pct, lbl, i, total }: { pct: string; lbl: string; i: number;
             onMouseLeave={() => setHov(false)}
             style={{
                 flex: 1,
-                padding: "28px 24px",
+                padding: phone ? "20px 16px" : "28px 24px",
                 borderRight: i < total - 1 ? `1px solid ${C.border}` : "none",
                 backgroundColor: hov ? C.ink : "transparent",
                 transition: "background 0.3s",
@@ -937,7 +1046,7 @@ function StatCell({ pct, lbl, i, total }: { pct: string; lbl: string; i: number;
             <p
                 style={{
                     fontFamily: Z,
-                    fontSize: "44px",
+                    fontSize: phone ? "32px" : "44px",
                     fontWeight: 700,
                     letterSpacing: "-0.04em",
                     color: hov ? "#fff" : C.ink,
@@ -965,6 +1074,9 @@ function StatCell({ pct, lbl, i, total }: { pct: string; lbl: string; i: number;
 }
 
 export default function AnthropologieCaseStudy() {
+    const { phone, tablet } = useResponsive()
+    const pad = phone ? 20 : tablet ? 40 : 80
+
     const [activeFinding, setActiveFinding] = useState(0)
     const [activeRec, setActiveRec] = useState<number | null>(null)
     const [isDesktop, setIsDesktop] = useState(true)
@@ -1036,12 +1148,12 @@ export default function AnthropologieCaseStudy() {
                 style={{
                     maxWidth: 1040,
                     margin: "0 auto",
-                    padding: "0 80px 160px",
+                    padding: `0 ${pad}px 160px`,
                 }}
             >
                 {/* ── HERO ── */}
                 <FadeIn>
-                    <div style={{ paddingTop: "80px", paddingBottom: "64px" }}>
+                    <div style={{ paddingTop: phone ? "48px" : "80px", paddingBottom: "64px" }}>
                         <p
                             style={{
                                 fontFamily: INTER,
@@ -1059,7 +1171,7 @@ export default function AnthropologieCaseStudy() {
                             style={{
                                 fontFamily: Z,
                                 fontWeight: 700,
-                                fontSize: "clamp(36px, 5vw, 58px)",
+                                fontSize: "clamp(28px, 5vw, 58px)",
                                 lineHeight: "1.04",
                                 letterSpacing: "-0.03em",
                                 marginBottom: "18px",
@@ -1090,7 +1202,8 @@ export default function AnthropologieCaseStudy() {
                         <div
                             style={{
                                 display: "flex",
-                                gap: "48px",
+                                flexWrap: "wrap",
+                                gap: phone ? 20 : "48px",
                                 paddingBottom: "40px",
                                 borderBottom: `1px solid ${C.border}`,
                             }}
@@ -1145,7 +1258,7 @@ export default function AnthropologieCaseStudy() {
                         >
                             <div
                                 style={{
-                                    padding: "32px 36px 24px",
+                                    padding: phone ? "20px 16px 16px" : "32px 36px 24px",
                                     borderBottom: `1px solid ${C.border}`,
                                     backgroundColor: "#FAFAF8",
                                 }}
@@ -1253,7 +1366,7 @@ export default function AnthropologieCaseStudy() {
                                     *Projected · Source: Statista 2024
                                 </p>
                             </div>
-                            <div style={{ display: "flex" }}>
+                            <div style={{ display: "flex", flexWrap: phone ? "wrap" : "nowrap" }}>
                                 {[
                                     [
                                         "74%",
@@ -1268,7 +1381,7 @@ export default function AnthropologieCaseStudy() {
                                         "value virtual shopping assistants for recommendations",
                                     ],
                                 ].map((item, i, arr) => (
-                                <StatCell key={item[0]} pct={item[0]} lbl={item[1]} i={i} total={arr.length} />
+                                <StatCell key={item[0]} pct={item[0]} lbl={item[1]} i={i} total={arr.length} phone={phone} />
                                 ))}
                             </div>
                         </div>
@@ -1292,6 +1405,7 @@ export default function AnthropologieCaseStudy() {
                     <div
                         style={{
                             display: "flex",
+                            flexDirection: phone ? "column" : "row",
                             gap: "10px",
                             marginBottom: "40px",
                             marginTop: "16px",
@@ -1333,6 +1447,7 @@ export default function AnthropologieCaseStudy() {
                     <div
                         style={{
                             display: "flex",
+                            flexDirection: phone ? "column" : "row",
                             gap: "10px",
                             marginBottom: "40px",
                         }}
@@ -1357,18 +1472,18 @@ export default function AnthropologieCaseStudy() {
                         />
                     </div>
                     {/* Trend image gallery */}
-                    <div style={{ display: "flex", gap: "16px", marginTop: "40px" }}>
+                    <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: "16px", marginTop: "40px" }}>
                         {([
                             { src: "/slides/zeroparty.gif",   alt: "Zero-party data — Sephora",       caption: "Zero-Party Data — Sephora",  clip: true,  size: 1.18 },
                             { src: "/slides/ARtryon.png",     alt: "Augmented Reality try-on — Nike", caption: "Augmented Reality — Nike",   clip: false, size: 1    },
                             { src: "/slides/appxclusive.png", alt: "App-exclusive perks — Nike",      caption: "App-Exclusive Perks — Nike", clip: false, size: 1    },
                         ] as { src: string; alt: string; caption: string; clip: boolean; size: number }[]).map(({ src, alt, caption, clip, size }) => (
-                            <div key={caption} style={{ flex: size, display: "flex", flexDirection: "column", gap: "10px" }}>
+                            <div key={caption} style={{ flex: phone ? "unset" : size, display: "flex", flexDirection: "column", gap: "10px" }}>
                                 <div style={{
                                     borderRadius: 10,
                                     overflow: "hidden",
                                     lineHeight: 0,
-                                    height: "280px",
+                                    height: phone ? "200px" : "280px",
                                     display: "flex",
                                     alignItems: "center",
                                     justifyContent: "center",
@@ -1382,6 +1497,7 @@ export default function AnthropologieCaseStudy() {
                                             display: "block",
                                             objectFit: clip ? "cover" : "contain",
                                             transform: clip ? "scale(1.08)" : "none",
+                                            maxWidth: "100%",
                                         }}
                                     />
                                 </div>
@@ -1438,6 +1554,7 @@ export default function AnthropologieCaseStudy() {
                                 display: "block",
                                 borderRadius: 14,
                                 boxShadow: "0 4px 32px rgba(0,0,0,0.09)",
+                                maxWidth: "100%",
                             }}
                         />
                         <p style={{
@@ -1475,6 +1592,7 @@ export default function AnthropologieCaseStudy() {
                                 display: "block",
                                 borderRadius: 14,
                                 boxShadow: "0 4px 32px rgba(0,0,0,0.09)",
+                                maxWidth: "100%",
                             }}
                         />
                         <p style={{
@@ -1513,17 +1631,17 @@ export default function AnthropologieCaseStudy() {
                     }}>
                         Comparison 01 — Control vs. V1: New Layout
                     </p>
-                    <div style={{ display: "flex", gap: "10px", marginBottom: "16px" }}>
+                    <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: "10px", marginBottom: "16px" }}>
                         <ABCard label="Control"       desc="Existing layout with category pills and stacked hero banner"                bg={C.surface}  />
                         <ABCard label="V1: New Layout" desc="Full-bleed stacked images with embedded category labels, no pills"         bg={C.surface2} />
                     </div>
-                    <div style={{ display: "flex", gap: "10px", marginBottom: "56px" }}>
+                    <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: "10px", marginBottom: "56px" }}>
                         {[
                             { src: "/slides/control.png", alt: "Control variant",  lbl: "Control"        },
                             { src: "/slides/v1.png",      alt: "V1: New Layout",   lbl: "V1: New Layout" },
                         ].map(({ src, alt, lbl }) => (
                             <div key={lbl} style={{ flex: 1 }}>
-                                <img src={src} alt={alt} style={{ width: "100%", height: "250px", objectFit: "contain", objectPosition: "top", display: "block", borderRadius: 10 }} />
+                                <img src={src} alt={alt} style={{ width: "100%", height: phone ? "auto" : "250px", objectFit: "contain", objectPosition: "top", display: "block", borderRadius: 10, maxWidth: "100%" }} />
                             </div>
                         ))}
                     </div>
@@ -1536,17 +1654,17 @@ export default function AnthropologieCaseStudy() {
                     }}>
                         Comparison 02 — Stack vs. Slider
                     </p>
-                    <div style={{ display: "flex", gap: "10px", marginBottom: "16px" }}>
+                    <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: "10px", marginBottom: "16px" }}>
                         <ABCard label="Stacked" desc="Tall editorial images stacked vertically — maximizes scroll engagement"      bg={C.surface3} />
                         <ABCard label="Slider"  desc="Two-column grid of images with horizontal swipe — increases density"         bg="#D8D6CF"    />
                     </div>
-                    <div style={{ display: "flex", gap: "10px", marginBottom: "16px" }}>
+                    <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: "10px", marginBottom: "16px" }}>
                         {[
                             { src: "/slides/stack.png",  alt: "Stacked variant", lbl: "Stacked" },
                             { src: "/slides/slider.png", alt: "Slider variant",  lbl: "Slider"  },
                         ].map(({ src, alt, lbl }) => (
                             <div key={lbl} style={{ flex: 1 }}>
-                                <img src={src} alt={alt} style={{ width: "100%", height: "250px", objectFit: "contain", objectPosition: "top", display: "block", borderRadius: 10 }} />
+                                <img src={src} alt={alt} style={{ width: "100%", height: phone ? "auto" : "250px", objectFit: "contain", objectPosition: "top", display: "block", borderRadius: 10, maxWidth: "100%" }} />
                             </div>
                         ))}
                     </div>
@@ -1566,7 +1684,7 @@ export default function AnthropologieCaseStudy() {
                         title="What the data revealed about mobile drop-off"
                     />
                     <div
-                        style={{ display: "flex", gap: "10px" }}
+                        style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: "10px" }}
                         onMouseLeave={() => isDesktop && setActiveFinding(0)}
                     >
                         {findings.map((f, i) => (
@@ -1591,7 +1709,7 @@ export default function AnthropologieCaseStudy() {
                     <div
                         style={{
                             borderLeft: `3px solid ${C.ink}`,
-                            paddingLeft: "32px",
+                            paddingLeft: phone ? "20px" : "32px",
                             marginTop: "8px",
                         }}
                     >
@@ -1600,7 +1718,7 @@ export default function AnthropologieCaseStudy() {
                                 fontFamily: Z,
                                 fontStyle: "italic",
                                 fontWeight: 300,
-                                fontSize: "22px",
+                                fontSize: phone ? "18px" : "22px",
                                 lineHeight: "1.55",
                                 maxWidth: "680px",
                                 color: C.ink2,
@@ -1635,6 +1753,7 @@ export default function AnthropologieCaseStudy() {
                         <RecRow
                             key={i}
                             {...r}
+                            phone={phone}
                             open={activeRec === i}
                             onClick={() =>
                                 setActiveRec(activeRec === i ? null : i)
@@ -1702,7 +1821,7 @@ export default function AnthropologieCaseStudy() {
                             display: "flex",
                             gap: "24px",
                             alignItems: "flex-start",
-                            padding: "48px",
+                            padding: phone ? "24px 20px" : "48px",
                             backgroundColor: C.ink,
                             borderRadius: "12px",
                         }}
@@ -1724,7 +1843,7 @@ export default function AnthropologieCaseStudy() {
                                 fontFamily: Z,
                                 fontStyle: "italic",
                                 fontWeight: 300,
-                                fontSize: "22px",
+                                fontSize: phone ? "18px" : "22px",
                                 lineHeight: "1.55",
                                 maxWidth: "660px",
                                 color: "rgba(255,255,255,0.92)",
@@ -1756,6 +1875,9 @@ export default function AnthropologieCaseStudy() {
                             textDecoration: "none",
                             letterSpacing: "-0.01em",
                             transition: "color 0.18s",
+                            minHeight: 44,
+                            display: "flex",
+                            alignItems: "center",
                         }}
                         onMouseEnter={(e) => (e.currentTarget.style.color = "#111111")}
                         onMouseLeave={(e) => (e.currentTarget.style.color = "#8A8A82")}
@@ -1768,4 +1890,3 @@ export default function AnthropologieCaseStudy() {
         </div>
     )
 }
-
