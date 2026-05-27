@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 
 const I = "Inter, system-ui, sans-serif"
@@ -14,12 +14,14 @@ export default function SharedNav() {
     const [scrolled, setScrolled] = useState(false)
     const [phone, setPhone] = useState(false)
     const [tablet, setTablet] = useState(false)
+    const [menuOpen, setMenuOpen] = useState(false)
+    const overlayRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 12)
         const onResize = () => {
-            setPhone(window.innerWidth < 540)
-            setTablet(window.innerWidth >= 540 && window.innerWidth < 1024)
+            setPhone(window.innerWidth < 768)
+            setTablet(window.innerWidth >= 768 && window.innerWidth < 1024)
         }
         onResize()
         window.addEventListener("scroll", onScroll, { passive: true })
@@ -30,70 +32,197 @@ export default function SharedNav() {
         }
     }, [])
 
+    // Close menu on route change or resize out of phone
+    useEffect(() => { setMenuOpen(false) }, [pathname])
+    useEffect(() => { if (!phone) setMenuOpen(false) }, [phone])
+
+    // Prevent body scroll when menu open
+    useEffect(() => {
+        document.body.style.overflow = menuOpen ? "hidden" : ""
+        return () => { document.body.style.overflow = "" }
+    }, [menuOpen])
+
     const px = phone ? 20 : tablet ? 40 : 80
     const isHome = pathname === "/"
 
     const allLinks = [
-        { label: "Work",     href: isHome ? "#work" : "/#work" },
+        { label: "Work",       href: isHome ? "#work" : "/#work" },
         { label: "Playground", href: "/playground" },
-        { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-        { label: "Resume",   href: "#" },
+        { label: "LinkedIn",   href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
+        { label: "Resume",     href: "#" },
     ]
-    const links = phone ? allLinks.filter(l => l.label !== "Playground") : allLinks
+
+    const isPlayground = pathname?.startsWith("/playground")
 
     return (
-        <nav
-            style={{
-                position: "sticky",
-                top: 0,
-                zIndex: 100,
-                width: "100%",
-                height: phone ? 54 : 64,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: `0 ${px}px`,
-                boxSizing: "border-box",
-                backgroundColor: scrolled ? "rgba(255,255,255,0.96)" : BG,
-                backdropFilter: scrolled ? "blur(20px)" : "none",
-                WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-                borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : BORDER}`,
-                transition: "background 0.25s, border-color 0.25s",
-            }}
-        >
-            <a href="/" style={{ display: "block", lineHeight: 0 }}>
-                <img
-                    src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
-                    alt="OC"
-                    style={{ width: phone ? 48 : 58, height: phone ? 48 : 58, objectFit: "contain", display: "block" }}
-                />
-            </a>
-            <div style={{ display: "flex", gap: phone ? 16 : tablet ? 24 : 32, alignItems: "center" }}>
-                {links.map(({ label, href, ext }) => {
-                    const active = label === "Playground" && pathname?.startsWith("/playground")
-                    return (
-                        <a
-                            key={label}
-                            href={href}
-                            target={ext ? "_blank" : "_self"}
-                            rel="noreferrer"
-                            style={{
-                                fontFamily: I,
-                                fontSize: phone ? 13 : 14,
-                                fontWeight: active ? 600 : 500,
-                                color: active ? INK : INK3,
-                                textDecoration: "none",
-                                letterSpacing: "-0.01em",
-                                transition: "color 0.18s",
-                            }}
-                            onMouseEnter={(e) => (e.currentTarget.style.color = INK)}
-                            onMouseLeave={(e) => { if (!active) e.currentTarget.style.color = INK3 }}
-                        >
-                            {label}
-                        </a>
-                    )
-                })}
-            </div>
-        </nav>
+        <>
+            <nav
+                style={{
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 200,
+                    width: "100%",
+                    height: phone ? 54 : 64,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: `0 ${px}px`,
+                    boxSizing: "border-box",
+                    backgroundColor: scrolled || menuOpen ? "rgba(255,255,255,0.98)" : BG,
+                    backdropFilter: scrolled || menuOpen ? "blur(20px)" : "none",
+                    WebkitBackdropFilter: scrolled || menuOpen ? "blur(20px)" : "none",
+                    borderBottom: `1px solid ${scrolled || menuOpen ? "rgba(0,0,0,0.09)" : BORDER}`,
+                    transition: "background 0.25s, border-color 0.25s",
+                }}
+            >
+                {/* Logo */}
+                <a href="/" style={{ display: "block", lineHeight: 0, zIndex: 201 }}>
+                    <img
+                        src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
+                        alt="OC"
+                        style={{ width: phone ? 48 : 58, height: phone ? 48 : 58, objectFit: "contain", display: "block" }}
+                    />
+                </a>
+
+                {/* Desktop links */}
+                {!phone && (
+                    <div style={{ display: "flex", gap: tablet ? 24 : 32, alignItems: "center" }}>
+                        {allLinks.map(({ label, href, ext }) => {
+                            const active = label === "Playground" && isPlayground
+                            return (
+                                <a
+                                    key={label}
+                                    href={href}
+                                    target={ext ? "_blank" : "_self"}
+                                    rel="noreferrer"
+                                    style={{
+                                        fontFamily: I,
+                                        fontSize: 14,
+                                        fontWeight: active ? 600 : 500,
+                                        color: active ? INK : INK3,
+                                        textDecoration: "none",
+                                        letterSpacing: "-0.01em",
+                                        transition: "color 0.18s",
+                                    }}
+                                    onMouseEnter={(e) => (e.currentTarget.style.color = INK)}
+                                    onMouseLeave={(e) => { if (!active) e.currentTarget.style.color = INK3 }}
+                                >
+                                    {label}
+                                </a>
+                            )
+                        })}
+                    </div>
+                )}
+
+                {/* Hamburger button */}
+                {phone && (
+                    <button
+                        onClick={() => setMenuOpen(o => !o)}
+                        aria-label={menuOpen ? "Close menu" : "Open menu"}
+                        style={{
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            padding: "10px",
+                            margin: "-10px",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            gap: 5,
+                            zIndex: 201,
+                            minWidth: 44,
+                            minHeight: 44,
+                        }}
+                    >
+                        <span style={{
+                            display: "block",
+                            width: 22,
+                            height: 2,
+                            backgroundColor: INK,
+                            borderRadius: 1,
+                            transformOrigin: "center",
+                            transform: menuOpen ? "translateY(7px) rotate(45deg)" : "none",
+                            transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
+                        }} />
+                        <span style={{
+                            display: "block",
+                            width: 22,
+                            height: 2,
+                            backgroundColor: INK,
+                            borderRadius: 1,
+                            opacity: menuOpen ? 0 : 1,
+                            transition: "opacity 0.2s",
+                        }} />
+                        <span style={{
+                            display: "block",
+                            width: 22,
+                            height: 2,
+                            backgroundColor: INK,
+                            borderRadius: 1,
+                            transformOrigin: "center",
+                            transform: menuOpen ? "translateY(-7px) rotate(-45deg)" : "none",
+                            transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
+                        }} />
+                    </button>
+                )}
+            </nav>
+
+            {/* Full-screen mobile menu overlay */}
+            {phone && (
+                <div
+                    ref={overlayRef}
+                    onClick={(e) => { if (e.target === overlayRef.current) setMenuOpen(false) }}
+                    style={{
+                        position: "fixed",
+                        inset: 0,
+                        zIndex: 199,
+                        backgroundColor: "rgba(255,255,255,0.98)",
+                        backdropFilter: "blur(20px)",
+                        WebkitBackdropFilter: "blur(20px)",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "flex-start",
+                        padding: "0 32px",
+                        gap: 0,
+                        opacity: menuOpen ? 1 : 0,
+                        pointerEvents: menuOpen ? "auto" : "none",
+                        transition: "opacity 0.25s cubic-bezier(0.22,1,0.36,1)",
+                    }}
+                >
+                    {allLinks.map(({ label, href, ext }, i) => {
+                        const active = label === "Playground" && isPlayground
+                        return (
+                            <a
+                                key={label}
+                                href={href}
+                                target={ext ? "_blank" : "_self"}
+                                rel="noreferrer"
+                                onClick={() => setMenuOpen(false)}
+                                style={{
+                                    fontFamily: I,
+                                    fontSize: 32,
+                                    fontWeight: active ? 700 : 400,
+                                    color: active ? INK : INK3,
+                                    textDecoration: "none",
+                                    letterSpacing: "-0.02em",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    minHeight: 64,
+                                    width: "100%",
+                                    borderBottom: `1px solid ${BORDER}`,
+                                    opacity: menuOpen ? 1 : 0,
+                                    transform: menuOpen ? "translateY(0)" : "translateY(16px)",
+                                    transition: `opacity 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 55}ms, transform 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 55}ms`,
+                                }}
+                            >
+                                {label}
+                            </a>
+                        )
+                    })}
+                </div>
+            )}
+        </>
     )
 }

@@ -31,6 +31,7 @@ const CURSOR_STYLES = `
     to   { opacity: 1; transform: translateY(0); }
   }
   html { scroll-behavior: smooth; }
+  html, body { max-width: 100%; overflow-x: hidden; }
   @keyframes marquee {
     from { transform: translateX(0); }
     to   { transform: translateX(-50%); }
@@ -78,8 +79,8 @@ function useBP() {
         return () => ro.disconnect()
     }, [])
 
-    const phone = w < 540
-    const tablet = w >= 540 && w < 1024
+    const phone = w < 768
+    const tablet = w >= 768 && w < 1024
     const desktop = w >= 1024 && w <= 1440
     const large = w > 1440
 
@@ -87,13 +88,13 @@ function useBP() {
     const maxW = large ? 1280 : 1040
 
     const sp = {
-        sectionGap: phone ? 72 : tablet ? 96 : 120,
-        headerGap: phone ? 28 : tablet ? 40 : 56,
-        cardRowGap: phone ? 24 : tablet ? 28 : 36,
+        sectionGap: phone ? 64 : tablet ? 96 : 120,
+        headerGap: phone ? 24 : tablet ? 40 : 56,
+        cardRowGap: phone ? 20 : tablet ? 28 : 36,
         cardColGap: phone ? 0 : tablet ? 20 : 24,
-        cardH: phone ? 220 : tablet ? 260 : large ? 460 : 390,
-        heroTop: phone ? 48 : tablet ? 64 : 96,
-        heroBottom: phone ? 80 : tablet ? 100 : 120,
+        cardH: phone ? 200 : tablet ? 280 : large ? 460 : 390,
+        heroTop: phone ? 40 : tablet ? 64 : 96,
+        heroBottom: phone ? 64 : tablet ? 100 : 120,
         colOffset: tablet ? 0 : 80,
     }
 
@@ -182,7 +183,7 @@ function Hero({
     maxW: number
     sp: ReturnType<typeof useBP>["sp"]
 }) {
-    const hiW = phone ? 120 : tablet ? 160 : large ? 260 : 210
+    const hiW = phone ? 100 : tablet ? 150 : large ? 260 : 210
     const hiH = Math.round(hiW / 1.615)
 
     type Particle = { id: number; color: string; x: number; angle: number; size: number }
@@ -215,7 +216,7 @@ function Hero({
         }, 700)
     }
 
-    const headSize = phone ? "22px" : tablet ? "28px" : "33px"
+    const headSize = phone ? "clamp(22px, 6vw, 28px)" : tablet ? "clamp(26px, 3.5vw, 32px)" : "33px"
     const headMaxW = "100%"
 
     return (
@@ -805,11 +806,11 @@ function LogoTicker({
                                 alt={alt}
                                 className="logo-img"
                                 style={{
-                                    height: 40,
+                                    height: phone ? 28 : 40,
                                     width: "auto",
                                     display: "block",
                                     flexShrink: 0,
-                                    marginRight: 80,
+                                    marginRight: phone ? 48 : 80,
                                 }}
                             />
                         ))}
