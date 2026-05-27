@@ -193,12 +193,9 @@ function Hero({
     const BUBBLE_COLORS = ["#E8B4C8", "#D4AEDD", "#F4C6D8", "#C9B8E4", "#EAD4F0", "#F9B8CF", "#D8BEF8"]
 
     const [revealed, setRevealed] = useState(false)
-    const [heroScrollY, setHeroScrollY] = useState(0)
     useEffect(() => {
         const t = setTimeout(() => setRevealed(true), 60)
-        const onScroll = () => setHeroScrollY(window.scrollY)
-        window.addEventListener("scroll", onScroll, { passive: true })
-        return () => { clearTimeout(t); window.removeEventListener("scroll", onScroll) }
+        return () => clearTimeout(t)
     }, [])
 
     const triggerPop = () => {
@@ -226,13 +223,12 @@ function Hero({
         <section
             style={{
                 width: "100%",
-                minHeight: "100vh",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-start",
-                justifyContent: "space-between",
                 padding: `${sp.heroTop}px ${px}px ${sp.heroBottom}px`,
                 boxSizing: "border-box",
+                gap: phone ? 40 : 60,
             }}
         >
             {/* Hero content row: text left, Hi! image right */}
@@ -316,12 +312,10 @@ function Hero({
                 </p>
                 </div>
 
-                {/* Hi! image — right, with parallax + reveal */}
+                {/* Hi! image — right */}
                 <div style={{
                     flexShrink: 0,
                     marginTop: phone ? 32 : 0,
-                    transform: `translateY(${heroScrollY * 0.3}px)`,
-                    willChange: "transform",
                 }}>
                     <div style={{
                         opacity: revealed ? 1 : 0,
@@ -379,7 +373,6 @@ function Hero({
                     alignItems: "center",
                     justifyContent: "center",
                     gap: 6,
-                    paddingTop: phone ? 40 : 0,
                 }}
             >
                 <p
@@ -520,9 +513,10 @@ function Card({
     }, [])
 
     useEffect(() => {
+        if (!hov) { cancelAnimationFrame(raf.current); return }
         raf.current = requestAnimationFrame(animate)
         return () => cancelAnimationFrame(raf.current)
-    }, [animate])
+    }, [animate, hov])
 
     const onMove = (e: React.MouseEvent) => {
         const r = ref.current?.getBoundingClientRect()
