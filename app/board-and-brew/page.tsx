@@ -1702,6 +1702,35 @@ export default function BoardAndBrewCaseStudy() {
                     </p>
                 </div>
             </FadeIn>
+
+            {/* Back to work */}
+            <div style={{
+                paddingTop: 64,
+                marginTop: 80,
+                borderTop: "1px solid rgba(0,0,0,0.08)",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "64px 80px 0",
+            }}>
+                <a
+                    href="/#work"
+                    style={{
+                        fontFamily: INTER,
+                        fontSize: 14,
+                        fontWeight: 500,
+                        color: "#8A8A82",
+                        textDecoration: "none",
+                        letterSpacing: "-0.01em",
+                        transition: "color 0.18s",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = "#111111")}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = "#8A8A82")}
+                >
+                    ← Back to work
+                </a>
+            </div>
+
         </div>
     )
 }

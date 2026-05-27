@@ -374,7 +374,7 @@ export default function PlaygroundPage() {
                     }}
                 >
                     <a
-                        href="/"
+                        href="/#work"
                         style={{
                             fontFamily: I,
                             fontSize: 14,
