@@ -256,6 +256,7 @@ function Hero({
                                 height: hiH,
                                 objectFit: "contain",
                                 display: "block",
+                                marginLeft: "-10px",
                                 filter: "saturate(1.6) brightness(1.05)",
                                 animation:
                                     hiAnim === "pop" ? "hi-pop 0.55s cubic-bezier(0.34,1.56,0.64,1) forwards" :
@@ -971,7 +972,7 @@ function Footer({
                     {[
                         { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
                         { label: "Email", href: "mailto:omishachabria@gmail.com" },
-                        { label: "Resume", href: "#" },
+                        { label: "Resume", href: "/slides/Omisha Chabria Resume .docx (12)", ext: true },
                     ].map(({ label, href, ext }) => (
                         <a
                             key={label}
