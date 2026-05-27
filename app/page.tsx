@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback, Fragment } from "react"
 import SharedNav from "../components/SharedNav"
 
 const CURSOR_STYLES = `
-  * { cursor: none !important; }
+  @media (pointer: fine) { * { cursor: none !important; } }
   @keyframes hi-float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-6px); }
@@ -46,11 +46,11 @@ const CURSOR_STYLES = `
     animation-play-state: paused;
   }
   .logo-img {
-    filter: grayscale(100%) opacity(0.55);
+    filter: opacity(0.75);
     transition: filter 0.35s ease;
   }
   .logo-img:hover {
-    filter: grayscale(0%) opacity(1);
+    filter: opacity(1);
   }
 `
 
@@ -107,6 +107,8 @@ function CustomCursor() {
     const [lag, setLag] = useState({ x: -200, y: -200 })
     const [hovered, setHovered] = useState(false)
     const [visible, setVisible] = useState(false)
+    const [isTouch, setIsTouch] = useState(false)
+    useEffect(() => { setIsTouch(window.matchMedia("(pointer: coarse)").matches) }, [])
 
     useEffect(() => {
         const onMove = (e: MouseEvent) => {
@@ -134,7 +136,7 @@ function CustomCursor() {
         }
     }, [visible])
 
-    if (!visible) return null
+    if (isTouch || !visible) return null
     return (
         <div
             style={{
