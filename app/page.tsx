@@ -46,11 +46,11 @@ const CURSOR_STYLES = `
     animation-play-state: paused;
   }
   .logo-img {
-    filter: opacity(0.75);
+    filter: none;
     transition: filter 0.35s ease;
   }
   .logo-img:hover {
-    filter: opacity(1);
+    filter: opacity(0.7);
   }
 `
 
