@@ -199,7 +199,7 @@ function AnimStat({
     sub?: string
     bg: string
 }) {
-    const { ref, visible } = useInView(0.4)
+    const { ref, visible } = useInView(0.1)
     const val = useCounter(num, visible)
     const [hov, setHov] = useState(false)
     return (
@@ -873,7 +873,7 @@ function CaseStudyNav() {
         { label: "Work", href: "/#work" },
         { label: "Playground", href: "/playground" },
         { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-        { label: "Resume", href: "#" },
+        { label: "Resume", href: "/slides/resume.pdf", ext: true },
     ]
 
     const F = "Inter, system-ui, sans-serif"
@@ -1782,6 +1782,9 @@ export default function AnthropologieCaseStudy() {
                         optimization isn't a UX nice-to-have — it's a
                         revenue decision. In a channel growing toward $856B,
                         every point of friction is measurable loss.
+                    </Body>
+                    <Body>
+                        Recommendations were formally presented to the digital analytics team and flagged for Q3 roadmap consideration.
                     </Body>
                 </FadeIn>
 

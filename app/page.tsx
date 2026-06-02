@@ -160,14 +160,15 @@ function CustomCursor() {
 
 type WordDef = { text: string; yb?: boolean }
 const HERO_LINE1: WordDef[] = [
-    { text: "I" }, { text: "design" }, { text: "digital" }, { text: "products" },
-    { text: "by" }, { text: "balancing" },
-    { text: "Creativity", yb: true }, { text: "&" }, { text: "Insights;", yb: true },
+    { text: "Product" }, { text: "designer" }, { text: "with" }, { text: "a" },
+    { text: "background" }, { text: "in" },
+    { text: "digital", yb: true }, { text: "analytics", yb: true }, { text: "—" },
 ]
 const HERO_LINE2: WordDef[] = [
-    { text: "always" }, { text: "grounded" }, { text: "in" },
-    { text: "how", yb: true },
-    { text: "people" }, { text: "experience" }, { text: "them" },
+    { text: "I" }, { text: "design" }, { text: "e-commerce" }, { text: "experiences" },
+    { text: "grounded" }, { text: "in" },
+    { text: "behavioral", yb: true }, { text: "data,", yb: true },
+    { text: "not" }, { text: "assumptions." },
 ]
 
 function Hero({
@@ -468,15 +469,8 @@ const CARDS = [
         href: "/rfnd",
         image: "https://framerusercontent.com/images/zVoRHBtJogEEa7qGBjvmTij4HiM.png",
         title: "Rethinking Online Through UX",
-        tags: ["Research", "UX/UI", "Branding"],
+        tags: ["Digital Strategy", "UX/UI", "Conceptual"],
         company: "RFND",
-    },
-    {
-        href: "/board-and-brew",
-        image: "https://framerusercontent.com/images/cLVYFY7QACPw6GJX0du1qogfw.png",
-        title: "Board & Brew Social Campaign",
-        tags: ["Marketing", "Socials"],
-        company: "Personal",
     },
 ]
 
@@ -732,7 +726,6 @@ function WorkSection({
                         </div>
                         <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: sp.cardRowGap }}>
                             <div style={reveal(1)}><Card {...CARDS[1]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
-                            <div style={reveal(3)}><Card {...CARDS[3]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
                         </div>
                     </div>
                 )}

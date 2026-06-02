@@ -247,7 +247,7 @@ function CaseStudyNav() {
         { label: "Work", href: "/#work" },
         { label: "Playground", href: "/playground" },
         { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-        { label: "Resume", href: "#" },
+        { label: "Resume", href: "/slides/resume.pdf", ext: true },
     ]
 
     const F = "Inter, system-ui, sans-serif"
@@ -1498,7 +1498,7 @@ export default function IOSCaseStudy() {
                     obs.disconnect()
                 }
             },
-            { threshold: 0.2 }
+            { threshold: 0.1 }
         )
         obs.observe(el)
         return () => obs.disconnect()
@@ -2237,6 +2237,19 @@ export default function IOSCaseStudy() {
                             <ResultCard key={r.num} {...r} />
                         ))}
                     </div>
+                    <p
+                        style={{
+                            fontFamily: "Inter, system-ui, sans-serif",
+                            fontSize: 14,
+                            lineHeight: 1.8,
+                            color: C.ink2,
+                            maxWidth: 720,
+                            marginTop: 24,
+                            marginBottom: 0,
+                        }}
+                    >
+                        This feature is currently live across iPhone 15 and up for users whose app language is set to a different language than their device language.
+                    </p>
                 </div>
 
                 {/* ── 09 REFLECTION ── */}

@@ -491,7 +491,7 @@ function CaseStudyNav() {
         { label: "Work", href: "/#work" },
         { label: "Playground", href: "/playground" },
         { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-        { label: "Resume", href: "#" },
+        { label: "Resume", href: "/slides/resume.pdf", ext: true },
     ]
 
     return (
@@ -987,7 +987,7 @@ export default function RFNDCaseStudy() {
                         title="What this conceptual project taught me"
                     />
                     <Body>
-                        RFND clarified how I think about design at a strategic level — as a discipline that sits at the intersection of business, psychology, and behavior.
+                        RFND clarified how I think about design at a strategic level — as a discipline that sits at the intersection of business, psychology, and behavior. This project concluded with a full concept presentation — a speculative capstone exploring what emotionally-aware commerce could look like if built from first principles.
                     </Body>
                     <BulletList items={[
                         "Knowing what to build is half the work — knowing what not to build is the other half",
