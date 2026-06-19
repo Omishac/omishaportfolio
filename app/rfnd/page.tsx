@@ -66,15 +66,19 @@ function useActiveSection(sectionIds: string[]) {
     const [active, setActive] = useState("")
     useEffect(() => {
         const onScroll = () => {
-            let current = ""
+            let best = ""
+            let bestDist = Infinity
             for (const id of sectionIds) {
                 const el = document.getElementById(id)
                 if (el) {
-                    const rect = el.getBoundingClientRect()
-                    if (rect.top <= window.innerHeight * 0.4) current = id
+                    const top = el.getBoundingClientRect().top
+                    if (top <= 200 && Math.abs(top) < bestDist) {
+                        bestDist = Math.abs(top)
+                        best = id
+                    }
                 }
             }
-            setActive(current)
+            if (best) setActive(best)
         }
         onScroll()
         window.addEventListener("scroll", onScroll, { passive: true })
@@ -315,7 +319,7 @@ function MoodCarousel() {
 function SideChapterNav({ active }: { active: string }) {
     return (
         <nav style={{
-            position: "sticky", top: 100, paddingTop: 40, paddingLeft: 28,
+            position: "sticky", top: 120, paddingTop: 100, paddingLeft: 28,
             alignSelf: "start",
         }}>
             {SECTIONS.map(({ id, label }) => {
