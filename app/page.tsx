@@ -163,7 +163,7 @@ function CustomCursor() {
 type WordDef = { text: string; yb?: boolean; annotation?: string }
 const HERO_WORDS: WordDef[] = [
     { text: "I'm a" },
-    { text: "Product Designer", annotation: "the experience" },
+    { text: "Product Designer" },
     { text: "with a background in" },
     { text: "Analytics", yb: true, annotation: "the evidence" },
     { text: "&" },
@@ -380,7 +380,7 @@ function Hero({
                     </span>
                     <span style={{
                         display: "block",
-                        marginTop: phone ? 32 : 44,
+                        marginTop: phone ? 20 : 30,
                         opacity: 0,
                         animation: revealed
                             ? `word-in 0.65s cubic-bezier(0.22,1,0.36,1) ${200 + HERO_WORDS.length * 100}ms forwards`
