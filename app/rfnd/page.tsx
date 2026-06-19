@@ -17,21 +17,34 @@ const C = {
     border: "rgba(28,28,26,0.1)",
 }
 
+const SECTIONS = [
+    { id: "context", num: "01", label: "Context" },
+    { id: "problem", num: "02", label: "Problem" },
+    { id: "research", num: "03", label: "Research" },
+    { id: "exploration", num: "04", label: "Exploration" },
+    { id: "decisions", num: "05", label: "Decisions" },
+    { id: "testing", num: "06", label: "Testing" },
+    { id: "recommendation", num: "07", label: "Recommendation" },
+    { id: "reflection", num: "08", label: "Reflection" },
+]
+
 // ── Responsive hook ────────────────────────────────────────────────────────────
 function useResponsive() {
     const [phone, setPhone] = useState(false)
     const [tablet, setTablet] = useState(false)
+    const [wide, setWide] = useState(false)
     useEffect(() => {
         const check = () => {
             const w = window.innerWidth
             setPhone(w < 768)
             setTablet(w >= 768 && w < 1024)
+            setWide(w >= 1400)
         }
         check()
         window.addEventListener("resize", check, { passive: true })
         return () => window.removeEventListener("resize", check)
     }, [])
-    return { phone, tablet }
+    return { phone, tablet, wide }
 }
 
 // ── Utilities ──────────────────────────────────────────────────────────────────
@@ -52,6 +65,29 @@ function useInView(threshold = 0.1) {
         return () => obs.disconnect()
     }, [])
     return { ref, visible }
+}
+
+function useActiveSection(sectionIds: string[]) {
+    const [active, setActive] = useState("")
+    useEffect(() => {
+        const onScroll = () => {
+            let current = ""
+            for (const id of sectionIds) {
+                const el = document.getElementById(id)
+                if (el) {
+                    const rect = el.getBoundingClientRect()
+                    if (rect.top <= window.innerHeight * 0.4) {
+                        current = id
+                    }
+                }
+            }
+            setActive(current)
+        }
+        onScroll()
+        window.addEventListener("scroll", onScroll, { passive: true })
+        return () => window.removeEventListener("scroll", onScroll)
+    }, [])
+    return active
 }
 
 function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
@@ -76,7 +112,7 @@ function Divider() {
             width: "100%",
             height: "1px",
             backgroundColor: C.border,
-            margin: "96px 0 60px",
+            margin: "140px 0 80px",
         }} />
     )
 }
@@ -84,26 +120,26 @@ function Divider() {
 // ── Editorial components ───────────────────────────────────────────────────────
 function ChapterLabel({ index, title }: { index: string; title: string }) {
     return (
-        <div style={{ marginBottom: "36px" }}>
+        <div style={{ marginBottom: "48px" }}>
             <p style={{
                 fontFamily: INTER,
-                fontSize: "10px",
-                fontWeight: 700,
-                letterSpacing: "0.14em",
+                fontSize: "11px",
+                fontWeight: 600,
+                letterSpacing: "0.12em",
                 textTransform: "uppercase",
                 color: C.muted,
-                marginBottom: "12px",
+                marginBottom: "20px",
             }}>
                 {index}
             </p>
             <h2 style={{
                 fontFamily: Z,
-                fontSize: "clamp(22px, 3.2vw, 38px)",
+                fontSize: "clamp(26px, 3.6vw, 44px)",
                 fontWeight: 700,
                 letterSpacing: "-0.03em",
                 color: C.ink,
                 margin: 0,
-                lineHeight: 1.06,
+                lineHeight: 1.1,
                 maxWidth: "760px",
             }}>
                 {title}
@@ -117,10 +153,10 @@ function Body({ children }: { children: React.ReactNode }) {
         <p style={{
             fontFamily: INTER,
             fontSize: "15px",
-            lineHeight: "1.78",
+            lineHeight: "1.82",
             color: C.ink2,
-            maxWidth: "720px",
-            marginBottom: "16px",
+            maxWidth: "640px",
+            marginBottom: "18px",
             letterSpacing: "-0.003em",
         }}>
             {children}
@@ -135,10 +171,10 @@ function BoldLine({ children }: { children: React.ReactNode }) {
             fontWeight: 700,
             fontSize: "clamp(18px, 2.4vw, 24px)",
             color: C.ink,
-            lineHeight: 1.3,
+            lineHeight: 1.35,
             letterSpacing: "-0.02em",
-            margin: "32px 0",
-            maxWidth: "760px",
+            margin: "36px 0",
+            maxWidth: "680px",
         }}>
             {children}
         </p>
@@ -287,7 +323,7 @@ function FullImage({ src, alt, caption, radius = 14 }: {
     radius?: number
 }) {
     return (
-        <div style={{ margin: "44px 0" }}>
+        <div style={{ margin: "56px 0" }}>
             <img
                 src={src}
                 alt={alt}
@@ -470,6 +506,77 @@ function MoodCarousel() {
     )
 }
 
+// ── Side chapter nav ──────────────────────────────────────────────────────────
+function SideChapterNav({ active, visible }: { active: string; visible: boolean }) {
+    const [show, setShow] = useState(false)
+    useEffect(() => {
+        const onScroll = () => setShow(window.scrollY > 400)
+        onScroll()
+        window.addEventListener("scroll", onScroll, { passive: true })
+        return () => window.removeEventListener("scroll", onScroll)
+    }, [])
+
+    if (!visible) return null
+
+    return (
+        <nav style={{
+            position: "fixed",
+            left: "calc((100vw - 1040px) / 2 - 160px)",
+            top: "50%",
+            transform: "translateY(-50%)",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            zIndex: 50,
+            opacity: show ? 1 : 0,
+            transition: "opacity 0.5s ease",
+            pointerEvents: show ? "auto" : "none",
+        }}>
+            {SECTIONS.map(({ id, label }) => {
+                const isActive = active === id
+                return (
+                    <a
+                        key={id}
+                        href={`#${id}`}
+                        onClick={(e) => {
+                            e.preventDefault()
+                            document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })
+                        }}
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 10,
+                            padding: "7px 0",
+                            textDecoration: "none",
+                            opacity: isActive ? 1 : 0.3,
+                            transition: "opacity 0.3s ease",
+                        }}
+                    >
+                        <span style={{
+                            width: isActive ? 24 : 14,
+                            height: 1.5,
+                            backgroundColor: C.ink,
+                            transition: "width 0.35s cubic-bezier(0.22,1,0.36,1)",
+                            flexShrink: 0,
+                        }} />
+                        <span style={{
+                            fontFamily: INTER,
+                            fontSize: 10,
+                            fontWeight: isActive ? 600 : 400,
+                            color: C.ink,
+                            letterSpacing: "0.05em",
+                            textTransform: "uppercase",
+                            whiteSpace: "nowrap",
+                        }}>
+                            {label}
+                        </span>
+                    </a>
+                )
+            })}
+        </nav>
+    )
+}
+
 // ── Nav ────────────────────────────────────────────────────────────────────────
 function CaseStudyNav() {
     const [scrolled, setScrolled] = useState(false)
@@ -636,12 +743,14 @@ function CaseStudyNav() {
 
 // ── Page ───────────────────────────────────────────────────────────────────────
 export default function RFNDCaseStudy() {
-    const { phone, tablet } = useResponsive()
+    const { phone, tablet, wide } = useResponsive()
     const pad = phone ? 20 : tablet ? 40 : 80
+    const activeSection = useActiveSection(SECTIONS.map(s => s.id))
 
     return (
         <div style={{ width: "100%", backgroundColor: C.bg }}>
             <CaseStudyNav />
+            <SideChapterNav active={activeSection} visible={wide} />
             <div style={{ maxWidth: 1040, margin: "0 auto", padding: `0 ${pad}px 160px` }}>
 
                 {/* ── HERO ── */}
@@ -709,6 +818,7 @@ export default function RFNDCaseStudy() {
 
                 {/* ── 01 CONTEXT ── */}
                 <Divider />
+                <section id="context" style={{ scrollMarginTop: 100 }}>
                 <FadeIn>
                     <ChapterLabel
                         index="01 — Context"
@@ -728,9 +838,11 @@ export default function RFNDCaseStudy() {
                     ]} />
                     <Transition text="I started this conceptual exploration with one question: what would it look like if a commerce product finally understood how someone felt when they showed up?" />
                 </FadeIn>
+                </section>
 
                 {/* ── 02 THE PROBLEM ── */}
                 <Divider />
+                <section id="problem" style={{ scrollMarginTop: 100 }}>
                 <FadeIn>
                     <ChapterLabel
                         index="02 — The Problem"
@@ -750,9 +862,11 @@ export default function RFNDCaseStudy() {
                     />
                     <Transition text="Which meant research had to come before design — and that turned out to be the right call." />
                 </FadeIn>
+                </section>
 
                 {/* ── 03 RESEARCH & DISCOVERY ── */}
                 <Divider />
+                <section id="research" style={{ scrollMarginTop: 100 }}>
                 <FadeIn>
                     <ChapterLabel
                         index="03 — Research & Discovery"
@@ -789,9 +903,11 @@ export default function RFNDCaseStudy() {
                     />
                     <Transition text="Once I could name the two modes, the design direction became clear — but getting there required a creative exploration that challenged almost every assumption I started with." />
                 </FadeIn>
+                </section>
 
                 {/* ── 04 EXPLORATION ── */}
                 <Divider />
+                <section id="exploration" style={{ scrollMarginTop: 100 }}>
                 <FadeIn>
                     <ChapterLabel
                         index="04 — Exploration"
@@ -836,9 +952,11 @@ export default function RFNDCaseStudy() {
                     <MoodCarousel />
                     <Transition text="With a creative direction established, the harder work began: making actual product decisions." />
                 </FadeIn>
+                </section>
 
                 {/* ── 05 DECISION MAKING ── */}
                 <Divider />
+                <section id="decisions" style={{ scrollMarginTop: 100 }}>
                 <FadeIn>
                     <ChapterLabel
                         index="05 — Decision Making"
@@ -879,9 +997,11 @@ export default function RFNDCaseStudy() {
                 <FadeIn>
                     <Transition text="With the core concept defined, I needed to validate that the features built on top of it would hold — not just as ideas, but as behavioral propositions." />
                 </FadeIn>
+                </section>
 
                 {/* ── 06 TESTING & VALIDATION ── */}
                 <Divider />
+                <section id="testing" style={{ scrollMarginTop: 100 }}>
                 <FadeIn>
                     <ChapterLabel
                         index="06 — Testing & Validation"
@@ -910,9 +1030,11 @@ export default function RFNDCaseStudy() {
                     />
                     <Transition text="With the feature set validated against research, the concept was ready to be presented as a complete proposed experience." />
                 </FadeIn>
+                </section>
 
                 {/* ── 07 FINAL RECOMMENDATION ── */}
                 <Divider />
+                <section id="recommendation" style={{ scrollMarginTop: 100 }}>
                 <FadeIn>
                     <ChapterLabel
                         index="07 — Final Recommendation"
@@ -978,9 +1100,11 @@ export default function RFNDCaseStudy() {
                         ))}
                     </div>
                 </FadeIn>
+                </section>
 
                 {/* ── 08 REFLECTION & IMPACT ── */}
                 <Divider />
+                <section id="reflection" style={{ scrollMarginTop: 100 }}>
                 <FadeIn>
                     <ChapterLabel
                         index="08 — Reflection"
@@ -1028,6 +1152,7 @@ export default function RFNDCaseStudy() {
                         </p>
                     </div>
                 </FadeIn>
+                </section>
 
                 {/* Back to work */}
                 <div style={{
