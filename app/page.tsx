@@ -161,16 +161,13 @@ function CustomCursor() {
 
 
 type WordDef = { text: string; yb?: boolean; annotation?: string }
-const HERO_LINE1: WordDef[] = [
+const HERO_WORDS: WordDef[] = [
     { text: "I'm a" },
     { text: "Product Designer", annotation: "the experience" },
     { text: "with a background in" },
     { text: "Analytics", yb: true, annotation: "the evidence" },
-    { text: "&", yb: true },
+    { text: "&" },
     { text: "Business Strategy.", yb: true, annotation: "the impact" },
-]
-const HERO_LINE2: WordDef[] = [
-    { text: "Turning insights into experiences." },
 ]
 
 function AnnotatedWord({ word, revealed, delay, phone, activeAnnotation, onHover }: {
@@ -222,7 +219,7 @@ function AnnotatedWord({ word, revealed, delay, phone, activeAnnotation, onHover
                         fontFamily: YB,
                         fontSize: phone ? 16 : 22,
                         color: "#E8B4C8",
-                        fontWeight: 400,
+                        fontWeight: 700,
                         fontStyle: "italic",
                         letterSpacing: "0.01em",
                         lineHeight: 1.2,
@@ -372,23 +369,13 @@ function Hero({
                         fontStyle: "normal",
                     }}
                 >
-                    <span style={{ display: "block" }}>
-                        {HERO_LINE1.map((w, j) => (
-                            <Fragment key={j}>
-                                <AnnotatedWord word={w} revealed={revealed} delay={200 + j * 100} phone={phone}
-                                    activeAnnotation={activeAnnotation} onHover={setActiveAnnotation} />
-                                {" "}
-                            </Fragment>
-                        ))}
-                    </span>
-                    <span style={{ display: "block", marginTop: phone ? 4 : 8 }}>
-                        {HERO_LINE2.map((w, j) => (
-                            <Fragment key={j}>
-                                <AnnotatedWord word={w} revealed={revealed} delay={200 + (HERO_LINE1.length + j) * 100} phone={phone}
-                                    activeAnnotation={activeAnnotation} onHover={setActiveAnnotation} />
-                            </Fragment>
-                        ))}
-                    </span>
+                    {HERO_WORDS.map((w, j) => (
+                        <Fragment key={j}>
+                            <AnnotatedWord word={w} revealed={revealed} delay={200 + j * 100} phone={phone}
+                                activeAnnotation={activeAnnotation} onHover={setActiveAnnotation} />
+                            {" "}
+                        </Fragment>
+                    ))}
                 </h1>
             </div>
 
