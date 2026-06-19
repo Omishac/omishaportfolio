@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 
 const I = "Inter, system-ui, sans-serif"
+const YB = "var(--font-yuji-boku), serif"
 const INK  = "#111111"
 const INK3 = "#6B6B6B"
 const BG   = "#FFFFFF"
@@ -15,6 +16,7 @@ export default function SharedNav() {
     const [phone, setPhone] = useState(false)
     const [tablet, setTablet] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
+    const [hoveredLink, setHoveredLink] = useState<string | null>(null)
     const overlayRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
@@ -89,6 +91,7 @@ export default function SharedNav() {
                     <div style={{ display: "flex", gap: tablet ? 24 : 32, alignItems: "center" }}>
                         {allLinks.map(({ label, href, ext }) => {
                             const active = label === "Playground" && isPlayground
+                            const hovered = hoveredLink === label
                             return (
                                 <a
                                     key={label}
@@ -96,18 +99,37 @@ export default function SharedNav() {
                                     target={ext ? "_blank" : "_self"}
                                     rel="noreferrer"
                                     style={{
+                                        position: "relative",
                                         fontFamily: I,
                                         fontSize: 14,
                                         fontWeight: active ? 600 : 500,
-                                        color: active ? INK : INK3,
+                                        color: active ? INK : (hovered ? INK : INK3),
                                         textDecoration: "none",
                                         letterSpacing: "-0.01em",
-                                        transition: "color 0.18s",
+                                        transition: "color 0.25s",
                                     }}
-                                    onMouseEnter={(e) => (e.currentTarget.style.color = INK)}
-                                    onMouseLeave={(e) => { if (!active) e.currentTarget.style.color = INK3 }}
+                                    onMouseEnter={() => setHoveredLink(label)}
+                                    onMouseLeave={() => setHoveredLink(null)}
                                 >
-                                    {label}
+                                    <span style={{
+                                        opacity: hovered ? 0 : 1,
+                                        transition: "opacity 0.25s ease",
+                                    }}>{label}</span>
+                                    <span style={{
+                                        position: "absolute",
+                                        left: 0,
+                                        top: "50%",
+                                        transform: "translateY(-50%)",
+                                        fontFamily: YB,
+                                        fontSize: 15,
+                                        fontWeight: 700,
+                                        fontStyle: "italic",
+                                        color: INK,
+                                        whiteSpace: "nowrap",
+                                        opacity: hovered ? 1 : 0,
+                                        transition: "opacity 0.25s ease",
+                                        pointerEvents: "none",
+                                    }}>{label}</span>
                                 </a>
                             )
                         })}
