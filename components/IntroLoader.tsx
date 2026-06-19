@@ -57,7 +57,7 @@ export default function IntroLoader({ onComplete }: { onComplete: () => void }) 
 
     if (reduced) return null
 
-    const bw = ph ? 160 : 220
+    const bw = ph ? 200 : 300
 
     return (
         <motion.div style={{
@@ -91,7 +91,7 @@ export default function IntroLoader({ onComplete }: { onComplete: () => void }) 
                         transition={{ duration: 0.3, ease: EO }}
                         style={{ position: "absolute", zIndex: 3 }}>
                         <span style={{
-                            fontFamily: Z, fontSize: ph ? 24 : 34,
+                            fontFamily: Z, fontSize: ph ? 32 : 48,
                             color: "#fff", fontStyle: "italic",
                         }}>Oh hey!</span>
                     </motion.div>
@@ -107,23 +107,23 @@ export default function IntroLoader({ onComplete }: { onComplete: () => void }) 
                         style={{
                             position: "absolute", zIndex: 3,
                             display: "flex", flexDirection: "column",
-                            alignItems: "center", gap: ph ? 20 : 26,
+                            alignItems: "center", gap: ph ? 24 : 32,
                         }}>
                         <div style={{ textAlign: "center" }}>
                             <div style={{
-                                fontFamily: Z, fontSize: ph ? 15 : 19,
+                                fontFamily: Z, fontSize: ph ? 20 : 28,
                                 color: "rgba(255,255,255,0.65)", fontStyle: "italic",
                                 lineHeight: 1.6,
                             }}>Give me a second.</div>
                             <div style={{
-                                fontFamily: INTER, fontSize: ph ? 11 : 13,
+                                fontFamily: INTER, fontSize: ph ? 13 : 16,
                                 color: "rgba(255,255,255,0.35)", fontStyle: "italic",
-                                marginTop: ph ? 4 : 6,
+                                marginTop: ph ? 6 : 8,
                             }}>Let me give my case studies a quick pep talk...</div>
                         </div>
 
                         {/* Hand-drawn rectangle with scribble fill */}
-                        <svg viewBox="0 0 220 24" width={bw} height={ph ? 18 : 24}
+                        <svg viewBox="0 0 220 24" width={bw} height={ph ? 22 : 32}
                             fill="none" style={{ overflow: "visible" }}>
                             {/* Sketched border */}
                             <motion.path d={RECT}
@@ -158,7 +158,7 @@ export default function IntroLoader({ onComplete }: { onComplete: () => void }) 
                         transition={{ duration: 0.35, ease: EO }}
                         style={{ position: "absolute", zIndex: 3 }}>
                         <span style={{
-                            fontFamily: Z, fontSize: ph ? 18 : 24,
+                            fontFamily: Z, fontSize: ph ? 22 : 32,
                             color: "rgba(255,255,255,0.75)", fontStyle: "italic",
                         }}>{"Okay, they're ready."}</span>
                     </motion.div>
