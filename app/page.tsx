@@ -287,7 +287,7 @@ function Hero({
         }, 700)
     }
 
-    const headSize = phone ? "clamp(22px, 6vw, 28px)" : tablet ? "clamp(26px, 3.5vw, 32px)" : "33px"
+    const headSize = phone ? "clamp(20px, 5.5vw, 26px)" : tablet ? "clamp(22px, 3vw, 28px)" : "28px"
     const headMaxW = "100%"
 
     return (
@@ -369,13 +369,25 @@ function Hero({
                         fontStyle: "normal",
                     }}
                 >
-                    {HERO_WORDS.map((w, j) => (
-                        <Fragment key={j}>
-                            <AnnotatedWord word={w} revealed={revealed} delay={200 + j * 100} phone={phone}
-                                activeAnnotation={activeAnnotation} onHover={setActiveAnnotation} />
-                            {" "}
-                        </Fragment>
-                    ))}
+                    <span style={{ display: "block", whiteSpace: phone ? "normal" : "nowrap" }}>
+                        {HERO_WORDS.map((w, j) => (
+                            <Fragment key={j}>
+                                <AnnotatedWord word={w} revealed={revealed} delay={200 + j * 100} phone={phone}
+                                    activeAnnotation={activeAnnotation} onHover={setActiveAnnotation} />
+                                {" "}
+                            </Fragment>
+                        ))}
+                    </span>
+                    <span style={{
+                        display: "block",
+                        marginTop: phone ? 6 : 10,
+                        opacity: 0,
+                        animation: revealed
+                            ? `word-in 0.65s cubic-bezier(0.22,1,0.36,1) ${200 + HERO_WORDS.length * 100}ms forwards`
+                            : "none",
+                    }}>
+                        Turning insights into experiences.
+                    </span>
                 </h1>
             </div>
 
