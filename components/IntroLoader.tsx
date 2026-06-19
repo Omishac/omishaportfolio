@@ -5,44 +5,23 @@ import { motion, AnimatePresence } from "framer-motion"
 
 const INTER = "Inter, system-ui, sans-serif"
 const Z = "Zodiak, 'Times New Roman', serif"
-const PINK = "#E8B4C8"
 const EO: [number, number, number, number] = [0.22, 1, 0.36, 1]
 const GRAIN = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.04'/%3E%3C/svg%3E")`
 
-const MSGS = [
-    "remember the research",
-    "show the impact",
-    "tell the story",
-    "you got this",
-]
+const RECT = "M3 2 Q55 0.5, 110 2.5 Q165 4, 217 2 Q219 7, 218 12 Q216 18, 218 22 Q165 24, 110 21.5 Q55 20, 3 22 Q1 17, 2 12 Q4 7, 3 2 Z"
 
-const BAR_PATH = "M0 4 Q10 2.5, 20 4.2 Q30 5.5, 40 3.8 Q50 2.5, 60 4.3 Q70 5.5, 80 3.7 Q90 2.5, 100 4.1 Q110 5.5, 120 3.9 Q130 2.5, 140 4.2 Q150 5.5, 160 3.8 Q170 2.5, 180 4.1 Q190 5.5, 200 4"
-const BAR_DUR = 2.5
-
-const DOODLES: { d: string; vb: string }[] = [
-    { d: "M12 2 L14.4 8.5 L21 9.5 L16.2 14 L17.5 21 L12 17.5 L6.5 21 L7.8 14 L3 9.5 L9.6 8.5 Z", vb: "0 0 24 24" },
-    { d: "M4 13 L9 18 L20 6", vb: "0 0 24 24" },
-    { d: "M6 9 L6 20 L18 20 L18 9 Z M9 9 C9 5, 15 5, 15 9", vb: "0 0 24 24" },
-    { d: "M8 2 L16 2 L16 22 L8 22 Z M11 19 L13 19", vb: "0 0 24 24" },
-    { d: "M3 20 L3 5 M3 20 L21 20 M7 15 L7 20 M11 10 L11 20 M15 13 L15 20 M19 7 L19 20", vb: "0 0 24 24" },
-    { d: "M12 3 C8 3, 5 7, 9 12 L9 15 L15 15 L15 12 C19 7, 16 3, 12 3 Z M9.5 17 L14.5 17 M10 19 L14 19", vb: "0 0 24 24" },
-    { d: "M12 2 L13 9 L20 10 L13 11 L12 18 L11 11 L4 10 L11 9 Z", vb: "0 0 24 24" },
-    { d: "M4 12 L18 12 M13 7 L18 12 L13 17", vb: "0 0 24 24" },
-]
-
-const DPOS = [
-    [-150, -70], [145, -75], [-165, 15], [160, 10],
-    [-125, 70], [130, 65], [-55, -100], [50, -95],
+const SCRIBBLES = [
+    "M8 5.5 Q20 3, 32 6 Q44 9, 56 5 Q68 3, 80 7 Q92 9, 104 5 Q116 3, 128 6.5 Q140 9, 152 5 Q164 3, 176 7 Q188 9, 200 5.5 Q210 4, 212 6",
+    "M8 10 Q22 12, 36 9 Q50 7, 64 11 Q78 13, 92 9 Q106 7, 120 11 Q134 13, 148 10 Q162 7, 176 11 Q190 13, 204 10 Q212 8, 212 10",
+    "M8 14.5 Q20 16.5, 32 13 Q44 11, 56 15 Q68 17, 80 13 Q92 11, 104 15 Q116 17, 128 14 Q140 11, 152 15 Q164 17, 176 14 Q188 11, 200 14.5 Q210 16, 212 14",
+    "M8 18.5 Q24 20, 40 17 Q56 15, 72 19 Q88 21, 104 17.5 Q120 15, 136 19 Q152 21, 168 18 Q184 15, 200 18.5 Q212 20, 212 18",
 ]
 
 export default function IntroLoader({ onComplete }: { onComplete: () => void }) {
     const [ph, setPh] = useState(false)
     const [reduced, setReduced] = useState(false)
-    const [showWelcome, setShowWelcome] = useState(false)
-    const [showPep, setShowPep] = useState(false)
-    const [showBar, setShowBar] = useState(false)
-    const [msg, setMsg] = useState(0)
-    const [vis, setVis] = useState<Set<number>>(new Set())
+    const [showHey, setShowHey] = useState(false)
+    const [showText, setShowText] = useState(false)
     const [showReady, setShowReady] = useState(false)
     const [fade, setFade] = useState(false)
     const done = useRef(false)
@@ -65,43 +44,32 @@ export default function IntroLoader({ onComplete }: { onComplete: () => void }) 
         if (reduced) { onComplete(); return }
         const t: ReturnType<typeof setTimeout>[] = []
 
-        t.push(setTimeout(() => setShowWelcome(true), 200))
-        t.push(setTimeout(() => setShowWelcome(false), 900))
-
-        t.push(setTimeout(() => { setShowPep(true); setShowBar(true) }, 1200))
-
-        t.push(setTimeout(() => setMsg(0), 1200))
-        t.push(setTimeout(() => setMsg(1), 1850))
-        t.push(setTimeout(() => setMsg(2), 2500))
-        t.push(setTimeout(() => setMsg(3), 3100))
-
-        DOODLES.forEach((_, i) => {
-            t.push(setTimeout(() => setVis(p => new Set(p).add(i)), 1300 + i * 250))
-            t.push(setTimeout(() => setVis(p => { const s = new Set(p); s.delete(i); return s }), 1900 + i * 250))
-        })
-
-        t.push(setTimeout(() => { setShowPep(false); setShowBar(false) }, 3700))
-        t.push(setTimeout(() => setShowReady(true), 3800))
-        t.push(setTimeout(() => setFade(true), 4350))
-        t.push(setTimeout(() => { if (!done.current) { done.current = true; onComplete() } }, 4950))
+        t.push(setTimeout(() => setShowHey(true), 100))
+        t.push(setTimeout(() => setShowHey(false), 800))
+        t.push(setTimeout(() => setShowText(true), 1000))
+        t.push(setTimeout(() => setShowText(false), 2600))
+        t.push(setTimeout(() => setShowReady(true), 2700))
+        t.push(setTimeout(() => setFade(true), 3150))
+        t.push(setTimeout(() => { if (!done.current) { done.current = true; onComplete() } }, 3700))
 
         return () => t.forEach(clearTimeout)
     }, [onComplete, reduced])
 
     if (reduced) return null
 
-    const bw = ph ? 170 : 240
+    const bw = ph ? 160 : 220
 
     return (
         <motion.div style={{
             position: "fixed", inset: 0, zIndex: 10000,
             backgroundColor: "#0A0A0A", backgroundImage: GRAIN, backgroundSize: "200px",
-            display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            overflow: "hidden",
         }}>
             {/* Skip */}
             <motion.button onClick={skip}
                 initial={{ opacity: 0 }} animate={{ opacity: fade ? 0 : 0.8 }}
-                transition={{ delay: 0.6, duration: 0.4 }}
+                transition={{ delay: 0.4, duration: 0.3 }}
                 style={{
                     position: "absolute", top: ph ? 16 : 24, right: ph ? 16 : 32,
                     background: "none", border: "1px solid rgba(255,255,255,0.1)",
@@ -113,158 +81,95 @@ export default function IntroLoader({ onComplete }: { onComplete: () => void }) 
                 </span>
             </motion.button>
 
-            {/* ── Welcome ── */}
+            {/* "Oh hey!" */}
             <AnimatePresence>
-                {showWelcome && (
-                    <motion.div key="w"
-                        initial={{ opacity: 0, y: 10 }}
+                {showHey && (
+                    <motion.div key="hey"
+                        initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
-                        transition={{ duration: 0.4, ease: EO }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.3, ease: EO }}
                         style={{ position: "absolute", zIndex: 3 }}>
                         <span style={{
-                            fontFamily: Z, fontSize: ph ? 26 : 38,
+                            fontFamily: Z, fontSize: ph ? 24 : 34,
                             color: "#fff", fontStyle: "italic",
-                        }}>Welcome.</span>
+                        }}>Oh hey!</span>
                     </motion.div>
                 )}
             </AnimatePresence>
 
-            {/* ── Pep talk label ── */}
+            {/* Text + loading bar */}
             <AnimatePresence>
-                {showPep && (
-                    <motion.div key="pep"
+                {showText && (
+                    <motion.div key="content"
                         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }} transition={{ duration: 0.35, ease: EO }}
-                        style={{
-                            position: "absolute", zIndex: 3, textAlign: "center",
-                            top: "50%", left: "50%", width: ph ? 250 : 340,
-                            transform: `translate(-50%, ${ph ? -68 : -80}px)`,
-                        }}>
-                        <span style={{
-                            fontFamily: INTER, fontSize: ph ? 11 : 13.5,
-                            color: "rgba(255,255,255,0.4)", fontStyle: "italic",
-                        }}>let me give my case studies a quick pep talk...</span>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            {/* ── Rotating messages ── */}
-            <div style={{
-                position: "absolute", zIndex: 3, textAlign: "center",
-                top: "50%", left: "50%", width: ph ? 220 : 300,
-                transform: `translate(-50%, ${ph ? -32 : -38}px)`,
-                height: ph ? 22 : 28,
-            }}>
-                <AnimatePresence mode="wait">
-                    {showBar && (
-                        <motion.div key={msg}
-                            initial={{ opacity: 0, y: 5 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -5 }}
-                            transition={{ duration: 0.25, ease: EO }}>
-                            <span style={{
-                                fontFamily: Z, fontSize: ph ? 15 : 19,
-                                color: "rgba(255,255,255,0.65)", fontStyle: "italic",
-                            }}>{MSGS[msg]}</span>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </div>
-
-            {/* ── Loading bar + pencil ── */}
-            <AnimatePresence>
-                {showBar && (
-                    <motion.div key="bar"
-                        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }} transition={{ duration: 0.3 }}
+                        exit={{ opacity: 0 }} transition={{ duration: 0.3, ease: EO }}
                         style={{
                             position: "absolute", zIndex: 3,
-                            top: "50%", left: "50%",
-                            transform: `translate(-50%, ${ph ? 10 : 12}px)`,
-                            width: bw, height: 24,
+                            display: "flex", flexDirection: "column",
+                            alignItems: "center", gap: ph ? 20 : 26,
                         }}>
-                        {/* Wobbly hand-drawn bar */}
-                        <svg viewBox="0 0 200 8" width={bw} height={10}
-                            style={{ position: "absolute", top: 7, left: 0 }}>
-                            <motion.path d={BAR_PATH} fill="none"
-                                stroke={PINK} strokeWidth="2" strokeLinecap="round"
+                        <div style={{ textAlign: "center" }}>
+                            <div style={{
+                                fontFamily: Z, fontSize: ph ? 15 : 19,
+                                color: "rgba(255,255,255,0.65)", fontStyle: "italic",
+                                lineHeight: 1.6,
+                            }}>Give me a second.</div>
+                            <div style={{
+                                fontFamily: INTER, fontSize: ph ? 11 : 13,
+                                color: "rgba(255,255,255,0.35)", fontStyle: "italic",
+                                marginTop: ph ? 4 : 6,
+                            }}>Let me give my case studies a quick pep talk...</div>
+                        </div>
+
+                        {/* Hand-drawn rectangle with scribble fill */}
+                        <svg viewBox="0 0 220 24" width={bw} height={ph ? 18 : 24}
+                            fill="none" style={{ overflow: "visible" }}>
+                            {/* Sketched border */}
+                            <motion.path d={RECT}
+                                stroke="rgba(255,255,255,0.3)" strokeWidth="1.3"
+                                strokeLinecap="round" strokeLinejoin="round"
                                 initial={{ pathLength: 0 }}
                                 animate={{ pathLength: 1 }}
-                                transition={{ duration: BAR_DUR, ease: "easeInOut" }}
+                                transition={{ duration: 0.6, delay: 0.1, ease: EO }}
                             />
+                            {/* Scribble fill */}
+                            {SCRIBBLES.map((d, i) => (
+                                <motion.path key={i} d={d}
+                                    stroke={`rgba(255,255,255,${0.10 + (i % 2) * 0.04})`}
+                                    strokeWidth="2" strokeLinecap="round"
+                                    initial={{ pathLength: 0 }}
+                                    animate={{ pathLength: 1 }}
+                                    transition={{ duration: 1.0, delay: 0.25 + i * 0.1, ease: "easeInOut" }}
+                                />
+                            ))}
                         </svg>
-
-                        {/* Doodle pencil */}
-                        <motion.div
-                            initial={{ x: -4 }}
-                            animate={{ x: bw - 4 }}
-                            transition={{ duration: BAR_DUR, ease: "easeInOut" }}
-                            style={{ position: "absolute", top: -6, left: 0 }}>
-                            <svg width="14" height="18" viewBox="0 0 14 18" fill="none">
-                                <line x1="11" y1="2" x2="3.5" y2="15"
-                                    stroke="rgba(255,255,255,0.45)" strokeWidth="2" strokeLinecap="round" />
-                                <line x1="3.5" y1="15" x2="2" y2="18"
-                                    stroke={PINK} strokeWidth="1.4" strokeLinecap="round" />
-                            </svg>
-                        </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
 
-            {/* ── Doodles ── */}
-            {DOODLES.map((dd, i) => {
-                const sc = ph ? 0.6 : 1
-                return (
-                    <AnimatePresence key={i}>
-                        {vis.has(i) && (
-                            <motion.svg key={`d${i}`}
-                                width={18 * sc} height={18 * sc} viewBox={dd.vb}
-                                initial={{ opacity: 0, scale: 0.4 }}
-                                animate={{ opacity: 0.35, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.5 }}
-                                transition={{ duration: 0.35, ease: EO }}
-                                style={{
-                                    position: "absolute",
-                                    left: `calc(50% + ${DPOS[i][0] * sc}px)`,
-                                    top: `calc(50% + ${DPOS[i][1] * sc}px)`,
-                                    zIndex: 2,
-                                }}>
-                                <motion.path d={dd.d} fill="none"
-                                    stroke={i % 3 === 0 ? PINK : "rgba(255,255,255,0.25)"}
-                                    strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"
-                                    initial={{ pathLength: 0 }}
-                                    animate={{ pathLength: 1 }}
-                                    transition={{ duration: 0.45, ease: EO }}
-                                />
-                            </motion.svg>
-                        )}
-                    </AnimatePresence>
-                )
-            })}
-
-            {/* ── "Okay, they're ready." ── */}
+            {/* "Okay, they're ready." */}
             <AnimatePresence>
                 {showReady && (
                     <motion.div key="ready"
-                        initial={{ opacity: 0, y: 6 }}
+                        initial={{ opacity: 0, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.4, ease: EO }}
+                        transition={{ duration: 0.35, ease: EO }}
                         style={{ position: "absolute", zIndex: 3 }}>
                         <span style={{
                             fontFamily: Z, fontSize: ph ? 18 : 24,
                             color: "rgba(255,255,255,0.75)", fontStyle: "italic",
-                        }}>{"Okay, they’re ready."}</span>
+                        }}>{"Okay, they're ready."}</span>
                     </motion.div>
                 )}
             </AnimatePresence>
 
-            {/* ── Fade to homepage ── */}
+            {/* Fade to homepage */}
             {fade && (
                 <motion.div
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                    transition={{ duration: 0.65, ease: [0.4, 0, 0.2, 1] }}
+                    transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
                     style={{ position: "fixed", inset: 0, backgroundColor: "#fff", zIndex: 10 }}
                 />
             )}
