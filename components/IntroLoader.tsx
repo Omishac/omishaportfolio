@@ -117,7 +117,7 @@ export default function IntroLoader({ onComplete }: { onComplete: () => void }) 
                             }}>Give me a second.</div>
                             <div style={{
                                 fontFamily: INTER, fontSize: ph ? 13 : 16,
-                                color: "rgba(255,255,255,0.35)", fontStyle: "italic",
+                                color: "#fff", fontWeight: 600,
                                 marginTop: ph ? 6 : 8,
                             }}>Let me give my case studies a quick pep talk...</div>
                         </div>
