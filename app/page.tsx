@@ -508,6 +508,13 @@ const CARDS = [
         tags: ["Digital Strategy", "UX/UI", "Conceptual"],
         company: "RFND",
     },
+    {
+        href: "/anthropologie-product-discovery",
+        image: "https://framerusercontent.com/images/vE5NBaasSteSM6lORQbcDZsAU.png",
+        title: "Designing Confidence in Product Discovery",
+        tags: ["Product Design", "Design Systems", "E-Commerce"],
+        company: "URBN",
+    },
 ]
 
 function Card({
@@ -762,6 +769,7 @@ function WorkSection({
                         </div>
                         <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: sp.cardRowGap }}>
                             <div style={reveal(1)}><Card {...CARDS[1]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
+                            <div style={reveal(3)}><Card {...CARDS[3]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
                         </div>
                     </div>
                 )}
