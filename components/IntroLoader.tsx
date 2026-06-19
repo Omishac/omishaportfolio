@@ -22,7 +22,6 @@ export default function IntroLoader({ onComplete }: { onComplete: () => void }) 
     const [reduced, setReduced] = useState(false)
     const [showHey, setShowHey] = useState(false)
     const [showText, setShowText] = useState(false)
-    const [showReady, setShowReady] = useState(false)
     const [fade, setFade] = useState(false)
     const done = useRef(false)
 
@@ -45,12 +44,11 @@ export default function IntroLoader({ onComplete }: { onComplete: () => void }) 
         const t: ReturnType<typeof setTimeout>[] = []
 
         t.push(setTimeout(() => setShowHey(true), 100))
-        t.push(setTimeout(() => setShowHey(false), 800))
-        t.push(setTimeout(() => setShowText(true), 1000))
-        t.push(setTimeout(() => setShowText(false), 2600))
-        t.push(setTimeout(() => setShowReady(true), 2700))
-        t.push(setTimeout(() => setFade(true), 3150))
-        t.push(setTimeout(() => { if (!done.current) { done.current = true; onComplete() } }, 3700))
+        t.push(setTimeout(() => setShowHey(false), 900))
+        t.push(setTimeout(() => setShowText(true), 1100))
+        t.push(setTimeout(() => setShowText(false), 3800))
+        t.push(setTimeout(() => setFade(true), 3900))
+        t.push(setTimeout(() => { if (!done.current) { done.current = true; onComplete() } }, 4500))
 
         return () => t.forEach(clearTimeout)
     }, [onComplete, reduced])
@@ -103,7 +101,7 @@ export default function IntroLoader({ onComplete }: { onComplete: () => void }) 
                 {showText && (
                     <motion.div key="content"
                         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }} transition={{ duration: 0.3, ease: EO }}
+                        exit={{ opacity: 0 }} transition={{ duration: 0.4, ease: EO }}
                         style={{
                             position: "absolute", zIndex: 3,
                             display: "flex", flexDirection: "column",
@@ -131,7 +129,7 @@ export default function IntroLoader({ onComplete }: { onComplete: () => void }) 
                                 strokeLinecap="round" strokeLinejoin="round"
                                 initial={{ pathLength: 0 }}
                                 animate={{ pathLength: 1 }}
-                                transition={{ duration: 0.6, delay: 0.1, ease: EO }}
+                                transition={{ duration: 0.8, delay: 0.15, ease: EO }}
                             />
                             {/* Scribble fill */}
                             {SCRIBBLES.map((d, i) => (
@@ -140,27 +138,10 @@ export default function IntroLoader({ onComplete }: { onComplete: () => void }) 
                                     strokeWidth="2" strokeLinecap="round"
                                     initial={{ pathLength: 0 }}
                                     animate={{ pathLength: 1 }}
-                                    transition={{ duration: 1.0, delay: 0.25 + i * 0.1, ease: "easeInOut" }}
+                                    transition={{ duration: 2.0, delay: 0.3 + i * 0.12, ease: "easeInOut" }}
                                 />
                             ))}
                         </svg>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            {/* "Okay, they're ready." */}
-            <AnimatePresence>
-                {showReady && (
-                    <motion.div key="ready"
-                        initial={{ opacity: 0, y: 5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.35, ease: EO }}
-                        style={{ position: "absolute", zIndex: 3 }}>
-                        <span style={{
-                            fontFamily: Z, fontSize: ph ? 22 : 32,
-                            color: "rgba(255,255,255,0.75)", fontStyle: "italic",
-                        }}>{"Okay, they're ready."}</span>
                     </motion.div>
                 )}
             </AnimatePresence>
