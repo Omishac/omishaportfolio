@@ -162,30 +162,30 @@ function CustomCursor() {
 
 type WordDef = { text: string; yb?: boolean; annotation?: string }
 const HERO_LINE1: WordDef[] = [
-    { text: "I'm" }, { text: "a" },
-    { text: "Product Designer", yb: true, annotation: "the experience" },
-    { text: "with" }, { text: "a" },
-    { text: "background" }, { text: "in" },
+    { text: "I'm a" },
+    { text: "Product Designer", annotation: "the experience" },
+    { text: "with a background in" },
     { text: "Analytics", yb: true, annotation: "the evidence" },
-    { text: "&" }, { text: "Business Strategy", yb: true, annotation: "the impact" },
-    { text: "—" },
+    { text: "&", yb: true },
+    { text: "Business Strategy.", yb: true, annotation: "the impact" },
 ]
 const HERO_LINE2: WordDef[] = [
-    { text: "Turning" }, { text: "insights" }, { text: "into" }, { text: "experiences." },
+    { text: "Turning insights into experiences." },
 ]
 
-function AnnotatedWord({ word, revealed, delay, phone }: {
+function AnnotatedWord({ word, revealed, delay, phone, activeAnnotation, onHover }: {
     word: WordDef; revealed: boolean; delay: number; phone: boolean
+    activeAnnotation: string | null; onHover: (a: string | null) => void
 }) {
-    const [hovered, setHovered] = useState(false)
+    const isActive = word.annotation ? activeAnnotation === word.annotation : false
     return (
         <span
-            style={{ position: "relative", display: "inline-block" }}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
+            style={{ position: "relative", display: "inline" }}
+            onMouseEnter={() => word.annotation && onHover(word.annotation)}
+            onMouseLeave={() => word.annotation && onHover(null)}
         >
             <span style={{
-                display: "inline-block",
+                display: "inline",
                 fontFamily: word.yb ? YB : Z,
                 fontStyle: word.yb ? "italic" : "normal",
                 fontWeight: word.yb ? 700 : 400,
@@ -194,26 +194,47 @@ function AnnotatedWord({ word, revealed, delay, phone }: {
                     ? `word-in 0.65s cubic-bezier(0.22,1,0.36,1) ${delay}ms forwards`
                     : "none",
             }}>
-                {word.text === "&" ? <>&amp;</> : word.text}
+                {word.text}
             </span>
             {word.annotation && (
                 <span style={{
                     position: "absolute",
-                    left: "50%",
+                    left: phone ? 0 : "50%",
                     top: "100%",
-                    transform: `translate(-50%, ${hovered ? "2px" : "6px"})`,
-                    opacity: hovered ? 1 : 0,
+                    transform: `translate(${phone ? "0" : "-50%"}, ${isActive ? "4px" : "10px"})`,
+                    opacity: isActive ? 1 : 0,
                     transition: "opacity 0.2s ease, transform 0.2s ease",
-                    fontFamily: YB,
-                    fontSize: phone ? 10 : 12,
-                    color: "#E8B4C8",
-                    whiteSpace: "nowrap",
                     pointerEvents: "none",
-                    fontWeight: 400,
-                    fontStyle: "italic",
-                    letterSpacing: "0.01em",
+                    whiteSpace: "nowrap",
+                    zIndex: 10,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: phone ? "flex-start" : "center",
+                    gap: 2,
                 }}>
-                    {word.annotation}
+                    {/* Arrow pointing up toward the word */}
+                    <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style={{ marginBottom: -1 }}>
+                        <path d="M7 9 L7 2 M4 5 L7 1.5 L10 5" stroke="#E8B4C8" strokeWidth="1.3"
+                            strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    {/* Annotation text */}
+                    <span style={{
+                        fontFamily: YB,
+                        fontSize: phone ? 16 : 22,
+                        color: "#E8B4C8",
+                        fontWeight: 400,
+                        fontStyle: "italic",
+                        letterSpacing: "0.01em",
+                        lineHeight: 1.2,
+                    }}>
+                        {word.annotation}
+                    </span>
+                    {/* Hand-drawn underline */}
+                    <svg width={phone ? 80 : 120} height="4" viewBox="0 0 120 4" fill="none"
+                        style={{ marginTop: -1 }}>
+                        <path d="M0 2 Q15 0.5, 30 2.5 Q45 4, 60 1.5 Q75 0, 90 2.5 Q105 4, 120 2"
+                            stroke="#E8B4C8" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
+                    </svg>
                 </span>
             )}
         </span>
@@ -245,6 +266,7 @@ function Hero({
     const BUBBLE_COLORS = ["#E8B4C8", "#D4AEDD", "#F4C6D8", "#C9B8E4", "#EAD4F0", "#F9B8CF", "#D8BEF8"]
 
     const [revealed, setRevealed] = useState(false)
+    const [activeAnnotation, setActiveAnnotation] = useState<string | null>(null)
     useEffect(() => {
         const t = setTimeout(() => setRevealed(true), 60)
         return () => clearTimeout(t)
@@ -353,33 +375,21 @@ function Hero({
                     <span style={{ display: "block" }}>
                         {HERO_LINE1.map((w, j) => (
                             <Fragment key={j}>
-                                <AnnotatedWord word={w} revealed={revealed} delay={200 + j * 60} phone={phone} />
+                                <AnnotatedWord word={w} revealed={revealed} delay={200 + j * 100} phone={phone}
+                                    activeAnnotation={activeAnnotation} onHover={setActiveAnnotation} />
                                 {" "}
                             </Fragment>
                         ))}
                     </span>
-                    <span style={{ display: "block" }}>
+                    <span style={{ display: "block", marginTop: phone ? 4 : 8 }}>
                         {HERO_LINE2.map((w, j) => (
                             <Fragment key={j}>
-                                <AnnotatedWord word={w} revealed={revealed} delay={200 + (HERO_LINE1.length + j) * 60} phone={phone} />
-                                {" "}
+                                <AnnotatedWord word={w} revealed={revealed} delay={200 + (HERO_LINE1.length + j) * 100} phone={phone}
+                                    activeAnnotation={activeAnnotation} onHover={setActiveAnnotation} />
                             </Fragment>
                         ))}
                     </span>
                 </h1>
-                <p
-                    style={{
-                        fontFamily: I,
-                        fontSize: phone ? 12 : 13,
-                        fontWeight: 500,
-                        color: C.muted,
-                        letterSpacing: "0.06em",
-                        textTransform: "uppercase",
-                        marginTop: phone ? 20 : 28,
-                    }}
-                >
-                    Product Design &nbsp;·&nbsp; Analytics &nbsp;·&nbsp; Business Strategy
-                </p>
             </div>
 
             {/* Centered label + inline pink arrow to the right */}
