@@ -160,18 +160,65 @@ function CustomCursor() {
 }
 
 
-type WordDef = { text: string; yb?: boolean }
+type WordDef = { text: string; yb?: boolean; annotation?: string }
 const HERO_LINE1: WordDef[] = [
-    { text: "Product" }, { text: "designer" }, { text: "with" }, { text: "a" },
+    { text: "I'm" }, { text: "a" },
+    { text: "Product Designer", yb: true, annotation: "the experience" },
+    { text: "with" }, { text: "a" },
     { text: "background" }, { text: "in" },
-    { text: "digital", yb: true }, { text: "analytics", yb: true }, { text: "—" },
+    { text: "Analytics", yb: true, annotation: "the evidence" },
+    { text: "&" }, { text: "Business Strategy", yb: true, annotation: "the impact" },
+    { text: "—" },
 ]
 const HERO_LINE2: WordDef[] = [
-    { text: "I" }, { text: "design" }, { text: "e-commerce" }, { text: "experiences" },
-    { text: "grounded" }, { text: "in" },
-    { text: "behavioral", yb: true }, { text: "data,", yb: true },
-    { text: "not" }, { text: "assumptions." },
+    { text: "Turning" }, { text: "insights" }, { text: "into" }, { text: "experiences." },
 ]
+
+function AnnotatedWord({ word, revealed, delay, phone }: {
+    word: WordDef; revealed: boolean; delay: number; phone: boolean
+}) {
+    const [hovered, setHovered] = useState(false)
+    return (
+        <span
+            style={{ position: "relative", display: "inline-block" }}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+        >
+            <span style={{
+                display: "inline-block",
+                fontFamily: word.yb ? YB : Z,
+                fontStyle: word.yb ? "italic" : "normal",
+                fontWeight: word.yb ? 700 : 400,
+                opacity: 0,
+                animation: revealed
+                    ? `word-in 0.65s cubic-bezier(0.22,1,0.36,1) ${delay}ms forwards`
+                    : "none",
+            }}>
+                {word.text === "&" ? <>&amp;</> : word.text}
+            </span>
+            {word.annotation && (
+                <span style={{
+                    position: "absolute",
+                    left: "50%",
+                    top: "100%",
+                    transform: `translate(-50%, ${hovered ? "2px" : "6px"})`,
+                    opacity: hovered ? 1 : 0,
+                    transition: "opacity 0.2s ease, transform 0.2s ease",
+                    fontFamily: YB,
+                    fontSize: phone ? 10 : 12,
+                    color: "#E8B4C8",
+                    whiteSpace: "nowrap",
+                    pointerEvents: "none",
+                    fontWeight: 400,
+                    fontStyle: "italic",
+                    letterSpacing: "0.01em",
+                }}>
+                    {word.annotation}
+                </span>
+            )}
+        </span>
+    )
+}
 
 function Hero({
     phone,
@@ -306,18 +353,7 @@ function Hero({
                     <span style={{ display: "block" }}>
                         {HERO_LINE1.map((w, j) => (
                             <Fragment key={j}>
-                                <span style={{
-                                    display: "inline-block",
-                                    fontFamily: w.yb ? YB : Z,
-                                    fontStyle: w.yb ? "italic" : "normal",
-                                    fontWeight: w.yb ? 700 : 400,
-                                    opacity: 0,
-                                    animation: revealed
-                                        ? `word-in 0.65s cubic-bezier(0.22,1,0.36,1) ${200 + j * 60}ms forwards`
-                                        : "none",
-                                }}>
-                                    {w.text === "&" ? <>&amp;</> : w.text}
-                                </span>
+                                <AnnotatedWord word={w} revealed={revealed} delay={200 + j * 60} phone={phone} />
                                 {" "}
                             </Fragment>
                         ))}
@@ -325,18 +361,7 @@ function Hero({
                     <span style={{ display: "block" }}>
                         {HERO_LINE2.map((w, j) => (
                             <Fragment key={j}>
-                                <span style={{
-                                    display: "inline-block",
-                                    fontFamily: w.yb ? YB : Z,
-                                    fontStyle: w.yb ? "italic" : "normal",
-                                    fontWeight: w.yb ? 700 : 400,
-                                    opacity: 0,
-                                    animation: revealed
-                                        ? `word-in 0.65s cubic-bezier(0.22,1,0.36,1) ${200 + (HERO_LINE1.length + j) * 60}ms forwards`
-                                        : "none",
-                                }}>
-                                    {w.text}
-                                </span>
+                                <AnnotatedWord word={w} revealed={revealed} delay={200 + (HERO_LINE1.length + j) * 60} phone={phone} />
                                 {" "}
                             </Fragment>
                         ))}
@@ -353,7 +378,7 @@ function Hero({
                         marginTop: phone ? 20 : 28,
                     }}
                 >
-                    UX &amp; Digital Strategy &nbsp;·&nbsp; Turning user insights into product decisions
+                    Product Design &nbsp;·&nbsp; Analytics &nbsp;·&nbsp; Business Strategy
                 </p>
             </div>
 
