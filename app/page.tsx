@@ -380,7 +380,7 @@ function Hero({
                     </span>
                     <span style={{
                         display: "block",
-                        marginTop: phone ? 6 : 10,
+                        marginTop: phone ? 32 : 44,
                         opacity: 0,
                         animation: revealed
                             ? `word-in 0.65s cubic-bezier(0.22,1,0.36,1) ${200 + HERO_WORDS.length * 100}ms forwards`
