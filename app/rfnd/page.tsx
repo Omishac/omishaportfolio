@@ -319,7 +319,7 @@ function MoodCarousel() {
 function SideChapterNav({ active }: { active: string }) {
     return (
         <nav style={{
-            position: "sticky", top: 120, paddingTop: 100, paddingLeft: 28,
+            position: "sticky", top: 80, paddingTop: 0, paddingLeft: 0,
             alignSelf: "start",
         }}>
             {SECTIONS.map(({ id, label }) => {
