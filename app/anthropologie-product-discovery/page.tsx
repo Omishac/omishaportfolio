@@ -101,7 +101,7 @@ function Placeholder({ label, aspect = "56.25%", dark = false }: { label: string
 
 function SideNav({ active }: { active: string }) {
     return (
-        <nav style={{ position: "sticky", top: 80, alignSelf: "start" }}>
+        <nav>
             {SECTIONS.map(({ id, label }) => {
                 const isActive = active === id
                 return (
@@ -209,15 +209,17 @@ export default function AnthropologieProductDiscovery() {
         <div style={{ width: "100%", backgroundColor: C.bg }}>
             <CaseStudyNav />
 
-            <div style={{
-                display: desktop ? "grid" : "block",
-                gridTemplateColumns: desktop ? "120px 1fr" : undefined,
-                maxWidth: desktop ? 1100 : 1040, margin: "0 auto",
-                padding: desktop ? "0 48px" : undefined, gap: desktop ? "0 48px" : undefined,
-            }}>
-                {desktop && <aside style={{ position: "relative" }}><SideNav active={activeSection} /></aside>}
+            {desktop && (
+                <div style={{ position: "fixed", left: 48, top: 80, zIndex: 50 }}>
+                    <SideNav active={activeSection} />
+                </div>
+            )}
 
-                <div style={{ padding: `0 ${px}px 180px`, maxWidth: desktop ? 900 : 1040 }}>
+            <div style={{
+                maxWidth: 900, margin: "0 auto",
+                padding: `0 ${px}px 180px`,
+            }}>
+                <div>
 
                     {/* ════════ OVERVIEW ════════ */}
                     <section id="overview" style={{ scrollMarginTop: 80, paddingTop: phone ? 48 : 100 }}>
