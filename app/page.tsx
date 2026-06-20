@@ -488,6 +488,14 @@ function SectionLabel({
 
 const CARDS: { href: string; image: string; video?: string; title: string; tags: string[]; company: string }[] = [
     {
+        href: "/anthropologie-product-discovery",
+        image: "https://framerusercontent.com/images/vE5NBaasSteSM6lORQbcDZsAU.png",
+        video: "/videos/product-discovery-hero.mp4",
+        title: "Designing Confidence in Product Discovery",
+        tags: ["Product Design", "Design Systems", "E-Commerce"],
+        company: "URBN",
+    },
+    {
         href: "/ios-review-accessibility",
         image: "https://framerusercontent.com/images/kDMnpjfRqLhIvdEi1aQ3Jp0wkg.png",
         title: "iOS Review Accessibility",
@@ -507,14 +515,6 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
         title: "Rethinking Online Through UX",
         tags: ["Digital Strategy", "UX/UI", "Conceptual"],
         company: "RFND",
-    },
-    {
-        href: "/anthropologie-product-discovery",
-        image: "https://framerusercontent.com/images/vE5NBaasSteSM6lORQbcDZsAU.png",
-        video: "/videos/product-discovery-hero.mp4",
-        title: "Designing Confidence in Product Discovery",
-        tags: ["Product Design", "Design Systems", "E-Commerce"],
-        company: "URBN",
     },
 ]
 
@@ -596,8 +596,6 @@ function Card({
                             height: "100%",
                             objectFit: "cover",
                             display: "block",
-                            transform: hov ? "scale(1.06)" : "scale(1)",
-                            transition: "transform 0.7s cubic-bezier(0.22,1,0.36,1)",
                         }}
                     />
                 ) : (
@@ -609,8 +607,6 @@ function Card({
                             height: "100%",
                             objectFit: "cover",
                             display: "block",
-                            transform: hov ? "scale(1.06)" : "scale(1)",
-                            transition: "transform 0.7s cubic-bezier(0.22,1,0.36,1)",
                         }}
                     />
                 )}
