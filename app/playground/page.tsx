@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useEffect } from "react"
 import SharedNav from "../../components/SharedNav"
 
 const Z = "Zodiak, 'Times New Roman', serif"
@@ -45,13 +45,6 @@ const PROJECTS_EMBEDS = [
     "https://www.canva.com/design/DAGxGinBSuE/ipGt5HbXqLNmofmGAt0yUw/view?embed",
 ]
 
-const NAV_ITEMS = [
-    { label: "Visual Design", num: "01" },
-    { label: "Photography", num: "02" },
-    { label: "Motion", num: "03" },
-    { label: "Projects", num: "04" },
-]
-
 const SECTIONS = [
     { num: "01", title: "Visual Design & Branding", desc: "Brand identities, posters, and creative direction." },
     { num: "02", title: "Photography", desc: "Personal photography — light, texture, and moment." },
@@ -72,7 +65,62 @@ function useResponsive() {
         window.addEventListener("resize", check, { passive: true })
         return () => window.removeEventListener("resize", check)
     }, [])
-    return { phone, tablet }
+    return { phone, tablet, desktop: !phone && !tablet }
+}
+
+function useActiveSection(ids: string[]) {
+    const [active, setActive] = useState("")
+    useEffect(() => {
+        const onScroll = () => {
+            let best = ""; let bestDist = Infinity
+            for (const id of ids) {
+                const el = document.getElementById(id)
+                if (el) { const top = el.getBoundingClientRect().top; if (top <= 200 && Math.abs(top) < bestDist) { bestDist = Math.abs(top); best = id } }
+            }
+            if (best) setActive(best)
+        }
+        onScroll()
+        window.addEventListener("scroll", onScroll, { passive: true })
+        return () => window.removeEventListener("scroll", onScroll)
+    }, [])
+    return active
+}
+
+const SIDE_NAV_SECTIONS = [
+    { id: "visual-design", label: "Visual Design" },
+    { id: "photography", label: "Photography" },
+    { id: "motion", label: "Motion" },
+    { id: "projects", label: "Projects" },
+]
+
+function SideNav({ active }: { active: string }) {
+    return (
+        <nav>
+            {SIDE_NAV_SECTIONS.map(({ id, label }) => {
+                const isActive = active === id
+                return (
+                    <a key={id} href={`#${id}`}
+                        onClick={(e) => { e.preventDefault(); document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" }) }}
+                        style={{
+                            display: "block", padding: "6px 0",
+                            textDecoration: "none", transition: "opacity 0.3s ease",
+                            opacity: isActive ? 1 : 0.3,
+                        }}
+                    >
+                        <span style={{
+                            fontFamily: I, fontSize: 10, fontWeight: isActive ? 700 : 400,
+                            color: T.ink, letterSpacing: "0.06em", textTransform: "uppercase",
+                            transition: "font-weight 0.2s",
+                            borderLeft: isActive ? `2px solid ${T.muted}` : "2px solid transparent",
+                            paddingLeft: 12,
+                        }}>
+                            {label}
+                        </span>
+                    </a>
+                )
+            })}
+        </nav>
+    )
 }
 
 function SectionHeader({ num, title, desc }: { num: string; title: string; desc: string }) {
@@ -184,46 +232,31 @@ function EmbedFrame({ src, aspect = "16/9" }: { src: string; aspect?: string }) 
 }
 
 export default function PlaygroundPage() {
-    const { phone, tablet } = useResponsive()
-
-    const ref0 = useRef<HTMLDivElement>(null)
-    const ref1 = useRef<HTMLDivElement>(null)
-    const ref2 = useRef<HTMLDivElement>(null)
-    const ref3 = useRef<HTMLDivElement>(null)
-    const sectionRefs = [ref0, ref1, ref2, ref3]
-
-    const [active, setActive] = useState(0)
-    const [hovNav, setHovNav] = useState(-1)
-
-    const pad = phone ? "0 20px 80px" : tablet ? "0 40px 120px" : "0 80px 160px"
-
-    useEffect(() => {
-        const onScroll = () => {
-            let cur = 0
-            sectionRefs.forEach((ref, i) => {
-                if (ref.current && ref.current.getBoundingClientRect().top <= 100) cur = i
-            })
-            setActive(cur)
-        }
-        window.addEventListener("scroll", onScroll, { passive: true })
-        return () => window.removeEventListener("scroll", onScroll)
-    }, [])
-
-    const scrollToSection = (i: number) => {
-        const el = sectionRefs[i].current
-        if (!el) return
-        window.scrollTo({
-            top: el.getBoundingClientRect().top + window.scrollY - 90,
-            behavior: "smooth",
-        })
-    }
+    const { phone, tablet, desktop } = useResponsive()
+    const activeSection = useActiveSection(SIDE_NAV_SECTIONS.map(s => s.id))
+    const px = phone ? 20 : tablet ? 40 : 80
 
     return (
         <div style={{ width: "100%", backgroundColor: "#fff", fontFamily: I }}>
             <SharedNav />
-            <div style={{ maxWidth: 1120, margin: "0 auto", padding: pad }}>
+            <div style={{
+                display: desktop ? "grid" : "block",
+                gridTemplateColumns: desktop ? "140px 1fr" : undefined,
+                gap: desktop ? 48 : undefined,
+                maxWidth: 1400,
+                margin: "0 auto",
+                padding: `0 ${px}px 180px`,
+            }}>
+                {desktop && (
+                    <aside>
+                        <div style={{ position: "sticky", top: 80, paddingTop: 40 }}>
+                            <SideNav active={activeSection} />
+                        </div>
+                    </aside>
+                )}
+                <div>
                 {/* Hero */}
-                <div style={{ paddingTop: phone ? 48 : 96, paddingBottom: 48 }}>
+                <div style={{ paddingTop: phone ? 48 : 40, paddingBottom: 48 }}>
                     <p
                         style={{
                             fontFamily: I,
@@ -255,58 +288,8 @@ export default function PlaygroundPage() {
                     </p>
                 </div>
 
-                {/* Section Nav */}
-                <div style={{ display: "flex", paddingBottom: 80, borderBottom: `1px solid ${T.border}` }}>
-                    <div
-                        style={{
-                            display: "flex",
-                            gap: 4,
-                            backgroundColor: "rgba(255,255,255,0.9)",
-                            backdropFilter: "blur(16px)",
-                            WebkitBackdropFilter: "blur(16px)",
-                            borderRadius: 40,
-                            padding: "5px 6px",
-                            boxShadow: "0 2px 16px rgba(0,0,0,0.09), 0 0 0 1px rgba(0,0,0,0.06)",
-                            overflowX: phone ? "auto" : "visible",
-                            flexWrap: "nowrap",
-                            WebkitOverflowScrolling: "touch" as any,
-                            maxWidth: "100%",
-                        }}
-                    >
-                        {NAV_ITEMS.map((s, i) => (
-                            <button
-                                key={i}
-                                onClick={() => scrollToSection(i)}
-                                onMouseEnter={() => setHovNav(i)}
-                                onMouseLeave={() => setHovNav(-1)}
-                                style={{
-                                    fontFamily: I,
-                                    fontSize: 12,
-                                    fontWeight: active === i ? 600 : 500,
-                                    color: active === i ? T.ink : hovNav === i ? T.ink2 : T.ink3,
-                                    backgroundColor:
-                                        active === i ? "#EBEBEA" : hovNav === i ? "rgba(0,0,0,0.04)" : "transparent",
-                                    border: "none",
-                                    borderRadius: 30,
-                                    padding: "7px 16px",
-                                    cursor: "pointer",
-                                    outline: "none",
-                                    transition: "color 0.15s, background 0.15s",
-                                    whiteSpace: "nowrap" as const,
-                                    lineHeight: 1,
-                                    letterSpacing: "-0.01em",
-                                    minHeight: 44,
-                                    flexShrink: 0,
-                                }}
-                            >
-                                {s.num} — {s.label}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
                 {/* [01] Visual Design */}
-                <div ref={ref0} style={{ paddingTop: 72, marginBottom: 80 }}>
+                <div id="visual-design" style={{ scrollMarginTop: 80, paddingTop: 72, marginBottom: 80 }}>
                     <SectionHeader {...SECTIONS[0]} />
                     <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: 14 }}>
                         <div style={{ display: "flex", flexDirection: "column" as const, gap: 14 }}>
@@ -349,7 +332,7 @@ export default function PlaygroundPage() {
                 </div>
 
                 {/* [02] Photography */}
-                <div ref={ref1} style={{ paddingTop: 72, marginBottom: 80 }}>
+                <div id="photography" style={{ scrollMarginTop: 80, paddingTop: 72, marginBottom: 80 }}>
                     <SectionHeader {...SECTIONS[1]} />
                     <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
                         <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: 12 }}>
@@ -370,7 +353,7 @@ export default function PlaygroundPage() {
                 </div>
 
                 {/* [03] Motion */}
-                <div ref={ref2} style={{ paddingTop: 72, marginBottom: 80 }}>
+                <div id="motion" style={{ scrollMarginTop: 80, paddingTop: 72, marginBottom: 80 }}>
                     <SectionHeader {...SECTIONS[2]} />
                     <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr 1fr", gap: 14 }}>
                         {MOTION_EMBEDS.map((src, i) => (
@@ -380,7 +363,7 @@ export default function PlaygroundPage() {
                 </div>
 
                 {/* [04] Projects */}
-                <div ref={ref3} style={{ paddingTop: 72, marginBottom: 80 }}>
+                <div id="projects" style={{ scrollMarginTop: 80, paddingTop: 72, marginBottom: 80 }}>
                     <SectionHeader {...SECTIONS[3]} />
                     <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: 14 }}>
                         {PROJECTS_EMBEDS.map((src, i) => (
@@ -423,6 +406,7 @@ export default function PlaygroundPage() {
                     <p style={{ fontFamily: I, fontSize: 12, color: T.muted, margin: 0 }}>
                         © {new Date().getFullYear()} Omisha Chabria
                     </p>
+                </div>
                 </div>
             </div>
         </div>
