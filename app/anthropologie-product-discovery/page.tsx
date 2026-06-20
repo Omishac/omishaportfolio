@@ -230,7 +230,11 @@ export default function AnthropologieProductDiscovery() {
                     {/* ════════ OVERVIEW ════════ */}
                     <section id="overview" style={{ scrollMarginTop: 80, paddingTop: phone ? 48 : 40 }}>
                         <FadeIn>
-                            <Placeholder label="Hero Mockup — Final filter experience across mobile and desktop" aspect="52%" />
+                            <video
+                                src="/videos/product-discovery-hero.mp4"
+                                autoPlay loop muted playsInline
+                                style={{ width: "100%", display: "block", borderRadius: 14 }}
+                            />
                         </FadeIn>
 
                         <FadeIn delay={80}>
