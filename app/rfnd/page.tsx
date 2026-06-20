@@ -315,34 +315,27 @@ function MoodCarousel() {
     )
 }
 
-// ── Side chapter nav ──────────────────────────────────────────────────────────
-function SideChapterNav({ active }: { active: string }) {
+// ── Side nav ─────────────────────────────────────────────────────────────────
+function SideNav({ active }: { active: string }) {
     return (
-        <nav style={{
-            position: "sticky", top: 80, paddingTop: 0, paddingLeft: 0,
-            alignSelf: "start",
-        }}>
+        <nav>
             {SECTIONS.map(({ id, label }) => {
                 const isActive = active === id
                 return (
                     <a key={id} href={`#${id}`}
                         onClick={(e) => { e.preventDefault(); document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" }) }}
                         style={{
-                            display: "flex", alignItems: "center", gap: 10, padding: "7px 0",
-                            textDecoration: "none", opacity: isActive ? 1 : 0.35, transition: "opacity 0.3s ease",
+                            display: "block", padding: "6px 0",
+                            textDecoration: "none", transition: "opacity 0.3s ease",
+                            opacity: isActive ? 1 : 0.3,
                         }}
                     >
                         <span style={{
-                            width: isActive ? 24 : 14, height: 1.5,
-                            backgroundColor: isActive ? C.pink : C.ink,
-                            transition: "width 0.35s cubic-bezier(0.22,1,0.36,1), background-color 0.3s",
-                            flexShrink: 0,
-                        }} />
-                        <span style={{
-                            fontFamily: INTER, fontSize: 10, fontWeight: isActive ? 600 : 400,
-                            color: isActive ? C.pink : C.ink,
-                            letterSpacing: "0.05em", textTransform: "uppercase", whiteSpace: "nowrap",
-                            transition: "color 0.3s",
+                            fontFamily: INTER, fontSize: 10, fontWeight: isActive ? 700 : 400,
+                            color: C.ink, letterSpacing: "0.06em", textTransform: "uppercase",
+                            transition: "font-weight 0.2s",
+                            borderLeft: isActive ? `2px solid ${C.pink}` : "2px solid transparent",
+                            paddingLeft: 12,
                         }}>
                             {label}
                         </span>
@@ -448,22 +441,23 @@ export default function RFNDCaseStudy() {
             <div style={{
                 display: desktop ? "grid" : "block",
                 gridTemplateColumns: desktop ? "140px 1fr" : undefined,
-                maxWidth: desktop ? 1140 : 1040,
+                gap: desktop ? 48 : undefined,
+                maxWidth: 1400,
                 margin: "0 auto",
-                padding: desktop ? "0 40px" : undefined,
-                gap: desktop ? "0 40px" : undefined,
+                padding: `0 ${phone ? 20 : tablet ? 40 : 80}px 180px`,
             }}>
                 {/* ── Left rail ── */}
                 {desktop && (
-                    <aside style={{ position: "relative" }}>
-                        <SideChapterNav active={activeSection} />
+                    <aside>
+                        <div style={{ position: "sticky", top: 80, paddingTop: 40 }}>
+                            <SideNav active={activeSection} />
+                        </div>
                     </aside>
                 )}
 
                 {/* ── Content column ── */}
                 <div style={{
-                    padding: phone ? "0 20px 160px" : tablet ? "0 40px 160px" : "0 0 160px",
-                    maxWidth: desktop ? 920 : 1040,
+                    padding: `0 ${phone ? 20 : tablet ? 40 : 0}px 180px`,
                 }}>
 
                     {/* ═══════════════════════ OVERVIEW ═══════════════════════ */}

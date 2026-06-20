@@ -17,6 +17,19 @@ const C = {
     border: "rgba(0,0,0,0.07)",
 }
 
+const SECTIONS = [
+    { id: "overview", label: "Overview" },
+    { id: "context", label: "Context" },
+    { id: "trends", label: "Trends" },
+    { id: "benchmarking", label: "Benchmarking" },
+    { id: "ab-tests", label: "A/B Tests" },
+    { id: "findings", label: "Findings" },
+    { id: "insight", label: "Insight" },
+    { id: "recommendations", label: "Recommendations" },
+    { id: "impact", label: "Impact" },
+    { id: "reflection", label: "Reflection" },
+]
+
 // ── Responsive hook ────────────────────────────────────────────────────────────
 function useResponsive() {
     const [phone, setPhone] = useState(false)
@@ -31,7 +44,7 @@ function useResponsive() {
         window.addEventListener("resize", check, { passive: true })
         return () => window.removeEventListener("resize", check)
     }, [])
-    return { phone, tablet }
+    return { phone, tablet, desktop: !phone && !tablet }
 }
 
 // ── Utilities ─────────────────────────────────────────────────────────────────
@@ -52,6 +65,24 @@ function useInView(threshold = 0.1) {
         return () => obs.disconnect()
     }, [])
     return { ref, visible }
+}
+
+function useActiveSection(ids: string[]) {
+    const [active, setActive] = useState("")
+    useEffect(() => {
+        const onScroll = () => {
+            let best = ""; let bestDist = Infinity
+            for (const id of ids) {
+                const el = document.getElementById(id)
+                if (el) { const top = el.getBoundingClientRect().top; if (top <= 200 && Math.abs(top) < bestDist) { bestDist = Math.abs(top); best = id } }
+            }
+            if (best) setActive(best)
+        }
+        onScroll()
+        window.addEventListener("scroll", onScroll, { passive: true })
+        return () => window.removeEventListener("scroll", onScroll)
+    }, [])
+    return active
 }
 
 function useCounter(target: number, active: boolean, duration = 1200) {
@@ -1073,9 +1104,40 @@ function StatCell({ pct, lbl, i, total, phone }: { pct: string; lbl: string; i: 
     )
 }
 
+function SideNav({ active }: { active: string }) {
+    return (
+        <nav>
+            {SECTIONS.map(({ id, label }) => {
+                const isActive = active === id
+                return (
+                    <a key={id} href={`#${id}`}
+                        onClick={(e) => { e.preventDefault(); document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" }) }}
+                        style={{
+                            display: "block", padding: "6px 0",
+                            textDecoration: "none", transition: "opacity 0.3s ease",
+                            opacity: isActive ? 1 : 0.3,
+                        }}
+                    >
+                        <span style={{
+                            fontFamily: INTER, fontSize: 10, fontWeight: isActive ? 700 : 400,
+                            color: C.ink, letterSpacing: "0.06em", textTransform: "uppercase",
+                            transition: "font-weight 0.2s",
+                            borderLeft: isActive ? `2px solid ${C.ink}` : "2px solid transparent",
+                            paddingLeft: 12,
+                        }}>
+                            {label}
+                        </span>
+                    </a>
+                )
+            })}
+        </nav>
+    )
+}
+
 export default function AnthropologieCaseStudy() {
-    const { phone, tablet } = useResponsive()
+    const { phone, tablet, desktop } = useResponsive()
     const pad = phone ? 20 : tablet ? 40 : 80
+    const activeSection = useActiveSection(SECTIONS.map(s => s.id))
 
     const [activeFinding, setActiveFinding] = useState(0)
     const [activeRec, setActiveRec] = useState<number | null>(null)
@@ -1146,14 +1208,25 @@ export default function AnthropologieCaseStudy() {
             <CaseStudyNav />
             <div
                 style={{
-                    maxWidth: 1040,
+                    display: desktop ? "grid" : "block",
+                    gridTemplateColumns: desktop ? "140px 1fr" : undefined,
+                    gap: desktop ? 48 : undefined,
+                    maxWidth: 1400,
                     margin: "0 auto",
-                    padding: `0 ${pad}px 160px`,
+                    padding: `0 ${pad}px 180px`,
                 }}
             >
+                {desktop && (
+                    <aside>
+                        <div style={{ position: "sticky", top: 80, paddingTop: 40 }}>
+                            <SideNav active={activeSection} />
+                        </div>
+                    </aside>
+                )}
+                <div>
                 {/* ── HERO ── */}
                 <FadeIn>
-                    <div style={{ paddingTop: phone ? "48px" : "80px", paddingBottom: "64px" }}>
+                    <div id="overview" style={{ scrollMarginTop: 80, paddingTop: phone ? "48px" : "80px", paddingBottom: "64px" }}>
                         <p
                             style={{
                                 fontFamily: INTER,
@@ -1389,6 +1462,7 @@ export default function AnthropologieCaseStudy() {
                 </FadeIn>
 
                 {/* ── 01 CONTEXT ── */}
+                <div id="context" style={{ scrollMarginTop: 80 }} />
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1433,6 +1507,7 @@ export default function AnthropologieCaseStudy() {
                 </FadeIn>
 
                 {/* ── 02 TRENDS ── */}
+                <div id="trends" style={{ scrollMarginTop: 80 }} />
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1519,6 +1594,7 @@ export default function AnthropologieCaseStudy() {
                 </FadeIn>
 
                 {/* ── 03 BENCHMARKING ── */}
+                <div id="benchmarking" style={{ scrollMarginTop: 80 }} />
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1611,6 +1687,7 @@ export default function AnthropologieCaseStudy() {
                 </FadeIn>
 
                 {/* ── 04 A/B TESTS ── */}
+                <div id="ab-tests" style={{ scrollMarginTop: 80 }} />
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1677,6 +1754,7 @@ export default function AnthropologieCaseStudy() {
                 </FadeIn>
 
                 {/* ── 05 FINDINGS ── */}
+                <div id="findings" style={{ scrollMarginTop: 80 }} />
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1700,6 +1778,7 @@ export default function AnthropologieCaseStudy() {
                 </FadeIn>
 
                 {/* ── 06 INSIGHT ── */}
+                <div id="insight" style={{ scrollMarginTop: 80 }} />
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1735,6 +1814,7 @@ export default function AnthropologieCaseStudy() {
                 </FadeIn>
 
                 {/* ── 07 RECOMMENDATIONS ── */}
+                <div id="recommendations" style={{ scrollMarginTop: 80 }} />
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1763,6 +1843,7 @@ export default function AnthropologieCaseStudy() {
                 </FadeIn>
 
                 {/* ── 08 IMPACT ── */}
+                <div id="impact" style={{ scrollMarginTop: 80 }} />
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1789,6 +1870,7 @@ export default function AnthropologieCaseStudy() {
                 </FadeIn>
 
                 {/* ── 09 REFLECTION ── */}
+                <div id="reflection" style={{ scrollMarginTop: 80 }} />
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1889,6 +1971,7 @@ export default function AnthropologieCaseStudy() {
                     </a>
                 </div>
 
+                </div>
             </div>
         </div>
     )

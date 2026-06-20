@@ -18,6 +18,19 @@ const C = {
     surface: "#F5F5F3",
 }
 
+const SECTIONS = [
+    { id: "overview", label: "Overview" },
+    { id: "ecosystem", label: "Ecosystem" },
+    { id: "problem", label: "Problem" },
+    { id: "friction", label: "Friction Points" },
+    { id: "exploration", label: "Exploration" },
+    { id: "why-it-matters", label: "Why It Matters" },
+    { id: "solution", label: "Solution" },
+    { id: "experience", label: "Experience" },
+    { id: "outcome", label: "Outcome" },
+    { id: "reflection", label: "Reflection" },
+]
+
 // ── Responsive hook ────────────────────────────────────────────────────────────
 function useResponsive() {
     const [phone, setPhone] = useState(false)
@@ -32,7 +45,25 @@ function useResponsive() {
         window.addEventListener("resize", check, { passive: true })
         return () => window.removeEventListener("resize", check)
     }, [])
-    return { phone, tablet }
+    return { phone, tablet, desktop: !phone && !tablet }
+}
+
+function useActiveSection(ids: string[]) {
+    const [active, setActive] = useState("")
+    useEffect(() => {
+        const onScroll = () => {
+            let best = ""; let bestDist = Infinity
+            for (const id of ids) {
+                const el = document.getElementById(id)
+                if (el) { const top = el.getBoundingClientRect().top; if (top <= 200 && Math.abs(top) < bestDist) { bestDist = Math.abs(top); best = id } }
+            }
+            if (best) setActive(best)
+        }
+        onScroll()
+        window.addEventListener("scroll", onScroll, { passive: true })
+        return () => window.removeEventListener("scroll", onScroll)
+    }, [])
+    return active
 }
 
 function useInView(threshold = 0.1) {
@@ -223,6 +254,36 @@ function Pill({ label }: { label: string }) {
                 {label}
             </span>
         </div>
+    )
+}
+
+function SideNav({ active }: { active: string }) {
+    return (
+        <nav>
+            {SECTIONS.map(({ id, label }) => {
+                const isActive = active === id
+                return (
+                    <a key={id} href={`#${id}`}
+                        onClick={(e) => { e.preventDefault(); document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" }) }}
+                        style={{
+                            display: "block", padding: "6px 0",
+                            textDecoration: "none", transition: "opacity 0.3s ease",
+                            opacity: isActive ? 1 : 0.3,
+                        }}
+                    >
+                        <span style={{
+                            fontFamily: I, fontSize: 10, fontWeight: isActive ? 700 : 400,
+                            color: C.ink, letterSpacing: "0.06em", textTransform: "uppercase",
+                            transition: "font-weight 0.2s",
+                            borderLeft: isActive ? `2px solid ${C.muted}` : "2px solid transparent",
+                            paddingLeft: 12,
+                        }}>
+                            {label}
+                        </span>
+                    </a>
+                )
+            })}
+        </nav>
     )
 }
 
@@ -1483,8 +1544,9 @@ function ResultCard({ num, label }: { num: string; label: string }) {
 }
 
 export default function IOSCaseStudy() {
-    const { phone, tablet } = useResponsive()
+    const { phone, tablet, desktop } = useResponsive()
     const pad = phone ? 20 : tablet ? 40 : 80
+    const activeSection = useActiveSection(SECTIONS.map(s => s.id))
 
     const statsRef = useRef<HTMLDivElement>(null)
     const [statsVis, setStatsVis] = useState(false)
@@ -1543,15 +1605,28 @@ export default function IOSCaseStudy() {
             <CaseStudyNav />
             <div
                 style={{
-                    maxWidth: 1040,
+                    display: desktop ? "grid" : "block",
+                    gridTemplateColumns: desktop ? "140px 1fr" : undefined,
+                    gap: desktop ? 48 : undefined,
+                    maxWidth: 1400,
                     margin: "0 auto",
-                    padding: `0 ${pad}px 160px`,
+                    padding: `0 ${pad}px 180px`,
                 }}
             >
+                {desktop && (
+                    <aside>
+                        <div style={{ position: "sticky", top: 80, paddingTop: 40 }}>
+                            <SideNav active={activeSection} />
+                        </div>
+                    </aside>
+                )}
+
+                <div>
                 {/* ── HERO ── */}
                 <div
+                    id="overview"
                     ref={hero.ref}
-                    style={{ ...hero.style, paddingTop: phone ? 48 : 88, paddingBottom: phone ? 36 : 56 }}
+                    style={{ ...hero.style, scrollMarginTop: 80, paddingTop: phone ? 48 : 88, paddingBottom: phone ? 36 : 56 }}
                 >
                     <Pill label="iOS · Mobile Experience · URBN" />
                     <h1
@@ -1645,7 +1720,7 @@ export default function IOSCaseStudy() {
 
                 {/* ── 01 ECOSYSTEM ── */}
                 <Divider />
-                <div ref={eco.ref} style={eco.style}>
+                <div id="ecosystem" ref={eco.ref} style={{ ...eco.style, scrollMarginTop: 80 }}>
                     <Pill label="01 — Business Context" />
                     <h2
                         style={{
@@ -1692,7 +1767,7 @@ export default function IOSCaseStudy() {
 
                 {/* ── 02 PROBLEM ── */}
                 <Divider />
-                <div ref={prob.ref} style={prob.style}>
+                <div id="problem" ref={prob.ref} style={{ ...prob.style, scrollMarginTop: 80 }}>
                     <Pill label="02 — The Problem" />
                     <h2
                         style={{
@@ -1777,7 +1852,7 @@ export default function IOSCaseStudy() {
 
                 {/* ── 03 FRICTION POINTS ── */}
                 <Divider />
-                <div ref={friction.ref} style={friction.style}>
+                <div id="friction" ref={friction.ref} style={{ ...friction.style, scrollMarginTop: 80 }}>
                     <div style={{ marginBottom: 28 }}>
                         <Pill label="03 — Friction Points" />
                         <p
@@ -1829,11 +1904,13 @@ export default function IOSCaseStudy() {
 
                 {/* ── 04 EXPLORATION PROCESS ── */}
                 <Divider />
-                <ProcessSection phone={phone} />
+                <div id="exploration" style={{ scrollMarginTop: 80 }}>
+                    <ProcessSection phone={phone} />
+                </div>
 
                 {/* ── 05 WHY IT MATTERS ── */}
                 <Divider />
-                <div ref={why.ref} style={why.style}>
+                <div id="why-it-matters" ref={why.ref} style={{ ...why.style, scrollMarginTop: 80 }}>
                     <Pill label="05 — Why It Matters" />
                     <h2
                         style={{
@@ -1970,7 +2047,7 @@ export default function IOSCaseStudy() {
 
                 {/* ── 06 FROM CONSTRAINTS TO SOLUTION ── */}
                 <Divider />
-                <div ref={constraints.ref} style={constraints.style}>
+                <div id="solution" ref={constraints.ref} style={{ ...constraints.style, scrollMarginTop: 80 }}>
                     <Pill label="06 — From Constraints to Solution" />
                     <h2
                         style={{
@@ -2110,7 +2187,7 @@ export default function IOSCaseStudy() {
 
                 {/* ── 07 EXPERIENCE ── */}
                 <Divider />
-                <div ref={experience.ref} style={experience.style}>
+                <div id="experience" ref={experience.ref} style={{ ...experience.style, scrollMarginTop: 80 }}>
                     <Pill label="07 — The Experience" />
                     <h2
                         style={{
@@ -2179,7 +2256,7 @@ export default function IOSCaseStudy() {
 
                 {/* ── 08 OUTCOME ── */}
                 <Divider />
-                <div ref={outcome.ref} style={outcome.style}>
+                <div id="outcome" ref={outcome.ref} style={{ ...outcome.style, scrollMarginTop: 80 }}>
                     <Pill label="08 — Outcome" />
                     <h2
                         style={{
@@ -2254,7 +2331,7 @@ export default function IOSCaseStudy() {
 
                 {/* ── 09 REFLECTION ── */}
                 <Divider />
-                <div ref={reflection.ref} style={reflection.style}>
+                <div id="reflection" ref={reflection.ref} style={{ ...reflection.style, scrollMarginTop: 80 }}>
                     <Pill label="09 — Reflection" />
                     <h2
                         style={{
@@ -2357,6 +2434,7 @@ export default function IOSCaseStudy() {
                     </a>
                 </div>
 
+                </div>
             </div>
         </div>
     )

@@ -18,6 +18,18 @@ const C = {
     border: "rgba(0,0,0,0.07)",
 }
 
+const SECTIONS = [
+    { id: "overview", label: "Overview" },
+    { id: "problem", label: "Problem" },
+    { id: "goal", label: "Goal" },
+    { id: "strategy", label: "Strategy" },
+    { id: "targeting", label: "Targeting" },
+    { id: "creative", label: "Creative" },
+    { id: "results", label: "Results" },
+    { id: "insights", label: "Insights" },
+    { id: "reflection", label: "Reflection" },
+]
+
 // ── Responsive hook ────────────────────────────────────────────────────────────
 function useResponsive() {
     const [phone, setPhone] = useState(false)
@@ -32,7 +44,7 @@ function useResponsive() {
         window.addEventListener("resize", check, { passive: true })
         return () => window.removeEventListener("resize", check)
     }, [])
-    return { phone, tablet }
+    return { phone, tablet, desktop: !phone && !tablet }
 }
 
 // ── Utilities ─────────────────────────────────────────────────────────────────
@@ -53,6 +65,24 @@ function useInView(threshold = 0.1) {
         return () => obs.disconnect()
     }, [])
     return { ref, visible }
+}
+
+function useActiveSection(ids: string[]) {
+    const [active, setActive] = useState("")
+    useEffect(() => {
+        const onScroll = () => {
+            let best = ""; let bestDist = Infinity
+            for (const id of ids) {
+                const el = document.getElementById(id)
+                if (el) { const top = el.getBoundingClientRect().top; if (top <= 200 && Math.abs(top) < bestDist) { bestDist = Math.abs(top); best = id } }
+            }
+            if (best) setActive(best)
+        }
+        onScroll()
+        window.addEventListener("scroll", onScroll, { passive: true })
+        return () => window.removeEventListener("scroll", onScroll)
+    }, [])
+    return active
 }
 
 function useCounter(target: number, active: boolean, duration = 1200) {
@@ -266,6 +296,36 @@ function AnimStat({
     )
 }
 
+
+function SideNav({ active }: { active: string }) {
+    return (
+        <nav>
+            {SECTIONS.map(({ id, label }) => {
+                const isActive = active === id
+                return (
+                    <a key={id} href={`#${id}`}
+                        onClick={(e) => { e.preventDefault(); document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" }) }}
+                        style={{
+                            display: "block", padding: "6px 0",
+                            textDecoration: "none", transition: "opacity 0.3s ease",
+                            opacity: isActive ? 1 : 0.3,
+                        }}
+                    >
+                        <span style={{
+                            fontFamily: INTER, fontSize: 10, fontWeight: isActive ? 700 : 400,
+                            color: C.ink, letterSpacing: "0.06em", textTransform: "uppercase",
+                            transition: "font-weight 0.2s",
+                            borderLeft: isActive ? `2px solid ${C.muted}` : "2px solid transparent",
+                            paddingLeft: 12,
+                        }}>
+                            {label}
+                        </span>
+                    </a>
+                )
+            })}
+        </nav>
+    )
+}
 
 function CaseStudyNav() {
     const [scrolled, setScrolled] = useState(false)
@@ -970,7 +1030,8 @@ function InstaPhoneCard({ src, label, filename }: { src?: string; label: string;
 }
 
 export default function BoardAndBrewCaseStudy() {
-    const { phone, tablet } = useResponsive()
+    const { phone, tablet, desktop } = useResponsive()
+    const activeSection = useActiveSection(SECTIONS.map(s => s.id))
     const pad = phone ? 20 : tablet ? 40 : 80
 
     const { ref: metricsRef, visible: metricsVisible } = useInView(0.2)
@@ -1008,12 +1069,24 @@ export default function BoardAndBrewCaseStudy() {
             <CaseStudyNav />
             <div
                 style={{
-                    maxWidth: 1040,
+                    display: desktop ? "grid" : "block",
+                    gridTemplateColumns: desktop ? "140px 1fr" : undefined,
+                    gap: desktop ? 48 : undefined,
+                    maxWidth: 1400,
                     margin: "0 auto",
-                    padding: `0 ${pad}px 80px`,
+                    padding: `0 ${pad}px 180px`,
                 }}
             >
+                {desktop && (
+                    <aside>
+                        <div style={{ position: "sticky", top: 80, paddingTop: 40 }}>
+                            <SideNav active={activeSection} />
+                        </div>
+                    </aside>
+                )}
+                <div>
                 {/* ── HERO ── */}
+                <div id="overview" style={{ scrollMarginTop: 80 }}>
                 <FadeIn>
                     <div style={{ paddingTop: phone ? "48px" : "80px", paddingBottom: "64px" }}>
                         <p
@@ -1156,8 +1229,10 @@ export default function BoardAndBrewCaseStudy() {
                         maxWidth: "100%",
                     }}
                 />
+                </div>
 
                 {/* ── 01 PROBLEM ── */}
+                <div id="problem" style={{ scrollMarginTop: 80 }}>
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1181,8 +1256,10 @@ export default function BoardAndBrewCaseStudy() {
                         brand for the first time.
                     </Body>
                 </FadeIn>
+                </div>
 
                 {/* ── 02 GOAL ── */}
+                <div id="goal" style={{ scrollMarginTop: 80 }}>
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1204,8 +1281,10 @@ export default function BoardAndBrewCaseStudy() {
                         Board & Brew served dinner and drinks.
                     </Body>
                 </FadeIn>
+                </div>
 
                 {/* ── 03 STRATEGY ── */}
+                <div id="strategy" style={{ scrollMarginTop: 80 }}>
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1283,8 +1362,10 @@ export default function BoardAndBrewCaseStudy() {
                         ))}
                     </div>
                 </FadeIn>
+                </div>
 
                 {/* ── 04 TARGETING ── */}
+                <div id="targeting" style={{ scrollMarginTop: 80 }}>
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1306,8 +1387,10 @@ export default function BoardAndBrewCaseStudy() {
                         constraints.
                     </Body>
                 </FadeIn>
+                </div>
 
                 {/* ── 05 CREATIVE ── */}
+                <div id="creative" style={{ scrollMarginTop: 80 }}>
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1501,8 +1584,10 @@ export default function BoardAndBrewCaseStudy() {
                         </p>
                     </div>
                 </FadeIn>
+                </div>
 
                 {/* ── 06 RESULTS ── */}
+                <div id="results" style={{ scrollMarginTop: 80 }}>
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1546,8 +1631,10 @@ export default function BoardAndBrewCaseStudy() {
                         cost per thousand impressions.
                     </Body>
                 </FadeIn>
+                </div>
 
                 {/* ── 07 KEY INSIGHTS ── */}
+                <div id="insights" style={{ scrollMarginTop: 80 }}>
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1633,8 +1720,10 @@ export default function BoardAndBrewCaseStudy() {
                         />
                     ))}
                 </FadeIn>
+                </div>
 
                 {/* ── 10 REFLECTION ── */}
+                <div id="reflection" style={{ scrollMarginTop: 80 }}>
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1704,6 +1793,8 @@ export default function BoardAndBrewCaseStudy() {
                         </p>
                     </div>
                 </FadeIn>
+                </div>
+                </div>
             </div>
 
             {/* ── FINAL PRESENTATION ── */}
