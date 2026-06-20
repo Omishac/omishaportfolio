@@ -210,7 +210,7 @@ export default function AnthropologieProductDiscovery() {
             <CaseStudyNav />
 
             {desktop && (
-                <div style={{ position: "fixed", left: 48, top: 80, zIndex: 50 }}>
+                <div style={{ position: "fixed", left: 80, top: 80, zIndex: 50 }}>
                     <SideNav active={activeSection} />
                 </div>
             )}
