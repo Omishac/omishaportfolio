@@ -40,6 +40,12 @@ export default function IntroLoader({ onComplete }: { onComplete: () => void }) 
     }, [onComplete])
 
     useEffect(() => {
+        const onKey = (e: KeyboardEvent) => { if (e.key === "Enter" || e.key === " ") skip() }
+        window.addEventListener("keydown", onKey)
+        return () => window.removeEventListener("keydown", onKey)
+    }, [skip])
+
+    useEffect(() => {
         if (reduced) { onComplete(); return }
         const t: ReturnType<typeof setTimeout>[] = []
 
@@ -58,11 +64,11 @@ export default function IntroLoader({ onComplete }: { onComplete: () => void }) 
     const bw = ph ? 200 : 300
 
     return (
-        <motion.div style={{
+        <motion.div onClick={skip} style={{
             position: "fixed", inset: 0, zIndex: 10000,
             backgroundColor: "#0A0A0A", backgroundImage: GRAIN, backgroundSize: "200px",
             display: "flex", alignItems: "center", justifyContent: "center",
-            overflow: "hidden",
+            overflow: "hidden", cursor: "pointer",
         }}>
             {/* Skip */}
             <motion.button onClick={skip}

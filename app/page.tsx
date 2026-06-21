@@ -491,7 +491,7 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
         href: "/anthropologie-product-discovery",
         image: "https://framerusercontent.com/images/vE5NBaasSteSM6lORQbcDZsAU.png",
         video: "/videos/product-discovery-hero.mp4",
-        title: "Redesigning Product Filters Across the URBN Ecosystem",
+        title: "URBN Product Filter Redesign",
         tags: ["Product Design", "Design Systems", "E-Commerce"],
         company: "URBN",
     },
