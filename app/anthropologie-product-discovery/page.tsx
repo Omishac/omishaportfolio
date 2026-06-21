@@ -252,7 +252,7 @@ export default function AnthropologieProductDiscovery() {
                                         lineHeight: 1.05, letterSpacing: "-0.035em", color: C.ink,
                                         marginBottom: desktop ? 0 : 24,
                                     }}>
-                                        Designing Confidence in Product Discovery
+                                        Redesigning Product Filters Across the URBN Ecosystem
                                     </h1>
                                 </div>
                                 <div style={{ paddingTop: desktop ? 36 : 0 }}>
@@ -260,7 +260,7 @@ export default function AnthropologieProductDiscovery() {
                                         fontFamily: INTER, fontSize: 14, lineHeight: 1.7,
                                         color: C.ink3, marginBottom: 20,
                                     }}>
-                                        Redesigning filters across Mobile Web and Desktop to help shoppers feel confident navigating large product catalogs.
+                                        Improving product discovery across Mobile Web and Desktop for Anthropologie, Urban Outfitters, and Free People.
                                     </p>
                                     <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 24 }}>
                                         {["Product Design", "Design Systems", "E-Commerce"].map(tag => (
