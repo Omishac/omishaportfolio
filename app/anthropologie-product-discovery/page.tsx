@@ -615,47 +615,270 @@ export default function AnthropologieProductDiscovery() {
 
                     {/* ════════ COMPONENT DESIGN ════════ */}
                     <section id="component" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+
+                        {/* Intro */}
                         <FadeIn>
                             <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Component Design</p>
                             <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
-                                Contributing to the design system
+                                Creating a Reusable Toggle Component
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 560, marginBottom: 56 }}>
-                                The existing design system lacked a toggle component for inventory filters. I designed one from scratch: accessible, reusable, and consistent across platforms.
+                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 560, marginBottom: 80 }}>
+                                The redesigned filtering experience introduced a new inventory interaction pattern, but the existing design system lacked a component that supported the behavior we needed. Rather than adapting an existing pattern, I designed a reusable toggle component that could scale across future filtering experiences.
                             </p>
                         </FadeIn>
 
-                        <FadeIn delay={60}>
-                            <Placeholder label="Toggle component evolution: problem to final" aspect="44%" />
+                        {/* ── Part 1: Exploring Interaction Patterns ── */}
+                        <FadeIn>
+                            <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Exploration</p>
+                            <h3 style={{ fontFamily: Z, fontSize: phone ? 24 : 32, fontWeight: 700, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.1, marginBottom: 32 }}>
+                                Exploring Interaction Patterns
+                            </h3>
                         </FadeIn>
 
-                        <FadeIn delay={120}>
+                        <FadeIn delay={60}>
                             <div style={{
-                                display: "grid", gridTemplateColumns: phone ? "1fr" : "repeat(4, 1fr)",
-                                gap: 0, marginTop: 48, borderTop: `1px solid ${C.border}`,
+                                display: "grid", gridTemplateColumns: phone ? "1fr 1fr" : "repeat(4, 1fr)",
+                                gap: phone ? 12 : 16,
                             }}>
-                                {[
-                                    { step: "Problem", desc: "No component existed for binary inventory states" },
-                                    { step: "Explorations", desc: "Tested against accessibility and touch-target requirements" },
-                                    { step: "Final", desc: "WCAG-compliant, 44px touch targets, multiple state behaviors" },
-                                    { step: "Specifications", desc: "Documented for reuse across all three brand platforms" },
-                                ].map((item, i) => (
+                                {["Version 1", "Version 2", "Version 3", "Final Direction"].map((v, i) => (
                                     <div key={i} style={{
-                                        padding: phone ? "24px 0" : "28px 24px 28px 0",
-                                        borderBottom: phone ? `1px solid ${C.border}` : "none",
-                                        borderRight: !phone && i < 3 ? `1px solid ${C.border}` : "none",
-                                        paddingLeft: !phone && i > 0 ? 24 : 0,
+                                        backgroundColor: i === 3 ? C.ink : C.surface,
+                                        borderRadius: 12, overflow: "hidden",
                                     }}>
-                                        <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: C.olive, marginBottom: 10, textTransform: "uppercase" }}>{item.step}</p>
-                                        <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.6, color: C.ink3, margin: 0 }}>{item.desc}</p>
+                                        <div style={{
+                                            width: "100%", paddingTop: "120%", position: "relative",
+                                        }}>
+                                            <div style={{
+                                                position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
+                                            }}>
+                                                <span style={{
+                                                    fontFamily: INTER, fontSize: 10, fontWeight: 600, letterSpacing: "0.1em",
+                                                    textTransform: "uppercase", color: i === 3 ? "rgba(255,255,255,0.25)" : C.muted,
+                                                }}>Component exploration</span>
+                                            </div>
+                                        </div>
+                                        <div style={{ padding: phone ? "14px" : "16px 20px" }}>
+                                            <p style={{
+                                                fontFamily: INTER, fontSize: 11, fontWeight: 600,
+                                                color: i === 3 ? "#fff" : C.ink, margin: 0,
+                                            }}>{v}</p>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
                         </FadeIn>
 
-                        <FadeIn delay={180}>
-                            <div style={{ marginTop: 48 }}>
-                                <Placeholder label="Final component specs: states, sizing, color tokens, interaction behavior" aspect="56%" />
+                        <FadeIn delay={90}>
+                            <p style={{
+                                fontFamily: INTER, fontSize: 13, lineHeight: 1.7, color: C.ink3,
+                                marginTop: 24, maxWidth: 600,
+                            }}>
+                                Multiple approaches were explored to improve visibility, interaction feedback, reduce ambiguity, and maintain consistency with existing filtering patterns.
+                            </p>
+                        </FadeIn>
+
+                        {/* ── Part 2: Final Component ── */}
+                        <FadeIn>
+                            <div style={{ marginTop: 80 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Final Component</p>
+                                <h3 style={{ fontFamily: Z, fontSize: phone ? 24 : 32, fontWeight: 700, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.1, marginBottom: 32 }}>
+                                    The selected direction
+                                </h3>
+                            </div>
+                        </FadeIn>
+
+                        <FadeIn delay={60}>
+                            <Placeholder label="Final toggle component: default, active, hover, and disabled states in product context" aspect={phone ? "80%" : "50%"} />
+                        </FadeIn>
+
+                        <FadeIn delay={120}>
+                            <div style={{
+                                display: "grid", gridTemplateColumns: phone ? "1fr" : "repeat(4, 1fr)",
+                                gap: phone ? 12 : 16, marginTop: 24,
+                            }}>
+                                {[
+                                    { title: "Accessibility", desc: "WCAG 2.1 AA compliant with visible focus indicators and screen reader support" },
+                                    { title: "Touch Targets", desc: "Minimum 44px targets across all interactive states" },
+                                    { title: "State Visibility", desc: "Clear visual distinction between default, active, hover, and disabled" },
+                                    { title: "Scalability", desc: "Flexible enough to support future inventory and filtering patterns" },
+                                ].map((card, i) => (
+                                    <div key={i} style={{
+                                        backgroundColor: C.surface, borderRadius: 12,
+                                        padding: phone ? "24px" : "28px",
+                                    }}>
+                                        <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: C.olive, marginBottom: 10, textTransform: "uppercase" }}>{card.title}</p>
+                                        <p style={{ fontFamily: INTER, fontSize: 12.5, lineHeight: 1.6, color: C.ink3, margin: 0 }}>{card.desc}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </FadeIn>
+
+                        {/* ── Part 3: Adapting Across Brands ── */}
+                        <FadeIn>
+                            <div style={{ marginTop: 80 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Adapting Across Brands</p>
+                                <h3 style={{ fontFamily: Z, fontSize: phone ? 24 : 32, fontWeight: 700, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.1, marginBottom: 32 }}>
+                                    One pattern, three brand expressions
+                                </h3>
+                            </div>
+                        </FadeIn>
+
+                        <FadeIn delay={60}>
+                            <div style={{
+                                display: "grid", gridTemplateColumns: phone ? "1fr" : "repeat(3, 1fr)",
+                                gap: phone ? 12 : 16,
+                            }}>
+                                {[
+                                    { brand: "Anthropologie", color: "#3D4F2F" },
+                                    { brand: "Urban Outfitters", color: "#1A1A1A" },
+                                    { brand: "Free People", color: "#8B6914" },
+                                ].map((b, i) => (
+                                    <div key={i} style={{
+                                        borderRadius: 14, overflow: "hidden",
+                                        border: `1px solid ${C.border}`,
+                                    }}>
+                                        <div style={{
+                                            width: "100%", paddingTop: "75%", position: "relative",
+                                            backgroundColor: C.surface,
+                                        }}>
+                                            <div style={{
+                                                position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
+                                            }}>
+                                                <span style={{
+                                                    fontFamily: INTER, fontSize: 10, fontWeight: 600, letterSpacing: "0.1em",
+                                                    textTransform: "uppercase", color: C.muted,
+                                                }}>Brand implementation</span>
+                                            </div>
+                                        </div>
+                                        <div style={{
+                                            padding: phone ? "16px" : "20px 24px",
+                                            display: "flex", alignItems: "center", gap: 10,
+                                        }}>
+                                            <span style={{
+                                                width: 8, height: 8, borderRadius: "50%",
+                                                backgroundColor: b.color, flexShrink: 0,
+                                            }} />
+                                            <p style={{ fontFamily: INTER, fontSize: 13, fontWeight: 600, color: C.ink, margin: 0 }}>{b.brand}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </FadeIn>
+
+                        <FadeIn delay={90}>
+                            <p style={{
+                                fontFamily: INTER, fontSize: 13, lineHeight: 1.7, color: C.ink3,
+                                marginTop: 24, maxWidth: 600,
+                            }}>
+                                While the interaction pattern remained consistent, visual treatments were adapted to align with each brand's established design language.
+                            </p>
+                        </FadeIn>
+
+                        {/* ── Part 4: Implementation Ready ── */}
+                        <FadeIn>
+                            <div style={{ marginTop: 80 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Implementation Ready</p>
+                                <h3 style={{ fontFamily: Z, fontSize: phone ? 24 : 32, fontWeight: 700, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.1, marginBottom: 32 }}>
+                                    Documented for development
+                                </h3>
+                            </div>
+                        </FadeIn>
+
+                        <FadeIn delay={60}>
+                            <div style={{
+                                display: phone ? "block" : "grid", gridTemplateColumns: "1.4fr 1fr",
+                                gap: phone ? 24 : 32,
+                            }}>
+                                <Placeholder label="Component specifications: states, interaction behavior, annotations" aspect={phone ? "65%" : "75%"} />
+                                <div style={{
+                                    backgroundColor: C.surface, borderRadius: 14,
+                                    padding: phone ? "28px" : "36px",
+                                    display: "flex", flexDirection: "column", justifyContent: "center",
+                                }}>
+                                    <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: C.olive, marginBottom: 24, textTransform: "uppercase" }}>Implementation Ready</p>
+                                    {[
+                                        "Component states documented",
+                                        "Interaction logic defined",
+                                        "Accessibility guidance included",
+                                        "Edge cases considered",
+                                        "Engineering handoff completed",
+                                    ].map((item, i) => (
+                                        <div key={i} style={{
+                                            display: "flex", alignItems: "center", gap: 12,
+                                            marginBottom: i < 4 ? 14 : 0,
+                                        }}>
+                                            <span style={{
+                                                width: 18, height: 18, borderRadius: "50%", flexShrink: 0,
+                                                backgroundColor: "rgba(137,144,100,0.15)",
+                                                display: "flex", alignItems: "center", justifyContent: "center",
+                                            }}>
+                                                <span style={{ fontFamily: INTER, fontSize: 9, color: C.olive }}>&#10003;</span>
+                                            </span>
+                                            <p style={{ fontFamily: INTER, fontSize: 13, color: C.ink2, margin: 0, lineHeight: 1.4 }}>{item}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </FadeIn>
+
+                        {/* ── Part 5: Design System Impact ── */}
+                        <FadeIn>
+                            <div style={{ marginTop: 80 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Design System Impact</p>
+                                <h3 style={{ fontFamily: Z, fontSize: phone ? 24 : 32, fontWeight: 700, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.1, marginBottom: 16 }}>
+                                    Beyond a single use case
+                                </h3>
+                                <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 560, marginBottom: 40 }}>
+                                    Rather than creating a one-off solution, the component was designed to support future inventory and filtering experiences across the URBN ecosystem.
+                                </p>
+                            </div>
+                        </FadeIn>
+
+                        <FadeIn delay={60}>
+                            <div style={{
+                                backgroundColor: C.ink, borderRadius: 16,
+                                padding: phone ? "40px 24px" : "56px 48px",
+                            }}>
+                                <div style={{
+                                    display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center",
+                                    gap: phone ? 8 : 12,
+                                }}>
+                                    {["Exploration", "Component", "Design System", "Future Experiences"].map((step, i) => (
+                                        <React.Fragment key={i}>
+                                            <span style={{
+                                                fontFamily: INTER, fontSize: phone ? 11 : 13, fontWeight: 600,
+                                                color: "#fff", letterSpacing: "-0.01em",
+                                                padding: phone ? "10px 16px" : "12px 24px",
+                                                backgroundColor: "rgba(255,255,255,0.08)",
+                                                borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)",
+                                            }}>{step}</span>
+                                            {i < 3 && <span style={{ fontFamily: INTER, fontSize: 14, color: "rgba(255,255,255,0.3)" }}>&#8594;</span>}
+                                        </React.Fragment>
+                                    ))}
+                                </div>
+
+                                <div style={{
+                                    display: "grid", gridTemplateColumns: phone ? "1fr" : "repeat(4, 1fr)",
+                                    gap: 0, marginTop: phone ? 32 : 40,
+                                    borderTop: "1px solid rgba(255,255,255,0.08)",
+                                }}>
+                                    {[
+                                        { label: "Reusability", desc: "Built for use beyond the initial filtering project" },
+                                        { label: "Consistency", desc: "Unified interaction behavior across all three brands" },
+                                        { label: "Scalability", desc: "Designed to adapt to future filtering patterns" },
+                                        { label: "Cross-Platform", desc: "Spec'd for Mobile Web, Desktop, and native integration" },
+                                    ].map((item, i) => (
+                                        <div key={i} style={{
+                                            padding: phone ? "20px 0" : "24px 20px 24px 0",
+                                            borderBottom: phone ? "1px solid rgba(255,255,255,0.08)" : "none",
+                                            borderRight: !phone && i < 3 ? "1px solid rgba(255,255,255,0.08)" : "none",
+                                            paddingLeft: !phone && i > 0 ? 20 : 0,
+                                        }}>
+                                            <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.olive, marginBottom: 8, textTransform: "uppercase" }}>{item.label}</p>
+                                            <p style={{ fontFamily: INTER, fontSize: 12, lineHeight: 1.6, color: "rgba(255,255,255,0.55)", margin: 0 }}>{item.desc}</p>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </FadeIn>
                     </section>
