@@ -704,8 +704,34 @@ export default function AnthropologieProductDiscovery() {
                         {/* 1. Exploring the Pattern */}
                         <FadeIn>
                             <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Exploring the Pattern</p>
-                            <div style={{ borderRadius: 14, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
-                                <img src="/images/toggle-specs.png" alt="Proposed web toggle components: default, selected, hover states with specifications" style={{ width: "100%", height: "auto", display: "block" }} />
+                            <div style={{
+                                display: "flex", gap: 16, overflowX: "auto", paddingBottom: 8,
+                                scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch",
+                                scrollbarWidth: "none",
+                            }}>
+                                {[
+                                    { src: "/images/explore-rebuild-web.png", label: "Rebuild for Web" },
+                                    { src: "/images/explore-toggle-styles.png", label: "Toggle Styles" },
+                                    { src: "/images/explore-flat-toggles.png", label: "Flat Toggles" },
+                                    { src: "/images/explore-outline-toggle.png", label: "Outline Toggle" },
+                                    { src: "/images/explore-filled-toggle.png", label: "Filled Toggle" },
+                                ].map((item, i) => (
+                                    <div key={i} style={{
+                                        flex: "0 0 auto",
+                                        width: phone ? "75vw" : 260,
+                                        scrollSnapAlign: "start",
+                                        borderRadius: 12, overflow: "hidden",
+                                        border: `1px solid ${C.border}`, backgroundColor: C.surface,
+                                        display: "flex", flexDirection: "column",
+                                    }}>
+                                        <div style={{ padding: 20, display: "flex", alignItems: "center", justifyContent: "center", flex: 1, minHeight: phone ? 140 : 180 }}>
+                                            <img src={item.src} alt={item.label} style={{ maxWidth: "100%", maxHeight: phone ? 120 : 160, height: "auto", display: "block" }} />
+                                        </div>
+                                        <div style={{ padding: "10px 14px", borderTop: `1px solid ${C.border}`, backgroundColor: C.bg }}>
+                                            <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.ink, margin: 0 }}>{item.label}</p>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                             <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, marginTop: 16, maxWidth: 480 }}>
                                 Multiple interaction patterns were explored to improve clarity and consistency.
