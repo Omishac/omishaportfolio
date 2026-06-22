@@ -615,28 +615,34 @@ export default function AnthropologieProductDiscovery() {
                         </div>
                     </section>
 
-                    {/* ════════ RAPID PROTOTYPING ════════ */}
+                    {/* ════════ BRINGING SOLUTIONS TOGETHER ════════ */}
                     <section id="prototyping" style={{ scrollMarginTop: 80, marginTop: 100 }}>
                         <FadeIn>
+                            <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 12 }}>Bringing the Solutions Together</p>
+                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 48 }}>
+                                The four design improvements were combined into a single interactive prototype and tested as a complete filtering experience before development.
+                            </p>
+                        </FadeIn>
+
+                        <FadeIn delay={40}>
                             <div style={{
                                 display: "grid",
-                                gridTemplateColumns: phone ? "1fr" : "1.2fr 1fr",
+                                gridTemplateColumns: phone ? "1fr" : "1fr 1.2fr",
                                 gap: phone ? 32 : 56,
                                 alignItems: "center",
                             }}>
                                 <div>
-                                    <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Rapid Prototyping for Validation</p>
-                                    <p style={{ fontFamily: Z, fontSize: phone ? 48 : 64, fontWeight: 700, color: C.ink, letterSpacing: "-0.03em", lineHeight: 1, margin: 0, marginBottom: 16 }}>45%</p>
+                                    <p style={{ fontFamily: Z, fontSize: phone ? 48 : 64, fontWeight: 700, color: C.ink, letterSpacing: "-0.03em", lineHeight: 1, margin: 0, marginBottom: 12 }}>45%</p>
                                     <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.ink2, letterSpacing: "0.04em", textTransform: "uppercase", margin: 0, marginBottom: 20 }}>
-                                        Faster Validation Cycle
+                                        Faster Prototype Creation &amp; Testing Preparation
                                     </p>
                                     <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.7, color: C.ink3, margin: 0, maxWidth: 400 }}>
-                                        Before development, I created an interactive prototype to validate key filtering interactions with users. Using Builder.io and URBN's existing design system components, I rapidly transformed concepts into a testable experience, reducing prototype creation and testing preparation time by 45%.
+                                        Using Builder.io and URBN's existing design system components, I rapidly transformed concepts into a testable experience, allowing faster validation before development.
                                     </p>
                                 </div>
-                                <div style={{ maxWidth: 400 }}>
+                                <div>
                                     <div style={{
-                                        borderRadius: 12, overflow: "hidden",
+                                        borderRadius: 14, overflow: "hidden",
                                         border: `1px solid ${C.border}`,
                                         backgroundColor: C.surface,
                                     }}>
@@ -650,6 +656,45 @@ export default function AnthropologieProductDiscovery() {
                                         Interactive prototype used for usability testing prior to implementation.
                                     </p>
                                 </div>
+                            </div>
+                        </FadeIn>
+
+                        {/* Journey connector */}
+                        <FadeIn delay={80}>
+                            <div style={{
+                                marginTop: phone ? 56 : 72,
+                                display: "flex", flexDirection: "column", alignItems: "center", gap: 0,
+                            }}>
+                                {[
+                                    { text: "4 Design Improvements", bold: true },
+                                    { text: "Interactive Prototype", bold: false },
+                                    { text: "Usability Testing", bold: false },
+                                    { text: "100% Task Completion", bold: true },
+                                ].map((step, i, arr) => (
+                                    <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                        {i > 0 && (
+                                            <div style={{
+                                                width: 1, height: 32,
+                                                backgroundColor: C.border,
+                                            }} />
+                                        )}
+                                        <div style={{
+                                            padding: "10px 28px",
+                                            borderRadius: 100,
+                                            backgroundColor: (i === 0 || i === arr.length - 1) ? C.ink : C.surface,
+                                            border: (i === 0 || i === arr.length - 1) ? "none" : `1px solid ${C.border}`,
+                                        }}>
+                                            <p style={{
+                                                fontFamily: INTER,
+                                                fontSize: 12,
+                                                fontWeight: step.bold ? 600 : 500,
+                                                color: (i === 0 || i === arr.length - 1) ? "#fff" : C.ink2,
+                                                margin: 0,
+                                                letterSpacing: "0.01em",
+                                            }}>{step.text}</p>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </FadeIn>
                     </section>
