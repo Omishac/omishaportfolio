@@ -362,60 +362,64 @@ export default function AnthropologieProductDiscovery() {
                             <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
                                 The existing filtering experience
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 64 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 48 }}>
                                 Product filters play a critical role in helping shoppers navigate large product catalogs. As assortments expanded across URBN brands, we wanted to better understand how the filtering experience supported product discovery across Mobile Web and Desktop.
                             </p>
                         </FadeIn>
 
                         <FadeIn delay={60}>
                             <div style={{
-                                display: "grid",
-                                gridTemplateColumns: phone ? "1fr" : "1fr auto 1fr auto 1fr auto 1fr",
-                                gap: phone ? 24 : 0,
-                                alignItems: "start",
+                                backgroundColor: C.surface, borderRadius: 14,
+                                padding: phone ? "28px 20px 32px" : "48px 48px 44px",
                             }}>
-                                {[
-                                    { num: "01", title: "Open Filters", src: "/images/Sort%20Modal.png" },
-                                    { num: "02", title: "Choose Filter", src: "/images/Sort%20Modal-1.png" },
-                                    { num: "03", title: "Make Selection", src: "/images/Sort%20Modal-2.png" },
-                                    { num: "04", title: "Return & Review", src: "/images/Sort%20Modal%202.png" },
-                                ].map((screen, i) => (
-                                    <React.Fragment key={i}>
-                                        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                                            <div style={{
-                                                borderRadius: 12, overflow: "hidden",
-                                                backgroundColor: C.surface, border: `1px solid ${C.border}`,
-                                            }}>
-                                                <img
-                                                    src={screen.src}
-                                                    alt={screen.title}
-                                                    style={{ width: "100%", height: "auto", display: "block" }}
-                                                />
+                                <div style={{
+                                    display: "grid",
+                                    gridTemplateColumns: phone ? "1fr" : "1fr auto 1fr auto 1fr auto 1fr",
+                                    gap: phone ? 32 : 0,
+                                    alignItems: "start",
+                                }}>
+                                    {[
+                                        { num: "01", title: "Open Filters", src: "/images/Sort%20Modal.png" },
+                                        { num: "02", title: "Choose Filter", src: "/images/Sort%20Modal-1.png" },
+                                        { num: "03", title: "Make Selection", src: "/images/Sort%20Modal-2.png" },
+                                        { num: "04", title: "Return & Review", src: "/images/Sort%20Modal%202.png" },
+                                    ].map((screen, i) => (
+                                        <React.Fragment key={i}>
+                                            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                                                <div style={{
+                                                    borderRadius: 10, overflow: "hidden",
+                                                    backgroundColor: C.bg,
+                                                    boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03)",
+                                                }}>
+                                                    <img
+                                                        src={screen.src}
+                                                        alt={screen.title}
+                                                        style={{ width: "100%", height: "auto", display: "block" }}
+                                                    />
+                                                </div>
+                                                <div style={{ textAlign: "center" }}>
+                                                    <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: C.olive, marginBottom: 4 }}>{screen.num}</p>
+                                                    <p style={{ fontFamily: Z, fontSize: phone ? 15 : 16, fontWeight: 600, color: C.ink, lineHeight: 1.3 }}>{screen.title}</p>
+                                                </div>
                                             </div>
-                                            <div style={{ padding: "0 4px" }}>
-                                                <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: C.olive, marginBottom: 6 }}>{screen.num}</p>
-                                                <p style={{ fontFamily: Z, fontSize: 17, fontWeight: 600, color: C.ink, lineHeight: 1.3 }}>{screen.title}</p>
-                                            </div>
-                                        </div>
-                                        {i < 3 && !phone && (
-                                            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "0 12px", marginTop: "40%" }}>
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                    <path d="M5 12h14M13 6l6 6-6 6" stroke={C.muted} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                                </svg>
-                                            </div>
-                                        )}
-                                    </React.Fragment>
-                                ))}
-                            </div>
-                        </FadeIn>
+                                            {i < 3 && !phone && (
+                                                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "0 10px", marginTop: "38%" }}>
+                                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                        <path d="M4 10h12M11 5l5 5-5 5" stroke={C.muted} strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" opacity="0.6" />
+                                                    </svg>
+                                                </div>
+                                            )}
+                                        </React.Fragment>
+                                    ))}
+                                </div>
 
-                        <FadeIn delay={120}>
-                            <p style={{
-                                fontFamily: INTER, fontSize: 14, lineHeight: 1.7, color: C.ink3,
-                                textAlign: "center", maxWidth: 600, margin: "32px auto 0",
-                            }}>
-                                Applying multiple filters required repeated movement between screens before returning to the main drawer to review selections.
-                            </p>
+                                <p style={{
+                                    fontFamily: INTER, fontSize: 13, lineHeight: 1.7, color: C.ink3,
+                                    textAlign: "center", maxWidth: 520, margin: "36px auto 0",
+                                }}>
+                                    Applying multiple filters required repeated movement between screens before returning to the main drawer to review selections.
+                                </p>
+                            </div>
                         </FadeIn>
                     </section>
 
