@@ -782,29 +782,39 @@ export default function AnthropologieProductDiscovery() {
                         <FadeIn>
                             <div style={{ marginTop: 64 }}>
                                 <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 8 }}>Supporting Different States</p>
-                                <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, marginBottom: 20, maxWidth: 520 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, marginBottom: 24, maxWidth: 520 }}>
                                     The component was designed to adapt to multiple pickup and availability scenarios while maintaining a consistent interaction model.
                                 </p>
-                                <div style={{
-                                    display: "grid",
-                                    gridTemplateColumns: phone ? "1fr" : "1fr 1fr",
-                                    gap: phone ? 12 : 16,
-                                }}>
+                                <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
                                     {[
-                                        { title: "No Pickup Store Selected", desc: "Default state prompting users to select a store" },
-                                        { title: "Pickup Store Selected", desc: "Active state showing selected store availability" },
-                                        { title: "Pickup Store Unavailable", desc: "Disabled state communicating limited availability" },
-                                        { title: "Hidden Toggle State", desc: "Collapsed state when pickup is not applicable" },
+                                        {
+                                            title: "No Pickup Store Selected",
+                                            desc: "Default state prompting users to select a store",
+                                            desktop: "/images/state-no-store-desktop.png",
+                                            mobile: "/images/state-no-store-mobile.png",
+                                        },
+                                        {
+                                            title: "Pickup Store Unavailable",
+                                            desc: "Disabled state communicating limited availability",
+                                            desktop: "/images/state-unavailable-desktop.png",
+                                            mobile: "/images/state-unavailable-mobile.png",
+                                        },
                                     ].map((state, i) => (
-                                        <div key={i} style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}` }}>
-                                            <div style={{ width: "100%", paddingTop: "56%", position: "relative", backgroundColor: C.surface }}>
-                                                <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                                    <span style={{ fontFamily: INTER, fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: C.muted }}>State {String(i + 1).padStart(2, "0")}</span>
+                                        <div key={i}>
+                                            <p style={{ fontFamily: INTER, fontSize: 13, fontWeight: 600, color: C.ink, margin: 0, marginBottom: 4 }}>{state.title}</p>
+                                            <p style={{ fontFamily: INTER, fontSize: 12, color: C.ink3, margin: 0, marginBottom: 12, lineHeight: 1.5 }}>{state.desc}</p>
+                                            <div style={{
+                                                display: "grid",
+                                                gridTemplateColumns: phone ? "1fr" : "1fr auto",
+                                                gap: 16,
+                                                alignItems: "start",
+                                            }}>
+                                                <div style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.surface }}>
+                                                    <img src={state.desktop} alt={`${state.title} — desktop`} style={{ width: "100%", height: "auto", display: "block" }} />
                                                 </div>
-                                            </div>
-                                            <div style={{ padding: "14px 18px" }}>
-                                                <p style={{ fontFamily: INTER, fontSize: 13, fontWeight: 600, color: C.ink, margin: 0, marginBottom: 4 }}>{state.title}</p>
-                                                <p style={{ fontFamily: INTER, fontSize: 12, color: C.ink3, margin: 0, lineHeight: 1.5 }}>{state.desc}</p>
+                                                <div style={{ width: phone ? 120 : 140, borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.surface, flexShrink: 0 }}>
+                                                    <img src={state.mobile} alt={`${state.title} — mobile`} style={{ width: "100%", height: "auto", display: "block" }} />
+                                                </div>
                                             </div>
                                         </div>
                                     ))}
