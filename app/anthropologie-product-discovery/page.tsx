@@ -678,49 +678,6 @@ export default function AnthropologieProductDiscovery() {
                             </div>
                         </FadeIn>
 
-                        {/* Horizontal journey flow */}
-                        <FadeIn delay={80}>
-                            <div style={{
-                                marginTop: phone ? 56 : 72,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                flexWrap: phone ? "wrap" : "nowrap",
-                                gap: phone ? 8 : 0,
-                            }}>
-                                {[
-                                    "4 Design Improvements",
-                                    "Interactive Prototype",
-                                    "Usability Testing",
-                                    "100% Task Completion",
-                                ].map((step, i, arr) => (
-                                    <div key={i} style={{ display: "flex", alignItems: "center" }}>
-                                        <p style={{
-                                            fontFamily: INTER,
-                                            fontSize: phone ? 11 : 13,
-                                            fontWeight: (i === 0 || i === arr.length - 1) ? 600 : 400,
-                                            color: (i === 0 || i === arr.length - 1) ? C.ink : C.ink3,
-                                            margin: 0,
-                                            whiteSpace: "nowrap",
-                                        }}>{step}</p>
-                                        {i < arr.length - 1 && !phone && (
-                                            <span style={{
-                                                fontFamily: INTER, fontSize: 14, color: C.muted,
-                                                margin: "0 20px",
-                                                userSelect: "none",
-                                            }}>&rarr;</span>
-                                        )}
-                                        {i < arr.length - 1 && phone && (
-                                            <span style={{
-                                                fontFamily: INTER, fontSize: 12, color: C.muted,
-                                                margin: "0 8px",
-                                                userSelect: "none",
-                                            }}>&rarr;</span>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        </FadeIn>
                     </section>
 
                     {/* ════════ VALIDATION ════════ */}
