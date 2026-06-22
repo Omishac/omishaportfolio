@@ -640,7 +640,11 @@ export default function AnthropologieProductDiscovery() {
                                         border: `1px solid ${C.border}`,
                                         backgroundColor: C.surface,
                                     }}>
-                                        <Placeholder label="Prototype walkthrough video" aspect={phone ? "56%" : "62%"} />
+                                        <video
+                                            src="/videos/prototype-walkthrough.mov"
+                                            autoPlay muted loop playsInline
+                                            style={{ width: "100%", height: "auto", display: "block" }}
+                                        />
                                     </div>
                                     <p style={{ fontFamily: INTER, fontSize: 11, lineHeight: 1.5, color: C.muted, margin: 0, marginTop: 10 }}>
                                         Interactive prototype used for usability testing prior to implementation.
