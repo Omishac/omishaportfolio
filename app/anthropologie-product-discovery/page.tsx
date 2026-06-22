@@ -620,7 +620,7 @@ export default function AnthropologieProductDiscovery() {
                         <FadeIn>
                             <div style={{
                                 display: "grid",
-                                gridTemplateColumns: phone ? "1fr" : "1fr 1.4fr",
+                                gridTemplateColumns: phone ? "1fr" : "1.2fr 1fr",
                                 gap: phone ? 32 : 56,
                                 alignItems: "center",
                             }}>
@@ -634,9 +634,9 @@ export default function AnthropologieProductDiscovery() {
                                         Before development, I created an interactive prototype to validate key filtering interactions with users. Using Builder.io and URBN's existing design system components, I rapidly transformed concepts into a testable experience, reducing prototype creation and testing preparation time by 45%.
                                     </p>
                                 </div>
-                                <div>
+                                <div style={{ maxWidth: 400 }}>
                                     <div style={{
-                                        borderRadius: 14, overflow: "hidden",
+                                        borderRadius: 12, overflow: "hidden",
                                         border: `1px solid ${C.border}`,
                                         backgroundColor: C.surface,
                                     }}>
