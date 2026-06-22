@@ -376,9 +376,9 @@ export default function AnthropologieProductDiscovery() {
                             }}>
                                 {[
                                     { num: "01", title: "Open Filters", caption: "Start from a centralized filter drawer.", src: "/images/Sort%20Modal.png" },
-                                    { num: "02", title: "Choose Filter", caption: "Select a category to refine results.", src: "/images/Sort%20Modal-2.png" },
+                                    { num: "02", title: "Choose Filter", caption: "Select a category to refine results.", src: "/images/Sort%20Modal-1.png" },
                                     { num: "03", title: "Make Selection", caption: "Apply filter options.", src: "/images/Sort%20Modal%202.png" },
-                                    { num: "04", title: "Return & Review", caption: "Review applied selections.", src: "/images/Sort%20Modal-1.png" },
+                                    { num: "04", title: "Return & Review", caption: "Review applied selections.", src: "/images/Sort%20Modal-2.png" },
                                 ].map((screen, i) => (
                                     <React.Fragment key={i}>
                                         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
