@@ -876,8 +876,8 @@ export default function AnthropologieProductDiscovery() {
                             <div style={{ display: "flex", gap: phone ? 12 : 20, flexWrap: "wrap", marginBottom: 96 }}>
                                 {[
                                     { name: "Urban Outfitters", href: "https://www.urbanoutfitters.com/womens-clothing", brandColor: "#11120C" },
-                                    { name: "Free People", href: "https://www.freepeople.com/clothes", brandColor: "#B5553E" },
-                                    { name: "Anthropologie", href: "https://www.anthropologie.com/womens-clothing", brandColor: "#2D6A6A" },
+                                    { name: "Free People", href: "https://www.freepeople.com/clothes", brandColor: "#D52975" },
+                                    { name: "Anthropologie", href: "https://www.anthropologie.com/womens-clothing", brandColor: "#167A92" },
                                 ].map((brand, i) => (
                                     <a key={i} href={brand.href} target="_blank" rel="noopener noreferrer" style={{
                                         fontFamily: INTER, fontSize: 14, fontWeight: 600, color: C.ink,
