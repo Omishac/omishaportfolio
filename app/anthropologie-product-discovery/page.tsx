@@ -362,8 +362,14 @@ export default function AnthropologieProductDiscovery() {
                             <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
                                 The existing filtering experience
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 56 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
                                 Product filters play a critical role in helping shoppers navigate large product catalogs. As assortments expanded across URBN brands, we wanted to better understand how the filtering experience supported product discovery across Mobile Web and Desktop.
+                            </p>
+                            <p style={{
+                                fontFamily: Z, fontSize: phone ? 20 : 24, fontWeight: 600, color: C.ink,
+                                lineHeight: 1.4, maxWidth: 520, letterSpacing: "-0.01em", marginBottom: 56,
+                            }}>
+                                Users moved between multiple screens to apply and review filters.
                             </p>
                         </FadeIn>
 
@@ -410,16 +416,6 @@ export default function AnthropologieProductDiscovery() {
                             </div>
                         </FadeIn>
 
-                        <FadeIn delay={120}>
-                            <div style={{ borderTop: `1px solid ${C.border}`, marginTop: 56, paddingTop: 32 }}>
-                                <p style={{
-                                    fontFamily: Z, fontSize: phone ? 20 : 24, fontWeight: 600, color: C.ink,
-                                    lineHeight: 1.4, maxWidth: 520, letterSpacing: "-0.01em",
-                                }}>
-                                    Users moved between multiple screens to apply and review filters.
-                                </p>
-                            </div>
-                        </FadeIn>
                     </section>
 
                     {/* ════════ RESEARCH FINDINGS ════════ */}
