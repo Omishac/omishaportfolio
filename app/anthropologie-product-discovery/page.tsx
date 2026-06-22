@@ -659,7 +659,7 @@ export default function AnthropologieProductDiscovery() {
                                         Using Builder.io and URBN's existing design system components, I rapidly transformed concepts into a testable experience, allowing faster validation before development.
                                     </p>
                                 </div>
-                                <div style={{ maxWidth: 360 }}>
+                                <div style={{ maxWidth: 300 }}>
                                     <div style={{
                                         borderRadius: 12, overflow: "hidden",
                                         border: `1px solid ${C.border}`,
@@ -726,16 +726,18 @@ export default function AnthropologieProductDiscovery() {
                     {/* ════════ VALIDATION ════════ */}
                     <section id="validation" style={{ scrollMarginTop: 80, marginTop: 72 }}>
                         <FadeIn>
-                            <div style={{
-                                backgroundColor: C.ink, borderRadius: 16, padding: phone ? "48px 28px" : "56px 64px",
-                                textAlign: "center", marginBottom: 40,
-                            }}>
-                                <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Validation</p>
-                                <p style={{ fontFamily: Z, fontSize: phone ? 64 : 96, fontWeight: 700, color: "#fff", letterSpacing: "-0.04em", lineHeight: 1, marginBottom: 16 }}>100%</p>
-                                <p style={{ fontFamily: INTER, fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.45)", letterSpacing: "0.08em", textTransform: "uppercase", margin: 0 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 12, fontWeight: 500, color: C.muted, letterSpacing: "0.06em", textTransform: "uppercase", margin: 0, marginBottom: 12, textAlign: "center" }}>
+                                Leading to&hellip;
+                            </p>
+                            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 16, marginBottom: 12 }}>
+                                <p style={{ fontFamily: Z, fontSize: phone ? 56 : 72, fontWeight: 700, color: C.ink, letterSpacing: "-0.04em", lineHeight: 1, margin: 0 }}>
+                                    <CountUp to={100} suffix="%" duration={1400} />
+                                </p>
+                                <p style={{ fontFamily: INTER, fontSize: 13, fontWeight: 600, color: C.ink2, letterSpacing: "0.04em", textTransform: "uppercase", margin: 0 }}>
                                     Task Completion Rate
                                 </p>
                             </div>
+                            <div style={{ width: 40, height: 1, backgroundColor: C.border, margin: "24px auto 32px" }} />
                         </FadeIn>
 
                         <FadeIn delay={60}>
