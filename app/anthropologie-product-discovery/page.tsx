@@ -69,6 +69,23 @@ function useActiveSection(ids: string[]) {
     return active
 }
 
+function CountUp({ to, suffix = "", duration = 1200 }: { to: number; suffix?: string; duration?: number }) {
+    const { ref, visible } = useInView(0.3)
+    const [value, setValue] = useState(0)
+    useEffect(() => {
+        if (!visible) return
+        const start = performance.now()
+        const tick = (now: number) => {
+            const t = Math.min((now - start) / duration, 1)
+            const eased = 1 - Math.pow(1 - t, 3)
+            setValue(Math.round(eased * to))
+            if (t < 1) requestAnimationFrame(tick)
+        }
+        requestAnimationFrame(tick)
+    }, [visible, to, duration])
+    return <span ref={ref}>{value}{suffix}</span>
+}
+
 function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
     const { ref, visible } = useInView()
     return (
@@ -634,7 +651,7 @@ export default function AnthropologieProductDiscovery() {
                                 alignItems: "center",
                             }}>
                                 <div>
-                                    <p style={{ fontFamily: Z, fontSize: phone ? 48 : 56, fontWeight: 700, color: C.ink, letterSpacing: "-0.03em", lineHeight: 1, margin: 0, marginBottom: 10 }}>45%</p>
+                                    <p style={{ fontFamily: Z, fontSize: phone ? 48 : 56, fontWeight: 700, color: C.ink, letterSpacing: "-0.03em", lineHeight: 1, margin: 0, marginBottom: 10 }}><CountUp to={45} suffix="%" /></p>
                                     <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.ink2, letterSpacing: "0.04em", textTransform: "uppercase", margin: 0, marginBottom: 20 }}>
                                         Faster Prototype Creation &amp; Testing Preparation
                                     </p>
