@@ -24,8 +24,7 @@ const SECTIONS = [
     { id: "strategy", label: "Strategy" },
     { id: "validation", label: "Results" },
     { id: "component", label: "System" },
-    { id: "impact", label: "Impact" },
-    { id: "looking-back", label: "Looking Back" },
+    { id: "launch", label: "Launch" },
 ]
 
 function useResponsive() {
@@ -861,62 +860,57 @@ export default function AnthropologieProductDiscovery() {
                         </FadeIn>
                     </section>
 
-                    {/* ════════ IMPACT & LAUNCH ════════ */}
-                    <section id="impact" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    {/* ════════ LAUNCH & REFLECTION ════════ */}
+                    <section id="launch" style={{ scrollMarginTop: 80, marginTop: 120 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Impact &amp; Launch</p>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 560, marginBottom: 48 }}>
-                                The redesigned filtering experience is now live across Urban Outfitters, Free People, and Anthropologie.
+                            <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Launch &amp; Reflection</p>
+                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 40 }}>
+                                This redesign is now live across Urban Outfitters, Free People, and Anthropologie, helping shoppers navigate large product catalogs with greater clarity and confidence.
                             </p>
                         </FadeIn>
 
                         <FadeIn delay={40}>
-                            <div style={{
-                                display: "grid", gridTemplateColumns: phone ? "1fr 1fr" : "repeat(4, 1fr)",
-                                gap: phone ? 12 : 16, marginBottom: 40,
-                            }}>
-                                <ImpactCard value="30%" label="Increase in Task Success" phone={phone} />
-                                <ImpactCard value="100%" label="Task Completion Rate" phone={phone} />
-                                <ImpactCard value="45%" label="Faster Prototype Validation" phone={phone} />
-                                <ImpactCard value="Shipped" label="Mobile Web + Desktop" phone={phone} />
+                            <div style={{ display: "flex", gap: phone ? 12 : 20, flexWrap: "wrap", marginBottom: 96 }}>
+                                {[
+                                    { name: "Urban Outfitters", href: "https://www.urbanoutfitters.com/womens-clothing" },
+                                    { name: "Free People", href: "https://www.freepeople.com/clothes" },
+                                    { name: "Anthropologie", href: "https://www.anthropologie.com/clothing" },
+                                ].map((brand, i) => (
+                                    <a key={i} href={brand.href} target="_blank" rel="noopener noreferrer" style={{
+                                        fontFamily: INTER, fontSize: 14, fontWeight: 600, color: C.ink,
+                                        textDecoration: "none", padding: "14px 28px",
+                                        borderRadius: 100, border: `1px solid ${C.border}`,
+                                        transition: "all 0.25s ease",
+                                    }}
+                                    onMouseEnter={e => { e.currentTarget.style.backgroundColor = C.ink; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = C.ink }}
+                                    onMouseLeave={e => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = C.ink; e.currentTarget.style.borderColor = C.border }}
+                                    >
+                                        {brand.name} &nbsp;&#8599;
+                                    </a>
+                                ))}
                             </div>
-                        </FadeIn>
-
-                        <FadeIn delay={80}>
-                            <div style={{
-                                display: "grid", gridTemplateColumns: phone ? "1fr" : "repeat(3, 1fr)",
-                                gap: phone ? 12 : 16,
-                            }}>
-                                <BrandCard name="Urban Outfitters" href="https://www.urbanoutfitters.com/womens-clothing" phone={phone} />
-                                <BrandCard name="Free People" href="https://www.freepeople.com/clothes" phone={phone} />
-                                <BrandCard name="Anthropologie" href="https://www.anthropologie.com/clothing" phone={phone} />
-                            </div>
-                        </FadeIn>
-                    </section>
-
-                    {/* ════════ LOOKING BACK ════════ */}
-                    <section id="looking-back" style={{ scrollMarginTop: 80, marginTop: 120 }}>
-                        <FadeIn>
-                            <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Looking Back</p>
                         </FadeIn>
 
                         <FadeIn delay={60}>
-                            <div style={{ margin: "0 0 36px" }}>
-                                <span style={{ fontFamily: Z, fontSize: "clamp(48px, 6vw, 72px)", lineHeight: 0.8, color: C.olive, display: "block", marginBottom: 12, userSelect: "none", opacity: 0.35 }}>&ldquo;</span>
+                            <div style={{ marginBottom: 48 }}>
+                                <span style={{ fontFamily: Z, fontSize: "clamp(56px, 7vw, 80px)", lineHeight: 0.8, color: C.olive, display: "block", marginBottom: 16, userSelect: "none", opacity: 0.3 }}>&ldquo;</span>
                                 <p style={{
                                     fontFamily: Z, fontStyle: "italic", fontWeight: 400,
-                                    fontSize: "clamp(24px, 3.5vw, 40px)", lineHeight: 1.3,
-                                    color: C.ink, letterSpacing: "-0.025em", maxWidth: 680, marginBottom: 0,
+                                    fontSize: "clamp(28px, 4vw, 48px)", lineHeight: 1.25,
+                                    color: C.ink, letterSpacing: "-0.03em", maxWidth: 720, marginBottom: 0,
                                 }}>
-                                    The biggest challenge wasn't organizing products. It was helping users trust the system.
+                                    Designing better filters wasn't the goal. Building confidence was.
                                 </p>
                             </div>
                         </FadeIn>
 
                         <FadeIn delay={100}>
-                            <div style={{ width: 40, height: 1, backgroundColor: C.olive, marginBottom: 28 }} />
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.85, color: C.ink3, maxWidth: 560, margin: 0 }}>
-                                This project reinforced that effective product design isn't always about new functionality. The greatest impact came from making existing interactions feel clearer, more predictable, and easier to trust.
+                            <div style={{ width: 40, height: 1, backgroundColor: C.olive, marginBottom: 32, opacity: 0.5 }} />
+                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.85, color: C.ink3, maxWidth: 580, margin: 0 }}>
+                                Usability testing revealed that the biggest friction wasn't functionality — it was uncertainty. Small moments of hesitation compounded throughout the experience, causing users to question whether the system was working as expected.
+                            </p>
+                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.85, color: C.ink3, maxWidth: 580, marginTop: 20, marginBottom: 0 }}>
+                                This project reinforced that effective product design is often less about adding new features and more about creating experiences that feel clear, predictable, and trustworthy.
                             </p>
                         </FadeIn>
                     </section>
