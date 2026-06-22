@@ -360,15 +360,123 @@ export default function AnthropologieProductDiscovery() {
                         <FadeIn>
                             <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Challenge</p>
                             <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
-                                Understanding where product discovery breaks down
+                                The existing filtering experience
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 560, marginBottom: 56 }}>
-                                Product filters play a critical role in helping shoppers navigate large product catalogs. As assortments expanded across URBN brands, we wanted to understand where the filtering experience created friction and how product discovery could be improved across Mobile Web and Desktop.
+                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 16 }}>
+                                Product filters play a critical role in helping shoppers navigate large product catalogs. As assortments expanded across URBN brands, we wanted to better understand how the filtering experience supported product discovery across Mobile Web and Desktop.
+                            </p>
+                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 64 }}>
+                                The existing experience followed a consistent pattern: users opened a centralized filter drawer, navigated into individual filter categories, made selections, and returned to review their choices.
                             </p>
                         </FadeIn>
 
+                        {/* Hero: Four original screens with arrows */}
                         <FadeIn delay={60}>
-                            <Placeholder label="Current filter experience across URBN brands" aspect="50%" />
+                            <div style={{
+                                display: "grid",
+                                gridTemplateColumns: phone ? "1fr" : "1fr auto 1fr auto 1fr auto 1fr",
+                                gap: phone ? 24 : 0,
+                                alignItems: "start",
+                                marginBottom: 48,
+                            }}>
+                                {[
+                                    { num: "01", title: "Open Filters", desc: "Users begin in a centralized filter drawer containing all available refinement options." },
+                                    { num: "02", title: "Choose Filter", desc: "Selecting a category opens a dedicated screen for that filter." },
+                                    { num: "03", title: "Make Selection", desc: "Users apply filter options within the category screen." },
+                                    { num: "04", title: "Return & Review", desc: "Applied filters are surfaced through counts and labels within the main drawer." },
+                                ].map((screen, i) => (
+                                    <React.Fragment key={i}>
+                                        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                                            <div style={{
+                                                width: "100%", paddingTop: "178%", position: "relative", borderRadius: 12, overflow: "hidden",
+                                                backgroundColor: C.surface, border: `1px solid ${C.border}`,
+                                            }}>
+                                                <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                    <span style={{ fontFamily: INTER, fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: C.muted, opacity: 0.5 }}>Screen</span>
+                                                </div>
+                                            </div>
+                                            <div style={{ padding: "0 4px" }}>
+                                                <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: C.olive, marginBottom: 6 }}>{screen.num}</p>
+                                                <p style={{ fontFamily: Z, fontSize: 17, fontWeight: 600, color: C.ink, marginBottom: 6, lineHeight: 1.3 }}>{screen.title}</p>
+                                                <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.6, color: C.ink3 }}>{screen.desc}</p>
+                                            </div>
+                                        </div>
+                                        {i < 3 && !phone && (
+                                            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "0 12px", marginTop: "40%" }}>
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <path d="M5 12h14M13 6l6 6-6 6" stroke={C.muted} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                                </svg>
+                                            </div>
+                                        )}
+                                    </React.Fragment>
+                                ))}
+                            </div>
+                        </FadeIn>
+
+                        {/* Experience Flow */}
+                        <FadeIn delay={120}>
+                            <div style={{
+                                backgroundColor: C.surface, borderRadius: 14, border: `1px solid ${C.border}`,
+                                padding: phone ? "32px 24px" : "48px 56px",
+                            }}>
+                                <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 24 }}>
+                                    How Filtering Worked Before
+                                </p>
+
+                                <div style={{
+                                    display: "flex", flexDirection: phone ? "column" : "row",
+                                    alignItems: phone ? "flex-start" : "center",
+                                    gap: phone ? 16 : 0,
+                                }}>
+                                    {[
+                                        { label: "Open Filters", pills: null },
+                                        { label: "Choose Filter", pills: ["Color", "Size", "Price", "Style", "Brand", "Availability"] },
+                                        { label: "Make Selection", pills: null },
+                                        { label: "Return & Review", pills: null },
+                                    ].map((step, i) => (
+                                        <React.Fragment key={i}>
+                                            <div style={{ display: "flex", flexDirection: "column", alignItems: phone ? "flex-start" : "center", gap: 10, flex: phone ? undefined : 1 }}>
+                                                <span style={{
+                                                    fontFamily: Z, fontSize: phone ? 15 : 16, fontWeight: 600, color: C.ink, whiteSpace: "nowrap",
+                                                }}>{step.label}</span>
+                                                {step.pills && (
+                                                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, justifyContent: phone ? "flex-start" : "center" }}>
+                                                        {step.pills.map(p => (
+                                                            <span key={p} style={{
+                                                                fontFamily: INTER, fontSize: 11, fontWeight: 500, color: C.ink3,
+                                                                backgroundColor: C.bg, border: `1px solid ${C.border}`,
+                                                                borderRadius: 100, padding: "4px 12px",
+                                                            }}>{p}</span>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {i < 3 && (
+                                                <div style={{
+                                                    display: "flex", alignItems: "center", justifyContent: "center",
+                                                    padding: phone ? "0" : "0 8px",
+                                                    transform: phone ? "rotate(90deg)" : "none",
+                                                    margin: phone ? "0 12px" : undefined,
+                                                }}>
+                                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                        <path d="M4 10h12M11 5l5 5-5 5" stroke={C.muted} strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                                                    </svg>
+                                                </div>
+                                            )}
+                                        </React.Fragment>
+                                    ))}
+                                </div>
+                            </div>
+                        </FadeIn>
+
+                        {/* Supporting Caption */}
+                        <FadeIn delay={160}>
+                            <p style={{
+                                fontFamily: INTER, fontSize: 14, lineHeight: 1.7, color: C.ink3,
+                                textAlign: "center", maxWidth: 600, margin: "32px auto 0",
+                            }}>
+                                Applying multiple filters required repeated movement between screens before returning to the main drawer to review selections.
+                            </p>
                         </FadeIn>
                     </section>
 
