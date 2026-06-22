@@ -1599,7 +1599,7 @@ export default function IOSCaseStudy() {
             style={{
                 width: "100%",
                 backgroundColor: C.bg,
-                overflowX: "hidden",
+                overflowX: "clip" as const,
             }}
         >
             <CaseStudyNav />
@@ -1621,7 +1621,7 @@ export default function IOSCaseStudy() {
                     </aside>
                 )}
 
-                <div style={{ overflowX: "hidden" as const }}>
+                <div style={{ overflowX: "clip" as const }}>
                 {/* ── HERO ── */}
                 <div
                     id="overview"
