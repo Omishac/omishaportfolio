@@ -528,10 +528,10 @@ export default function AnthropologieProductDiscovery() {
                                 alignItems: "start",
                             }}>
                                 {[
-                                    { num: "01", title: "Filter Drawer", caption: "Users start from a centralized modal.", src: "/images/Sort%20Modal.png" },
-                                    { num: "02", title: "Category Selection", caption: "Navigate to a specific filter type.", src: "/images/Sort%20Modal-1.png" },
-                                    { num: "03", title: "Apply Options", caption: "Make selections within the category.", src: "/images/Sort%20Modal%202.png" },
-                                    { num: "04", title: "Review Selections", caption: "Return to review applied filters.", src: "/images/Sort%20Modal-2.png" },
+                                    { num: "01", title: "Open Filter Modal", caption: "Users open the centralized filter drawer.", src: "/images/Sort%20Modal.png" },
+                                    { num: "02", title: "Select & Refine", caption: "Choose a filter category and refine options.", src: "/images/Sort%20Modal-1.png" },
+                                    { num: "03", title: "Confirm & Go Back", caption: "Confirm selections and return to the list.", src: "/images/Sort%20Modal%202.png" },
+                                    { num: "04", title: "Apply Other Filters", caption: "Repeat the process for additional filters.", src: "/images/Sort%20Modal-2.png" },
                                 ].map((screen, i) => (
                                     <React.Fragment key={i}>
                                         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
