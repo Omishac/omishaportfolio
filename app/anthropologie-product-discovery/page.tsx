@@ -516,82 +516,94 @@ export default function AnthropologieProductDiscovery() {
                     <section id="strategy" style={{ scrollMarginTop: 80, marginTop: 120 }}>
                         <FadeIn>
                             <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Strategy</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 56 }}>
+                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
                                 Four concepts tested and refined
                             </h2>
+                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 560, marginBottom: 72 }}>
+                                Based on the research findings, the redesign focused on reducing uncertainty throughout the filtering experience by making interactions clearer, more predictable, and easier to navigate.
+                            </p>
                         </FadeIn>
 
-                        <div style={{ display: "flex", flexDirection: "column", gap: phone ? 48 : 72 }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: phone ? 80 : 120 }}>
                             {[
                                 {
                                     num: "01", title: "Make Selections More Visible",
-                                    observation: "Users struggled to identify active filters.",
-                                    changes: ["Introduced checkboxes", "Repositioned active refinements", "Improved selected-state visibility"],
-                                    why: "Stronger feedback helps users understand which actions have been applied.",
-                                    placeholder: "Design explorations: selection state visibility",
+                                    problem: "Selected filters lacked visibility. Users couldn't tell which filters were active.",
+                                    changes: ["Introduced checkboxes", "Improved selected-state visibility", "Repositioned active refinements"],
+                                    why: "Users receive clearer feedback and can immediately understand which filters have been applied.",
+                                    video: "/videos/strategy-01-selections.mov",
                                 },
                                 {
                                     num: "02", title: "Reduce Navigation Friction",
-                                    observation: "Users questioned whether selections remained active while moving between filter groups.",
-                                    changes: ["Accordion architecture", "Sticky filter headers"],
-                                    why: "Reduces backtracking and supports multi-filter workflows.",
-                                    placeholder: "Design explorations: accordion navigation",
+                                    problem: "Multi-filter workflows felt fragile. Users questioned whether previous selections remained active.",
+                                    changes: ["Introduced accordion architecture", "Improved movement between filter groups", "Reduced backtracking"],
+                                    why: "Users can explore multiple filters without questioning whether previous selections remain active.",
+                                    video: "/videos/strategy-02-navigation.mov",
                                 },
                                 {
                                     num: "03", title: "Create a Clear Exit Path",
-                                    observation: "Users became confused when attempting to leave the filter drawer without selecting filters.",
-                                    changes: ["Contextual \"Done\" CTA", "Updated modal behavior"],
-                                    why: "Users should always understand how to continue their journey.",
-                                    placeholder: "Design explorations: exit path behavior",
+                                    problem: "Exiting the drawer was unclear. Users didn't know how to leave without applying filters.",
+                                    changes: ["Introduced contextual Done behavior", "Clarified exit actions", "Improved drawer navigation"],
+                                    why: "Users always understand how to continue their shopping journey.",
+                                    video: "/videos/strategy-03-exit.mov",
                                 },
                                 {
-                                    num: "04", title: "Clarify Inventory Availability",
-                                    observation: "Users interpreted \"Available Within 24 Hours\" as a shipping promise.",
-                                    changes: ["New inventory toggles", "Updated labeling", "Improved hierarchy"],
-                                    why: "Clear language reduces ambiguity and improves decision-making.",
-                                    placeholder: "Design explorations: inventory filter redesign",
+                                    num: "04", title: "Clarify Store Pickup Availability",
+                                    problem: "Inventory language created confusion. Users read \"Available Within 24 Hours\" as a shipping promise.",
+                                    changes: ["Introduced new pickup toggle behavior", "Improved copy hierarchy", "Supported multiple pickup states"],
+                                    why: "Users can better understand product availability and make more informed decisions.",
+                                    video: "/videos/strategy-04-inventory.mov",
                                 },
-                            ].map((s, i) => (
-                                <FadeIn key={i} delay={i * 60}>
-                                    <div>
-                                        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
-                                            <span style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: C.olive }}>{s.num}</span>
-                                            <span style={{ width: 24, height: 1, backgroundColor: C.border }} />
-                                            <span style={{ fontFamily: Z, fontSize: phone ? 22 : 28, fontWeight: 700, color: C.ink, letterSpacing: "-0.02em" }}>{s.title}</span>
-                                        </div>
-
-                                        <Placeholder label={s.placeholder} aspect="48%" />
-
+                            ].map((s, i) => {
+                                const reversed = i % 2 === 1
+                                return (
+                                    <FadeIn key={i} delay={40}>
                                         <div style={{
-                                            display: phone ? "block" : "grid", gridTemplateColumns: "1fr 1fr 1fr",
-                                            gap: 0, marginTop: 24, borderTop: `1px solid ${C.border}`,
+                                            display: phone ? "flex" : "grid",
+                                            gridTemplateColumns: phone ? undefined : "1fr 1.4fr",
+                                            flexDirection: phone ? "column" : undefined,
+                                            gap: phone ? 32 : 56,
+                                            alignItems: "start",
+                                            direction: reversed && !phone ? "rtl" : "ltr",
                                         }}>
-                                            <div style={{
-                                                padding: phone ? "24px 0" : "28px 24px 28px 0",
-                                                borderBottom: phone ? `1px solid ${C.border}` : "none",
-                                                borderRight: !phone ? `1px solid ${C.border}` : "none",
-                                            }}>
-                                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.muted, marginBottom: 10, textTransform: "uppercase" }}>Observation</p>
-                                                <p style={{ fontFamily: INTER, fontSize: 13, color: C.ink3, lineHeight: 1.6, margin: 0 }}>{s.observation}</p>
-                                            </div>
-                                            <div style={{
-                                                padding: phone ? "24px 0" : "28px 24px",
-                                                borderBottom: phone ? `1px solid ${C.border}` : "none",
-                                                borderRight: !phone ? `1px solid ${C.border}` : "none",
-                                            }}>
-                                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.muted, marginBottom: 10, textTransform: "uppercase" }}>What We Changed</p>
+                                            <div style={{ direction: "ltr" }}>
+                                                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+                                                    <span style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: C.olive }}>{s.num}</span>
+                                                    <span style={{ width: 24, height: 1, backgroundColor: C.border }} />
+                                                </div>
+                                                <h3 style={{ fontFamily: Z, fontSize: phone ? 22 : 28, fontWeight: 700, color: C.ink, letterSpacing: "-0.02em", lineHeight: 1.15, marginBottom: 20 }}>{s.title}</h3>
+
+                                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>Problem</p>
+                                                <p style={{ fontFamily: INTER, fontSize: 13.5, color: C.ink3, lineHeight: 1.65, marginBottom: 28 }}>{s.problem}</p>
+
+                                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>What We Changed</p>
                                                 {s.changes.map((c, ci) => (
-                                                    <p key={ci} style={{ fontFamily: INTER, fontSize: 13, color: C.ink2, lineHeight: 1.6, margin: 0, marginBottom: ci < s.changes.length - 1 ? 4 : 0 }}>{c}</p>
+                                                    <p key={ci} style={{ fontFamily: INTER, fontSize: 13.5, color: C.ink2, lineHeight: 1.65, margin: 0, marginBottom: ci < s.changes.length - 1 ? 4 : 0 }}>{c}</p>
                                                 ))}
+
+                                                <div style={{ borderTop: `1px solid ${C.border}`, marginTop: 28, paddingTop: 20 }}>
+                                                    <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>Why It Matters</p>
+                                                    <p style={{ fontFamily: Z, fontSize: phone ? 16 : 18, fontWeight: 500, fontStyle: "italic", color: C.ink, lineHeight: 1.45, margin: 0 }}>{s.why}</p>
+                                                </div>
                                             </div>
-                                            <div style={{ padding: phone ? "24px 0" : "28px 0 28px 24px" }}>
-                                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.muted, marginBottom: 10, textTransform: "uppercase" }}>Why It Matters</p>
-                                                <p style={{ fontFamily: INTER, fontSize: 13, color: C.ink3, lineHeight: 1.6, margin: 0 }}>{s.why}</p>
+
+                                            <div style={{
+                                                direction: "ltr", borderRadius: 14, overflow: "hidden",
+                                                boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)",
+                                            }}>
+                                                <video
+                                                    src={s.video}
+                                                    autoPlay
+                                                    loop
+                                                    muted
+                                                    playsInline
+                                                    style={{ width: "100%", height: "auto", display: "block" }}
+                                                />
                                             </div>
                                         </div>
-                                    </div>
-                                </FadeIn>
-                            ))}
+                                    </FadeIn>
+                                )
+                            })}
                         </div>
                     </section>
 
