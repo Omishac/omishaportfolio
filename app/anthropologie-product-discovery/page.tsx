@@ -145,6 +145,55 @@ function BrandCard({ name, href, phone }: { name: string; href: string; phone: b
     )
 }
 
+function ResearchCard({ num, title, desc, quote, phone }: { num: string; title: string; desc: string; quote: string; phone: boolean }) {
+    const [hovered, setHovered] = useState(false)
+    return (
+        <div
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            style={{ position: "relative", paddingTop: phone ? 0 : 40 }}
+        >
+            {!phone && (
+                <div style={{
+                    position: "absolute", top: 0, left: 28, right: 28,
+                    opacity: hovered ? 1 : 0,
+                    transform: hovered ? "translateY(0)" : "translateY(6px)",
+                    transition: "opacity 0.3s ease, transform 0.3s ease",
+                    pointerEvents: "none", zIndex: 2,
+                }}>
+                    <div style={{
+                        backgroundColor: "#FAFAF7",
+                        borderRadius: 10,
+                        padding: "10px 16px",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                    }}>
+                        <span style={{
+                            fontFamily: Z, fontSize: 20, fontWeight: 400, color: C.olive,
+                            lineHeight: 1, marginRight: 6, verticalAlign: "top",
+                        }}>"</span>
+                        <span style={{
+                            fontFamily: Z, fontSize: 13.5, fontStyle: "italic", color: C.ink3,
+                            lineHeight: 1.5,
+                        }}>{quote.replace(/“|”|"/g, "")}</span>
+                    </div>
+                </div>
+            )}
+            <div style={{
+                backgroundColor: C.surface, borderRadius: 14,
+                padding: phone ? "28px 24px" : "36px 32px",
+                transform: hovered && !phone ? "translateY(-3px)" : "none",
+                boxShadow: hovered && !phone ? "0 4px 16px rgba(0,0,0,0.05)" : "none",
+                transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                cursor: "default",
+            }}>
+                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 12 }}>{num}</p>
+                <p style={{ fontFamily: Z, fontSize: phone ? 18 : 21, fontWeight: 600, color: C.ink, lineHeight: 1.25, marginBottom: 12 }}>{title}</p>
+                <p style={{ fontFamily: INTER, fontSize: 13.5, lineHeight: 1.65, color: C.ink3, margin: 0 }}>{desc}</p>
+            </div>
+        </div>
+    )
+}
+
 function Placeholder({ label, aspect = "56.25%", dark = false }: { label: string; aspect?: string; dark?: boolean }) {
     return (
         <div style={{
@@ -433,23 +482,15 @@ export default function AnthropologieProductDiscovery() {
                         <FadeIn delay={60}>
                             <div style={{
                                 display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr",
-                                gap: phone ? 12 : 16,
+                                gap: phone ? 16 : 20,
                             }}>
                                 {[
-                                    { num: "01", title: "Selected filters lacked visibility", placeholder: "Usability testing: filter selection visibility" },
-                                    { num: "02", title: "Multi-filter workflows felt fragile", placeholder: "Usability testing: multi-filter navigation" },
-                                    { num: "03", title: "Exiting the drawer was unclear", placeholder: "Usability testing: exit behavior confusion" },
-                                    { num: "04", title: "Inventory language created confusion", placeholder: "Usability testing: inventory filter interpretation" },
+                                    { num: "01", title: "Selected Filters Lacked Visibility", desc: "Users struggled to determine which filters were currently active after making a selection.", quote: "“I can’t tell if that filter actually applied?”" },
+                                    { num: "02", title: "Multi-Filter Workflows Felt Fragile", desc: "Participants questioned whether previous selections remained active while navigating between filter groups.", quote: "“Are my previous filters still selected?”" },
+                                    { num: "03", title: "Exiting the Drawer Was Unclear", desc: "Users struggled to understand how to leave the filtering experience without applying filters.", quote: "“How do I close this?”" },
+                                    { num: "04", title: "Inventory Language Created Confusion", desc: "Participants frequently interpreted “Available Within 24 Hours” as a shipping promise rather than local inventory availability.", quote: "“Does available within 24 hours mean shipping?”" },
                                 ].map((item, i) => (
-                                    <div key={i} style={{
-                                        backgroundColor: C.surface, borderRadius: 14, overflow: "hidden",
-                                    }}>
-                                        <Placeholder label={item.placeholder} aspect="65%" />
-                                        <div style={{ padding: phone ? "20px" : "24px 28px" }}>
-                                            <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: C.olive, marginBottom: 10 }}>{item.num}</p>
-                                            <p style={{ fontFamily: Z, fontSize: phone ? 17 : 19, fontWeight: 700, color: C.ink, lineHeight: 1.3, margin: 0 }}>{item.title}</p>
-                                        </div>
-                                    </div>
+                                    <ResearchCard key={i} num={item.num} title={item.title} desc={item.desc} quote={item.quote} phone={phone} />
                                 ))}
                             </div>
                         </FadeIn>
