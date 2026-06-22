@@ -742,7 +742,7 @@ export default function AnthropologieProductDiscovery() {
                         {/* Part 1: Designing the Core Pattern */}
                         <FadeIn>
                             <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Designing the Core Pattern</p>
-                            <div style={{ borderRadius: 14, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
+                            <div style={{ maxWidth: 480, borderRadius: 14, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
                                 <img src="/images/toggle-whitelabel.png" alt="White-label toggle component" style={{ width: "100%", height: "auto", display: "block" }} />
                             </div>
                             <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, marginTop: 16, maxWidth: 520 }}>
@@ -812,29 +812,6 @@ export default function AnthropologieProductDiscovery() {
                             </div>
                         </FadeIn>
 
-                        {/* Part 4: Implementation Ready */}
-                        <FadeIn>
-                            <div style={{ marginTop: 64 }}>
-                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Implementation Ready</p>
-                                <div style={{ borderRadius: 14, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
-                                    <img src="/images/toggle-specs.png" alt="Component specifications and annotation" style={{ width: "100%", height: "auto", display: "block" }} />
-                                </div>
-                                <div style={{ display: "flex", flexWrap: "wrap", gap: phone ? 12 : 24, marginTop: 20 }}>
-                                    {["States documented", "Interaction logic defined", "Copy variations documented", "Engineering handoff completed"].map((item, i) => (
-                                        <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                            <span style={{
-                                                width: 18, height: 18, borderRadius: "50%", flexShrink: 0,
-                                                backgroundColor: "rgba(137,144,100,0.15)",
-                                                display: "flex", alignItems: "center", justifyContent: "center",
-                                            }}>
-                                                <span style={{ fontFamily: INTER, fontSize: 9, color: C.olive }}>&#10003;</span>
-                                            </span>
-                                            <p style={{ fontFamily: INTER, fontSize: 13, color: C.ink2, margin: 0 }}>{item}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </FadeIn>
                     </section>
 
                     {/* ════════ IMPACT & LAUNCH ════════ */}
