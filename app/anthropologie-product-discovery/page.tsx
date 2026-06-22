@@ -179,16 +179,16 @@ function ResearchCard({ num, title, desc, quote, phone }: { num: string; title: 
                 </div>
             )}
             <div style={{
-                backgroundColor: C.surface, borderRadius: 14,
+                backgroundColor: hovered && !phone ? C.ink : C.surface, borderRadius: 14,
                 padding: phone ? "28px 24px" : "36px 32px",
                 transform: hovered && !phone ? "translateY(-3px)" : "none",
-                boxShadow: hovered && !phone ? "0 4px 16px rgba(0,0,0,0.05)" : "none",
-                transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                boxShadow: hovered && !phone ? "0 4px 16px rgba(0,0,0,0.08)" : "none",
+                transition: "background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease",
                 cursor: "default",
             }}>
-                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 12 }}>{num}</p>
-                <p style={{ fontFamily: Z, fontSize: phone ? 18 : 21, fontWeight: 600, color: C.ink, lineHeight: 1.25, marginBottom: 12 }}>{title}</p>
-                <p style={{ fontFamily: INTER, fontSize: 13.5, lineHeight: 1.65, color: C.ink3, margin: 0 }}>{desc}</p>
+                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: hovered && !phone ? "rgba(255,255,255,0.4)" : C.olive, marginBottom: 12, transition: "color 0.3s ease" }}>{num}</p>
+                <p style={{ fontFamily: Z, fontSize: phone ? 18 : 21, fontWeight: 600, color: hovered && !phone ? "#fff" : C.ink, lineHeight: 1.25, marginBottom: 12, transition: "color 0.3s ease" }}>{title}</p>
+                <p style={{ fontFamily: INTER, fontSize: 13.5, lineHeight: 1.65, color: hovered && !phone ? "rgba(255,255,255,0.6)" : C.ink3, margin: 0, transition: "color 0.3s ease" }}>{desc}</p>
             </div>
         </div>
     )
