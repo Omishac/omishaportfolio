@@ -701,146 +701,24 @@ export default function AnthropologieProductDiscovery() {
                             </p>
                         </FadeIn>
 
-                        {/* 1. Exploring the Pattern */}
                         <FadeIn>
-                            <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Exploring the Pattern</p>
                             <div style={{
-                                display: "flex", gap: 16, overflowX: "auto", paddingBottom: 8,
-                                scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch",
-                                scrollbarWidth: "none",
+                                display: "grid",
+                                gridTemplateColumns: phone ? "1fr" : "repeat(3, 1fr)",
+                                gap: phone ? 12 : 16,
                             }}>
                                 {[
-                                    { src: "/images/explore-rebuild-web.png", label: "Rebuild for Web" },
-                                    { src: "/images/explore-toggle-styles.png", label: "Toggle Styles" },
-                                    { src: "/images/explore-flat-toggles.png", label: "Flat Toggles" },
-                                    { src: "/images/explore-outline-toggle.png", label: "Outline Toggle" },
-                                    { src: "/images/explore-filled-toggle.png", label: "Filled Toggle" },
-                                ].map((item, i) => (
-                                    <div key={i} style={{
-                                        flex: "0 0 auto",
-                                        width: phone ? "75vw" : 260,
-                                        scrollSnapAlign: "start",
-                                        borderRadius: 12, overflow: "hidden",
-                                        border: `1px solid ${C.border}`, backgroundColor: C.surface,
-                                        display: "flex", flexDirection: "column",
-                                    }}>
-                                        <div style={{ padding: 20, display: "flex", alignItems: "center", justifyContent: "center", flex: 1, minHeight: phone ? 140 : 180 }}>
-                                            <img src={item.src} alt={item.label} style={{ maxWidth: "100%", maxHeight: phone ? 120 : 160, height: "auto", display: "block" }} />
-                                        </div>
-                                        <div style={{ padding: "10px 14px", borderTop: `1px solid ${C.border}`, backgroundColor: C.bg }}>
-                                            <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.ink, margin: 0 }}>{item.label}</p>
+                                    { src: "/images/toggle-anthropologie.png", label: "Anthropologie" },
+                                    { src: "/images/toggle-urbanoutfitters.png", label: "Urban Outfitters" },
+                                    { src: "/images/toggle-freepeople.png", label: "Free People" },
+                                ].map((brand, i) => (
+                                    <div key={i} style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
+                                        <img src={brand.src} alt={`${brand.label} toggle states`} style={{ width: "100%", height: "auto", display: "block" }} />
+                                        <div style={{ padding: "10px 14px", borderTop: `1px solid ${C.border}` }}>
+                                            <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.ink, margin: 0, textAlign: "center" }}>{brand.label}</p>
                                         </div>
                                     </div>
                                 ))}
-                            </div>
-                            <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, marginTop: 16, maxWidth: 480 }}>
-                                Multiple interaction patterns were explored to improve clarity and consistency.
-                            </p>
-                        </FadeIn>
-
-                        {/* 2. Final Component */}
-                        <FadeIn>
-                            <div style={{ marginTop: 56 }}>
-                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Final Component</p>
-                                <Placeholder label="Selected direction: production toggle component" aspect={phone ? "56%" : "44%"} />
-                                <div style={{ display: "flex", flexWrap: "wrap", gap: phone ? 16 : 28, marginTop: 20 }}>
-                                    {["Clear active state", "Accessible feedback", "Scalable pattern"].map((item, i) => (
-                                        <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                            <span style={{
-                                                width: 18, height: 18, borderRadius: "50%", flexShrink: 0,
-                                                backgroundColor: "rgba(137,144,100,0.15)",
-                                                display: "flex", alignItems: "center", justifyContent: "center",
-                                            }}>
-                                                <span style={{ fontFamily: INTER, fontSize: 9, color: C.olive }}>&#10003;</span>
-                                            </span>
-                                            <p style={{ fontFamily: INTER, fontSize: 13, color: C.ink2, margin: 0 }}>{item}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </FadeIn>
-
-                        {/* 3. Scaling Across Brands */}
-                        <FadeIn>
-                            <div style={{ marginTop: 56 }}>
-                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Scaling Across Brands</p>
-                                <div style={{
-                                    display: "grid",
-                                    gridTemplateColumns: phone ? "1fr" : "repeat(3, 1fr)",
-                                    gap: phone ? 12 : 16,
-                                }}>
-                                    {[
-                                        { src: "/images/toggle-anthropologie.png", label: "Anthropologie" },
-                                        { src: "/images/toggle-urbanoutfitters.png", label: "Urban Outfitters" },
-                                        { src: "/images/toggle-freepeople.png", label: "Free People" },
-                                    ].map((brand, i) => (
-                                        <div key={i} style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
-                                            <img src={brand.src} alt={`${brand.label} toggle states`} style={{ width: "100%", height: "auto", display: "block" }} />
-                                            <div style={{ padding: "10px 14px", borderTop: `1px solid ${C.border}` }}>
-                                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.ink, margin: 0, textAlign: "center" }}>{brand.label}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, marginTop: 16, maxWidth: 520 }}>
-                                    While the interaction remained consistent, visual treatments adapted to each brand.
-                                </p>
-                            </div>
-                        </FadeIn>
-
-                        {/* 4. Supporting Different States */}
-                        <FadeIn>
-                            <div style={{ marginTop: 56 }}>
-                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Supporting Different States</p>
-                                <div style={{
-                                    display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr",
-                                    gap: phone ? 16 : 20,
-                                }}>
-                                    {[
-                                        "No Pickup Store Selected",
-                                        "Pickup Store Selected",
-                                        "Pickup Store Unavailable",
-                                        "Hidden Toggle State",
-                                    ].map((title, i) => (
-                                        <div key={i} style={{ borderRadius: 14, overflow: "hidden", border: `1px solid ${C.border}` }}>
-                                            <div style={{ width: "100%", paddingTop: "65%", position: "relative", backgroundColor: C.surface }}>
-                                                <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                                    <span style={{ fontFamily: INTER, fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: C.muted }}>State {String(i + 1).padStart(2, "0")}</span>
-                                                </div>
-                                            </div>
-                                            <div style={{ padding: phone ? "16px" : "18px 24px" }}>
-                                                <p style={{ fontFamily: INTER, fontSize: 13, fontWeight: 600, color: C.ink, margin: 0 }}>{title}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, marginTop: 16, maxWidth: 520 }}>
-                                    The component was designed to support multiple pickup scenarios while maintaining a consistent interaction model.
-                                </p>
-                            </div>
-                        </FadeIn>
-
-                        {/* 5. Implementation */}
-                        <FadeIn>
-                            <div style={{ marginTop: 56 }}>
-                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Implementation</p>
-                                <div style={{ borderRadius: 14, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
-                                    <img src="/images/toggle-specs.png" alt="Component specifications and engineering handoff documentation" style={{ width: "100%", height: "auto", display: "block" }} />
-                                </div>
-                                <div style={{ display: "flex", flexWrap: "wrap", gap: phone ? 16 : 28, marginTop: 20 }}>
-                                    {["States documented", "Interaction logic defined", "Engineering handoff completed"].map((item, i) => (
-                                        <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                            <span style={{
-                                                width: 18, height: 18, borderRadius: "50%", flexShrink: 0,
-                                                backgroundColor: "rgba(137,144,100,0.15)",
-                                                display: "flex", alignItems: "center", justifyContent: "center",
-                                            }}>
-                                                <span style={{ fontFamily: INTER, fontSize: 9, color: C.olive }}>&#10003;</span>
-                                            </span>
-                                            <p style={{ fontFamily: INTER, fontSize: 13, color: C.ink2, margin: 0 }}>{item}</p>
-                                        </div>
-                                    ))}
-                                </div>
                             </div>
                         </FadeIn>
                     </section>
