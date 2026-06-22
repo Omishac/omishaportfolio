@@ -528,10 +528,10 @@ export default function AnthropologieProductDiscovery() {
                                 alignItems: "start",
                             }}>
                                 {[
-                                    { num: "01", title: "Open Filters", caption: "Start from a centralized filter drawer.", src: "/images/Sort%20Modal.png" },
-                                    { num: "02", title: "Choose Filter", caption: "Select a category to refine results.", src: "/images/Sort%20Modal-1.png" },
-                                    { num: "03", title: "Make Selection", caption: "Apply filter options.", src: "/images/Sort%20Modal%202.png" },
-                                    { num: "04", title: "Return & Review", caption: "Review applied selections.", src: "/images/Sort%20Modal-2.png" },
+                                    { num: "01", title: "Filter Drawer", caption: "Users start from a centralized modal.", src: "/images/Sort%20Modal.png" },
+                                    { num: "02", title: "Category Selection", caption: "Navigate to a specific filter type.", src: "/images/Sort%20Modal-1.png" },
+                                    { num: "03", title: "Apply Options", caption: "Make selections within the category.", src: "/images/Sort%20Modal%202.png" },
+                                    { num: "04", title: "Review Selections", caption: "Return to review applied filters.", src: "/images/Sort%20Modal-2.png" },
                                 ].map((screen, i) => (
                                     <React.Fragment key={i}>
                                         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -861,9 +861,12 @@ export default function AnthropologieProductDiscovery() {
                     </section>
 
                     {/* ════════ LAUNCH & REFLECTION ════════ */}
-                    <section id="launch" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="launch" style={{ scrollMarginTop: 80, marginTop: 160 }}>
                         <FadeIn>
                             <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Launch &amp; Reflection</p>
+                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
+                                Shipping across three brands
+                            </h2>
                             <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 40 }}>
                                 This redesign is now live across Urban Outfitters, Free People, and Anthropologie, helping shoppers navigate large product catalogs with greater clarity and confidence.
                             </p>
@@ -872,9 +875,9 @@ export default function AnthropologieProductDiscovery() {
                         <FadeIn delay={40}>
                             <div style={{ display: "flex", gap: phone ? 12 : 20, flexWrap: "wrap", marginBottom: 96 }}>
                                 {[
-                                    { name: "Urban Outfitters", href: "https://www.urbanoutfitters.com/womens-clothing" },
-                                    { name: "Free People", href: "https://www.freepeople.com/clothes" },
-                                    { name: "Anthropologie", href: "https://www.anthropologie.com/clothing" },
+                                    { name: "Urban Outfitters", href: "https://www.urbanoutfitters.com/womens-clothing", brandColor: "#11120C" },
+                                    { name: "Free People", href: "https://www.freepeople.com/clothes", brandColor: "#B5553E" },
+                                    { name: "Anthropologie", href: "https://www.anthropologie.com/womens-clothing", brandColor: "#2D6A6A" },
                                 ].map((brand, i) => (
                                     <a key={i} href={brand.href} target="_blank" rel="noopener noreferrer" style={{
                                         fontFamily: INTER, fontSize: 14, fontWeight: 600, color: C.ink,
@@ -882,7 +885,7 @@ export default function AnthropologieProductDiscovery() {
                                         borderRadius: 100, border: `1px solid ${C.border}`,
                                         transition: "all 0.25s ease",
                                     }}
-                                    onMouseEnter={e => { e.currentTarget.style.backgroundColor = C.ink; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = C.ink }}
+                                    onMouseEnter={e => { e.currentTarget.style.backgroundColor = brand.brandColor; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = brand.brandColor }}
                                     onMouseLeave={e => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = C.ink; e.currentTarget.style.borderColor = C.border }}
                                     >
                                         {brand.name} &nbsp;&#8599;
@@ -907,7 +910,7 @@ export default function AnthropologieProductDiscovery() {
                         <FadeIn delay={100}>
                             <div style={{ width: 40, height: 1, backgroundColor: C.olive, marginBottom: 32, opacity: 0.5 }} />
                             <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.85, color: C.ink3, maxWidth: 580, margin: 0 }}>
-                                Usability testing revealed that the biggest friction wasn't functionality — it was uncertainty. Small moments of hesitation compounded throughout the experience, causing users to question whether the system was working as expected.
+                                Usability testing revealed that the biggest friction wasn't functionality. It was uncertainty. Small moments of hesitation compounded throughout the experience, causing users to question whether the system was working as expected.
                             </p>
                             <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.85, color: C.ink3, maxWidth: 580, marginTop: 20, marginBottom: 0 }}>
                                 This project reinforced that effective product design is often less about adding new features and more about creating experiences that feel clear, predictable, and trustworthy.
