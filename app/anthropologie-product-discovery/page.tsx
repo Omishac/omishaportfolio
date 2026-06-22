@@ -362,8 +362,11 @@ export default function AnthropologieProductDiscovery() {
                             <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
                                 The existing filtering experience
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 64 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 16 }}>
                                 Product filters play a critical role in helping shoppers navigate large product catalogs. As assortments expanded across URBN brands, we wanted to better understand how the filtering experience supported product discovery across Mobile Web and Desktop.
+                            </p>
+                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 64 }}>
+                                The existing experience followed a consistent pattern: users opened a centralized filter drawer, navigated into individual filter categories, made selections, and returned to review their choices.
                             </p>
                         </FadeIn>
 
@@ -374,7 +377,6 @@ export default function AnthropologieProductDiscovery() {
                                 gridTemplateColumns: phone ? "1fr 1fr" : "1fr auto 1fr auto 1fr auto 1fr",
                                 gap: phone ? "24px 16px" : 0,
                                 alignItems: "start",
-                                marginBottom: 16,
                             }}>
                                 {[
                                     { label: "Open Filters", src: "/images/Sort%20Modal.png" },
@@ -385,7 +387,7 @@ export default function AnthropologieProductDiscovery() {
                                     <React.Fragment key={i}>
                                         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                                             <div style={{
-                                                position: "relative", borderRadius: 12, overflow: "hidden",
+                                                borderRadius: 12, overflow: "hidden",
                                                 backgroundColor: C.surface, border: `1px solid ${C.border}`,
                                             }}>
                                                 <img
@@ -393,30 +395,6 @@ export default function AnthropologieProductDiscovery() {
                                                     alt={screen.label}
                                                     style={{ width: "100%", height: "auto", display: "block" }}
                                                 />
-                                                {i === 3 && !phone && (
-                                                    <>
-                                                        <div style={{
-                                                            position: "absolute", top: "24%", right: 10,
-                                                        }}>
-                                                            <div style={{
-                                                                backgroundColor: C.bg, border: `1px solid ${C.olive}`,
-                                                                borderRadius: 100, padding: "3px 10px",
-                                                                fontFamily: INTER, fontSize: 9, fontWeight: 600, letterSpacing: "0.06em",
-                                                                color: C.olive, whiteSpace: "nowrap",
-                                                            }}>Filter count</div>
-                                                        </div>
-                                                        <div style={{
-                                                            position: "absolute", top: "30%", right: 10,
-                                                        }}>
-                                                            <div style={{
-                                                                backgroundColor: C.bg, border: `1px solid ${C.olive}`,
-                                                                borderRadius: 100, padding: "3px 10px",
-                                                                fontFamily: INTER, fontSize: 9, fontWeight: 600, letterSpacing: "0.06em",
-                                                                color: C.olive, whiteSpace: "nowrap",
-                                                            }}>Selected state</div>
-                                                        </div>
-                                                    </>
-                                                )}
                                             </div>
                                             <p style={{
                                                 fontFamily: INTER, fontSize: 12, fontWeight: 500, color: C.ink3,
@@ -435,11 +413,10 @@ export default function AnthropologieProductDiscovery() {
                             </div>
                         </FadeIn>
 
-                        {/* Supporting Caption */}
                         <FadeIn delay={120}>
                             <p style={{
                                 fontFamily: INTER, fontSize: 14, lineHeight: 1.7, color: C.ink3,
-                                textAlign: "center", maxWidth: 600, margin: "24px auto 0",
+                                textAlign: "center", maxWidth: 600, margin: "32px auto 0",
                             }}>
                                 Applying multiple filters required repeated movement between screens before returning to the main drawer to review selections.
                             </p>
