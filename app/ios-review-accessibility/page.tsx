@@ -1611,6 +1611,7 @@ export default function IOSCaseStudy() {
                     maxWidth: 1400,
                     margin: "0 auto",
                     padding: `0 ${pad}px 180px`,
+                    overflowX: "hidden" as const,
                 }}
             >
                 {desktop && (
@@ -2221,7 +2222,7 @@ export default function IOSCaseStudy() {
                             flexDirection: phone ? "column" : "row",
                             gap: 28,
                             alignItems: "flex-start",
-                            margin: phone ? "0" : "0 -40px",
+                            margin: "0",
                         }}
                     >
                         {[
