@@ -163,7 +163,7 @@ const STRATEGIES = [
     {
         num: "03", title: "Create a Clear Exit Path",
         problem: "Exiting the drawer was unclear. Users didn't know how to leave without applying filters.",
-        changes: ["Introduced contextual Done behavior", "Clarified exit actions", "Improved drawer navigation"],
+        changes: ["Changed CTA copy from \"Done\" to \"View Results\" when a filter is selected", "Clarified exit actions", "Improved drawer navigation"],
         why: "Users always understand how to continue their shopping journey.",
         video: "/videos/strategy-03-exit.mov",
     },
