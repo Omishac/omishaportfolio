@@ -616,33 +616,35 @@ export default function AnthropologieProductDiscovery() {
                     </section>
 
                     {/* ════════ BRINGING SOLUTIONS TOGETHER ════════ */}
-                    <section id="prototyping" style={{ scrollMarginTop: 80, marginTop: 100 }}>
+                    <section id="prototyping" style={{ scrollMarginTop: 80, marginTop: 120 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 12 }}>Bringing the Solutions Together</p>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 48 }}>
-                                The four design improvements were combined into a single interactive prototype and tested as a complete filtering experience before development.
+                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 20 }}>
+                                Bringing the solutions together
+                            </h2>
+                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 560, marginBottom: 56 }}>
+                                The four design improvements were combined into one interactive prototype and tested as a complete filtering experience before development.
                             </p>
                         </FadeIn>
 
                         <FadeIn delay={40}>
                             <div style={{
                                 display: "grid",
-                                gridTemplateColumns: phone ? "1fr" : "1fr 1.2fr",
+                                gridTemplateColumns: phone ? "1fr" : "1.3fr 1fr",
                                 gap: phone ? 32 : 56,
                                 alignItems: "center",
                             }}>
                                 <div>
-                                    <p style={{ fontFamily: Z, fontSize: phone ? 48 : 64, fontWeight: 700, color: C.ink, letterSpacing: "-0.03em", lineHeight: 1, margin: 0, marginBottom: 12 }}>45%</p>
+                                    <p style={{ fontFamily: Z, fontSize: phone ? 48 : 56, fontWeight: 700, color: C.ink, letterSpacing: "-0.03em", lineHeight: 1, margin: 0, marginBottom: 10 }}>45%</p>
                                     <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.ink2, letterSpacing: "0.04em", textTransform: "uppercase", margin: 0, marginBottom: 20 }}>
                                         Faster Prototype Creation &amp; Testing Preparation
                                     </p>
-                                    <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.7, color: C.ink3, margin: 0, maxWidth: 400 }}>
+                                    <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.7, color: C.ink3, margin: 0, maxWidth: 380 }}>
                                         Using Builder.io and URBN's existing design system components, I rapidly transformed concepts into a testable experience, allowing faster validation before development.
                                     </p>
                                 </div>
-                                <div>
+                                <div style={{ maxWidth: 360 }}>
                                     <div style={{
-                                        borderRadius: 14, overflow: "hidden",
+                                        borderRadius: 12, overflow: "hidden",
                                         border: `1px solid ${C.border}`,
                                         backgroundColor: C.surface,
                                     }}>
@@ -653,46 +655,51 @@ export default function AnthropologieProductDiscovery() {
                                         />
                                     </div>
                                     <p style={{ fontFamily: INTER, fontSize: 11, lineHeight: 1.5, color: C.muted, margin: 0, marginTop: 10 }}>
-                                        Interactive prototype used for usability testing prior to implementation.
+                                        Interactive prototype used for usability testing.
                                     </p>
                                 </div>
                             </div>
                         </FadeIn>
 
-                        {/* Journey connector */}
+                        {/* Horizontal journey flow */}
                         <FadeIn delay={80}>
                             <div style={{
                                 marginTop: phone ? 56 : 72,
-                                display: "flex", flexDirection: "column", alignItems: "center", gap: 0,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                flexWrap: phone ? "wrap" : "nowrap",
+                                gap: phone ? 8 : 0,
                             }}>
                                 {[
-                                    { text: "4 Design Improvements", bold: true },
-                                    { text: "Interactive Prototype", bold: false },
-                                    { text: "Usability Testing", bold: false },
-                                    { text: "100% Task Completion", bold: true },
+                                    "4 Design Improvements",
+                                    "Interactive Prototype",
+                                    "Usability Testing",
+                                    "100% Task Completion",
                                 ].map((step, i, arr) => (
-                                    <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                                        {i > 0 && (
-                                            <div style={{
-                                                width: 1, height: 32,
-                                                backgroundColor: C.border,
-                                            }} />
+                                    <div key={i} style={{ display: "flex", alignItems: "center" }}>
+                                        <p style={{
+                                            fontFamily: INTER,
+                                            fontSize: phone ? 11 : 13,
+                                            fontWeight: (i === 0 || i === arr.length - 1) ? 600 : 400,
+                                            color: (i === 0 || i === arr.length - 1) ? C.ink : C.ink3,
+                                            margin: 0,
+                                            whiteSpace: "nowrap",
+                                        }}>{step}</p>
+                                        {i < arr.length - 1 && !phone && (
+                                            <span style={{
+                                                fontFamily: INTER, fontSize: 14, color: C.muted,
+                                                margin: "0 20px",
+                                                userSelect: "none",
+                                            }}>&rarr;</span>
                                         )}
-                                        <div style={{
-                                            padding: "10px 28px",
-                                            borderRadius: 100,
-                                            backgroundColor: (i === 0 || i === arr.length - 1) ? C.ink : C.surface,
-                                            border: (i === 0 || i === arr.length - 1) ? "none" : `1px solid ${C.border}`,
-                                        }}>
-                                            <p style={{
-                                                fontFamily: INTER,
-                                                fontSize: 12,
-                                                fontWeight: step.bold ? 600 : 500,
-                                                color: (i === 0 || i === arr.length - 1) ? "#fff" : C.ink2,
-                                                margin: 0,
-                                                letterSpacing: "0.01em",
-                                            }}>{step.text}</p>
-                                        </div>
+                                        {i < arr.length - 1 && phone && (
+                                            <span style={{
+                                                fontFamily: INTER, fontSize: 12, color: C.muted,
+                                                margin: "0 8px",
+                                                userSelect: "none",
+                                            }}>&rarr;</span>
+                                        )}
                                     </div>
                                 ))}
                             </div>
@@ -700,7 +707,7 @@ export default function AnthropologieProductDiscovery() {
                     </section>
 
                     {/* ════════ VALIDATION ════════ */}
-                    <section id="validation" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="validation" style={{ scrollMarginTop: 80, marginTop: 72 }}>
                         <FadeIn>
                             <div style={{
                                 backgroundColor: C.ink, borderRadius: 16, padding: phone ? "48px 28px" : "56px 64px",
