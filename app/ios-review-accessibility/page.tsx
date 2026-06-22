@@ -1595,24 +1595,16 @@ export default function IOSCaseStudy() {
     const reflection = useInView()
 
     return (
-        <div
-            style={{
-                width: "100%",
-                backgroundColor: C.bg,
-                overflowX: "clip" as const,
-            }}
-        >
+        <div style={{ width: "100%", backgroundColor: C.bg }}>
             <CaseStudyNav />
-            <div
-                style={{
-                    display: desktop ? "grid" : "block",
-                    gridTemplateColumns: desktop ? "140px 1fr" : undefined,
-                    gap: desktop ? 48 : undefined,
-                    maxWidth: 1400,
-                    margin: "0 auto",
-                    padding: `0 ${pad}px 180px`,
-                }}
-            >
+            <div style={{
+                display: desktop ? "grid" : "block",
+                gridTemplateColumns: desktop ? "140px 1fr" : undefined,
+                gap: desktop ? 48 : undefined,
+                maxWidth: 1400,
+                margin: "0 auto",
+                padding: `0 ${pad}px 180px`,
+            }}>
                 {desktop && (
                     <aside>
                         <div style={{ position: "sticky", top: 80, paddingTop: 40 }}>
@@ -1621,7 +1613,7 @@ export default function IOSCaseStudy() {
                     </aside>
                 )}
 
-                <div style={{ overflowX: "clip" as const }}>
+                <div>
                 {/* ── HERO ── */}
                 <div
                     id="overview"
