@@ -1023,7 +1023,7 @@ function Footer({
                 <div style={{ display: "flex", gap: phone ? 20 : tablet ? 24 : 32, alignItems: "center" }}>
                     {[
                         { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-                        { label: "Email", href: "mailto:omishachabria@gmail.com" },
+                        { label: "Email", href: "mailto:omishachabria3@gmail.com" },
                         { label: "Resume", href: "/slides/resume.pdf", ext: true },
                     ].map(({ label, href, ext }) => (
                         <a
