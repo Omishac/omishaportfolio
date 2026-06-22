@@ -704,7 +704,9 @@ export default function AnthropologieProductDiscovery() {
                         {/* 1. Exploring the Pattern */}
                         <FadeIn>
                             <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Exploring the Pattern</p>
-                            <Placeholder label="Toggle exploration: interaction patterns across brands" aspect={phone ? "56%" : "40%"} />
+                            <div style={{ borderRadius: 14, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
+                                <img src="/images/toggle-specs.png" alt="Proposed web toggle components: default, selected, hover states with specifications" style={{ width: "100%", height: "auto", display: "block" }} />
+                            </div>
                             <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, marginTop: 16, maxWidth: 480 }}>
                                 Multiple toggle variations were tested to balance clarity, accessibility, and brand consistency.
                             </p>
@@ -714,7 +716,26 @@ export default function AnthropologieProductDiscovery() {
                         <FadeIn>
                             <div style={{ marginTop: 56 }}>
                                 <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Final Component</p>
-                                <Placeholder label="Production toggle: default, selected, hover states" aspect={phone ? "80%" : "50%"} />
+                                <div style={{
+                                    display: "grid",
+                                    gridTemplateColumns: phone ? "1fr 1fr" : "repeat(5, 1fr)",
+                                    gap: phone ? 12 : 16,
+                                }}>
+                                    {[
+                                        { src: "/images/toggle-anthropologie.png", label: "Anthropologie" },
+                                        { src: "/images/toggle-freepeople.png", label: "Free People" },
+                                        { src: "/images/toggle-terrain.png", label: "Terrain" },
+                                        { src: "/images/toggle-urbanoutfitters.png", label: "Urban Outfitters" },
+                                        { src: "/images/toggle-whitelabel.png", label: "White Label" },
+                                    ].map((brand, i) => (
+                                        <div key={i} style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
+                                            <img src={brand.src} alt={`${brand.label} toggle states`} style={{ width: "100%", height: "auto", display: "block" }} />
+                                            <div style={{ padding: "10px 14px", borderTop: `1px solid ${C.border}` }}>
+                                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.ink, margin: 0, textAlign: "center" }}>{brand.label}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                                 <div style={{
                                     display: "flex", flexWrap: "wrap", gap: phone ? 16 : 28, marginTop: 20,
                                 }}>
@@ -770,7 +791,9 @@ export default function AnthropologieProductDiscovery() {
                         <FadeIn>
                             <div style={{ marginTop: 56 }}>
                                 <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Implementation</p>
-                                <Placeholder label="Component specifications & engineering handoff" aspect={phone ? "65%" : "50%"} />
+                                <div style={{ borderRadius: 14, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
+                                    <img src="/images/toggle-specs.png" alt="Component specifications and engineering handoff documentation" style={{ width: "100%", height: "auto", display: "block" }} />
+                                </div>
                                 <div style={{
                                     display: "flex", flexWrap: "wrap", gap: phone ? 16 : 28, marginTop: 20,
                                 }}>
