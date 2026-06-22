@@ -734,29 +734,105 @@ export default function AnthropologieProductDiscovery() {
                             <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
                                 Building a reusable component
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 64 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 72 }}>
                                 The redesigned pickup experience introduced a new interaction pattern that wasn't supported by the existing design system. Rather than creating a one-off solution, I designed a reusable component that could support future filtering experiences across URBN brands.
                             </p>
                         </FadeIn>
 
+                        {/* Part 1: Designing the Core Pattern */}
                         <FadeIn>
-                            <div style={{
-                                display: "grid",
-                                gridTemplateColumns: phone ? "1fr" : "repeat(3, 1fr)",
-                                gap: phone ? 12 : 16,
-                            }}>
-                                {[
-                                    { src: "/images/toggle-anthropologie.png", label: "Anthropologie" },
-                                    { src: "/images/toggle-urbanoutfitters.png", label: "Urban Outfitters" },
-                                    { src: "/images/toggle-freepeople.png", label: "Free People" },
-                                ].map((brand, i) => (
-                                    <div key={i} style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
-                                        <img src={brand.src} alt={`${brand.label} toggle states`} style={{ width: "100%", height: "auto", display: "block" }} />
-                                        <div style={{ padding: "10px 14px", borderTop: `1px solid ${C.border}` }}>
-                                            <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.ink, margin: 0, textAlign: "center" }}>{brand.label}</p>
+                            <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Designing the Core Pattern</p>
+                            <div style={{ borderRadius: 14, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
+                                <img src="/images/toggle-whitelabel.png" alt="White-label toggle component" style={{ width: "100%", height: "auto", display: "block" }} />
+                            </div>
+                            <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, marginTop: 16, maxWidth: 520 }}>
+                                The component was first designed as a white-label pattern before being adapted across individual brand experiences.
+                            </p>
+                        </FadeIn>
+
+                        {/* Part 2: Adapting Across Brands */}
+                        <FadeIn>
+                            <div style={{ marginTop: 64 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Adapting Across Brands</p>
+                                <div style={{
+                                    display: "grid",
+                                    gridTemplateColumns: phone ? "1fr" : "repeat(3, 1fr)",
+                                    gap: phone ? 12 : 16,
+                                }}>
+                                    {[
+                                        { src: "/images/toggle-anthropologie.png", label: "Anthropologie" },
+                                        { src: "/images/toggle-urbanoutfitters.png", label: "Urban Outfitters" },
+                                        { src: "/images/toggle-freepeople.png", label: "Free People" },
+                                    ].map((brand, i) => (
+                                        <div key={i} style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
+                                            <img src={brand.src} alt={`${brand.label} toggle states`} style={{ width: "100%", height: "auto", display: "block" }} />
+                                            <div style={{ padding: "10px 14px", borderTop: `1px solid ${C.border}` }}>
+                                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.ink, margin: 0, textAlign: "center" }}>{brand.label}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
+                                <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, marginTop: 16, maxWidth: 520 }}>
+                                    While the interaction remained consistent, visual treatments were adapted to align with each brand's established design language.
+                                </p>
+                            </div>
+                        </FadeIn>
+
+                        {/* Part 3: Supporting Different States */}
+                        <FadeIn>
+                            <div style={{ marginTop: 64 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 8 }}>Supporting Different States</p>
+                                <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, marginBottom: 20, maxWidth: 520 }}>
+                                    The component was designed to adapt to multiple pickup and availability scenarios while maintaining a consistent interaction model.
+                                </p>
+                                <div style={{
+                                    display: "grid",
+                                    gridTemplateColumns: phone ? "1fr" : "1fr 1fr",
+                                    gap: phone ? 12 : 16,
+                                }}>
+                                    {[
+                                        { title: "No Pickup Store Selected", desc: "Default state prompting users to select a store" },
+                                        { title: "Pickup Store Selected", desc: "Active state showing selected store availability" },
+                                        { title: "Pickup Store Unavailable", desc: "Disabled state communicating limited availability" },
+                                        { title: "Hidden Toggle State", desc: "Collapsed state when pickup is not applicable" },
+                                    ].map((state, i) => (
+                                        <div key={i} style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}` }}>
+                                            <div style={{ width: "100%", paddingTop: "56%", position: "relative", backgroundColor: C.surface }}>
+                                                <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                    <span style={{ fontFamily: INTER, fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: C.muted }}>State {String(i + 1).padStart(2, "0")}</span>
+                                                </div>
+                                            </div>
+                                            <div style={{ padding: "14px 18px" }}>
+                                                <p style={{ fontFamily: INTER, fontSize: 13, fontWeight: 600, color: C.ink, margin: 0, marginBottom: 4 }}>{state.title}</p>
+                                                <p style={{ fontFamily: INTER, fontSize: 12, color: C.ink3, margin: 0, lineHeight: 1.5 }}>{state.desc}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </FadeIn>
+
+                        {/* Part 4: Implementation Ready */}
+                        <FadeIn>
+                            <div style={{ marginTop: 64 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Implementation Ready</p>
+                                <div style={{ borderRadius: 14, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
+                                    <img src="/images/toggle-specs.png" alt="Component specifications and annotation" style={{ width: "100%", height: "auto", display: "block" }} />
+                                </div>
+                                <div style={{ display: "flex", flexWrap: "wrap", gap: phone ? 12 : 24, marginTop: 20 }}>
+                                    {["States documented", "Interaction logic defined", "Copy variations documented", "Engineering handoff completed"].map((item, i) => (
+                                        <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                            <span style={{
+                                                width: 18, height: 18, borderRadius: "50%", flexShrink: 0,
+                                                backgroundColor: "rgba(137,144,100,0.15)",
+                                                display: "flex", alignItems: "center", justifyContent: "center",
+                                            }}>
+                                                <span style={{ fontFamily: INTER, fontSize: 9, color: C.olive }}>&#10003;</span>
+                                            </span>
+                                            <p style={{ fontFamily: INTER, fontSize: 13, color: C.ink2, margin: 0 }}>{item}</p>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </FadeIn>
                     </section>
