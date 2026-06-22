@@ -768,8 +768,7 @@ export default function AnthropologieProductDiscovery() {
                                 <div style={{
                                     display: "grid",
                                     gridTemplateColumns: phone ? "1fr" : "repeat(3, 1fr)",
-                                    gap: phone ? 12 : 16,
-                                    maxWidth: 840,
+                                    gap: phone ? 12 : 32,
                                 }}>
                                     {[
                                         { src: "/images/toggle-anthropologie.png", label: "Anthropologie" },
@@ -817,15 +816,14 @@ export default function AnthropologieProductDiscovery() {
                                             <p style={{ fontFamily: INTER, fontSize: 13, color: C.ink3, margin: 0, marginBottom: 20, lineHeight: 1.5 }}>{state.desc}</p>
                                             <div style={{
                                                 display: "grid",
-                                                gridTemplateColumns: phone ? "1fr" : "1fr auto",
-                                                gap: 16,
+                                                gridTemplateColumns: phone ? "1fr" : "3fr 1fr",
+                                                gap: 20,
                                                 alignItems: "start",
-                                                maxWidth: 880,
                                             }}>
                                                 <div style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.surface }}>
                                                     <img src={state.desktop} alt={`${state.title} — desktop`} style={{ width: "100%", height: "auto", display: "block" }} />
                                                 </div>
-                                                <div style={{ width: phone ? 100 : 120, borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.surface, flexShrink: 0 }}>
+                                                <div style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.surface }}>
                                                     <img src={state.mobile} alt={`${state.title} — mobile`} style={{ width: "100%", height: "auto", display: "block" }} />
                                                 </div>
                                             </div>
