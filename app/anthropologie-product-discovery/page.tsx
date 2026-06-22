@@ -408,6 +408,15 @@ export default function AnthropologieProductDiscovery() {
                                 ))}
                             </div>
                         </FadeIn>
+
+                        <FadeIn delay={120}>
+                            <p style={{
+                                fontFamily: INTER, fontSize: 14, lineHeight: 1.7, color: C.ink3,
+                                textAlign: "center", maxWidth: 600, margin: "32px auto 0",
+                            }}>
+                                Applying multiple filters required repeated movement between screens before returning to the main drawer to review selections.
+                            </p>
+                        </FadeIn>
                     </section>
 
                     {/* ════════ RESEARCH FINDINGS ════════ */}
