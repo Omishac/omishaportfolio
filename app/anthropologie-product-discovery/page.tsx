@@ -145,6 +145,158 @@ function BrandCard({ name, href, phone }: { name: string; href: string; phone: b
     )
 }
 
+const STRATEGIES = [
+    {
+        num: "01", title: "Make Selections More Visible",
+        problem: "Selected filters lacked visibility. Users couldn't tell which filters were active.",
+        changes: ["Introduced checkboxes", "Improved selected-state visibility", "Repositioned active refinements"],
+        why: "Users receive clearer feedback and can immediately understand which filters have been applied.",
+        video: "/videos/strategy-01-selections.mov",
+    },
+    {
+        num: "02", title: "Reduce Navigation Friction",
+        problem: "Multi-filter workflows felt fragile. Users questioned whether previous selections remained active.",
+        changes: ["Introduced accordion architecture", "Improved movement between filter groups", "Reduced backtracking"],
+        why: "Users can explore multiple filters without questioning whether previous selections remain active.",
+        video: "/videos/strategy-02-navigation.mov",
+    },
+    {
+        num: "03", title: "Create a Clear Exit Path",
+        problem: "Exiting the drawer was unclear. Users didn't know how to leave without applying filters.",
+        changes: ["Introduced contextual Done behavior", "Clarified exit actions", "Improved drawer navigation"],
+        why: "Users always understand how to continue their shopping journey.",
+        video: "/videos/strategy-03-exit.mov",
+    },
+    {
+        num: "04", title: "Clarify Store Pickup Availability",
+        problem: "Inventory language created confusion. Users read \"Available Within 24 Hours\" as a shipping promise.",
+        changes: ["Introduced new pickup toggle behavior", "Improved copy hierarchy", "Supported multiple pickup states"],
+        why: "Users can better understand product availability and make more informed decisions.",
+        video: "/videos/strategy-04-inventory.mov",
+    },
+]
+
+function StrategyScroller({ phone }: { phone: boolean }) {
+    const [activeIdx, setActiveIdx] = useState(0)
+    const cardRefs = useRef<(HTMLDivElement | null)[]>([])
+
+    useEffect(() => {
+        const onScroll = () => {
+            let best = 0
+            let bestDist = Infinity
+            cardRefs.current.forEach((el, i) => {
+                if (el) {
+                    const rect = el.getBoundingClientRect()
+                    const center = rect.top + rect.height / 2
+                    const viewCenter = window.innerHeight / 2
+                    const dist = Math.abs(center - viewCenter)
+                    if (dist < bestDist) { bestDist = dist; best = i }
+                }
+            })
+            setActiveIdx(best)
+        }
+        window.addEventListener("scroll", onScroll, { passive: true })
+        onScroll()
+        return () => window.removeEventListener("scroll", onScroll)
+    }, [])
+
+    if (phone) {
+        return (
+            <div style={{ display: "flex", flexDirection: "column", gap: 64 }}>
+                {STRATEGIES.map((s, i) => (
+                    <FadeIn key={i} delay={40}>
+                        <div>
+                            <div style={{ borderRadius: 14, overflow: "hidden", boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)", marginBottom: 28 }}>
+                                <video src={s.video} autoPlay loop muted playsInline style={{ width: "100%", height: "auto", display: "block" }} />
+                            </div>
+                            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+                                <span style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: C.olive }}>{s.num}</span>
+                                <span style={{ width: 24, height: 1, backgroundColor: C.border }} />
+                            </div>
+                            <h3 style={{ fontFamily: Z, fontSize: 22, fontWeight: 700, color: C.ink, letterSpacing: "-0.02em", lineHeight: 1.15, marginBottom: 16 }}>{s.title}</h3>
+                            <p style={{ fontFamily: INTER, fontSize: 13.5, color: C.ink3, lineHeight: 1.65, marginBottom: 20 }}>{s.problem}</p>
+                            <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>What We Changed</p>
+                            {s.changes.map((c, ci) => (
+                                <p key={ci} style={{ fontFamily: INTER, fontSize: 13.5, color: C.ink2, lineHeight: 1.65, margin: 0, marginBottom: ci < s.changes.length - 1 ? 4 : 0 }}>{c}</p>
+                            ))}
+                            <div style={{ borderTop: `1px solid ${C.border}`, marginTop: 24, paddingTop: 16 }}>
+                                <p style={{ fontFamily: Z, fontSize: 16, fontWeight: 500, fontStyle: "italic", color: C.ink, lineHeight: 1.45, margin: 0 }}>{s.why}</p>
+                            </div>
+                        </div>
+                    </FadeIn>
+                ))}
+            </div>
+        )
+    }
+
+    return (
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: 64, alignItems: "start" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+                {STRATEGIES.map((s, i) => {
+                    const isActive = i === activeIdx
+                    return (
+                        <div
+                            key={i}
+                            ref={el => { cardRefs.current[i] = el }}
+                            style={{
+                                padding: "48px 0",
+                                borderTop: i === 0 ? "none" : `1px solid ${C.border}`,
+                                opacity: isActive ? 1 : 0.35,
+                                transition: "opacity 0.4s ease",
+                            }}
+                        >
+                            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
+                                <span style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: C.olive }}>{s.num}</span>
+                                <span style={{ width: 24, height: 1, backgroundColor: C.border }} />
+                            </div>
+                            <h3 style={{ fontFamily: Z, fontSize: 28, fontWeight: 700, color: C.ink, letterSpacing: "-0.02em", lineHeight: 1.15, marginBottom: 18 }}>{s.title}</h3>
+
+                            <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>Problem</p>
+                            <p style={{ fontFamily: INTER, fontSize: 13.5, color: C.ink3, lineHeight: 1.65, marginBottom: 24 }}>{s.problem}</p>
+
+                            <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>What We Changed</p>
+                            {s.changes.map((c, ci) => (
+                                <p key={ci} style={{ fontFamily: INTER, fontSize: 13.5, color: C.ink2, lineHeight: 1.65, margin: 0, marginBottom: ci < s.changes.length - 1 ? 4 : 0 }}>{c}</p>
+                            ))}
+
+                            <div style={{ borderTop: `1px solid ${C.border}`, marginTop: 24, paddingTop: 18 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>Why It Matters</p>
+                                <p style={{ fontFamily: Z, fontSize: 18, fontWeight: 500, fontStyle: "italic", color: C.ink, lineHeight: 1.45, margin: 0 }}>{s.why}</p>
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
+
+            <div style={{ position: "sticky", top: 100 }}>
+                {STRATEGIES.map((s, i) => (
+                    <div key={i} style={{
+                        position: i === 0 ? "relative" : "absolute",
+                        top: 0, left: 0, width: "100%",
+                        opacity: i === activeIdx ? 1 : 0,
+                        transition: "opacity 0.5s ease",
+                        pointerEvents: i === activeIdx ? "auto" : "none",
+                    }}>
+                        <div style={{
+                            borderRadius: 14, overflow: "hidden",
+                            boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)",
+                        }}>
+                            <video
+                                src={s.video}
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                style={{ width: "100%", height: "auto", display: "block" }}
+                            />
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
+}
+
 function ResearchCard({ num, title, desc, quote, phone }: { num: string; title: string; desc: string; quote: string; phone: boolean }) {
     const [hovered, setHovered] = useState(false)
     return (
@@ -524,87 +676,7 @@ export default function AnthropologieProductDiscovery() {
                             </p>
                         </FadeIn>
 
-                        <div style={{ display: "flex", flexDirection: "column", gap: phone ? 80 : 120 }}>
-                            {[
-                                {
-                                    num: "01", title: "Make Selections More Visible",
-                                    problem: "Selected filters lacked visibility. Users couldn't tell which filters were active.",
-                                    changes: ["Introduced checkboxes", "Improved selected-state visibility", "Repositioned active refinements"],
-                                    why: "Users receive clearer feedback and can immediately understand which filters have been applied.",
-                                    video: "/videos/strategy-01-selections.mov",
-                                },
-                                {
-                                    num: "02", title: "Reduce Navigation Friction",
-                                    problem: "Multi-filter workflows felt fragile. Users questioned whether previous selections remained active.",
-                                    changes: ["Introduced accordion architecture", "Improved movement between filter groups", "Reduced backtracking"],
-                                    why: "Users can explore multiple filters without questioning whether previous selections remain active.",
-                                    video: "/videos/strategy-02-navigation.mov",
-                                },
-                                {
-                                    num: "03", title: "Create a Clear Exit Path",
-                                    problem: "Exiting the drawer was unclear. Users didn't know how to leave without applying filters.",
-                                    changes: ["Introduced contextual Done behavior", "Clarified exit actions", "Improved drawer navigation"],
-                                    why: "Users always understand how to continue their shopping journey.",
-                                    video: "/videos/strategy-03-exit.mov",
-                                },
-                                {
-                                    num: "04", title: "Clarify Store Pickup Availability",
-                                    problem: "Inventory language created confusion. Users read \"Available Within 24 Hours\" as a shipping promise.",
-                                    changes: ["Introduced new pickup toggle behavior", "Improved copy hierarchy", "Supported multiple pickup states"],
-                                    why: "Users can better understand product availability and make more informed decisions.",
-                                    video: "/videos/strategy-04-inventory.mov",
-                                },
-                            ].map((s, i) => {
-                                const reversed = i % 2 === 1
-                                return (
-                                    <FadeIn key={i} delay={40}>
-                                        <div style={{
-                                            display: phone ? "flex" : "grid",
-                                            gridTemplateColumns: phone ? undefined : "1fr 1.4fr",
-                                            flexDirection: phone ? "column" : undefined,
-                                            gap: phone ? 32 : 56,
-                                            alignItems: "start",
-                                            direction: reversed && !phone ? "rtl" : "ltr",
-                                        }}>
-                                            <div style={{ direction: "ltr" }}>
-                                                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-                                                    <span style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: C.olive }}>{s.num}</span>
-                                                    <span style={{ width: 24, height: 1, backgroundColor: C.border }} />
-                                                </div>
-                                                <h3 style={{ fontFamily: Z, fontSize: phone ? 22 : 28, fontWeight: 700, color: C.ink, letterSpacing: "-0.02em", lineHeight: 1.15, marginBottom: 20 }}>{s.title}</h3>
-
-                                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>Problem</p>
-                                                <p style={{ fontFamily: INTER, fontSize: 13.5, color: C.ink3, lineHeight: 1.65, marginBottom: 28 }}>{s.problem}</p>
-
-                                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>What We Changed</p>
-                                                {s.changes.map((c, ci) => (
-                                                    <p key={ci} style={{ fontFamily: INTER, fontSize: 13.5, color: C.ink2, lineHeight: 1.65, margin: 0, marginBottom: ci < s.changes.length - 1 ? 4 : 0 }}>{c}</p>
-                                                ))}
-
-                                                <div style={{ borderTop: `1px solid ${C.border}`, marginTop: 28, paddingTop: 20 }}>
-                                                    <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>Why It Matters</p>
-                                                    <p style={{ fontFamily: Z, fontSize: phone ? 16 : 18, fontWeight: 500, fontStyle: "italic", color: C.ink, lineHeight: 1.45, margin: 0 }}>{s.why}</p>
-                                                </div>
-                                            </div>
-
-                                            <div style={{
-                                                direction: "ltr", borderRadius: 14, overflow: "hidden",
-                                                boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)",
-                                            }}>
-                                                <video
-                                                    src={s.video}
-                                                    autoPlay
-                                                    loop
-                                                    muted
-                                                    playsInline
-                                                    style={{ width: "100%", height: "auto", display: "block" }}
-                                                />
-                                            </div>
-                                        </div>
-                                    </FadeIn>
-                                )
-                            })}
-                        </div>
+                        <StrategyScroller phone={phone} />
                     </section>
 
                     {/* ════════ PROTOTYPING FOR VALIDATION ════════ */}
