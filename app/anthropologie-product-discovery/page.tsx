@@ -22,7 +22,6 @@ const SECTIONS = [
     { id: "research", label: "Research" },
     { id: "goal", label: "Design Goal" },
     { id: "strategy", label: "Strategy" },
-    { id: "prototyping", label: "Validation" },
     { id: "validation", label: "Results" },
     { id: "component", label: "System" },
     { id: "impact", label: "Impact" },
@@ -616,36 +615,27 @@ export default function AnthropologieProductDiscovery() {
                         </div>
                     </section>
 
-                    {/* ════════ ACCELERATING VALIDATION ════════ */}
-                    <section id="prototyping" style={{ scrollMarginTop: 80, marginTop: 120 }}>
-                        <FadeIn>
-                            <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Accelerating Validation</p>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 36 }}>
-                                To test concepts more quickly, I used Builder.io and URBN's existing design system components to create interactive prototypes for usability testing. This reduced prototype creation and testing preparation time by 45%, allowing faster iteration before development.
-                            </p>
-                        </FadeIn>
-
-                        <FadeIn delay={60}>
-                            <div style={{
-                                backgroundColor: C.ink, borderRadius: 14,
-                                padding: phone ? "40px 28px" : "56px 48px",
-                                display: "flex", alignItems: phone ? "flex-start" : "center",
-                                gap: phone ? 20 : 48,
-                                flexDirection: phone ? "column" : "row",
-                            }}>
-                                <div>
-                                    <p style={{ fontFamily: Z, fontSize: phone ? 48 : 64, fontWeight: 700, color: "#fff", letterSpacing: "-0.03em", lineHeight: 1, margin: 0 }}>45%</p>
-                                    <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", margin: 0, marginTop: 8 }}>
-                                        Faster Prototype Validation
-                                    </p>
-                                </div>
-                                <div style={{ width: 1, height: 48, backgroundColor: "rgba(255,255,255,0.1)", display: phone ? "none" : "block" }} />
-                                <p style={{ fontFamily: INTER, fontSize: 13.5, lineHeight: 1.65, color: "rgba(255,255,255,0.55)", margin: 0, maxWidth: 360 }}>
-                                    Interactive prototypes built with Builder.io enabled rapid usability testing across all four strategy concepts.
+                    {/* ════════ ACCELERATING VALIDATION (callout) ════════ */}
+                    <FadeIn>
+                        <div id="prototyping" style={{
+                            scrollMarginTop: 80, marginTop: 80,
+                            backgroundColor: C.surface, borderRadius: 16,
+                            padding: phone ? "32px 24px" : "40px 48px",
+                            display: "flex", alignItems: phone ? "flex-start" : "center",
+                            gap: phone ? 20 : 48,
+                            flexDirection: phone ? "column" : "row",
+                        }}>
+                            <p style={{ fontFamily: Z, fontSize: phone ? 48 : 56, fontWeight: 700, color: C.ink, letterSpacing: "-0.03em", lineHeight: 1, margin: 0, flexShrink: 0 }}>45%</p>
+                            <div>
+                                <p style={{ fontFamily: INTER, fontSize: 13, fontWeight: 600, color: C.ink, margin: 0, marginBottom: 6 }}>
+                                    Faster Prototype Validation
+                                </p>
+                                <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, margin: 0, maxWidth: 440 }}>
+                                    Using Builder.io and URBN's design system components, I created interactive prototypes that cut testing preparation time nearly in half.
                                 </p>
                             </div>
-                        </FadeIn>
-                    </section>
+                        </div>
+                    </FadeIn>
 
                     {/* ════════ VALIDATION ════════ */}
                     <section id="validation" style={{ scrollMarginTop: 80, marginTop: 120 }}>
