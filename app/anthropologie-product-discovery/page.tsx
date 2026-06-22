@@ -708,7 +708,7 @@ export default function AnthropologieProductDiscovery() {
                                 <img src="/images/toggle-specs.png" alt="Proposed web toggle components: default, selected, hover states with specifications" style={{ width: "100%", height: "auto", display: "block" }} />
                             </div>
                             <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, marginTop: 16, maxWidth: 480 }}>
-                                Multiple toggle variations were tested to balance clarity, accessibility, and brand consistency.
+                                Multiple interaction patterns were explored to improve clarity and consistency.
                             </p>
                         </FadeIn>
 
@@ -716,30 +716,9 @@ export default function AnthropologieProductDiscovery() {
                         <FadeIn>
                             <div style={{ marginTop: 56 }}>
                                 <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Final Component</p>
-                                <div style={{
-                                    display: "grid",
-                                    gridTemplateColumns: phone ? "1fr 1fr" : "repeat(5, 1fr)",
-                                    gap: phone ? 12 : 16,
-                                }}>
-                                    {[
-                                        { src: "/images/toggle-anthropologie.png", label: "Anthropologie" },
-                                        { src: "/images/toggle-freepeople.png", label: "Free People" },
-                                        { src: "/images/toggle-terrain.png", label: "Terrain" },
-                                        { src: "/images/toggle-urbanoutfitters.png", label: "Urban Outfitters" },
-                                        { src: "/images/toggle-whitelabel.png", label: "White Label" },
-                                    ].map((brand, i) => (
-                                        <div key={i} style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
-                                            <img src={brand.src} alt={`${brand.label} toggle states`} style={{ width: "100%", height: "auto", display: "block" }} />
-                                            <div style={{ padding: "10px 14px", borderTop: `1px solid ${C.border}` }}>
-                                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.ink, margin: 0, textAlign: "center" }}>{brand.label}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div style={{
-                                    display: "flex", flexWrap: "wrap", gap: phone ? 16 : 28, marginTop: 20,
-                                }}>
-                                    {["Store Availability", "Pickup Filtering", "Cross-Brand Consistency"].map((item, i) => (
+                                <Placeholder label="Selected direction: production toggle component" aspect={phone ? "56%" : "44%"} />
+                                <div style={{ display: "flex", flexWrap: "wrap", gap: phone ? 16 : 28, marginTop: 20 }}>
+                                    {["Clear active state", "Accessible feedback", "Scalable pattern"].map((item, i) => (
                                         <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                                             <span style={{
                                                 width: 18, height: 18, borderRadius: "50%", flexShrink: 0,
@@ -755,7 +734,35 @@ export default function AnthropologieProductDiscovery() {
                             </div>
                         </FadeIn>
 
-                        {/* 3. Supporting Different States */}
+                        {/* 3. Scaling Across Brands */}
+                        <FadeIn>
+                            <div style={{ marginTop: 56 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Scaling Across Brands</p>
+                                <div style={{
+                                    display: "grid",
+                                    gridTemplateColumns: phone ? "1fr" : "repeat(3, 1fr)",
+                                    gap: phone ? 12 : 16,
+                                }}>
+                                    {[
+                                        { src: "/images/toggle-anthropologie.png", label: "Anthropologie" },
+                                        { src: "/images/toggle-urbanoutfitters.png", label: "Urban Outfitters" },
+                                        { src: "/images/toggle-freepeople.png", label: "Free People" },
+                                    ].map((brand, i) => (
+                                        <div key={i} style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
+                                            <img src={brand.src} alt={`${brand.label} toggle states`} style={{ width: "100%", height: "auto", display: "block" }} />
+                                            <div style={{ padding: "10px 14px", borderTop: `1px solid ${C.border}` }}>
+                                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.ink, margin: 0, textAlign: "center" }}>{brand.label}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, marginTop: 16, maxWidth: 520 }}>
+                                    While the interaction remained consistent, visual treatments adapted to each brand.
+                                </p>
+                            </div>
+                        </FadeIn>
+
+                        {/* 4. Supporting Different States */}
                         <FadeIn>
                             <div style={{ marginTop: 56 }}>
                                 <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Supporting Different States</p>
@@ -764,11 +771,11 @@ export default function AnthropologieProductDiscovery() {
                                     gap: phone ? 16 : 20,
                                 }}>
                                     {[
-                                        { title: "No Pickup Store Selected" },
-                                        { title: "Pickup Store Selected" },
-                                        { title: "Pickup Store Unavailable" },
-                                        { title: "Hidden Toggle State" },
-                                    ].map((state, i) => (
+                                        "No Pickup Store Selected",
+                                        "Pickup Store Selected",
+                                        "Pickup Store Unavailable",
+                                        "Hidden Toggle State",
+                                    ].map((title, i) => (
                                         <div key={i} style={{ borderRadius: 14, overflow: "hidden", border: `1px solid ${C.border}` }}>
                                             <div style={{ width: "100%", paddingTop: "65%", position: "relative", backgroundColor: C.surface }}>
                                                 <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -776,27 +783,25 @@ export default function AnthropologieProductDiscovery() {
                                                 </div>
                                             </div>
                                             <div style={{ padding: phone ? "16px" : "18px 24px" }}>
-                                                <p style={{ fontFamily: INTER, fontSize: 13, fontWeight: 600, color: C.ink, margin: 0 }}>{state.title}</p>
+                                                <p style={{ fontFamily: INTER, fontSize: 13, fontWeight: 600, color: C.ink, margin: 0 }}>{title}</p>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
-                                <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, marginTop: 16, maxWidth: 480 }}>
-                                    The component adapts to different user scenarios — from no store selected to unavailable inventory.
+                                <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, marginTop: 16, maxWidth: 520 }}>
+                                    The component was designed to support multiple pickup scenarios while maintaining a consistent interaction model.
                                 </p>
                             </div>
                         </FadeIn>
 
-                        {/* 4. Implementation */}
+                        {/* 5. Implementation */}
                         <FadeIn>
                             <div style={{ marginTop: 56 }}>
                                 <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Implementation</p>
                                 <div style={{ borderRadius: 14, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
                                     <img src="/images/toggle-specs.png" alt="Component specifications and engineering handoff documentation" style={{ width: "100%", height: "auto", display: "block" }} />
                                 </div>
-                                <div style={{
-                                    display: "flex", flexWrap: "wrap", gap: phone ? 16 : 28, marginTop: 20,
-                                }}>
+                                <div style={{ display: "flex", flexWrap: "wrap", gap: phone ? 16 : 28, marginTop: 20 }}>
                                     {["States documented", "Interaction logic defined", "Engineering handoff completed"].map((item, i) => (
                                         <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                                             <span style={{
@@ -810,19 +815,6 @@ export default function AnthropologieProductDiscovery() {
                                         </div>
                                     ))}
                                 </div>
-                            </div>
-                        </FadeIn>
-
-                        {/* Cross-platform note */}
-                        <FadeIn>
-                            <div style={{
-                                backgroundColor: C.surface, borderRadius: 14,
-                                padding: phone ? "24px" : "28px 36px",
-                                marginTop: 40,
-                            }}>
-                                <p style={{ fontFamily: INTER, fontSize: 13.5, lineHeight: 1.7, color: C.ink3, margin: 0 }}>
-                                    While initially designed for Mobile Web, the component and interaction patterns informed Desktop recommendations to maintain consistency across experiences.
-                                </p>
                             </div>
                         </FadeIn>
                     </section>
