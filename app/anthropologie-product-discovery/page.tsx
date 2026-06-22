@@ -731,33 +731,45 @@ export default function AnthropologieProductDiscovery() {
                     <section id="component" style={{ scrollMarginTop: 80, marginTop: 120 }}>
                         <FadeIn>
                             <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>From Solution to System</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
+                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 740, marginBottom: 24 }}>
                                 Building a reusable component
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 72 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 640, marginBottom: 0 }}>
                                 The redesigned pickup experience introduced a new interaction pattern that wasn't supported by the existing design system. Rather than creating a one-off solution, I designed a reusable component that could support future filtering experiences across URBN brands.
                             </p>
                         </FadeIn>
 
-                        {/* Part 1: Designing the Core Pattern */}
+                        {/* 01 Designing the Core Pattern */}
                         <FadeIn>
-                            <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Designing the Core Pattern</p>
-                            <div style={{ maxWidth: 480, borderRadius: 14, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
-                                <img src="/images/toggle-whitelabel.png" alt="White-label toggle component" style={{ width: "100%", height: "auto", display: "block" }} />
+                            <div style={{ marginTop: 96 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.muted, letterSpacing: "0.06em", margin: 0, marginBottom: 10 }}>01</p>
+                                <h3 style={{ fontFamily: Z, fontSize: phone ? 24 : 32, fontWeight: 700, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.15, margin: 0, marginBottom: 12 }}>
+                                    Designing the Core Pattern
+                                </h3>
+                                <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.7, color: C.ink3, margin: 0, maxWidth: 480, marginBottom: 32 }}>
+                                    The component was first designed as a white-label pattern before being adapted across individual brand experiences.
+                                </p>
+                                <div style={{ maxWidth: 400, borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
+                                    <img src="/images/toggle-whitelabel.png" alt="White-label toggle component" style={{ width: "100%", height: "auto", display: "block" }} />
+                                </div>
                             </div>
-                            <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, marginTop: 16, maxWidth: 520 }}>
-                                The component was first designed as a white-label pattern before being adapted across individual brand experiences.
-                            </p>
                         </FadeIn>
 
-                        {/* Part 2: Adapting Across Brands */}
+                        {/* 02 Adapting Across Brands */}
                         <FadeIn>
-                            <div style={{ marginTop: 64 }}>
-                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Adapting Across Brands</p>
+                            <div style={{ marginTop: 96 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.muted, letterSpacing: "0.06em", margin: 0, marginBottom: 10 }}>02</p>
+                                <h3 style={{ fontFamily: Z, fontSize: phone ? 24 : 32, fontWeight: 700, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.15, margin: 0, marginBottom: 12 }}>
+                                    Adapting Across Brands
+                                </h3>
+                                <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.7, color: C.ink3, margin: 0, maxWidth: 480, marginBottom: 32 }}>
+                                    While the interaction remained consistent, visual treatments were adapted to align with each brand's established design language.
+                                </p>
                                 <div style={{
                                     display: "grid",
                                     gridTemplateColumns: phone ? "1fr" : "repeat(3, 1fr)",
                                     gap: phone ? 12 : 16,
+                                    maxWidth: 840,
                                 }}>
                                     {[
                                         { src: "/images/toggle-anthropologie.png", label: "Anthropologie" },
@@ -772,20 +784,20 @@ export default function AnthropologieProductDiscovery() {
                                         </div>
                                     ))}
                                 </div>
-                                <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, marginTop: 16, maxWidth: 520 }}>
-                                    While the interaction remained consistent, visual treatments were adapted to align with each brand's established design language.
-                                </p>
                             </div>
                         </FadeIn>
 
-                        {/* Part 3: Supporting Different States */}
+                        {/* 03 Supporting Different States */}
                         <FadeIn>
-                            <div style={{ marginTop: 64 }}>
-                                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 8 }}>Supporting Different States</p>
-                                <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.65, color: C.ink3, marginBottom: 24, maxWidth: 520 }}>
+                            <div style={{ marginTop: 96 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.muted, letterSpacing: "0.06em", margin: 0, marginBottom: 10 }}>03</p>
+                                <h3 style={{ fontFamily: Z, fontSize: phone ? 24 : 32, fontWeight: 700, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.15, margin: 0, marginBottom: 12 }}>
+                                    Supporting Different States
+                                </h3>
+                                <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.7, color: C.ink3, margin: 0, maxWidth: 480, marginBottom: 40 }}>
                                     The component was designed to adapt to multiple pickup and availability scenarios while maintaining a consistent interaction model.
                                 </p>
-                                <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+                                <div style={{ display: "flex", flexDirection: "column", gap: 56 }}>
                                     {[
                                         {
                                             title: "No Pickup Store Selected",
@@ -801,18 +813,19 @@ export default function AnthropologieProductDiscovery() {
                                         },
                                     ].map((state, i) => (
                                         <div key={i}>
-                                            <p style={{ fontFamily: INTER, fontSize: 13, fontWeight: 600, color: C.ink, margin: 0, marginBottom: 4 }}>{state.title}</p>
-                                            <p style={{ fontFamily: INTER, fontSize: 12, color: C.ink3, margin: 0, marginBottom: 12, lineHeight: 1.5 }}>{state.desc}</p>
+                                            <h4 style={{ fontFamily: Z, fontSize: phone ? 20 : 24, fontWeight: 600, color: C.ink, margin: 0, marginBottom: 6, letterSpacing: "-0.01em" }}>{state.title}</h4>
+                                            <p style={{ fontFamily: INTER, fontSize: 13, color: C.ink3, margin: 0, marginBottom: 20, lineHeight: 1.5 }}>{state.desc}</p>
                                             <div style={{
                                                 display: "grid",
                                                 gridTemplateColumns: phone ? "1fr" : "1fr auto",
                                                 gap: 16,
                                                 alignItems: "start",
+                                                maxWidth: 880,
                                             }}>
                                                 <div style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.surface }}>
                                                     <img src={state.desktop} alt={`${state.title} — desktop`} style={{ width: "100%", height: "auto", display: "block" }} />
                                                 </div>
-                                                <div style={{ width: phone ? 120 : 140, borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.surface, flexShrink: 0 }}>
+                                                <div style={{ width: phone ? 100 : 120, borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.surface, flexShrink: 0 }}>
                                                     <img src={state.mobile} alt={`${state.title} — mobile`} style={{ width: "100%", height: "auto", display: "block" }} />
                                                 </div>
                                             </div>
@@ -822,6 +835,32 @@ export default function AnthropologieProductDiscovery() {
                             </div>
                         </FadeIn>
 
+                        {/* 04 Implementation Ready */}
+                        <FadeIn>
+                            <div style={{ marginTop: 96 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.muted, letterSpacing: "0.06em", margin: 0, marginBottom: 10 }}>04</p>
+                                <h3 style={{ fontFamily: Z, fontSize: phone ? 24 : 32, fontWeight: 700, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.15, margin: 0, marginBottom: 12 }}>
+                                    Implementation Ready
+                                </h3>
+                                <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.7, color: C.ink3, margin: 0, maxWidth: 480, marginBottom: 28 }}>
+                                    Full specifications were documented and handed off to engineering for production implementation.
+                                </p>
+                                <div style={{ display: "flex", flexWrap: "wrap", gap: phone ? 12 : 24 }}>
+                                    {["States documented", "Interaction logic defined", "Copy variations documented", "Engineering handoff completed"].map((item, i) => (
+                                        <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                            <span style={{
+                                                width: 18, height: 18, borderRadius: "50%", flexShrink: 0,
+                                                backgroundColor: "rgba(137,144,100,0.15)",
+                                                display: "flex", alignItems: "center", justifyContent: "center",
+                                            }}>
+                                                <span style={{ fontFamily: INTER, fontSize: 9, color: C.olive }}>&#10003;</span>
+                                            </span>
+                                            <p style={{ fontFamily: INTER, fontSize: 13, color: C.ink2, margin: 0 }}>{item}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </FadeIn>
                     </section>
 
                     {/* ════════ IMPACT & LAUNCH ════════ */}
