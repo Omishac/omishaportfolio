@@ -1611,7 +1611,6 @@ export default function IOSCaseStudy() {
                     maxWidth: 1400,
                     margin: "0 auto",
                     padding: `0 ${pad}px 180px`,
-                    overflowX: "hidden" as const,
                 }}
             >
                 {desktop && (
@@ -1622,7 +1621,7 @@ export default function IOSCaseStudy() {
                     </aside>
                 )}
 
-                <div>
+                <div style={{ overflowX: "hidden" as const }}>
                 {/* ── HERO ── */}
                 <div
                     id="overview"
