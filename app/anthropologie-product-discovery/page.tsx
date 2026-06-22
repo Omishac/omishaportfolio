@@ -683,10 +683,10 @@ export default function AnthropologieProductDiscovery() {
                     {/* ════════ VALIDATION ════════ */}
                     <section id="validation" style={{ scrollMarginTop: 80, marginTop: 72 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: INTER, fontSize: 12, fontWeight: 500, color: C.muted, letterSpacing: "0.06em", textTransform: "uppercase", margin: 0, marginBottom: 12, textAlign: "center" }}>
+                            <p style={{ fontFamily: INTER, fontSize: 15, fontWeight: 500, color: C.muted, margin: 0, marginBottom: 8 }}>
                                 Leading to&hellip;
                             </p>
-                            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 16, marginBottom: 12 }}>
+                            <div style={{ display: "flex", alignItems: "baseline", gap: 16, marginBottom: 8 }}>
                                 <p style={{ fontFamily: Z, fontSize: phone ? 56 : 72, fontWeight: 700, color: C.ink, letterSpacing: "-0.04em", lineHeight: 1, margin: 0 }}>
                                     <CountUp to={100} suffix="%" duration={1400} />
                                 </p>
@@ -694,7 +694,10 @@ export default function AnthropologieProductDiscovery() {
                                     Task Completion Rate
                                 </p>
                             </div>
-                            <div style={{ width: 40, height: 1, backgroundColor: C.border, margin: "24px auto 32px" }} />
+                        </FadeIn>
+
+                        <FadeIn delay={40}>
+                            <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, margin: 0, marginTop: 32, marginBottom: 20 }}>Seen Through</p>
                         </FadeIn>
 
                         <FadeIn delay={60}>
