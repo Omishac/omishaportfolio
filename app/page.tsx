@@ -738,7 +738,7 @@ function AboutBlock({
                         maxWidth: 620,
                     }}
                 >
-                    I use research, data, and design to understand digital behavior and turn those insights into products people actually want to use.
+                    Part designer, part analyst, part-time chronically online. I spend a lot of time thinking about the tiny decisions people make online and how thoughtful design can shape them.
                 </p>
             </div>
         </section>
