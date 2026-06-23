@@ -1549,7 +1549,7 @@ export default function AnthropologieCaseStudy() {
                     {/* Trend image gallery */}
                     <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: "16px", marginTop: "40px" }}>
                         {([
-                            { src: "/slides/zeroparty.gif",   alt: "Zero-party data — Sephora",       caption: "Zero-Party Data — Sephora",  clip: true,  size: 1.18 },
+                            { src: "/slides/zeroparty.gif",   alt: "Zero-party data — Sephora",       caption: "Zero-Party Data — Sephora",  clip: false, size: 1    },
                             { src: "/slides/ARtryon.png",     alt: "Augmented Reality try-on — Nike", caption: "Augmented Reality — Nike",   clip: false, size: 1    },
                             { src: "/slides/appxclusive.png", alt: "App-exclusive perks — Nike",      caption: "App-Exclusive Perks — Nike", clip: false, size: 1    },
                         ] as { src: string; alt: string; caption: string; clip: boolean; size: number }[]).map(({ src, alt, caption, clip, size }) => (
