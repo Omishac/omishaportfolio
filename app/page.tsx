@@ -386,7 +386,7 @@ function Hero({
                             ? `word-in 0.65s cubic-bezier(0.22,1,0.36,1) ${200 + HERO_WORDS.length * 100}ms forwards`
                             : "none",
                     }}>
-                        Curious about why people behave the way they do online — and how design can influence it.
+                        Turning insights into experiences.
                     </span>
                 </h1>
             </div>
