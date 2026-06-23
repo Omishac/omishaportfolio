@@ -545,8 +545,15 @@ export default function RFNDCaseStudy() {
                         </FadeIn>
 
                         <FadeIn delay={80}>
-                            <FullImage src="/images/rfnd-persona.webp" alt="RFND user persona"
-                                caption="Synthesized persona — the emotionally-driven, discovery-oriented modern shopper this concept was designed for" />
+                            <div style={{ maxWidth: 560, margin: "56px 0" }}>
+                                <img src="/images/rfnd-persona.webp" alt="RFND user persona" style={{
+                                    width: "100%", height: "auto", display: "block", borderRadius: 14,
+                                    boxShadow: "0 4px 52px rgba(0,0,0,0.10)",
+                                }} />
+                                <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 400, fontSize: 13, color: C.ink3, textAlign: "center", margin: "16px 0 0", lineHeight: 1.6 }}>
+                                    Synthesized persona — the emotionally-driven, discovery-oriented modern shopper this concept was designed for
+                                </p>
+                            </div>
                         </FadeIn>
 
                         <FadeIn>
@@ -581,8 +588,15 @@ export default function RFNDCaseStudy() {
                         </FadeIn>
 
                         <FadeIn delay={80}>
-                            <FullImage src="/images/rfnd-moodboard.webp" alt="RFND moodboard"
-                                caption="Visual and emotional territory — tonal direction and aesthetic reference for the envisioned RFND experience" />
+                            <div style={{ maxWidth: 560, margin: "56px 0" }}>
+                                <img src="/images/rfnd-moodboard.webp" alt="RFND moodboard" style={{
+                                    width: "100%", height: "auto", display: "block", borderRadius: 14,
+                                    boxShadow: "0 4px 52px rgba(0,0,0,0.10)",
+                                }} />
+                                <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 400, fontSize: 13, color: C.ink3, textAlign: "center", margin: "16px 0 0", lineHeight: 1.6 }}>
+                                    Visual and emotional territory — tonal direction and aesthetic reference for the envisioned RFND experience
+                                </p>
+                            </div>
                         </FadeIn>
 
                         <FadeIn>
