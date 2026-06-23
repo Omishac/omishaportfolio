@@ -337,6 +337,7 @@ function CaseStudyNav() {
     const [scrolled, setScrolled] = useState(false)
     const [phone, setPhone] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
+    const [hovNav, setHovNav] = useState<string | null>(null)
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 12)
         const onResize = () => setPhone(window.innerWidth < 768)
@@ -382,10 +383,11 @@ function CaseStudyNav() {
                     <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
                         {allLinks.map(({ label, href, ext }) => (
                             <a key={label} href={href} target={ext ? "_blank" : "_self"} rel="noreferrer"
-                                style={{ fontFamily: INTER, fontSize: 14, fontWeight: 500, color: C.ink3, textDecoration: "none", letterSpacing: "-0.01em", transition: "color 0.18s", minHeight: 44, display: "flex", alignItems: "center" }}
-                                onMouseEnter={(e) => (e.currentTarget.style.color = C.ink)}
-                                onMouseLeave={(e) => (e.currentTarget.style.color = C.ink3)}>
-                                {label}
+                                style={{ position: "relative", fontFamily: INTER, fontSize: 14, fontWeight: 500, color: hovNav === label ? C.ink : C.ink3, textDecoration: "none", letterSpacing: "-0.01em", transition: "color 0.25s", minHeight: 44, display: "flex", alignItems: "center" }}
+                                onMouseEnter={() => setHovNav(label)}
+                                onMouseLeave={() => setHovNav(null)}>
+                                <span style={{ opacity: hovNav === label ? 0 : 1, transition: "opacity 0.25s ease" }}>{label}</span>
+                                <span style={{ position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)", fontFamily: "var(--font-yuji-boku), serif", fontSize: 15, fontWeight: 700, fontStyle: "italic", color: C.ink, whiteSpace: "nowrap", opacity: hovNav === label ? 1 : 0, transition: "opacity 0.25s ease", pointerEvents: "none" }}>{label}</span>
                             </a>
                         ))}
                     </div>
