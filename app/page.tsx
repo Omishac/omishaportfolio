@@ -386,7 +386,7 @@ function Hero({
                             ? `word-in 0.65s cubic-bezier(0.22,1,0.36,1) ${200 + HERO_WORDS.length * 100}ms forwards`
                             : "none",
                     }}>
-                        Designing commerce experiences across the URBN ecosystem.
+                        Curious about why people behave the way they do online — and how design can influence it.
                     </span>
                 </h1>
             </div>
@@ -738,7 +738,7 @@ function AboutBlock({
                         maxWidth: 620,
                     }}
                 >
-                    Currently at URBN, I work across Anthropologie&apos;s digital products — designing for discovery, accessibility, and mobile commerce. I bring together research, data, and design to ship experiences that make a measurable difference.
+                    I use research, data, and design to understand digital behavior and turn those insights into products people actually want to use.
                 </p>
             </div>
         </section>
