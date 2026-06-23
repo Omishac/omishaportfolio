@@ -905,7 +905,7 @@ function CaseStudyNav() {
         { label: "Work", href: "/#work" },
         { label: "Playground", href: "/playground" },
         { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-        { label: "Resume", href: "/slides/resume.pdf", ext: true },
+        { label: "Resume", href: "/slides/resume.pdf", ext: true, download: "UX Omisha Chabria Resume.pdf" },
     ]
 
     const F = "Inter, system-ui, sans-serif"
@@ -959,8 +959,8 @@ function CaseStudyNav() {
                     </button>
                 ) : (
                     <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
-                        {allLinks.map(({ label, href, ext }) => (
-                            <a key={label} href={href} target={ext ? "_blank" : "_self"} rel="noreferrer"
+                        {allLinks.map(({ label, href, ext, download }) => (
+                            <a key={label} href={href} target={ext ? "_blank" : "_self"} rel="noreferrer" {...(download ? { download } : {})}
                                 style={{ position: "relative", fontFamily: F, fontSize: 14, fontWeight: 500, color: hovNav === label ? C.ink : C.ink3, textDecoration: "none", letterSpacing: "-0.01em", transition: "color 0.25s", minHeight: 44, display: "flex", alignItems: "center" }}
                                 onMouseEnter={() => setHovNav(label)}
                                 onMouseLeave={() => setHovNav(null)}>
@@ -1012,12 +1012,13 @@ function CaseStudyNav() {
                         </button>
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                        {allLinks.map(({ label, href, ext }) => (
+                        {allLinks.map(({ label, href, ext, download }) => (
                             <a
                                 key={label}
                                 href={href}
                                 target={ext ? "_blank" : "_self"}
                                 rel="noreferrer"
+                                {...(download ? { download } : {})}
                                 onClick={() => setMenuOpen(false)}
                                 style={{
                                     fontFamily: F,

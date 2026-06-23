@@ -357,7 +357,7 @@ function CaseStudyNav() {
         { label: "Work", href: "/#work" },
         { label: "Playground", href: "/playground" },
         { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-        { label: "Resume", href: "/slides/resume.pdf", ext: true },
+        { label: "Resume", href: "/slides/resume.pdf", ext: true, download: "UX Omisha Chabria Resume.pdf" },
     ]
     return (
         <>
@@ -381,8 +381,8 @@ function CaseStudyNav() {
                     </button>
                 ) : (
                     <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
-                        {links.map(({ label, href, ext }) => (
-                            <a key={label} href={href} target={ext ? "_blank" : "_self"} rel="noreferrer"
+                        {links.map(({ label, href, ext, download }) => (
+                            <a key={label} href={href} target={ext ? "_blank" : "_self"} rel="noreferrer" {...(download ? { download } : {})}
                                 style={{ position: "relative", fontFamily: INTER, fontSize: 14, fontWeight: 500, color: hovNav === label ? C.ink : C.ink3, textDecoration: "none", letterSpacing: "-0.01em", transition: "color 0.25s", minHeight: 44, display: "flex", alignItems: "center" }}
                                 onMouseEnter={() => setHovNav(label)}
                                 onMouseLeave={() => setHovNav(null)}>
@@ -400,8 +400,8 @@ function CaseStudyNav() {
                         <button onClick={() => setMenuOpen(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 24, color: C.ink, minHeight: 44, minWidth: 44, display: "flex", alignItems: "center", justifyContent: "center" }}>&#10005;</button>
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                        {links.map(({ label, href, ext }) => (
-                            <a key={label} href={href} target={ext ? "_blank" : "_self"} rel="noreferrer" onClick={() => setMenuOpen(false)}
+                        {links.map(({ label, href, ext, download }) => (
+                            <a key={label} href={href} target={ext ? "_blank" : "_self"} rel="noreferrer" {...(download ? { download } : {})} onClick={() => setMenuOpen(false)}
                                 style={{ fontFamily: INTER, fontSize: 28, fontWeight: 600, color: C.ink, textDecoration: "none", letterSpacing: "-0.02em", minHeight: 52, display: "flex", alignItems: "center", borderBottom: `1px solid ${C.border}`, paddingBottom: 12, paddingTop: 12 }}>
                                 {label}
                             </a>

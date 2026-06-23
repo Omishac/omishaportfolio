@@ -51,7 +51,7 @@ export default function SharedNav() {
         { label: "Work",       href: isHome ? "#work" : "/#work" },
         { label: "Playground", href: "/playground" },
         { label: "LinkedIn",   href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-        { label: "Resume",     href: "/slides/resume.pdf", ext: true },
+        { label: "Resume",     href: "/slides/resume.pdf", ext: true, download: "UX Omisha Chabria Resume.pdf" },
     ]
 
     const isPlayground = pathname?.startsWith("/playground")
@@ -89,7 +89,7 @@ export default function SharedNav() {
                 {/* Desktop links */}
                 {!phone && (
                     <div style={{ display: "flex", gap: tablet ? 24 : 32, alignItems: "center" }}>
-                        {allLinks.map(({ label, href, ext }) => {
+                        {allLinks.map(({ label, href, ext, download }) => {
                             const active = label === "Playground" && isPlayground
                             const hovered = hoveredLink === label
                             return (
@@ -98,6 +98,7 @@ export default function SharedNav() {
                                     href={href}
                                     target={ext ? "_blank" : "_self"}
                                     rel="noreferrer"
+                                    {...(download ? { download } : {})}
                                     style={{
                                         position: "relative",
                                         fontFamily: I,
@@ -213,7 +214,7 @@ export default function SharedNav() {
                         transition: "opacity 0.25s cubic-bezier(0.22,1,0.36,1)",
                     }}
                 >
-                    {allLinks.map(({ label, href, ext }, i) => {
+                    {allLinks.map(({ label, href, ext, download }, i) => {
                         const active = label === "Playground" && isPlayground
                         return (
                             <a
@@ -221,6 +222,7 @@ export default function SharedNav() {
                                 href={href}
                                 target={ext ? "_blank" : "_self"}
                                 rel="noreferrer"
+                                {...(download ? { download } : {})}
                                 onClick={() => setMenuOpen(false)}
                                 style={{
                                     fontFamily: I,

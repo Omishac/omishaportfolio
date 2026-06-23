@@ -1063,13 +1063,14 @@ function Footer({
                     {[
                         { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
                         { label: "Email", href: "mailto:omishachabria3@gmail.com" },
-                        { label: "Resume", href: "/slides/resume.pdf", ext: true },
-                    ].map(({ label, href, ext }) => (
+                        { label: "Resume", href: "/slides/resume.pdf", ext: true, download: "UX Omisha Chabria Resume.pdf" },
+                    ].map(({ label, href, ext, download }) => (
                         <a
                             key={label}
                             href={href}
                             target={ext ? "_blank" : "_self"}
                             rel="noreferrer"
+                            {...(download ? { download } : {})}
                             style={{
                                 fontFamily: I,
                                 fontSize: phone ? 13 : 14,
