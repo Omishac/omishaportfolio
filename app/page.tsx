@@ -914,10 +914,10 @@ function LogoTicker({
 }
 
 const SKILLS = [
-    { num: "01", title: "Product & UX Design", sub: "Interaction Design · Prototyping · Design Systems · Responsive & Mobile" },
-    { num: "02", title: "User Research & Strategy", sub: "Usability Testing · A/B Testing · Heuristic Evaluation · Journey Mapping" },
-    { num: "03", title: "Data-Informed Design", sub: "Google Analytics · Behavioral Metrics · Conversion Optimization · SQL" },
-    { num: "04", title: "Tools & Craft", sub: "Figma · Framer · Adobe Suite · HTML/CSS · React" },
+    { num: "01", title: "Data Analytics & AI", sub: "Google Analytics · Excel · Confluence · LLMs · Prompt Engineering" },
+    { num: "02", title: "User Experience Design", sub: "Research · UX/UI · Design Systems" },
+    { num: "03", title: "Digital Marketing", sub: "Research · Strategy · A/B Testing" },
+    { num: "04", title: "Branding & Content Creation", sub: "Brand kits · Photography · Video Content" },
 ]
 
 function SkillRow({ num, title, sub, phone, tablet }: { num: string; title: string; sub: string; phone: boolean; tablet: boolean }) {
