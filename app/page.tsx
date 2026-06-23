@@ -512,7 +512,7 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
     {
         href: "/rfnd",
         image: "https://framerusercontent.com/images/zVoRHBtJogEEa7qGBjvmTij4HiM.png",
-        title: "RFND — Mood-Aware Commerce Concept",
+        title: "RFND: Mood-Aware Commerce Concept",
         tags: ["Digital Strategy", "UX/UI", "Conceptual"],
         company: "RFND",
     },
