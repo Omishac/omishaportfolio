@@ -287,7 +287,7 @@ function Hero({
         }, 700)
     }
 
-    const headSize = phone ? "clamp(20px, 5.5vw, 26px)" : tablet ? "clamp(22px, 3vw, 28px)" : "28px"
+    const headSize = phone ? "clamp(28px, 6vw, 36px)" : tablet ? "clamp(32px, 4vw, 42px)" : "clamp(36px, 3.5vw, 56px)"
     const headMaxW = "100%"
 
     return (
@@ -386,7 +386,7 @@ function Hero({
                             ? `word-in 0.65s cubic-bezier(0.22,1,0.36,1) ${200 + HERO_WORDS.length * 100}ms forwards`
                             : "none",
                     }}>
-                        Turning insights into experiences.
+                        Designing commerce experiences across the URBN ecosystem.
                     </span>
                 </h1>
             </div>
@@ -512,7 +512,7 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
     {
         href: "/rfnd",
         image: "https://framerusercontent.com/images/zVoRHBtJogEEa7qGBjvmTij4HiM.png",
-        title: "Rethinking Online Through UX",
+        title: "RFND — Mood-Aware Commerce Concept",
         tags: ["Digital Strategy", "UX/UI", "Conceptual"],
         company: "RFND",
     },
@@ -706,6 +706,45 @@ function Card({
     )
 }
 
+function AboutBlock({
+    phone,
+    tablet,
+    large,
+    px,
+    maxW,
+}: {
+    phone: boolean
+    tablet: boolean
+    large: boolean
+    px: number
+    maxW: number
+}) {
+    return (
+        <section
+            style={{
+                width: "100%",
+                padding: `0 ${px}px ${phone ? 48 : tablet ? 64 : 80}px`,
+                boxSizing: "border-box",
+            }}
+        >
+            <div style={{ maxWidth: maxW, width: "100%" }}>
+                <p
+                    style={{
+                        fontFamily: I,
+                        fontSize: phone ? 15 : tablet ? 16 : 17,
+                        lineHeight: 1.7,
+                        color: C.ink3,
+                        margin: 0,
+                        maxWidth: 620,
+                    }}
+                >
+                    Currently at URBN, I work across Anthropologie&apos;s digital products — designing for discovery, accessibility, and mobile commerce. I bring together research, data, and design to ship experiences that make a measurable difference.
+                </p>
+            </div>
+        </section>
+    )
+}
+
 function WorkSection({
     phone,
     tablet,
@@ -875,10 +914,10 @@ function LogoTicker({
 }
 
 const SKILLS = [
-    { num: "01", title: "Data Analytics & AI", sub: "Google Analytics · Excel · Confluence · LLMs · Prompt Engineering" },
-    { num: "02", title: "User Experience Design", sub: "Research · UX/UI · Design Systems" },
-    { num: "03", title: "Digital Marketing", sub: "Research · Strategy · A/B Testing" },
-    { num: "04", title: "Branding & Content Creation", sub: "Brand kits · Photography · Video Content" },
+    { num: "01", title: "Product & UX Design", sub: "Interaction Design · Prototyping · Design Systems · Responsive & Mobile" },
+    { num: "02", title: "User Research & Strategy", sub: "Usability Testing · A/B Testing · Heuristic Evaluation · Journey Mapping" },
+    { num: "03", title: "Data-Informed Design", sub: "Google Analytics · Behavioral Metrics · Conversion Optimization · SQL" },
+    { num: "04", title: "Tools & Craft", sub: "Figma · Framer · Adobe Suite · HTML/CSS · React" },
 ]
 
 function SkillRow({ num, title, sub, phone, tablet }: { num: string; title: string; sub: string; phone: boolean; tablet: boolean }) {
@@ -1088,6 +1127,7 @@ export default function ResponsiveHome() {
                 <div style={{ width: "100%" }}>
                     <SharedNav />
                     <Hero phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
+                    <AboutBlock phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
                     <WorkSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
                     <LogoTicker phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
                     <SkillsSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
