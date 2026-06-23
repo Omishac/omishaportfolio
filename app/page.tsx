@@ -1029,6 +1029,8 @@ function Footer({
     maxW: number
 }) {
     const logoW = phone ? 75 : tablet ? 85 : 90
+    const [hovFooter, setHovFooter] = useState<string | null>(null)
+    const YB = "var(--font-yuji-boku), serif"
     return (
         <footer
             style={{
@@ -1064,26 +1066,46 @@ function Footer({
                         { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
                         { label: "Email", href: "mailto:omishachabria3@gmail.com" },
                         { label: "Resume", href: "/slides/resume.pdf", ext: true },
-                    ].map(({ label, href, ext }) => (
-                        <a
-                            key={label}
-                            href={href}
-                            target={ext ? "_blank" : "_self"}
-                            rel="noreferrer"
-                            style={{
-                                fontFamily: I,
-                                fontSize: phone ? 13 : 14,
-                                color: C.ink3,
-                                textDecoration: "none",
-                                letterSpacing: "-0.01em",
-                                transition: "color 0.18s",
-                            }}
-                            onMouseEnter={(e) => (e.currentTarget.style.color = C.ink)}
-                            onMouseLeave={(e) => (e.currentTarget.style.color = C.ink3)}
-                        >
-                            {label}
-                        </a>
-                    ))}
+                    ].map(({ label, href, ext }) => {
+                        const hovered = hovFooter === label
+                        return (
+                            <a
+                                key={label}
+                                href={href}
+                                target={ext ? "_blank" : "_self"}
+                                rel="noreferrer"
+                                style={{
+                                    position: "relative",
+                                    fontFamily: I,
+                                    fontSize: phone ? 13 : 14,
+                                    fontWeight: 500,
+                                    color: hovered ? C.ink : C.ink3,
+                                    textDecoration: "none",
+                                    letterSpacing: "-0.01em",
+                                    transition: "color 0.25s",
+                                }}
+                                onMouseEnter={() => setHovFooter(label)}
+                                onMouseLeave={() => setHovFooter(null)}
+                            >
+                                <span style={{ opacity: hovered ? 0 : 1, transition: "opacity 0.25s ease" }}>{label}</span>
+                                <span style={{
+                                    position: "absolute",
+                                    left: 0,
+                                    top: "50%",
+                                    transform: "translateY(-50%)",
+                                    fontFamily: YB,
+                                    fontSize: phone ? 14 : 15,
+                                    fontWeight: 700,
+                                    fontStyle: "italic",
+                                    color: C.ink,
+                                    whiteSpace: "nowrap",
+                                    opacity: hovered ? 1 : 0,
+                                    transition: "opacity 0.25s ease",
+                                    pointerEvents: "none",
+                                }}>{label}</span>
+                            </a>
+                        )
+                    })}
                 </div>
             </div>
         </footer>
