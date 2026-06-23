@@ -489,7 +489,7 @@ export default function RFNDCaseStudy() {
                         </FadeIn>
 
                         <FadeIn delay={120}>
-                            <FullImage src="/slides/rfnd-hero.png" alt="RFND — Reimagining Emotional E-Commerce" radius={16} />
+                            <FullImage src="/images/rfnd-hero.webp" alt="RFND — Reimagining Emotional E-Commerce" radius={16} />
                         </FadeIn>
                     </section>
 
@@ -545,7 +545,7 @@ export default function RFNDCaseStudy() {
                         </FadeIn>
 
                         <FadeIn delay={80}>
-                            <FullImage src="/slides/Persona.jpg" alt="RFND user persona"
+                            <FullImage src="/images/rfnd-persona.webp" alt="RFND user persona"
                                 caption="Synthesized persona — the emotionally-driven, discovery-oriented modern shopper this concept was designed for" />
                         </FadeIn>
 
@@ -581,7 +581,7 @@ export default function RFNDCaseStudy() {
                         </FadeIn>
 
                         <FadeIn delay={80}>
-                            <FullImage src="/slides/Mood%20board.png" alt="RFND moodboard"
+                            <FullImage src="/images/rfnd-moodboard.webp" alt="RFND moodboard"
                                 caption="Visual and emotional territory — tonal direction and aesthetic reference for the envisioned RFND experience" />
                         </FadeIn>
 
@@ -624,7 +624,7 @@ export default function RFNDCaseStudy() {
                             <ShoppingModeToggle />
                         </FadeIn>
                         <FadeIn delay={80}>
-                            <FullImage src="/slides/homepgexplorations.png" alt="Homepage design explorations"
+                            <FullImage src="/images/rfnd-homepage-explorations.webp" alt="Homepage design explorations"
                                 caption="Homepage explorations — iterating on hierarchy, mode entry points, and the first decision a user makes when they open the app" />
                         </FadeIn>
                     </section>
@@ -697,8 +697,8 @@ export default function RFNDCaseStudy() {
                             </div>
                             <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: 20, margin: "44px 0" }}>
                                 {[
-                                    { src: "/slides/discover.png", label: "Discover Screen", desc: "Proposed mood-aware discovery — editorial curation adapting to emotional intent and occasion" },
-                                    { src: "/slides/profile.png", label: "Profile Screen", desc: "Proposed style hub — digital closet, style history, and preference memory across sessions" },
+                                    { src: "/images/rfnd-discover.webp", label: "Discover Screen", desc: "Proposed mood-aware discovery — editorial curation adapting to emotional intent and occasion" },
+                                    { src: "/images/rfnd-profile.webp", label: "Profile Screen", desc: "Proposed style hub — digital closet, style history, and preference memory across sessions" },
                                 ].map(({ src, label, desc }) => (
                                     <div key={label} style={{ flex: 1, display: "flex", flexDirection: "column", gap: 16 }}>
                                         <img src={src} alt={label} style={{ width: "100%", height: "auto", display: "block", borderRadius: 14, boxShadow: "0 4px 52px rgba(0,0,0,0.10)", maxWidth: "100%" }} />
