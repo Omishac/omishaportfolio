@@ -1571,7 +1571,7 @@ export default function AnthropologieCaseStudy() {
                                             height: "100%",
                                             display: "block",
                                             objectFit: clip ? "cover" : "contain",
-                                            transform: clip ? "scale(1.08)" : "none",
+                                            transform: clip ? "scale(1.02)" : "none",
                                             maxWidth: "100%",
                                         }}
                                     />
