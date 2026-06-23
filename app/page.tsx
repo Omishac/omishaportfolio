@@ -287,7 +287,7 @@ function Hero({
         }, 700)
     }
 
-    const headSize = phone ? "clamp(22px, 5.5vw, 28px)" : tablet ? "clamp(24px, 3vw, 30px)" : "clamp(28px, 2.5vw, 36px)"
+    const headSize = phone ? "clamp(20px, 5.5vw, 26px)" : tablet ? "clamp(22px, 3vw, 28px)" : "28px"
     const headMaxW = "100%"
 
     return (
