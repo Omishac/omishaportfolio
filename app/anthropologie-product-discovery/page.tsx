@@ -164,28 +164,28 @@ const STRATEGIES = [
         problem: "Selected filters lacked visibility. Users couldn't tell which filters were active.",
         changes: ["Introduced checkboxes", "Improved selected-state visibility", "Repositioned active refinements"],
         why: "Users receive clearer feedback and can immediately understand which filters have been applied.",
-        video: "/videos/strategy-01-selections.mov",
+        video: "/videos/strategy-01-selections.mp4",
     },
     {
         num: "02", title: "Reduce Navigation Friction",
         problem: "Multi-filter workflows felt fragile. Users questioned whether previous selections remained active.",
         changes: ["Introduced accordion architecture", "Improved movement between filter groups", "Reduced backtracking"],
         why: "Users can explore multiple filters without questioning whether previous selections remain active.",
-        video: "/videos/strategy-02-navigation.mov",
+        video: "/videos/strategy-02-navigation.mp4",
     },
     {
         num: "03", title: "Create a Clear Exit Path",
         problem: "Exiting the drawer was unclear. Users didn't know how to leave without applying filters.",
         changes: ["Changed CTA copy from \"Done\" to \"View Results\" when a filter is selected", "Clarified exit actions", "Improved drawer navigation"],
         why: "Users always understand how to continue their shopping journey.",
-        video: "/videos/strategy-03-exit.mov",
+        video: "/videos/strategy-03-exit.mp4",
     },
     {
         num: "04", title: "Clarify Store Pickup Availability",
         problem: "Inventory language created confusion. Users read \"Available Within 24 Hours\" as a shipping promise.",
         changes: ["Introduced new pickup toggle behavior", "Improved copy hierarchy", "Supported multiple pickup states"],
         why: "Users can better understand product availability and make more informed decisions.",
-        video: "/videos/strategy-04-inventory.mov",
+        video: "/videos/strategy-04-inventory.mp4",
     },
 ]
 
@@ -667,7 +667,7 @@ export default function AnthropologieProductDiscovery() {
                                         backgroundColor: C.surface,
                                     }}>
                                         <video
-                                            src="/videos/prototype-walkthrough.mov"
+                                            src="/videos/prototype-walkthrough.mp4"
                                             autoPlay muted loop playsInline
                                             style={{ width: "100%", height: "auto", display: "block" }}
                                         />
