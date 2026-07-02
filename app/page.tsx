@@ -1,9 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect, useCallback, Fragment } from "react"
-import { AnimatePresence } from "framer-motion"
 import SharedNav from "../components/SharedNav"
-import IntroLoader from "../components/IntroLoader"
 
 const CURSOR_STYLES = `
   @media (pointer: fine) { * { cursor: none !important; } }
@@ -1114,24 +1112,9 @@ function Footer({
 
 export default function ResponsiveHome() {
     const { ref, phone, tablet, desktop, large, px, maxW, sp } = useBP()
-    const [showIntro, setShowIntro] = useState(false)
-
-    useEffect(() => {
-        if (typeof window === "undefined") return
-        const seen = sessionStorage.getItem("intro_seen")
-        if (!seen) setShowIntro(true)
-    }, [])
-
-    const onIntroComplete = useCallback(() => {
-        sessionStorage.setItem("intro_seen", "1")
-        setShowIntro(false)
-    }, [])
 
     return (
         <>
-            <AnimatePresence>
-                {showIntro && <IntroLoader onComplete={onIntroComplete} />}
-            </AnimatePresence>
             <div
                 ref={ref}
                 style={{
@@ -1140,8 +1123,6 @@ export default function ResponsiveHome() {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    opacity: showIntro ? 0 : 1,
-                    transition: "opacity 0.6s cubic-bezier(0.22,1,0.36,1)",
                 }}
             >
                 <style>{CURSOR_STYLES}</style>
