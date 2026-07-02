@@ -323,7 +323,7 @@ export default function PlaygroundPage() {
                                     <img
                                         src={src}
                                         alt=""
-                                        style={{ width: "100%", height: "100%", objectFit: i === 1 ? "contain" : "cover", display: "block", maxWidth: "100%" }}
+                                        style={{ width: i === 1 ? "75%" : "100%", height: "100%", objectFit: i === 1 ? "contain" : "cover", display: "block", maxWidth: "100%" }}
                                     />
                                 </div>
                             ))}
