@@ -319,7 +319,7 @@ export default function PlaygroundPage() {
                         </div>
                         <div style={{ display: "flex", flexDirection: "column" as const, gap: 14 }}>
                             {VISUAL_IMAGES.map((src, i) => (
-                                <div key={i} style={{ borderRadius: 10, overflow: "hidden", flex: phone ? "none" : 1, minHeight: phone ? 200 : 0 }}>
+                                <div key={i} style={{ borderRadius: 10, overflow: "hidden", flex: phone ? "none" : (i === 1 ? 0.5 : 1), minHeight: phone ? 200 : 0 }}>
                                     <img
                                         src={src}
                                         alt=""
