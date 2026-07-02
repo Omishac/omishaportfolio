@@ -29,7 +29,7 @@ const PHOTOS = [
 
 const VISUAL_IMAGES = [
     "https://framerusercontent.com/images/5iCEQ0frJyGbnjCBQb68ThJHAvg.png",
-    "https://framerusercontent.com/images/plkR05Zc0hlHoIagepXjCw6TA4.png",
+    "/images/image-1783027241246.png",
 ]
 
 const MOTION_EMBEDS = [
