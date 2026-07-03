@@ -157,15 +157,15 @@ export default function SharedNav() {
                         }}
                     >
                         {menuOpen ? (
-                            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M3 3.5 Q7.5 7.5 11 11 Q14.5 14.5 19 18.5" stroke={INK} strokeWidth="1.7" strokeLinecap="round"/>
-                                <path d="M19 3.5 Q14.5 7.5 11 11 Q7.5 14.5 3 18.5" stroke={INK} strokeWidth="1.7" strokeLinecap="round"/>
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                <path d="M2 2 L16 16" stroke={INK} strokeWidth="1.6" strokeLinecap="round"/>
+                                <path d="M16 2 L2 16" stroke={INK} strokeWidth="1.6" strokeLinecap="round"/>
                             </svg>
                         ) : (
-                            <svg width="26" height="17" viewBox="0 0 26 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M0.5 1.8 Q6.5 1 13 1.5 Q19 2 25.5 1.2" stroke={INK} strokeWidth="1.7" strokeLinecap="round"/>
-                                <path d="M0.5 8.5 Q7 7.8 13 8.4 Q19.5 9 25.5 8.2" stroke={INK} strokeWidth="1.7" strokeLinecap="round"/>
-                                <path d="M0.5 15.2 Q6 14.5 13 15.1 Q19 15.7 25.5 14.8" stroke={INK} strokeWidth="1.7" strokeLinecap="round"/>
+                            <svg width="5" height="21" viewBox="0 0 5 21" fill="none">
+                                <circle cx="2.5" cy="2.5" r="2.5" fill={INK}/>
+                                <circle cx="2.5" cy="10.5" r="2.5" fill={INK}/>
+                                <circle cx="2.5" cy="18.5" r="2.5" fill={INK}/>
                             </svg>
                         )}
                     </button>
