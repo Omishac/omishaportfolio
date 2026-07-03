@@ -703,13 +703,39 @@ function Card({
 function FeaturedCard({
     href, image, video, title, tags, company, desc, year, highlight, live, phone, tablet, large, cardH,
 }: (typeof CARDS)[0] & { phone: boolean; tablet: boolean; large: boolean; cardH: number }) {
+    const cardRef = useRef<HTMLDivElement>(null)
     const [hov, setHov] = useState(false)
+    const pos = useRef({ x: 0.5, y: 0.5 })
+    const cur = useRef({ x: 0.5, y: 0.5 })
+    const raf = useRef(0)
+    const [tilt, setTilt] = useState({ x: 0, y: 0 })
+
+    const animate = useCallback(() => {
+        cur.current.x += (pos.current.x - cur.current.x) * 0.07
+        cur.current.y += (pos.current.y - cur.current.y) * 0.07
+        setTilt({ x: (cur.current.y - 0.5) * -5, y: (cur.current.x - 0.5) * 5 })
+        raf.current = requestAnimationFrame(animate)
+    }, [])
+
+    useEffect(() => {
+        if (!hov) { cancelAnimationFrame(raf.current); return }
+        raf.current = requestAnimationFrame(animate)
+        return () => cancelAnimationFrame(raf.current)
+    }, [animate, hov])
+
+    const onMove = (e: React.MouseEvent) => {
+        const r = cardRef.current?.getBoundingClientRect()
+        if (!r) return
+        pos.current = { x: (e.clientX - r.left) / r.width, y: (e.clientY - r.top) / r.height }
+    }
 
     return (
         <a href={href} style={{ textDecoration: "none", display: "block" }}>
             <div
+                ref={cardRef}
                 onMouseEnter={() => setHov(true)}
-                onMouseLeave={() => setHov(false)}
+                onMouseLeave={() => { setHov(false); pos.current = { x: 0.5, y: 0.5 } }}
+                onMouseMove={onMove}
                 style={{
                     display: "flex",
                     flexDirection: phone ? "column" : "row",
@@ -717,10 +743,16 @@ function FeaturedCard({
                     overflow: "hidden",
                     height: phone ? "auto" : cardH,
                     cursor: "pointer",
+                    transform: hov
+                        ? `perspective(1400px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1.01)`
+                        : "perspective(1400px) rotateX(0deg) rotateY(0deg) scale(1)",
                     boxShadow: hov
-                        ? "0 24px 48px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06)"
+                        ? "0 28px 56px rgba(0,0,0,0.16), 0 8px 24px rgba(0,0,0,0.08)"
                         : "0 2px 12px rgba(0,0,0,0.05)",
-                    transition: "box-shadow 0.4s cubic-bezier(0.22,1,0.36,1)",
+                    transition: hov
+                        ? "box-shadow 0.4s cubic-bezier(0.22,1,0.36,1)"
+                        : "transform 0.8s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s cubic-bezier(0.22,1,0.36,1)",
+                    willChange: "transform",
                 }}
             >
                 {/* Image — 62% left */}
