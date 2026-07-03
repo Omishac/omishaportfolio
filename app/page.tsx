@@ -509,189 +509,87 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
     },
 ]
 
-function Card({
+function ListCard({
     href,
     image,
     video,
     title,
     tags,
     company,
+    phone,
+    tablet,
+    large,
     cardH,
-    titleSize,
-}: (typeof CARDS)[0] & { cardH: number; titleSize: number }) {
-    const ref = useRef<HTMLDivElement>(null)
+}: (typeof CARDS)[0] & { phone: boolean; tablet: boolean; large: boolean; cardH: number }) {
     const [hov, setHov] = useState(false)
-    const pos = useRef({ x: 0.5, y: 0.5 })
-    const cur = useRef({ x: 0.5, y: 0.5 })
-    const raf = useRef(0)
-    const [tilt, setTilt] = useState({ x: 0, y: 0 })
-
-    const animate = useCallback(() => {
-        cur.current.x += (pos.current.x - cur.current.x) * 0.07
-        cur.current.y += (pos.current.y - cur.current.y) * 0.07
-        setTilt({ x: (cur.current.y - 0.5) * -8, y: (cur.current.x - 0.5) * 8 })
-        raf.current = requestAnimationFrame(animate)
-    }, [])
-
-    useEffect(() => {
-        if (!hov) { cancelAnimationFrame(raf.current); return }
-        raf.current = requestAnimationFrame(animate)
-        return () => cancelAnimationFrame(raf.current)
-    }, [animate, hov])
-
-    const onMove = (e: React.MouseEvent) => {
-        const r = ref.current?.getBoundingClientRect()
-        if (!r) return
-        pos.current = {
-            x: (e.clientX - r.left) / r.width,
-            y: (e.clientY - r.top) / r.height,
-        }
-    }
+    const titleSize = phone ? 22 : tablet ? 26 : large ? 42 : 34
 
     return (
-        <a href={href} style={{ textDecoration: "none", display: "flex", flexDirection: "column", gap: 14 }}>
-            <div
-                ref={ref}
-                onMouseEnter={() => setHov(true)}
-                onMouseLeave={() => {
-                    setHov(false)
-                    pos.current = { x: 0.5, y: 0.5 }
-                }}
-                onMouseMove={onMove}
-                style={{
-                    width: "100%",
-                    height: cardH,
-                    borderRadius: 14,
-                    overflow: "hidden",
-                    backgroundColor: "#F5F5F3",
-                    position: "relative",
-                    cursor: "pointer",
-                    transform: hov
-                        ? `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1.02)`
-                        : "perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)",
-                    boxShadow: hov
-                        ? "0 28px 56px rgba(0,0,0,0.16), 0 8px 24px rgba(0,0,0,0.08)"
-                        : "0 1px 8px rgba(0,0,0,0.05)",
-                    transition: hov
-                        ? "box-shadow 0.4s cubic-bezier(0.22,1,0.36,1)"
-                        : "transform 0.8s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s cubic-bezier(0.22,1,0.36,1)",
-                    willChange: "transform",
-                }}
-            >
-                {video ? (
-                    <video
-                        src={video}
-                        autoPlay loop muted playsInline
-                        style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                            display: "block",
-                        }}
-                    />
-                ) : (
-                    <img
-                        src={image}
-                        alt={title}
-                        style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                            display: "block",
-                        }}
-                    />
-                )}
-                <div
-                    style={{
-                        position: "absolute",
-                        inset: 0,
-                        background: "linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%)",
-                        opacity: hov ? 1 : 0,
-                        transition: "opacity 0.35s",
-                        pointerEvents: "none",
-                    }}
-                />
-                <div
-                    style={{
-                        position: "absolute",
-                        bottom: 14,
-                        left: "50%",
-                        transform: hov
-                            ? "translateX(-50%) translateY(0)"
-                            : "translateX(-50%) translateY(10px)",
-                        opacity: hov ? 1 : 0,
-                        transition: "opacity 0.3s, transform 0.3s",
-                        backgroundColor: "rgba(255,255,255,0.96)",
-                        backdropFilter: "blur(16px)",
-                        WebkitBackdropFilter: "blur(16px)",
-                        borderRadius: 40,
-                        padding: "7px 16px",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 6,
-                        whiteSpace: "nowrap" as const,
-                        pointerEvents: "none",
-                        zIndex: 10,
-                    }}
-                >
-                    <span style={{ fontFamily: I, fontSize: 12, fontWeight: 600, color: C.ink, letterSpacing: "-0.01em" }}>
-                        View project
-                    </span>
-                    <span style={{ fontSize: 12, color: C.ink }}>→</span>
-                </div>
-            </div>
-            <div
-                style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    justifyContent: "space-between",
-                    gap: 12,
-                    padding: "0 2px",
-                }}
-            >
-                <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-                    <span
-                        style={{
-                            fontFamily: Z,
-                            fontSize: titleSize,
-                            fontWeight: 400,
-                            letterSpacing: "-0.02em",
-                            lineHeight: 1.25,
-                            color: C.ink2,
-                        }}
-                    >
-                        {title}
-                    </span>
-                    <span style={{ fontFamily: I, fontSize: 11, color: C.muted, letterSpacing: "0.02em" }}>
-                        {company}
-                    </span>
-                </div>
-                <div
-                    style={{
-                        display: "flex",
-                        flexWrap: "wrap" as const,
-                        gap: 4,
-                        flexShrink: 0,
-                        paddingTop: 2,
-                        justifyContent: "flex-end",
-                    }}
-                >
+        <a
+            href={href}
+            onMouseEnter={() => setHov(true)}
+            onMouseLeave={() => setHov(false)}
+            style={{
+                display: "flex",
+                flexDirection: phone ? "column" : "row",
+                alignItems: phone ? "stretch" : "center",
+                gap: phone ? 20 : tablet ? 32 : 56,
+                padding: `${phone ? 32 : 44}px 0`,
+                borderBottom: `1px solid ${C.border}`,
+                textDecoration: "none",
+            }}
+        >
+            {/* Text */}
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 12 }}>
+                <span style={{ fontFamily: I, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: C.muted }}>
+                    {company}
+                </span>
+                <h3 style={{
+                    fontFamily: Z, fontWeight: 400,
+                    fontSize: titleSize, letterSpacing: "-0.02em",
+                    lineHeight: 1.15, color: hov ? C.ink : C.ink2,
+                    margin: 0, transition: "color 0.2s",
+                }}>
+                    {title}
+                </h3>
+                <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 5, marginTop: 2 }}>
                     {tags.map((t, i) => (
-                        <span
-                            key={i}
-                            style={{
-                                fontFamily: I,
-                                fontSize: 10,
-                                color: C.muted,
-                                backgroundColor: "rgba(0,0,0,0.04)",
-                                borderRadius: 40,
-                                padding: "3px 9px",
-                            }}
-                        >
-                            {t}
+                        <span key={i} style={{ fontFamily: I, fontSize: 11, color: C.muted }}>
+                            {i > 0 && <span style={{ margin: "0 3px", opacity: 0.35 }}>·</span>}{t}
                         </span>
                     ))}
                 </div>
+                <div style={{
+                    marginTop: 12, display: "flex", alignItems: "center", gap: 5,
+                    opacity: hov ? 1 : 0.3, transition: "opacity 0.25s",
+                }}>
+                    <span style={{ fontFamily: I, fontSize: 12, fontWeight: 500, color: C.ink }}>View project</span>
+                    <span style={{
+                        color: C.ink, fontSize: 13, display: "inline-block",
+                        transform: hov ? "translateX(4px)" : "translateX(0)",
+                        transition: "transform 0.25s",
+                    }}>→</span>
+                </div>
+            </div>
+
+            {/* Image / Video */}
+            <div style={{
+                flex: phone ? "none" : "0 0 58%",
+                height: phone ? 220 : cardH,
+                borderRadius: 12,
+                overflow: "hidden",
+                backgroundColor: "#F5F5F3",
+                flexShrink: 0,
+                transform: hov ? "scale(1.015)" : "scale(1)",
+                transition: "transform 0.45s cubic-bezier(0.22,1,0.36,1)",
+            }}>
+                {video ? (
+                    <video src={video} autoPlay loop muted playsInline
+                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                ) : (
+                    <img src={image} alt={title}
+                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                )}
             </div>
         </a>
     )
@@ -751,7 +649,6 @@ function WorkSection({
     maxW: number
     sp: ReturnType<typeof useBP>["sp"]
 }) {
-    const cardTitleSize = phone ? 16 : tablet ? 17 : large ? 21 : 19
     const sectionRef = useRef<HTMLElement>(null)
     const [cardsShown, setCardsShown] = useState(false)
     useEffect(() => {
@@ -766,8 +663,8 @@ function WorkSection({
 
     const reveal = (idx: number) => ({
         opacity: cardsShown ? 1 : 0,
-        transform: cardsShown ? "translateY(0)" : "translateY(40px)",
-        transition: `opacity 0.72s cubic-bezier(0.22,1,0.36,1) ${idx * 120}ms, transform 0.72s cubic-bezier(0.22,1,0.36,1) ${idx * 120}ms`,
+        transform: cardsShown ? "translateY(0)" : "translateY(32px)",
+        transition: `opacity 0.72s cubic-bezier(0.22,1,0.36,1) ${idx * 140}ms, transform 0.72s cubic-bezier(0.22,1,0.36,1) ${idx * 140}ms`,
     })
 
     return (
@@ -788,29 +685,13 @@ function WorkSection({
                     tablet={tablet}
                     large={large}
                 />
-                {phone ? (
-                    <div style={{ display: "flex", flexDirection: "column", gap: sp.cardRowGap }}>
-                        {CARDS.map((c, i) => (
-                            <div key={i} style={reveal(i)}>
-                                <Card {...c} cardH={sp.cardH} titleSize={cardTitleSize} />
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <div style={{ display: "flex", flexDirection: "column", gap: sp.cardRowGap }}>
-                        <div style={reveal(0)}>
-                            <Card {...CARDS[0]} cardH={Math.round(sp.cardH * 1.5)} titleSize={cardTitleSize} />
+                <div style={{ borderTop: `1px solid ${C.border}` }}>
+                    {CARDS.map((c, i) => (
+                        <div key={i} style={reveal(i)}>
+                            <ListCard {...c} phone={phone} tablet={tablet} large={large} cardH={sp.cardH} />
                         </div>
-                        <div style={{ display: "flex", gap: sp.cardColGap }}>
-                            <div style={{ flex: 1 }}>
-                                <div style={reveal(1)}><Card {...CARDS[1]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
-                            </div>
-                            <div style={{ flex: 1 }}>
-                                <div style={reveal(2)}><Card {...CARDS[2]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                    ))}
+                </div>
             </div>
         </section>
     )
