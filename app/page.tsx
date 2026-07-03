@@ -799,7 +799,7 @@ function WorkSection({
                 ) : (
                     <div style={{ display: "flex", flexDirection: "column", gap: sp.cardRowGap }}>
                         <div style={reveal(0)}>
-                            <Card {...CARDS[0]} cardH={sp.cardH} titleSize={cardTitleSize} />
+                            <Card {...CARDS[0]} cardH={Math.round(sp.cardH * 1.5)} titleSize={cardTitleSize} />
                         </div>
                         <div style={{ display: "flex", gap: sp.cardColGap }}>
                             <div style={{ flex: 1 }}>
