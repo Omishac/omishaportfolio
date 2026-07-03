@@ -522,7 +522,7 @@ function ListCard({
     cardH,
 }: (typeof CARDS)[0] & { phone: boolean; tablet: boolean; large: boolean; cardH: number }) {
     const [hov, setHov] = useState(false)
-    const titleSize = phone ? 22 : tablet ? 26 : large ? 42 : 34
+    const titleSize = phone ? 18 : tablet ? 20 : large ? 28 : 24
 
     return (
         <a
@@ -534,8 +534,7 @@ function ListCard({
                 flexDirection: phone ? "column" : "row",
                 alignItems: phone ? "stretch" : "center",
                 gap: phone ? 20 : tablet ? 32 : 56,
-                padding: `${phone ? 32 : 44}px 0`,
-                borderBottom: `1px solid ${C.border}`,
+                padding: `${phone ? 20 : 28}px 0`,
                 textDecoration: "none",
             }}
         >
@@ -685,10 +684,10 @@ function WorkSection({
                     tablet={tablet}
                     large={large}
                 />
-                <div style={{ borderTop: `1px solid ${C.border}` }}>
+                <div>
                     {CARDS.map((c, i) => (
                         <div key={i} style={reveal(i)}>
-                            <ListCard {...c} phone={phone} tablet={tablet} large={large} cardH={sp.cardH} />
+                            <ListCard {...c} phone={phone} tablet={tablet} large={large} cardH={Math.round(sp.cardH * 0.7)} />
                         </div>
                     ))}
                 </div>
