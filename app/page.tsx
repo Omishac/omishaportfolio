@@ -950,6 +950,15 @@ function WorkSection({
                     tablet={tablet}
                     large={large}
                 />
+                {phone ? (
+                    <div style={{ display: "flex", flexDirection: "column", gap: sp.cardRowGap }}>
+                        {CARDS.map((c, i) => (
+                            <div key={i} style={reveal(i)}>
+                                <Card {...c} cardH={sp.cardH} titleSize={cardTitleSize} />
+                            </div>
+                        ))}
+                    </div>
+                ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: sp.cardRowGap }}>
                     <div style={reveal(0)}>
                         <FeaturedCard
@@ -958,25 +967,16 @@ function WorkSection({
                             cardH={Math.round(sp.cardH * 1.3)}
                         />
                     </div>
-                    {phone ? (
-                        <div style={{ display: "flex", flexDirection: "column", gap: sp.cardRowGap }}>
-                            {[CARDS[1], CARDS[2]].map((c, i) => (
-                                <div key={i} style={reveal(i + 1)}>
-                                    <Card {...c} cardH={sp.cardH} titleSize={cardTitleSize} />
-                                </div>
-                            ))}
+                    <div style={{ display: "flex", gap: sp.cardColGap }}>
+                        <div style={{ flex: 1 }}>
+                            <div style={reveal(1)}><Card {...CARDS[1]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
                         </div>
-                    ) : (
-                        <div style={{ display: "flex", gap: sp.cardColGap }}>
-                            <div style={{ flex: 1 }}>
-                                <div style={reveal(1)}><Card {...CARDS[1]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
-                            </div>
-                            <div style={{ flex: 1 }}>
-                                <div style={reveal(2)}><Card {...CARDS[2]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
-                            </div>
+                        <div style={{ flex: 1 }}>
+                            <div style={reveal(2)}><Card {...CARDS[2]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
                         </div>
-                    )}
+                    </div>
                 </div>
+                )}
             </div>
         </section>
     )
