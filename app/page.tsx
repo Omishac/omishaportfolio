@@ -796,22 +796,26 @@ function WorkSection({
                             </div>
                         ))}
                     </div>
-                ) : (
+                ) : tablet ? (
                     <div style={{ display: "flex", gap: sp.cardColGap, alignItems: "flex-start" }}>
-                        <div
-                            style={{
-                                flex: 1,
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: sp.cardRowGap,
-                                paddingTop: sp.colOffset,
-                            }}
-                        >
+                        <div style={{ flex: 1 }}>
                             <div style={reveal(0)}><Card {...CARDS[0]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
-                            <div style={reveal(2)}><Card {...CARDS[2]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
                         </div>
                         <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: sp.cardRowGap }}>
                             <div style={reveal(1)}><Card {...CARDS[1]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
+                            <div style={reveal(2)}><Card {...CARDS[2]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
+                        </div>
+                    </div>
+                ) : (
+                    <div style={{ display: "flex", gap: sp.cardColGap, alignItems: "flex-start" }}>
+                        <div style={{ flex: 1 }}>
+                            <div style={reveal(0)}><Card {...CARDS[0]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
+                        </div>
+                        <div style={{ flex: 1, paddingTop: sp.colOffset }}>
+                            <div style={reveal(1)}><Card {...CARDS[1]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                            <div style={reveal(2)}><Card {...CARDS[2]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
                         </div>
                     </div>
                 )}
