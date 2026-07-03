@@ -561,7 +561,7 @@ export default function IOSCaseStudy() {
                             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20, padding: "8px 0" }}>
                                 <img src="/slides/ios-original.png" alt="iOS original review experience showing English reviews in a Spanish-language app" style={{ width: phone ? "100%" : "70%", height: "auto", display: "block", maxWidth: "100%" }} />
                                 <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 300, fontSize: 14, color: C.ink3, textAlign: "center", maxWidth: 520, lineHeight: 1.65, margin: 0 }}>
-                                    Urban Outfitters app showing reviews in Spanish — a non-English speaking user sees English reviews with no way to translate them
+                                    The Spain Urban Outfitters app showing reviews in English — a non-English speaking user sees reviews with no way to translate them
                                 </p>
                             </div>
                         </FadeIn>
