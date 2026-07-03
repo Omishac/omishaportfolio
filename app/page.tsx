@@ -484,7 +484,7 @@ function SectionLabel({
     )
 }
 
-const CARDS: { href: string; image: string; video?: string; title: string; tags: string[]; company: string; desc?: string; year?: string; highlight?: { value: string; label: string } }[] = [
+const CARDS: { href: string; image: string; video?: string; title: string; tags: string[]; company: string; desc?: string; year?: string; highlight?: { value: string; label: string }; live?: boolean }[] = [
     {
         href: "/anthropologie-product-discovery",
         image: "https://framerusercontent.com/images/vE5NBaasSteSM6lORQbcDZsAU.png",
@@ -493,8 +493,8 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
         tags: ["Product Design", "Design Systems", "E-Commerce"],
         company: "URBN",
         desc: "Redesigning the filter experience across four retail brands, balancing discoverability with speed for millions of shoppers.",
-        year: "2024",
         highlight: { value: "+30%", label: "task success" },
+        live: true,
     },
     {
         href: "/ios-review-accessibility",
@@ -502,7 +502,6 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
         title: "iOS Review Accessibility",
         tags: ["Research", "UX/UI", "iOS"],
         company: "URBN",
-        year: "2024",
     },
     {
         href: "/anthropologie-mcommerce",
@@ -510,7 +509,6 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
         title: "Anthropologie M-Commerce",
         tags: ["A/B Testing", "Strategy", "iOS"],
         company: "URBN",
-        year: "2023",
     },
 ]
 
@@ -703,28 +701,28 @@ function Card({
 }
 
 function FeaturedCard({
-    href, image, video, title, tags, company, desc, year, highlight, phone, tablet, large, cardH,
+    href, image, video, title, tags, company, desc, year, highlight, live, phone, tablet, large, cardH,
 }: (typeof CARDS)[0] & { phone: boolean; tablet: boolean; large: boolean; cardH: number }) {
     const [hov, setHov] = useState(false)
 
     return (
-        <a
-            href={href}
-            onMouseEnter={() => setHov(true)}
-            onMouseLeave={() => setHov(false)}
-            style={{ textDecoration: "none", display: "block" }}
-        >
-            <div style={{
-                display: "flex",
-                flexDirection: phone ? "column" : "row",
-                borderRadius: 16,
-                overflow: "hidden",
-                height: phone ? "auto" : cardH,
-                boxShadow: hov
-                    ? "0 24px 48px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06)"
-                    : "0 2px 12px rgba(0,0,0,0.05)",
-                transition: "box-shadow 0.4s cubic-bezier(0.22,1,0.36,1)",
-            }}>
+        <a href={href} style={{ textDecoration: "none", display: "block" }}>
+            <div
+                onMouseEnter={() => setHov(true)}
+                onMouseLeave={() => setHov(false)}
+                style={{
+                    display: "flex",
+                    flexDirection: phone ? "column" : "row",
+                    borderRadius: 16,
+                    overflow: "hidden",
+                    height: phone ? "auto" : cardH,
+                    cursor: "pointer",
+                    boxShadow: hov
+                        ? "0 24px 48px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06)"
+                        : "0 2px 12px rgba(0,0,0,0.05)",
+                    transition: "box-shadow 0.4s cubic-bezier(0.22,1,0.36,1)",
+                }}
+            >
                 {/* Image — 62% left */}
                 <div style={{
                     flex: phone ? "none" : "0 0 62%",
@@ -754,17 +752,26 @@ function FeaturedCard({
                     flexDirection: "column",
                     justifyContent: "space-between",
                     padding: phone ? "24px" : tablet ? "28px 24px" : "36px 32px",
-                    backgroundColor: "#fff",
+                    backgroundColor: hov ? "#f9f8f7" : "#fff",
+                    transition: "background-color 0.35s ease",
                 }}>
                     <div>
-                        <span style={{ fontFamily: I, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: C.muted }}>
-                            {company}{year ? ` · ${year}` : ""}
-                        </span>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+                            <span style={{ fontFamily: I, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: C.muted }}>
+                                {company}
+                            </span>
+                            {live && (
+                                <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                                    <span style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: "#6EBF8B", display: "inline-block" }} />
+                                    <span style={{ fontFamily: I, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#6EBF8B" }}>Live</span>
+                                </span>
+                            )}
+                        </div>
                         <h2 style={{
                             fontFamily: Z, fontWeight: 400,
                             fontSize: phone ? 22 : tablet ? 22 : large ? 30 : 26,
                             letterSpacing: "-0.02em", lineHeight: 1.15,
-                            color: C.ink2, margin: "12px 0 14px",
+                            color: C.ink2, margin: "0 0 14px",
                         }}>
                             {title}
                         </h2>
