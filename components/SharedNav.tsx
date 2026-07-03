@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 
 const I = "Inter, system-ui, sans-serif"
+const Z = "Zodiak, 'Times New Roman', serif"
 const YB = "var(--font-yuji-boku), serif"
 const INK  = "#111111"
 const INK3 = "#6B6B6B"
@@ -148,44 +149,25 @@ export default function SharedNav() {
                             padding: "10px",
                             margin: "-10px",
                             display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "center",
                             alignItems: "center",
-                            gap: 5,
+                            justifyContent: "center",
                             zIndex: 201,
                             minWidth: 44,
                             minHeight: 44,
                         }}
                     >
-                        <span style={{
-                            display: "block",
-                            width: 22,
-                            height: 2,
-                            backgroundColor: INK,
-                            borderRadius: 1,
-                            transformOrigin: "center",
-                            transform: menuOpen ? "translateY(7px) rotate(45deg)" : "none",
-                            transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
-                        }} />
-                        <span style={{
-                            display: "block",
-                            width: 22,
-                            height: 2,
-                            backgroundColor: INK,
-                            borderRadius: 1,
-                            opacity: menuOpen ? 0 : 1,
-                            transition: "opacity 0.2s",
-                        }} />
-                        <span style={{
-                            display: "block",
-                            width: 22,
-                            height: 2,
-                            backgroundColor: INK,
-                            borderRadius: 1,
-                            transformOrigin: "center",
-                            transform: menuOpen ? "translateY(-7px) rotate(-45deg)" : "none",
-                            transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
-                        }} />
+                        {menuOpen ? (
+                            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3 3.5 Q7.5 7.5 11 11 Q14.5 14.5 19 18.5" stroke={INK} strokeWidth="1.7" strokeLinecap="round"/>
+                                <path d="M19 3.5 Q14.5 7.5 11 11 Q7.5 14.5 3 18.5" stroke={INK} strokeWidth="1.7" strokeLinecap="round"/>
+                            </svg>
+                        ) : (
+                            <svg width="26" height="17" viewBox="0 0 26 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0.5 1.8 Q6.5 1 13 1.5 Q19 2 25.5 1.2" stroke={INK} strokeWidth="1.7" strokeLinecap="round"/>
+                                <path d="M0.5 8.5 Q7 7.8 13 8.4 Q19.5 9 25.5 8.2" stroke={INK} strokeWidth="1.7" strokeLinecap="round"/>
+                                <path d="M0.5 15.2 Q6 14.5 13 15.1 Q19 15.7 25.5 14.8" stroke={INK} strokeWidth="1.7" strokeLinecap="round"/>
+                            </svg>
+                        )}
                     </button>
                 )}
             </nav>
@@ -223,9 +205,9 @@ export default function SharedNav() {
                                 rel="noreferrer"
                                 onClick={() => setMenuOpen(false)}
                                 style={{
-                                    fontFamily: I,
-                                    fontSize: 32,
-                                    fontWeight: active ? 700 : 400,
+                                    fontFamily: Z,
+                                    fontSize: 36,
+                                    fontWeight: active ? 600 : 400,
                                     color: active ? INK : INK3,
                                     textDecoration: "none",
                                     letterSpacing: "-0.02em",
