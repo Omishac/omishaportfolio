@@ -285,7 +285,7 @@ function Hero({
         }, 700)
     }
 
-    const headSize = phone ? "clamp(20px, 5.5vw, 26px)" : tablet ? "clamp(22px, 3vw, 28px)" : "28px"
+    const headSize = phone ? "clamp(20px, 5.5vw, 26px)" : tablet ? "clamp(22px, 3vw, 28px)" : large ? "clamp(32px, 2.4vw, 44px)" : "28px"
     const headMaxW = "100%"
 
     return (
@@ -302,7 +302,7 @@ function Hero({
             }}
         >
             {/* Left-aligned heading block */}
-            <div style={{ maxWidth: maxW, width: "100%", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+            <div style={{ maxWidth: maxW, width: "100%", margin: "0 auto", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
                 {/* Reveal fade-in on mount */}
                 <div style={{
                     marginBottom: phone ? 24 : tablet ? 32 : 40,
@@ -880,7 +880,7 @@ function AboutBlock({
                 boxSizing: "border-box",
             }}
         >
-            <div style={{ maxWidth: maxW, width: "100%" }}>
+            <div style={{ maxWidth: maxW, width: "100%", margin: "0 auto" }}>
                 <p
                     style={{
                         fontFamily: I,
@@ -942,7 +942,7 @@ function WorkSection({
                 boxSizing: "border-box",
             }}
         >
-            <div style={{ maxWidth: maxW, width: "100%" }}>
+            <div style={{ maxWidth: maxW, width: "100%", margin: "0 auto" }}>
                 <SectionLabel
                     tag="UX Strategy · Research · Digital Commerce"
                     title="Inside My Work"
@@ -1033,7 +1033,7 @@ function LogoTicker({
                 overflow: "hidden",
             }}
         >
-            <div style={{ maxWidth: maxW, width: "100%", transform: `translateY(${tickerY}px)`, willChange: "transform" }}>
+            <div style={{ maxWidth: maxW, width: "100%", margin: "0 auto", transform: `translateY(${tickerY}px)`, willChange: "transform" }}>
                 <SectionLabel
                     tag="Application"
                     title="Industry Experience:"
@@ -1155,7 +1155,7 @@ function SkillsSection({
                 borderTop: `1px solid ${C.border}`,
             }}
         >
-            <div style={{ maxWidth: maxW, width: "100%" }}>
+            <div style={{ maxWidth: maxW, width: "100%", margin: "0 auto" }}>
                 <SectionLabel tag="Skills" title="What I offer" phone={phone} tablet={tablet} large={large} />
                 <div>
                     {SKILLS.map((s) => (
@@ -1196,6 +1196,7 @@ function Footer({
                 style={{
                     maxWidth: maxW,
                     width: "100%",
+                    margin: "0 auto",
                     display: "flex",
                     alignItems: phone ? "flex-start" : "center",
                     flexDirection: phone ? "column" : "row",

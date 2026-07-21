@@ -34,17 +34,19 @@ const SECTIONS = [
 function useResponsive() {
     const [phone, setPhone] = useState(false)
     const [tablet, setTablet] = useState(false)
+    const [large, setLarge] = useState(false)
     useEffect(() => {
         const check = () => {
             const w = window.innerWidth
             setPhone(w < 768)
             setTablet(w >= 768 && w < 1024)
+            setLarge(w > 1440)
         }
         check()
         window.addEventListener("resize", check, { passive: true })
         return () => window.removeEventListener("resize", check)
     }, [])
-    return { phone, tablet, desktop: !phone && !tablet }
+    return { phone, tablet, desktop: !phone && !tablet, large }
 }
 
 function useActiveSection(ids: string[]) {
@@ -158,13 +160,12 @@ function CaseStudyNav() {
         <>
             <nav style={{
                 position: "sticky", top: 0, zIndex: 100, width: "100%", height: phone ? 54 : 64,
-                display: "flex", alignItems: "center", justifyContent: "space-between",
-                padding: `0 ${phone ? 20 : 80}px`, boxSizing: "border-box",
                 backgroundColor: scrolled ? "rgba(255,255,255,0.96)" : C.bg,
                 backdropFilter: scrolled ? "blur(20px)" : "none", WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
                 borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : C.border}`,
                 transition: "background 0.25s, border-color 0.25s",
             }}>
+                <div style={{ maxWidth: 1400, margin: "0 auto", height: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: `0 ${phone ? 20 : 80}px`, boxSizing: "border-box" }}>
                 <a href="/" style={{ display: "block", lineHeight: 0 }}>
                     <img src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png" alt="OC" style={{ width: phone ? 48 : 58, height: phone ? 48 : 58, objectFit: "contain", display: "block" }} />
                 </a>
@@ -187,6 +188,7 @@ function CaseStudyNav() {
                         ))}
                     </div>
                 )}
+                </div>
             </nav>
 
             {menuOpen && (

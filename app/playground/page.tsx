@@ -55,17 +55,19 @@ const SECTIONS = [
 function useResponsive() {
     const [phone, setPhone] = useState(false)
     const [tablet, setTablet] = useState(false)
+    const [large, setLarge] = useState(false)
     useEffect(() => {
         const check = () => {
             const w = window.innerWidth
             setPhone(w < 768)
             setTablet(w >= 768 && w < 1024)
+            setLarge(w > 1440)
         }
         check()
         window.addEventListener("resize", check, { passive: true })
         return () => window.removeEventListener("resize", check)
     }, [])
-    return { phone, tablet, desktop: !phone && !tablet }
+    return { phone, tablet, desktop: !phone && !tablet, large }
 }
 
 function useActiveSection(ids: string[]) {
