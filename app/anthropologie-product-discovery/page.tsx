@@ -344,11 +344,16 @@ function SideNav({ active }: { active: string }) {
 function CaseStudyNav() {
     const [scrolled, setScrolled] = useState(false)
     const [phone, setPhone] = useState(false)
+    const [tablet, setTablet] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
     const [hovNav, setHovNav] = useState<string | null>(null)
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 12)
-        const onResize = () => setPhone(window.innerWidth < 768)
+        const onResize = () => {
+            const w = window.innerWidth
+            setPhone(w < 768)
+            setTablet(w >= 768 && w < 1024)
+        }
         onResize()
         window.addEventListener("scroll", onScroll, { passive: true })
         window.addEventListener("resize", onResize, { passive: true })
@@ -369,7 +374,7 @@ function CaseStudyNav() {
                 borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : C.border}`,
                 transition: "background 0.25s, border-color 0.25s",
             }}>
-                <div style={{ maxWidth: 1400, margin: "0 auto", height: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: `0 ${phone ? 20 : 80}px`, boxSizing: "border-box" }}>
+                <div style={{ maxWidth: 1400, margin: "0 auto", height: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: `0 ${phone ? 20 : tablet ? 40 : 80}px`, boxSizing: "border-box" }}>
                 <a href="/" style={{ display: "block", lineHeight: 0 }}>
                     <img src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png" alt="OC" style={{ width: phone ? 48 : 58, height: phone ? 48 : 58, objectFit: "contain", display: "block" }} />
                 </a>
@@ -526,8 +531,8 @@ export default function AnthropologieProductDiscovery() {
                         <FadeIn delay={60}>
                             <div style={{
                                 display: "grid",
-                                gridTemplateColumns: phone ? "1fr" : "1fr auto 1fr auto 1fr auto 1fr",
-                                gap: phone ? 32 : 0,
+                                gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "1fr auto 1fr auto 1fr auto 1fr",
+                                gap: phone ? 32 : tablet ? 24 : 0,
                                 alignItems: "start",
                             }}>
                                 {[
@@ -554,7 +559,7 @@ export default function AnthropologieProductDiscovery() {
                                                 <p style={{ fontFamily: INTER, fontSize: 12.5, lineHeight: 1.55, color: C.ink3 }}>{screen.caption}</p>
                                             </div>
                                         </div>
-                                        {i < 3 && !phone && (
+                                        {i < 3 && !phone && !tablet && (
                                             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "0 10px", marginTop: "38%" }}>
                                                 <svg width="24" height="12" viewBox="0 0 24 12" fill="none">
                                                     <path d="M0 6h22M18 1l5 5-5 5" stroke={C.muted} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" opacity="0.4" />

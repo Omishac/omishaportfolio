@@ -342,7 +342,7 @@ export default function PlaygroundPage() {
                             <PhotoCard src={PHOTOS[1]} aspectRatio="3/2" />
                         </div>
                         <PhotoCard src={PHOTOS[2]} aspectRatio={phone ? "3/2" : "16/7"} />
-                        <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr 1fr", gap: 12 }}>
+                        <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "1fr 1fr 1fr", gap: 12 }}>
                             <PhotoCard src={PHOTOS[3]} aspectRatio="3/2" />
                             <PhotoCard src={PHOTOS[4]} aspectRatio="3/2" />
                             <PhotoCard src={PHOTOS[5]} aspectRatio="3/2" />
@@ -357,7 +357,7 @@ export default function PlaygroundPage() {
                 {/* [03] Motion */}
                 <div id="motion" style={{ scrollMarginTop: 80, paddingTop: 72, marginBottom: 80 }}>
                     <SectionHeader {...SECTIONS[2]} />
-                    <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr 1fr", gap: 14 }}>
+                    <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "1fr 1fr 1fr", gap: 14 }}>
                         {MOTION_EMBEDS.map((src, i) => (
                             <EmbedFrame key={i} src={src} />
                         ))}

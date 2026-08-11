@@ -367,7 +367,7 @@ function Hero({
                         fontStyle: "normal",
                     }}
                 >
-                    <span style={{ display: "block", whiteSpace: phone ? "normal" : "nowrap" }}>
+                    <span style={{ display: "block", whiteSpace: phone || tablet ? "normal" : "nowrap" }}>
                         {HERO_WORDS.map((w, j) => (
                             <Fragment key={j}>
                                 <AnnotatedWord word={w} revealed={revealed} delay={200 + j * 100} phone={phone}

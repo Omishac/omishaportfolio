@@ -257,7 +257,7 @@ function AnimStat({
                 style={{
                     fontFamily: Z,
                     fontWeight: 700,
-                    fontSize: "52px",
+                    fontSize: "clamp(36px, 4vw, 52px)",
                     letterSpacing: "-0.04em",
                     color: hov ? "#fff" : C.ink,
                     lineHeight: 1,
@@ -779,7 +779,7 @@ function RecRow({ num, title, body, detail, img, clip, open, onClick, phone }: a
                             borderRadius: 10,
                             overflow: "hidden",
                             lineHeight: 0,
-                            height: "460px",
+                            height: phone ? "220px" : "460px",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
@@ -889,11 +889,16 @@ const IMGS = {
 function CaseStudyNav() {
     const [scrolled, setScrolled] = useState(false)
     const [phone, setPhone] = useState(false)
+    const [tablet, setTablet] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
     const [hovNav, setHovNav] = useState<string | null>(null)
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 12)
-        const onResize = () => setPhone(window.innerWidth < 768)
+        const onResize = () => {
+            const w = window.innerWidth
+            setPhone(w < 768)
+            setTablet(w >= 768 && w < 1024)
+        }
         onResize()
         window.addEventListener("scroll", onScroll, { passive: true })
         window.addEventListener("resize", onResize, { passive: true })
@@ -925,7 +930,7 @@ function CaseStudyNav() {
                 borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : C.border}`,
                 transition: "background 0.25s, border-color 0.25s",
             }}>
-                <div style={{ maxWidth: 1400, margin: "0 auto", height: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: `0 ${phone ? 20 : 80}px`, boxSizing: "border-box" }}>
+                <div style={{ maxWidth: 1400, margin: "0 auto", height: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: `0 ${phone ? 20 : tablet ? 40 : 80}px`, boxSizing: "border-box" }}>
                 <a href="/" style={{ display: "block", lineHeight: 0 }}>
                     <img
                         src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
@@ -1747,7 +1752,7 @@ export default function AnthropologieCaseStudy() {
                         title="What the data revealed about mobile drop-off"
                     />
                     <div
-                        style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: "10px" }}
+                        style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(4, 1fr)", gap: "10px" }}
                         onMouseLeave={() => isDesktop && setActiveFinding(0)}
                     >
                         {findings.map((f, i) => (
