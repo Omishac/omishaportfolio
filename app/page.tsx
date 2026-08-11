@@ -4,7 +4,6 @@ import { useState, useRef, useEffect, useCallback, Fragment } from "react"
 import SharedNav from "../components/SharedNav"
 
 const CURSOR_STYLES = `
-  @media (pointer: fine) { html, body, * { cursor: none !important; } }
   @keyframes hi-float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-6px); }
@@ -99,62 +98,6 @@ function useBP() {
     }
 
     return { ref, w, phone, tablet, desktop, large, px, maxW, sp }
-}
-
-function CustomCursor() {
-    const lagRef = useRef({ x: -200, y: -200 })
-    const posRef = useRef({ x: -200, y: -200 })
-    const [lag, setLag] = useState({ x: -200, y: -200 })
-    const [hovered, setHovered] = useState(false)
-    const [visible, setVisible] = useState(false)
-    const [isTouch, setIsTouch] = useState(false)
-    useEffect(() => { setIsTouch(window.matchMedia("(pointer: coarse)").matches) }, [])
-
-    useEffect(() => {
-        const onMove = (e: MouseEvent) => {
-            posRef.current = { x: e.clientX, y: e.clientY }
-            if (!visible) setVisible(true)
-        }
-        const onOver = (e: MouseEvent) => {
-            const t = e.target as Element
-            setHovered(!!t.closest("a, button, [role='button']"))
-        }
-        let raf: number
-        const tick = () => {
-            lagRef.current.x += (posRef.current.x - lagRef.current.x) * 0.14
-            lagRef.current.y += (posRef.current.y - lagRef.current.y) * 0.14
-            setLag({ x: lagRef.current.x, y: lagRef.current.y })
-            raf = requestAnimationFrame(tick)
-        }
-        raf = requestAnimationFrame(tick)
-        window.addEventListener("mousemove", onMove, { passive: true })
-        window.addEventListener("mouseover", onOver, { passive: true })
-        return () => {
-            cancelAnimationFrame(raf)
-            window.removeEventListener("mousemove", onMove)
-            window.removeEventListener("mouseover", onOver)
-        }
-    }, [visible])
-
-    if (isTouch || !visible) return null
-    return (
-        <div
-            style={{
-                position: "fixed",
-                left: lag.x,
-                top: lag.y,
-                width: hovered ? 32 : 12,
-                height: hovered ? 32 : 12,
-                borderRadius: "50%",
-                backgroundColor: hovered ? "transparent" : "#E8B4C8",
-                border: hovered ? "2px solid #E8B4C8" : "none",
-                transform: "translate(-50%, -50%)",
-                pointerEvents: "none",
-                zIndex: 99999,
-                transition: "width 0.22s cubic-bezier(0.22,1,0.36,1), height 0.22s cubic-bezier(0.22,1,0.36,1), background-color 0.22s, border 0.22s",
-            }}
-        />
-    )
 }
 
 
@@ -523,11 +466,19 @@ function Card({
     titleSize,
 }: (typeof CARDS)[0] & { cardH: number; titleSize: number }) {
     const ref = useRef<HTMLDivElement>(null)
+    const videoRef = useRef<HTMLVideoElement>(null)
     const [hov, setHov] = useState(false)
     const pos = useRef({ x: 0.5, y: 0.5 })
     const cur = useRef({ x: 0.5, y: 0.5 })
     const raf = useRef(0)
     const [tilt, setTilt] = useState({ x: 0, y: 0 })
+
+    useEffect(() => {
+        const v = videoRef.current
+        if (!v) return
+        v.muted = true
+        v.play().catch(() => {})
+    }, [])
 
     const animate = useCallback(() => {
         cur.current.x += (pos.current.x - cur.current.x) * 0.07
@@ -583,6 +534,7 @@ function Card({
             >
                 {video ? (
                     <video
+                        ref={videoRef}
                         src={video}
                         autoPlay loop muted playsInline
                         style={{
@@ -704,11 +656,19 @@ function FeaturedCard({
     href, image, video, title, tags, company, desc, year, highlight, live, phone, tablet, large, cardH,
 }: (typeof CARDS)[0] & { phone: boolean; tablet: boolean; large: boolean; cardH: number }) {
     const cardRef = useRef<HTMLDivElement>(null)
+    const videoRef = useRef<HTMLVideoElement>(null)
     const [hov, setHov] = useState(false)
     const pos = useRef({ x: 0.5, y: 0.5 })
     const cur = useRef({ x: 0.5, y: 0.5 })
     const raf = useRef(0)
     const [tilt, setTilt] = useState({ x: 0, y: 0 })
+
+    useEffect(() => {
+        const v = videoRef.current
+        if (!v) return
+        v.muted = true
+        v.play().catch(() => {})
+    }, [])
 
     const animate = useCallback(() => {
         cur.current.x += (pos.current.x - cur.current.x) * 0.07
@@ -763,7 +723,7 @@ function FeaturedCard({
                     backgroundColor: "#F5F5F3",
                 }}>
                     {video ? (
-                        <video src={video} autoPlay loop muted playsInline style={{
+                        <video ref={videoRef} src={video} autoPlay loop muted playsInline style={{
                             width: "100%", height: "100%", objectFit: "cover", display: "block",
                         }} />
                     ) : (
@@ -1280,7 +1240,6 @@ export default function ResponsiveHome() {
                 }}
             >
                 <style>{CURSOR_STYLES}</style>
-                <CustomCursor />
                 <div style={{ width: "100%" }}>
                     <SharedNav />
                     <Hero phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
