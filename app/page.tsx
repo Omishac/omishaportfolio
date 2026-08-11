@@ -477,7 +477,10 @@ function Card({
         const v = videoRef.current
         if (!v) return
         v.muted = true
-        v.play().catch(() => {})
+        const play = () => v.play().catch(() => {})
+        v.addEventListener("canplay", play, { once: true })
+        play()
+        return () => v.removeEventListener("canplay", play)
     }, [])
 
     const animate = useCallback(() => {
@@ -536,7 +539,7 @@ function Card({
                     <video
                         ref={videoRef}
                         src={video}
-                        autoPlay loop muted playsInline
+                        autoPlay loop muted playsInline preload="auto"
                         style={{
                             width: "100%",
                             height: "100%",
@@ -667,7 +670,10 @@ function FeaturedCard({
         const v = videoRef.current
         if (!v) return
         v.muted = true
-        v.play().catch(() => {})
+        const play = () => v.play().catch(() => {})
+        v.addEventListener("canplay", play, { once: true })
+        play()
+        return () => v.removeEventListener("canplay", play)
     }, [])
 
     const animate = useCallback(() => {
@@ -723,7 +729,7 @@ function FeaturedCard({
                     backgroundColor: "#F5F5F3",
                 }}>
                     {video ? (
-                        <video ref={videoRef} src={video} autoPlay loop muted playsInline style={{
+                        <video ref={videoRef} src={video} autoPlay loop muted playsInline preload="auto" style={{
                             width: "100%", height: "100%", objectFit: "cover", display: "block",
                         }} />
                     ) : (
