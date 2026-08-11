@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback, Fragment } from "react"
 import SharedNav from "../components/SharedNav"
 
 const CURSOR_STYLES = `
-  @media (pointer: fine) { * { cursor: none !important; } }
+  @media (pointer: fine) { html, body, * { cursor: none !important; } }
   @keyframes hi-float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-6px); }
@@ -367,7 +367,7 @@ function Hero({
                         fontStyle: "normal",
                     }}
                 >
-                    <span style={{ display: "block", whiteSpace: phone ? "normal" : "nowrap" }}>
+                    <span style={{ display: "block", whiteSpace: phone || tablet ? "normal" : "nowrap" }}>
                         {HERO_WORDS.map((w, j) => (
                             <Fragment key={j}>
                                 <AnnotatedWord word={w} revealed={revealed} delay={200 + j * 100} phone={phone}

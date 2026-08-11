@@ -30,13 +30,14 @@ const SECTIONS = [
 function useResponsive() {
     const [phone, setPhone] = useState(false)
     const [tablet, setTablet] = useState(false)
+    const [large, setLarge] = useState(false)
     useEffect(() => {
-        const check = () => { const w = window.innerWidth; setPhone(w < 768); setTablet(w >= 768 && w < 1024) }
+        const check = () => { const w = window.innerWidth; setPhone(w < 768); setTablet(w >= 768 && w < 1024); setLarge(w > 1440) }
         check()
         window.addEventListener("resize", check, { passive: true })
         return () => window.removeEventListener("resize", check)
     }, [])
-    return { phone, tablet, desktop: !phone && !tablet }
+    return { phone, tablet, desktop: !phone && !tablet, large }
 }
 
 function useInView(threshold = 0.08) {
@@ -343,11 +344,16 @@ function SideNav({ active }: { active: string }) {
 function CaseStudyNav() {
     const [scrolled, setScrolled] = useState(false)
     const [phone, setPhone] = useState(false)
+    const [tablet, setTablet] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
     const [hovNav, setHovNav] = useState<string | null>(null)
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 12)
-        const onResize = () => setPhone(window.innerWidth < 768)
+        const onResize = () => {
+            const w = window.innerWidth
+            setPhone(w < 768)
+            setTablet(w >= 768 && w < 1024)
+        }
         onResize()
         window.addEventListener("scroll", onScroll, { passive: true })
         window.addEventListener("resize", onResize, { passive: true })
@@ -363,13 +369,12 @@ function CaseStudyNav() {
         <>
             <nav style={{
                 position: "sticky", top: 0, zIndex: 100, width: "100%", height: phone ? 54 : 64,
-                display: "flex", alignItems: "center", justifyContent: "space-between",
-                padding: `0 ${phone ? 20 : 80}px`, boxSizing: "border-box",
                 backgroundColor: scrolled ? "rgba(255,255,255,0.96)" : C.bg,
                 backdropFilter: scrolled ? "blur(20px)" : "none", WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
                 borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : C.border}`,
                 transition: "background 0.25s, border-color 0.25s",
             }}>
+                <div style={{ maxWidth: 1400, margin: "0 auto", height: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: `0 ${phone ? 20 : tablet ? 40 : 80}px`, boxSizing: "border-box" }}>
                 <a href="/" style={{ display: "block", lineHeight: 0 }}>
                     <img src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png" alt="OC" style={{ width: phone ? 48 : 58, height: phone ? 48 : 58, objectFit: "contain", display: "block" }} />
                 </a>
@@ -392,6 +397,7 @@ function CaseStudyNav() {
                         ))}
                     </div>
                 )}
+                </div>
             </nav>
             {menuOpen && (
                 <div onClick={() => setMenuOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 999, backgroundColor: "rgba(255,255,255,0.98)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", display: "flex", flexDirection: "column", padding: "24px 20px" }}>
@@ -525,8 +531,8 @@ export default function AnthropologieProductDiscovery() {
                         <FadeIn delay={60}>
                             <div style={{
                                 display: "grid",
-                                gridTemplateColumns: phone ? "1fr" : "1fr auto 1fr auto 1fr auto 1fr",
-                                gap: phone ? 32 : 0,
+                                gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "1fr auto 1fr auto 1fr auto 1fr",
+                                gap: phone ? 32 : tablet ? 24 : 0,
                                 alignItems: "start",
                             }}>
                                 {[
@@ -553,7 +559,7 @@ export default function AnthropologieProductDiscovery() {
                                                 <p style={{ fontFamily: INTER, fontSize: 12.5, lineHeight: 1.55, color: C.ink3 }}>{screen.caption}</p>
                                             </div>
                                         </div>
-                                        {i < 3 && !phone && (
+                                        {i < 3 && !phone && !tablet && (
                                             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "0 10px", marginTop: "38%" }}>
                                                 <svg width="24" height="12" viewBox="0 0 24 12" fill="none">
                                                     <path d="M0 6h22M18 1l5 5-5 5" stroke={C.muted} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" opacity="0.4" />

@@ -55,17 +55,19 @@ const SECTIONS = [
 function useResponsive() {
     const [phone, setPhone] = useState(false)
     const [tablet, setTablet] = useState(false)
+    const [large, setLarge] = useState(false)
     useEffect(() => {
         const check = () => {
             const w = window.innerWidth
             setPhone(w < 768)
             setTablet(w >= 768 && w < 1024)
+            setLarge(w > 1440)
         }
         check()
         window.addEventListener("resize", check, { passive: true })
         return () => window.removeEventListener("resize", check)
     }, [])
-    return { phone, tablet, desktop: !phone && !tablet }
+    return { phone, tablet, desktop: !phone && !tablet, large }
 }
 
 function useActiveSection(ids: string[]) {
@@ -340,7 +342,7 @@ export default function PlaygroundPage() {
                             <PhotoCard src={PHOTOS[1]} aspectRatio="3/2" />
                         </div>
                         <PhotoCard src={PHOTOS[2]} aspectRatio={phone ? "3/2" : "16/7"} />
-                        <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr 1fr", gap: 12 }}>
+                        <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "1fr 1fr 1fr", gap: 12 }}>
                             <PhotoCard src={PHOTOS[3]} aspectRatio="3/2" />
                             <PhotoCard src={PHOTOS[4]} aspectRatio="3/2" />
                             <PhotoCard src={PHOTOS[5]} aspectRatio="3/2" />
@@ -355,7 +357,7 @@ export default function PlaygroundPage() {
                 {/* [03] Motion */}
                 <div id="motion" style={{ scrollMarginTop: 80, paddingTop: 72, marginBottom: 80 }}>
                     <SectionHeader {...SECTIONS[2]} />
-                    <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr 1fr", gap: 14 }}>
+                    <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "1fr 1fr 1fr", gap: 14 }}>
                         {MOTION_EMBEDS.map((src, i) => (
                             <EmbedFrame key={i} src={src} />
                         ))}

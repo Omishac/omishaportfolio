@@ -34,17 +34,19 @@ const SECTIONS = [
 function useResponsive() {
     const [phone, setPhone] = useState(false)
     const [tablet, setTablet] = useState(false)
+    const [large, setLarge] = useState(false)
     useEffect(() => {
         const check = () => {
             const w = window.innerWidth
             setPhone(w < 768)
             setTablet(w >= 768 && w < 1024)
+            setLarge(w > 1440)
         }
         check()
         window.addEventListener("resize", check, { passive: true })
         return () => window.removeEventListener("resize", check)
     }, [])
-    return { phone, tablet, desktop: !phone && !tablet }
+    return { phone, tablet, desktop: !phone && !tablet, large }
 }
 
 function useActiveSection(ids: string[]) {
@@ -131,11 +133,16 @@ function SideNav({ active }: { active: string }) {
 function CaseStudyNav() {
     const [scrolled, setScrolled] = useState(false)
     const [phone, setPhone] = useState(false)
+    const [tablet, setTablet] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
     const [hovNav, setHovNav] = useState<string | null>(null)
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 12)
-        const onResize = () => setPhone(window.innerWidth < 768)
+        const onResize = () => {
+            const w = window.innerWidth
+            setPhone(w < 768)
+            setTablet(w >= 768 && w < 1024)
+        }
         onResize()
         window.addEventListener("scroll", onScroll, { passive: true })
         window.addEventListener("resize", onResize, { passive: true })
@@ -158,13 +165,12 @@ function CaseStudyNav() {
         <>
             <nav style={{
                 position: "sticky", top: 0, zIndex: 100, width: "100%", height: phone ? 54 : 64,
-                display: "flex", alignItems: "center", justifyContent: "space-between",
-                padding: `0 ${phone ? 20 : 80}px`, boxSizing: "border-box",
                 backgroundColor: scrolled ? "rgba(255,255,255,0.96)" : C.bg,
                 backdropFilter: scrolled ? "blur(20px)" : "none", WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
                 borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : C.border}`,
                 transition: "background 0.25s, border-color 0.25s",
             }}>
+                <div style={{ maxWidth: 1400, margin: "0 auto", height: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: `0 ${phone ? 20 : tablet ? 40 : 80}px`, boxSizing: "border-box" }}>
                 <a href="/" style={{ display: "block", lineHeight: 0 }}>
                     <img src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png" alt="OC" style={{ width: phone ? 48 : 58, height: phone ? 48 : 58, objectFit: "contain", display: "block" }} />
                 </a>
@@ -187,6 +193,7 @@ function CaseStudyNav() {
                         ))}
                     </div>
                 )}
+                </div>
             </nav>
 
             {menuOpen && (
@@ -601,7 +608,7 @@ export default function IOSCaseStudy() {
                             <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 680, marginBottom: 36 }}>
                                 In e-commerce, product reviews directly shape whether a shopper buys or bounces. They answer the questions a product page can't — and they only work if users can actually read them.
                             </p>
-                            <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: 10, marginBottom: 36 }}>
+                            <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(3, 1fr)", gap: 10, marginBottom: 36 }}>
                                 <BenefitCard icon="✅" title="Validate quality" body="Reviews confirm that a product lives up to its listing — or reveals when it doesn't." />
                                 <BenefitCard icon="💬" title="Learn from others" body="Real customer experiences surface fit issues, hidden features, and honest caveats." />
                                 <BenefitCard icon="📐" title="Understand fit & sizing" body="The most-read part of any review — especially critical for international shoppers." />
@@ -609,7 +616,7 @@ export default function IOSCaseStudy() {
                         </FadeIn>
 
                         <FadeIn delay={60}>
-                            <div ref={statsRef} style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: 10, marginBottom: 36 }}>
+                            <div ref={statsRef} style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(3, 1fr)", gap: 10, marginBottom: 36 }}>
                                 <StatCard num={74} suffix="%" label="of consumers expect seamless cross-language shopping" active={statsVis} />
                                 <StatCard num={66} suffix="%" label="say poor mobile UX negatively affects brand credibility" active={statsVis} />
                                 <StatCard num={3} suffix="x" label="more likely to abandon when reviews are in a foreign language" active={statsVis} />
@@ -640,7 +647,7 @@ export default function IOSCaseStudy() {
                             </p>
 
                             <CascadeLabel text="Constraints" />
-                            <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: 10 }}>
+                            <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(3, 1fr)", gap: 10 }}>
                                 {[
                                     { icon: "⚡", title: "Performance Limits", body: "Auto-translating large volumes at load would impact page speed significantly." },
                                     { icon: "🚫", title: "No Bulk Translation", body: "Reviews could not be translated all at once — only individual items on demand." },
@@ -656,7 +663,7 @@ export default function IOSCaseStudy() {
 
                             <CascadeConnector text="These constraints shaped three core design principles —" />
                             <CascadeLabel text="Principles" />
-                            <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: 12 }}>
+                            <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(3, 1fr)", gap: 12 }}>
                                 <PrincipleCard num="01" title="User Control" emoji="🎛️" body="Allow users to choose when to translate, rather than forcing automatic language changes." />
                                 <PrincipleCard num="02" title="System Efficiency" emoji="⚙️" body="Leverage Apple's native translation capabilities without introducing performance overhead." />
                                 <PrincipleCard num="03" title="Seamless Integration" emoji="🪡" body="Ensure the feature feels like a natural extension of the existing review UI — not a bolt-on." />
@@ -664,7 +671,7 @@ export default function IOSCaseStudy() {
 
                             <CascadeConnector text="Which led to a single, focused solution —" />
                             <CascadeLabel text="Solution" />
-                            <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: 10, marginBottom: 28 }}>
+                            <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(3, 1fr)", gap: 10, marginBottom: 28 }}>
                                 {[
                                     { title: "Translate on Demand", body: `Each review has a "Translate" CTA — users trigger translation when they need it, not before.`, icon: "🌐" },
                                     { title: "Toggle to Original", body: "Users can instantly switch back to the original language, preserving authenticity.", icon: "↩️" },
