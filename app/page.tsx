@@ -466,7 +466,7 @@ function Card({
     titleSize,
 }: (typeof CARDS)[0] & { cardH: number; titleSize: number }) {
     const ref = useRef<HTMLDivElement>(null)
-    const videoRef = useRef<HTMLVideoElement>(null)
+    const videoContainerRef = useRef<HTMLDivElement>(null)
     const [hov, setHov] = useState(false)
     const pos = useRef({ x: 0.5, y: 0.5 })
     const cur = useRef({ x: 0.5, y: 0.5 })
@@ -474,14 +474,20 @@ function Card({
     const [tilt, setTilt] = useState({ x: 0, y: 0 })
 
     useEffect(() => {
-        const v = videoRef.current
-        if (!v) return
+        if (!video || !videoContainerRef.current) return
+        const v = document.createElement("video")
+        v.src = video
+        v.setAttribute("autoplay", "")
+        v.setAttribute("loop", "")
+        v.setAttribute("muted", "")
+        v.setAttribute("playsinline", "")
+        v.setAttribute("preload", "auto")
         v.muted = true
-        const play = () => v.play().catch(() => {})
-        v.addEventListener("canplay", play, { once: true })
-        play()
-        return () => v.removeEventListener("canplay", play)
-    }, [])
+        v.style.cssText = "width:100%;height:100%;object-fit:cover;display:block;"
+        videoContainerRef.current.appendChild(v)
+        v.play().catch(() => {})
+        return () => { v.pause(); v.remove() }
+    }, [video])
 
     const animate = useCallback(() => {
         cur.current.x += (pos.current.x - cur.current.x) * 0.07
@@ -536,17 +542,7 @@ function Card({
                 }}
             >
                 {video ? (
-                    <video
-                        ref={videoRef}
-                        src={video}
-                        autoPlay loop muted playsInline preload="auto"
-                        style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                            display: "block",
-                        }}
-                    />
+                    <div ref={videoContainerRef} style={{ width: "100%", height: "100%" }} />
                 ) : (
                     <img
                         src={image}
@@ -659,7 +655,7 @@ function FeaturedCard({
     href, image, video, title, tags, company, desc, year, highlight, live, phone, tablet, large, cardH,
 }: (typeof CARDS)[0] & { phone: boolean; tablet: boolean; large: boolean; cardH: number }) {
     const cardRef = useRef<HTMLDivElement>(null)
-    const videoRef = useRef<HTMLVideoElement>(null)
+    const videoContainerRef = useRef<HTMLDivElement>(null)
     const [hov, setHov] = useState(false)
     const pos = useRef({ x: 0.5, y: 0.5 })
     const cur = useRef({ x: 0.5, y: 0.5 })
@@ -667,14 +663,20 @@ function FeaturedCard({
     const [tilt, setTilt] = useState({ x: 0, y: 0 })
 
     useEffect(() => {
-        const v = videoRef.current
-        if (!v) return
+        if (!video || !videoContainerRef.current) return
+        const v = document.createElement("video")
+        v.src = video
+        v.setAttribute("autoplay", "")
+        v.setAttribute("loop", "")
+        v.setAttribute("muted", "")
+        v.setAttribute("playsinline", "")
+        v.setAttribute("preload", "auto")
         v.muted = true
-        const play = () => v.play().catch(() => {})
-        v.addEventListener("canplay", play, { once: true })
-        play()
-        return () => v.removeEventListener("canplay", play)
-    }, [])
+        v.style.cssText = "width:100%;height:100%;object-fit:cover;display:block;"
+        videoContainerRef.current.appendChild(v)
+        v.play().catch(() => {})
+        return () => { v.pause(); v.remove() }
+    }, [video])
 
     const animate = useCallback(() => {
         cur.current.x += (pos.current.x - cur.current.x) * 0.07
@@ -729,9 +731,7 @@ function FeaturedCard({
                     backgroundColor: "#F5F5F3",
                 }}>
                     {video ? (
-                        <video ref={videoRef} src={video} autoPlay loop muted playsInline preload="auto" style={{
-                            width: "100%", height: "100%", objectFit: "cover", display: "block",
-                        }} />
+                        <div ref={videoContainerRef} style={{ width: "100%", height: "100%" }} />
                     ) : (
                         <img src={image} alt={title} style={{
                             width: "100%", height: "100%", objectFit: "cover", display: "block",
