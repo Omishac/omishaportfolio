@@ -16,6 +16,7 @@ export default function SharedNav() {
     const [scrolled, setScrolled] = useState(false)
     const [phone, setPhone] = useState(false)
     const [tablet, setTablet] = useState(false)
+    const [large, setLarge] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
     const [hoveredLink, setHoveredLink] = useState<string | null>(null)
     const overlayRef = useRef<HTMLDivElement>(null)
@@ -25,6 +26,7 @@ export default function SharedNav() {
         const onResize = () => {
             setPhone(window.innerWidth < 768)
             setTablet(window.innerWidth >= 768 && window.innerWidth < 1024)
+            setLarge(window.innerWidth > 1440)
         }
         onResize()
         window.addEventListener("scroll", onScroll, { passive: true })
@@ -45,7 +47,7 @@ export default function SharedNav() {
         return () => { document.body.style.overflow = "" }
     }, [menuOpen])
 
-    const px = phone ? 20 : tablet ? 40 : 80
+    const px = phone ? 20 : tablet ? 40 : large ? 120 : 80
     const isHome = pathname === "/"
 
     const allLinks = [
