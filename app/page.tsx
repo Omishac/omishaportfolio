@@ -235,7 +235,8 @@ function Hero({
         <section
             style={{
                 width: "100%",
-                minHeight: large ? "auto" : "100vh",
+                minHeight: "100vh",
+                maxHeight: "1000px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-start",
