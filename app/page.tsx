@@ -235,7 +235,6 @@ function Hero({
         <section
             style={{
                 width: "100%",
-                minHeight: "100vh",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-start",
