@@ -140,10 +140,25 @@ function Hero({
     sp: ReturnType<typeof useBP>["sp"]
 }) {
     const [revealed, setRevealed] = useState(false)
+    const [scrollY, setScrollY] = useState(0)
+    const reducedMotion = useReducedMotion()
+
     useEffect(() => {
         const t = setTimeout(() => setRevealed(true), 60)
         return () => clearTimeout(t)
     }, [])
+
+    useEffect(() => {
+        if (reducedMotion) { setScrollY(0); return }
+        const onScroll = () => setScrollY(window.scrollY)
+        window.addEventListener("scroll", onScroll, { passive: true })
+        return () => window.removeEventListener("scroll", onScroll)
+    }, [reducedMotion])
+
+    // Text drifts up slightly faster than scroll; illustration lags behind (slower) for depth
+    const textParallax   = reducedMotion ? 0 : -scrollY * 0.08
+    const illustParallax = reducedMotion ? 0 :  scrollY * 0.14
+    const ctaParallax    = reducedMotion ? 0 : -scrollY * 0.04
 
     const isStack = phone || tablet
     const illustH = phone ? 280 : tablet ? 360 : large ? 520 : 460
@@ -159,6 +174,7 @@ function Hero({
                 justifyContent: "space-between",
                 padding: `${sp.heroTop}px ${px}px ${sp.heroBottom}px`,
                 boxSizing: "border-box",
+                overflow: "hidden",
             }}
         >
             {/* Two-column content */}
@@ -173,14 +189,15 @@ function Hero({
                 gap: isStack ? 40 : 0,
                 flex: 1,
             }}>
-                {/* Left: bold headline */}
+                {/* Left: bold headline — fades in, then parallaxes on scroll */}
                 <div style={{
                     flex: isStack ? "none" : "0 0 52%",
                     display: "flex",
                     alignItems: "flex-start",
                     opacity: revealed ? 1 : 0,
-                    transform: revealed ? "translateY(0)" : "translateY(16px)",
-                    transition: `opacity 0.65s ${EASE_SPRING}, transform 0.65s ${EASE_SPRING}`,
+                    transform: `translateY(${textParallax}px)`,
+                    transition: `opacity 0.7s ${EASE_SPRING}`,
+                    willChange: "transform",
                 }}>
                     <h1 style={{
                         fontFamily: I,
@@ -198,7 +215,7 @@ function Hero({
                     </h1>
                 </div>
 
-                {/* Right: illustration */}
+                {/* Right: illustration — fades in with slight delay, lags on scroll for depth */}
                 {!phone && (
                     <div style={{
                         flex: "0 0 44%",
@@ -206,8 +223,9 @@ function Hero({
                         alignItems: "center",
                         justifyContent: "center",
                         opacity: revealed ? 1 : 0,
-                        transform: revealed ? "translateY(0)" : "translateY(24px)",
-                        transition: `opacity 0.75s ${EASE_SPRING} 120ms, transform 0.75s ${EASE_SPRING} 120ms`,
+                        transform: `translateY(${illustParallax}px)`,
+                        transition: `opacity 0.85s ${EASE_SPRING} 150ms`,
+                        willChange: "transform",
                     }}>
                         <img
                             src="/images/ChatGPT Image Aug 20, 2026, 03_52_59 PM.png"
@@ -224,7 +242,7 @@ function Hero({
                 )}
             </div>
 
-            {/* CTA pinned to bottom */}
+            {/* CTA pinned to bottom — subtle parallax */}
             <div
                 style={{
                     width: "100%",
@@ -235,7 +253,9 @@ function Hero({
                     gap: 6,
                     paddingTop: phone ? 40 : 0,
                     opacity: revealed ? 1 : 0,
+                    transform: `translateY(${ctaParallax}px)`,
                     transition: `opacity 0.6s ${EASE_OUT} 300ms`,
+                    willChange: "transform",
                 }}
             >
                 <p
