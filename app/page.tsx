@@ -123,119 +123,6 @@ function useBP() {
 }
 
 
-function PersonIllustration() {
-    return (
-        <svg
-            viewBox="0 0 500 530"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ width: "100%", height: "100%", display: "block" }}
-            aria-hidden="true"
-        >
-            {/* ── FLOOR LAMP (right side) ── */}
-            {/* Disc base */}
-            <ellipse cx="432" cy="488" rx="46" ry="11" fill="#fff" stroke="#111" strokeWidth="3.5"/>
-            {/* Inner ring detail on base */}
-            <ellipse cx="432" cy="486" rx="28" ry="6.5" fill="#fff" stroke="#111" strokeWidth="2"/>
-            {/* Pole: straight up then curves left to shade */}
-            <path d="M 432 478 L 432 195 Q 432 118 318 72"
-                  fill="none" stroke="#111" strokeWidth="4.5" strokeLinecap="round"/>
-            {/* Globe shade — round ball */}
-            <circle cx="306" cy="64" r="44" fill="#fff" stroke="#111" strokeWidth="3.5"/>
-            {/* Opening arc at bottom of shade */}
-            <path d="M 266 78 Q 306 104 346 78"
-                  fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round"/>
-            {/* Shade top cap */}
-            <ellipse cx="306" cy="21" rx="12" ry="7" fill="#fff" stroke="#111" strokeWidth="2.5"/>
-            <line x1="306" y1="28" x2="306" y2="64" stroke="#111" strokeWidth="2" strokeLinecap="round" opacity="0.35"/>
-
-            {/* ── BUBBLE COUCH ── */}
-            {/* Back row: 4 large round bubble segments (drawn left→right, white-filled so they layer) */}
-            <circle cx="72"  cy="304" r="56" fill="#fff" stroke="#111" strokeWidth="3.5"/>
-            <circle cx="158" cy="286" r="59" fill="#fff" stroke="#111" strokeWidth="3.5"/>
-            <circle cx="250" cy="280" r="59" fill="#fff" stroke="#111" strokeWidth="3.5"/>
-            <circle cx="342" cy="288" r="55" fill="#fff" stroke="#111" strokeWidth="3.5"/>
-
-            {/* Seat row: round cushion bumps in front of back */}
-            <circle cx="100" cy="366" r="43" fill="#fff" stroke="#111" strokeWidth="3"/>
-            <circle cx="180" cy="358" r="45" fill="#fff" stroke="#111" strokeWidth="3"/>
-            <circle cx="265" cy="355" r="45" fill="#fff" stroke="#111" strokeWidth="3"/>
-            <circle cx="346" cy="360" r="41" fill="#fff" stroke="#111" strokeWidth="3"/>
-
-            {/* Couch base strip */}
-            <path d="M 42 398 Q 196 412 376 400 L 376 409 Q 196 422 42 408 Z"
-                  fill="#fff" stroke="#111" strokeWidth="2.5"/>
-
-            {/* Couch feet — small round bumps along base */}
-            <ellipse cx="88"  cy="419" rx="19" ry="12" fill="#fff" stroke="#111" strokeWidth="2.5"/>
-            <ellipse cx="155" cy="422" rx="17" ry="11" fill="#fff" stroke="#111" strokeWidth="2.5"/>
-            <ellipse cx="265" cy="422" rx="17" ry="11" fill="#fff" stroke="#111" strokeWidth="2.5"/>
-            <ellipse cx="336" cy="419" rx="18" ry="12" fill="#fff" stroke="#111" strokeWidth="2.5"/>
-
-            {/* ── PERSON ── */}
-            {/* Single arm raised from left-back of couch, holding laptop above */}
-            <line x1="145" y1="336" x2="148" y2="175"
-                  stroke="#111" strokeWidth="12" strokeLinecap="round"/>
-
-            {/* Laptop — tilted slightly, held at top of arm */}
-            <g transform="rotate(-14, 148, 168)">
-                {/* Screen lid */}
-                <rect x="92" y="140" width="116" height="82" rx="6" fill="#fff" stroke="#111" strokeWidth="3"/>
-                {/* Display area */}
-                <rect x="100" y="148" width="100" height="67" rx="2.5" fill="#f5f5f5" stroke="#111" strokeWidth="1.5"/>
-                {/* Wireframe UI: top image-placeholder box with X */}
-                <rect x="106" y="154" width="40" height="28" rx="2" fill="none" stroke="#111" strokeWidth="1.5" opacity="0.55"/>
-                <line x1="106" y1="154" x2="146" y2="182" stroke="#111" strokeWidth="1" opacity="0.35"/>
-                <line x1="146" y1="154" x2="106" y2="182" stroke="#111" strokeWidth="1" opacity="0.35"/>
-                {/* Text lines to the right of placeholder */}
-                <line x1="153" y1="160" x2="194" y2="160" stroke="#111" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
-                <line x1="153" y1="169" x2="188" y2="169" stroke="#111" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
-                <line x1="153" y1="178" x2="192" y2="178" stroke="#111" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
-                {/* Bottom grid of thumbnail boxes */}
-                <rect x="106" y="189" width="17" height="13" rx="1.5" fill="none" stroke="#111" strokeWidth="1.5" opacity="0.5"/>
-                <rect x="128" y="189" width="17" height="13" rx="1.5" fill="none" stroke="#111" strokeWidth="1.5" opacity="0.5"/>
-                <rect x="150" y="189" width="17" height="13" rx="1.5" fill="none" stroke="#111" strokeWidth="1.5" opacity="0.5"/>
-                <rect x="172" y="189" width="17" height="13" rx="1.5" fill="none" stroke="#111" strokeWidth="1.5" opacity="0.5"/>
-                <rect x="106" y="207" width="17" height="13" rx="1.5" fill="none" stroke="#111" strokeWidth="1.5" opacity="0.5"/>
-                <rect x="128" y="207" width="17" height="13" rx="1.5" fill="none" stroke="#111" strokeWidth="1.5" opacity="0.5"/>
-                <rect x="150" y="207" width="17" height="13" rx="1.5" fill="none" stroke="#111" strokeWidth="1.5" opacity="0.5"/>
-                {/* Laptop base/palmrest */}
-                <path d="M 92 222 L 89 231 L 208 231 L 205 222"
-                      fill="#fff" stroke="#111" strokeWidth="2.5" strokeLinejoin="round"/>
-                {/* Trackpad */}
-                <rect x="133" y="232" width="32" height="21" rx="3" fill="none" stroke="#111" strokeWidth="1.5" opacity="0.4"/>
-            </g>
-
-            {/* Sparkle / glow marks near top-left of laptop */}
-            <line x1="98"  y1="132" x2="98"  y2="120" stroke="#111" strokeWidth="2.5" strokeLinecap="round"/>
-            <line x1="90"  y1="137" x2="79"  y2="130" stroke="#111" strokeWidth="2.5" strokeLinecap="round"/>
-            <line x1="87"  y1="148" x2="75"  y2="148" stroke="#111" strokeWidth="2.5" strokeLinecap="round"/>
-
-            {/* ── LEGS — two dangling from couch front ── */}
-            {/* Left leg (wide-leg pants) */}
-            <path d="M 182 398 C 178 418 173 442 170 466" fill="none" stroke="#111" strokeWidth="4" strokeLinecap="round"/>
-            <path d="M 200 398 C 198 418 196 442 194 466" fill="none" stroke="#111" strokeWidth="4" strokeLinecap="round"/>
-            {/* Pant hem */}
-            <path d="M 170 466 C 170 474 194 474 194 466" fill="none" stroke="#111" strokeWidth="3" strokeLinecap="round"/>
-            {/* Left shoe — rounded toe, seen from slight above-front angle */}
-            <path d="M 164 470 C 156 472 142 475 135 480 C 131 484 134 491 143 491 C 157 491 175 487 184 481 L 182 470"
-                  fill="#fff" stroke="#111" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-            {/* Shoe sole line */}
-            <path d="M 135 486 Q 160 490 184 482" fill="none" stroke="#111" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
-
-            {/* Right leg */}
-            <path d="M 222 398 C 220 418 218 442 216 466" fill="none" stroke="#111" strokeWidth="4" strokeLinecap="round"/>
-            <path d="M 240 398 C 240 418 239 442 238 466" fill="none" stroke="#111" strokeWidth="4" strokeLinecap="round"/>
-            {/* Pant hem */}
-            <path d="M 216 466 C 216 474 238 474 238 466" fill="none" stroke="#111" strokeWidth="3" strokeLinecap="round"/>
-            {/* Right shoe */}
-            <path d="M 210 470 C 202 472 188 475 181 480 C 177 484 180 491 189 491 C 203 491 221 487 230 481 L 228 470"
-                  fill="#fff" stroke="#111" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-            {/* Shoe sole line */}
-            <path d="M 181 486 Q 206 490 230 482" fill="none" stroke="#111" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
-        </svg>
-    )
-}
 
 function Hero({
     phone,
@@ -314,12 +201,24 @@ function Hero({
                 {!phone && (
                     <div style={{
                         flex: "0 0 44%",
-                        height: illustH,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                         opacity: revealed ? 1 : 0,
                         transform: revealed ? "translateY(0)" : "translateY(24px)",
                         transition: `opacity 0.75s ${EASE_SPRING} 120ms, transform 0.75s ${EASE_SPRING} 120ms`,
                     }}>
-                        <PersonIllustration />
+                        <img
+                            src="/images/ChatGPT Image Aug 20, 2026, 03_52_59 PM.png"
+                            alt="Person sitting on a bubble couch holding up a laptop, with an arc floor lamp beside them"
+                            style={{
+                                width: "100%",
+                                maxWidth: illustH,
+                                height: "auto",
+                                objectFit: "contain",
+                                display: "block",
+                            }}
+                        />
                     </div>
                 )}
             </div>
