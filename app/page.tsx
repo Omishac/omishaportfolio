@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect, useCallback, Fragment } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import SharedNav from "../components/SharedNav"
 
 const CURSOR_STYLES = `
@@ -24,10 +24,6 @@ const CURSOR_STYLES = `
   @keyframes bubble-rise {
     0% { transform: translate(0, 0) scale(1); opacity: 0.9; }
     100% { transform: translate(var(--bx), -60px) scale(0.3); opacity: 0; }
-  }
-  @keyframes word-in {
-    from { opacity: 0; transform: translateY(14px); }
-    to   { opacity: 1; transform: translateY(0); }
   }
   html { scroll-behavior: smooth; }
   html, body { max-width: 100%; overflow-x: hidden; }
@@ -127,81 +123,98 @@ function useBP() {
 }
 
 
-type WordDef = { text: string; yb?: boolean; annotation?: string }
-const HERO_WORDS: WordDef[] = [
-    { text: "I'm a" },
-    { text: "Product Designer" },
-    { text: "with a background in" },
-    { text: "Analytics", yb: true, annotation: "the evidence" },
-    { text: "&" },
-    { text: "Business Strategy.", yb: true, annotation: "the impact" },
-]
-
-function AnnotatedWord({ word, revealed, delay, phone, activeAnnotation, onHover }: {
-    word: WordDef; revealed: boolean; delay: number; phone: boolean
-    activeAnnotation: string | null; onHover: (a: string | null) => void
-}) {
-    const isActive = word.annotation ? activeAnnotation === word.annotation : false
+function PersonIllustration() {
     return (
-        <span
-            style={{ position: "relative", display: "inline" }}
-            onMouseEnter={() => word.annotation && onHover(word.annotation)}
-            onMouseLeave={() => word.annotation && onHover(null)}
+        <svg
+            viewBox="0 0 480 520"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ width: "100%", height: "100%", display: "block" }}
+            aria-hidden="true"
         >
-            <span style={{
-                display: "inline",
-                fontFamily: word.yb ? YB : Z,
-                fontStyle: word.yb ? "italic" : "normal",
-                fontWeight: word.yb ? 700 : 400,
-                opacity: 0,
-                animation: revealed
-                    ? `word-in 0.65s cubic-bezier(0.22,1,0.36,1) ${delay}ms forwards`
-                    : "none",
-            }}>
-                {word.text}
-            </span>
-            {word.annotation && (
-                <span style={{
-                    position: "absolute",
-                    left: phone ? 0 : "50%",
-                    top: "100%",
-                    transform: `translate(${phone ? "0" : "-50%"}, ${isActive ? "4px" : "10px"})`,
-                    opacity: isActive ? 1 : 0,
-                    transition: "opacity 0.2s ease, transform 0.2s ease",
-                    pointerEvents: "none",
-                    whiteSpace: "nowrap",
-                    zIndex: 10,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: phone ? "flex-start" : "center",
-                    gap: 2,
-                }}>
-                    {/* Arrow pointing up toward the word */}
-                    <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style={{ marginBottom: -1 }}>
-                        <path d="M7 9 L7 2 M4 5 L7 1.5 L10 5" stroke="#E8B4C8" strokeWidth="1.3"
-                            strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    {/* Annotation text */}
-                    <span style={{
-                        fontFamily: YB,
-                        fontSize: phone ? 16 : 22,
-                        color: "#E8B4C8",
-                        fontWeight: 700,
-                        fontStyle: "italic",
-                        letterSpacing: "0.01em",
-                        lineHeight: 1.2,
-                    }}>
-                        {word.annotation}
-                    </span>
-                    {/* Hand-drawn underline */}
-                    <svg width={phone ? 80 : 120} height="4" viewBox="0 0 120 4" fill="none"
-                        style={{ marginTop: -1 }}>
-                        <path d="M0 2 Q15 0.5, 30 2.5 Q45 4, 60 1.5 Q75 0, 90 2.5 Q105 4, 120 2"
-                            stroke="#E8B4C8" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
-                    </svg>
-                </span>
-            )}
-        </span>
+            {/* Arc floor lamp — tall pole from bottom-right curving up and over */}
+            <path
+                d="M 400 520 C 400 380, 360 260, 160 120"
+                stroke="#111" strokeWidth="5" strokeLinecap="round" fill="none"
+            />
+            {/* Lamp shade — small oval at end of arc */}
+            <ellipse cx="155" cy="112" rx="34" ry="14" stroke="#111" strokeWidth="4" fill="#fff" />
+            <line x1="155" y1="126" x2="155" y2="180" stroke="#111" strokeWidth="2.5" strokeLinecap="round" opacity="0.3" />
+            {/* Light cone suggestion */}
+            <path
+                d="M 130 130 L 100 220 M 180 130 L 200 220"
+                stroke="#111" strokeWidth="1.5" strokeLinecap="round" opacity="0.12"
+            />
+
+            {/* Bubble couch body — large rounded organic shape */}
+            <ellipse cx="240" cy="400" rx="195" ry="60" fill="#fff" stroke="#111" strokeWidth="4" />
+            {/* Couch back — large rounded bubble */}
+            <path
+                d="M 90 400 C 90 320, 140 290, 200 300 C 230 290, 270 290, 290 300 C 360 290, 390 330, 390 400"
+                fill="#fff" stroke="#111" strokeWidth="4"
+            />
+            {/* Couch cushion segments */}
+            <path d="M 195 300 C 195 350, 195 390, 195 400" stroke="#111" strokeWidth="2.5" strokeLinecap="round" opacity="0.4" />
+            <path d="M 290 300 C 290 350, 290 390, 290 400" stroke="#111" strokeWidth="2.5" strokeLinecap="round" opacity="0.4" />
+            {/* Couch legs */}
+            <line x1="140" y1="455" x2="130" y2="490" stroke="#111" strokeWidth="4" strokeLinecap="round" />
+            <line x1="340" y1="455" x2="350" y2="490" stroke="#111" strokeWidth="4" strokeLinecap="round" />
+
+            {/* Person body — reclined, leaning into back of couch */}
+            {/* Torso */}
+            <path
+                d="M 200 340 C 210 310, 250 300, 280 310 L 300 370 C 280 380, 220 380, 200 370 Z"
+                fill="#fff" stroke="#111" strokeWidth="3"
+            />
+            {/* Head */}
+            <circle cx="255" cy="278" r="36" fill="#fff" stroke="#111" strokeWidth="3.5" />
+            {/* Hair — simple swept top */}
+            <path
+                d="M 222 262 C 228 238, 260 232, 280 248 C 268 236, 248 234, 230 244"
+                stroke="#111" strokeWidth="3" strokeLinecap="round" fill="none"
+            />
+            {/* Face — minimal: two dots for eyes, small curve for mouth */}
+            <circle cx="244" cy="278" r="2.5" fill="#111" />
+            <circle cx="264" cy="278" r="2.5" fill="#111" />
+            <path d="M 248 290 Q 255 296, 262 290" stroke="#111" strokeWidth="2" strokeLinecap="round" fill="none" />
+
+            {/* Arms holding laptop up */}
+            <path
+                d="M 205 345 C 190 330, 180 310, 190 290"
+                stroke="#111" strokeWidth="3.5" strokeLinecap="round" fill="none"
+            />
+            <path
+                d="M 295 345 C 310 330, 320 310, 310 290"
+                stroke="#111" strokeWidth="3.5" strokeLinecap="round" fill="none"
+            />
+            {/* Laptop screen */}
+            <rect x="185" y="245" width="130" height="88" rx="6" fill="#fff" stroke="#111" strokeWidth="3" />
+            <rect x="193" y="252" width="114" height="74" rx="3" fill="#f5f5f5" stroke="#111" strokeWidth="1.5" />
+            {/* Screen content lines */}
+            <line x1="205" y1="268" x2="295" y2="268" stroke="#111" strokeWidth="1.5" opacity="0.25" />
+            <line x1="205" y1="278" x2="275" y2="278" stroke="#111" strokeWidth="1.5" opacity="0.25" />
+            <line x1="205" y1="288" x2="285" y2="288" stroke="#111" strokeWidth="1.5" opacity="0.25" />
+            <line x1="205" y1="298" x2="260" y2="298" stroke="#111" strokeWidth="1.5" opacity="0.25" />
+            {/* Laptop base / hinge */}
+            <path
+                d="M 185 333 L 182 340 L 318 340 L 315 333"
+                fill="#fff" stroke="#111" strokeWidth="2.5" strokeLinejoin="round"
+            />
+            {/* Trackpad */}
+            <rect x="236" y="342" width="28" height="18" rx="3" stroke="#111" strokeWidth="1.5" fill="none" opacity="0.4" />
+
+            {/* Legs stretched out on couch */}
+            <path
+                d="M 200 370 C 180 380, 140 378, 110 380 C 100 380, 95 390, 105 395"
+                stroke="#111" strokeWidth="3.5" strokeLinecap="round" fill="none"
+            />
+            <path
+                d="M 200 375 C 180 390, 145 392, 115 395"
+                stroke="#111" strokeWidth="3.5" strokeLinecap="round" fill="none"
+            />
+            {/* Foot */}
+            <path d="M 105 395 C 96 398, 88 402, 90 410" stroke="#111" strokeWidth="3" strokeLinecap="round" fill="none" />
+        </svg>
     )
 }
 
@@ -220,44 +233,14 @@ function Hero({
     maxW: number
     sp: ReturnType<typeof useBP>["sp"]
 }) {
-    const hiW = phone ? 100 : tablet ? 150 : large ? 260 : 210
-    const hiH = Math.round(hiW / 1.615)
-
-    const reducedMotion = useReducedMotion()
-
-    type Particle = { id: number; color: string; x: number; angle: number; size: number }
-    const [hiAnim, setHiAnim] = useState<"idle" | "hover" | "pop">("idle")
-    const [particles, setParticles] = useState<Particle[]>([])
-    const popTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
-    const BUBBLE_COLORS = ["#E8B4C8", "#D4AEDD", "#F4C6D8", "#C9B8E4", "#EAD4F0", "#F9B8CF", "#D8BEF8"]
-
     const [revealed, setRevealed] = useState(false)
-    const [activeAnnotation, setActiveAnnotation] = useState<string | null>(null)
     useEffect(() => {
         const t = setTimeout(() => setRevealed(true), 60)
         return () => clearTimeout(t)
     }, [])
 
-    const triggerPop = () => {
-        if (hiAnim === "pop") return
-        setHiAnim("pop")
-        const newParticles: Particle[] = Array.from({ length: 7 }, (_, i) => ({
-            id: Date.now() + i,
-            color: BUBBLE_COLORS[i % BUBBLE_COLORS.length],
-            x: (Math.random() - 0.5) * 80,
-            angle: Math.random() * 360,
-            size: 6 + Math.random() * 8,
-        }))
-        setParticles(newParticles)
-        if (popTimeout.current) clearTimeout(popTimeout.current)
-        popTimeout.current = setTimeout(() => {
-            setHiAnim("idle")
-            setParticles([])
-        }, 700)
-    }
-
-    const headSize = phone ? "clamp(20px, 5.5vw, 26px)" : tablet ? "clamp(22px, 3vw, 28px)" : "28px"
-    const headMaxW = "100%"
+    const isStack = phone || tablet
+    const illustH = phone ? 280 : tablet ? 360 : large ? 520 : 460
 
     return (
         <section
@@ -267,102 +250,62 @@ function Hero({
                 maxHeight: "1000px",
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "flex-start",
                 justifyContent: "space-between",
                 padding: `${sp.heroTop}px ${px}px ${sp.heroBottom}px`,
                 boxSizing: "border-box",
             }}
         >
-            {/* Left-aligned heading block */}
-            <div style={{ maxWidth: maxW, width: "100%", margin: "0 auto", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                {/* Reveal fade-in on mount */}
+            {/* Two-column content */}
+            <div style={{
+                maxWidth: maxW,
+                width: "100%",
+                margin: "0 auto",
+                display: "flex",
+                flexDirection: isStack ? "column" : "row",
+                alignItems: isStack ? "flex-start" : "center",
+                justifyContent: "space-between",
+                gap: isStack ? 40 : 0,
+                flex: 1,
+            }}>
+                {/* Left: bold headline */}
                 <div style={{
-                    marginBottom: phone ? 24 : tablet ? 32 : 40,
-                    display: "inline-block",
+                    flex: isStack ? "none" : "0 0 52%",
+                    display: "flex",
+                    alignItems: "flex-start",
                     opacity: revealed ? 1 : 0,
-                    transition: "opacity 0.65s cubic-bezier(0.22,1,0.36,1)",
+                    transform: revealed ? "translateY(0)" : "translateY(16px)",
+                    transition: `opacity 0.65s ${EASE_SPRING}, transform 0.65s ${EASE_SPRING}`,
                 }}>
-                    {/* Interaction + particles */}
-                    <div
-                        style={{ position: "relative", display: "inline-block" }}
-                        onMouseEnter={() => { if (hiAnim === "idle") setHiAnim("hover") }}
-                        onMouseLeave={() => { if (hiAnim === "hover") setHiAnim("idle") }}
-                        onClick={triggerPop}
-                    >
-                        <img
-                            src="https://framerusercontent.com/images/hK0bLjY9spx6qo44Ua9QOr0NQ7Y.png"
-                            alt="Hi"
-                            style={{
-                                width: hiW,
-                                height: hiH,
-                                objectFit: "contain",
-                                display: "block",
-                                marginLeft: "-10px",
-                                filter: "saturate(1.6) brightness(1.05)",
-                                animation:
-                                    reducedMotion ? "none" :
-                                    hiAnim === "pop" ? `hi-pop 0.55s ${EASE_SPRING} forwards` :
-                                    hiAnim === "hover" ? `hi-wiggle 0.5s ${EASE_SPRING} forwards` :
-                                    "hi-float 3s ease-in-out infinite",
-                            }}
-                        />
-                        {particles.map((p) => (
-                            <div
-                                key={p.id}
-                                style={{
-                                    position: "absolute",
-                                    left: "50%",
-                                    top: "40%",
-                                    width: p.size,
-                                    height: p.size,
-                                    borderRadius: "50%",
-                                    backgroundColor: p.color,
-                                    pointerEvents: "none",
-                                    "--bx": `${p.x}px`,
-                                    animation: "bubble-rise 0.65s cubic-bezier(0.22,1,0.36,1) forwards",
-                                } as React.CSSProperties}
-                            />
-                        ))}
-                    </div>
-                </div>
-                <h1
-                    style={{
-                        fontFamily: Z,
-                        fontWeight: 400,
-                        fontSize: headSize,
-                        lineHeight: 1.4,
-                        letterSpacing: "-0.02em",
-                        wordSpacing: "4px",
+                    <h1 style={{
+                        fontFamily: I,
+                        fontWeight: 900,
+                        fontSize: phone ? "clamp(44px, 12vw, 64px)" : tablet ? "clamp(52px, 8vw, 72px)" : large ? "clamp(72px, 5.5vw, 96px)" : "clamp(60px, 5vw, 80px)",
+                        lineHeight: 1.0,
+                        letterSpacing: "-0.04em",
                         color: C.ink,
                         margin: 0,
-                        maxWidth: headMaxW,
-                        textAlign: "left",
-                        fontStyle: "normal",
-                    }}
-                >
-                    <span style={{ display: "block", whiteSpace: phone || tablet ? "normal" : "nowrap" }}>
-                        {HERO_WORDS.map((w, j) => (
-                            <Fragment key={j}>
-                                <AnnotatedWord word={w} revealed={revealed} delay={200 + j * 100} phone={phone}
-                                    activeAnnotation={activeAnnotation} onHover={setActiveAnnotation} />
-                                {" "}
-                            </Fragment>
-                        ))}
-                    </span>
-                    <span style={{
-                        display: "block",
-                        marginTop: phone ? 16 : 24,
-                        opacity: 0,
-                        animation: revealed
-                            ? `word-in 0.65s cubic-bezier(0.22,1,0.36,1) ${200 + HERO_WORDS.length * 100}ms forwards`
-                            : "none",
                     }}>
-                        Turning insights into experiences.
-                    </span>
-                </h1>
+                        product designer,<br />
+                        data analyst,<br />
+                        brand storyteller.
+                    </h1>
+                </div>
+
+                {/* Right: illustration */}
+                {!phone && (
+                    <div style={{
+                        flex: "0 0 44%",
+                        height: illustH,
+                        opacity: revealed ? 1 : 0,
+                        transform: revealed ? "translateY(0)" : "translateY(24px)",
+                        transition: `opacity 0.75s ${EASE_SPRING} 120ms, transform 0.75s ${EASE_SPRING} 120ms`,
+                    }}>
+                        <PersonIllustration />
+                    </div>
+                )}
             </div>
 
-            {/* Centered label + inline pink arrow to the right */}
+            {/* CTA pinned to bottom */}
             <div
                 style={{
                     width: "100%",
@@ -372,6 +315,8 @@ function Hero({
                     justifyContent: "center",
                     gap: 6,
                     paddingTop: phone ? 40 : 0,
+                    opacity: revealed ? 1 : 0,
+                    transition: `opacity 0.6s ${EASE_OUT} 300ms`,
                 }}
             >
                 <p
