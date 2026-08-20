@@ -185,11 +185,12 @@ function Hero({
                     <h1 style={{
                         fontFamily: I,
                         fontWeight: 900,
-                        fontSize: phone ? "clamp(44px, 12vw, 64px)" : tablet ? "clamp(52px, 8vw, 72px)" : large ? "clamp(72px, 5.5vw, 96px)" : "clamp(60px, 5vw, 80px)",
-                        lineHeight: 1.0,
+                        fontSize: phone ? "clamp(36px, 10vw, 52px)" : tablet ? "clamp(40px, 6vw, 58px)" : large ? "clamp(56px, 4.2vw, 80px)" : "clamp(44px, 4vw, 68px)",
+                        lineHeight: 1.05,
                         letterSpacing: "-0.04em",
                         color: C.ink,
                         margin: 0,
+                        whiteSpace: "nowrap",
                     }}>
                         product designer,<br />
                         data analyst,<br />
