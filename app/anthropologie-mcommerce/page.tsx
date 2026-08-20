@@ -246,9 +246,10 @@ function AnimStat({
                 padding: "36px 28px",
                 borderRadius: "10px",
                 transition:
-                    "background 0.35s cubic-bezier(0.22,1,0.36,1), transform 0.35s cubic-bezier(0.22,1,0.36,1)",
+                    "background-color 0.35s cubic-bezier(0.22,1,0.36,1), transform 0.35s cubic-bezier(0.22,1,0.36,1), opacity 0.35s cubic-bezier(0.22,1,0.36,1)",
                 transform: hov ? "translateY(-6px)" : "none",
-                boxShadow: hov ? "0 24px 48px rgba(0,0,0,0.15)" : "none",
+                boxShadow: "0 24px 48px rgba(0,0,0,0.15)",
+                opacity: hov ? 1 : 0.92,
                 cursor: "default",
                 border: `1px solid ${C.border}`,
             }}

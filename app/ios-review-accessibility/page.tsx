@@ -285,7 +285,7 @@ function FrictionCard({ num, label, tag, themeIndex = 0 }: { num: string; label:
     const textColor = dark ? "rgba(255,255,255,0.92)" : "#111111"
     const numColor = dark ? "rgba(255,255,255,0.28)" : "rgba(0,0,0,0.22)"
     return (
-        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ backgroundColor: t.bg, borderRadius: 14, overflow: "hidden", position: "relative" as const, padding: "22px 22px 20px", display: "flex", flexDirection: "column" as const, gap: 12, cursor: "default", border: `1px solid ${t.border}`, transform: hov ? "translateY(-4px) scale(1.01)" : "none", boxShadow: hov ? `0 14px 36px rgba(0,0,0,${dark ? 0.32 : 0.09})` : "none", transition: "transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease" }}>
+        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ backgroundColor: t.bg, borderRadius: 14, overflow: "hidden", position: "relative" as const, padding: "22px 22px 20px", display: "flex", flexDirection: "column" as const, gap: 12, cursor: "default", border: `1px solid ${t.border}`, transform: hov ? "translateY(-4px) scale(1.01)" : "none", boxShadow: hov ? `0 14px 36px rgba(0,0,0,${dark ? 0.32 : 0.09})` : "none", transition: "transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease" }}>
             <div style={{ position: "absolute" as const, top: 0, left: 0, width: 3, height: "100%", backgroundColor: t.accent, transformOrigin: "top", transform: hov ? "scaleY(1)" : "scaleY(0.2)", opacity: hov ? 0.9 : 0.25, transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1), opacity 0.3s" }} />
             <span style={{ fontFamily: Z, fontStyle: "italic", fontSize: 12, color: numColor }}>{num}</span>
             <p style={{ fontFamily: Z, fontSize: 17, lineHeight: 1.38, color: textColor, margin: 0, fontWeight: 400, letterSpacing: "-0.01em" }}>{label}</p>
@@ -336,7 +336,7 @@ function ProcessSection({ phone }: { phone: boolean }) {
 function BenefitCard({ icon, title, body }: { icon: string; title: string; body: string }) {
     const [hov, setHov] = useState(false)
     return (
-        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: hov ? C.ink : C.warm, borderRadius: 14, padding: "24px 22px", transition: "background 0.25s cubic-bezier(0.22,1,0.36,1), transform 0.22s cubic-bezier(0.34,1.56,0.64,1)", transform: hov ? "translateY(-4px)" : "none", cursor: "default" }}>
+        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: hov ? C.ink : C.warm, borderRadius: 14, padding: "24px 22px", transition: "background 0.25s cubic-bezier(0.22,1,0.36,1), transform 0.22s cubic-bezier(0.22,1,0.36,1)", transform: hov ? "translateY(-4px)" : "none", cursor: "default" }}>
             <div style={{ fontSize: 26, marginBottom: 14, lineHeight: 1 }}>{icon}</div>
             <p style={{ fontFamily: Z, fontWeight: 700, fontSize: 15, color: hov ? "#fff" : C.ink, marginBottom: 7, lineHeight: 1.3, transition: "color 0.25s" }}>{title}</p>
             <p style={{ fontFamily: I, fontSize: 13, lineHeight: 1.65, color: hov ? "rgba(255,255,255,0.6)" : C.ink3, margin: 0, transition: "color 0.25s" }}>{body}</p>
@@ -347,7 +347,7 @@ function BenefitCard({ icon, title, body }: { icon: string; title: string; body:
 function StatCard({ num, suffix, label, active }: { num: number; suffix: string; label: string; active: boolean }) {
     const [hov, setHov] = useState(false)
     return (
-        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: hov ? C.ink : C.surface, borderRadius: 12, padding: "26px 22px", transition: "background 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1)", transform: hov ? "translateY(-4px)" : "none", cursor: "default" }}>
+        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: hov ? C.ink : C.surface, borderRadius: 12, padding: "26px 22px", transition: "background 0.25s, transform 0.22s cubic-bezier(0.22,1,0.36,1)", transform: hov ? "translateY(-4px)" : "none", cursor: "default" }}>
             <p style={{ fontFamily: Z, fontWeight: 700, fontSize: 44, letterSpacing: "-0.04em", color: hov ? "#fff" : C.ink, lineHeight: 1, marginBottom: 8, transition: "color 0.25s" }}>
                 <Counter target={num} suffix={suffix} active={active} />
             </p>
@@ -359,14 +359,14 @@ function StatCard({ num, suffix, label, active }: { num: number; suffix: string;
 function PrincipleCard({ num, title, body, emoji }: { num: string; title: string; body: string; emoji: string }) {
     const [hov, setHov] = useState(false)
     return (
-        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: C.cream, borderRadius: 14, overflow: "hidden", transform: hov ? "translateY(-5px)" : "none", boxShadow: hov ? "0 16px 36px rgba(0,0,0,0.12)" : "none", transition: "transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease", cursor: "default" }}>
+        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: C.cream, borderRadius: 14, overflow: "hidden", transform: hov ? "translateY(-5px)" : "none", boxShadow: hov ? "0 16px 36px rgba(0,0,0,0.12)" : "none", transition: "transform 0.22s cubic-bezier(0.22,1,0.36,1), box-shadow 0.22s ease", cursor: "default" }}>
             <div style={{ height: 3, backgroundColor: "rgba(0,0,0,0.55)", transformOrigin: "left", transform: hov ? "scaleX(1)" : "scaleX(0.1)", opacity: hov ? 1 : 0.18, transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1), opacity 0.3s" }} />
             <div style={{ padding: "20px 22px 24px" }}>
                 <div style={{ fontSize: 24, marginBottom: 12 }}>{emoji}</div>
                 <p style={{ fontFamily: I, fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.26)", letterSpacing: "0.1em", marginBottom: 5, textTransform: "uppercase" as const }}>{num}</p>
                 <p style={{ fontFamily: Z, fontWeight: 700, fontSize: 16, color: C.ink, marginBottom: 8, lineHeight: 1.3 }}>{title}</p>
                 <p style={{ fontFamily: I, fontSize: 13, lineHeight: 1.6, color: C.ink3, marginBottom: 12 }}>{body}</p>
-                <span style={{ fontFamily: Z, fontSize: 17, color: C.ink, opacity: hov ? 0.7 : 0.2, display: "inline-block", transform: hov ? "translateX(6px)" : "none", transition: "transform 0.22s cubic-bezier(0.34,1.56,0.64,1), opacity 0.22s" }}>→</span>
+                <span style={{ fontFamily: Z, fontSize: 17, color: C.ink, opacity: hov ? 0.7 : 0.2, display: "inline-block", transform: hov ? "translateX(6px)" : "none", transition: "transform 0.22s cubic-bezier(0.22,1,0.36,1), opacity 0.22s" }}>→</span>
             </div>
         </div>
     )
@@ -375,7 +375,7 @@ function PrincipleCard({ num, title, body, emoji }: { num: string; title: string
 function SolutionCard({ title, body, icon, i }: { title: string; body: string; icon: string; i: number }) {
     const [hov, setHov] = useState(false)
     return (
-        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: hov ? C.ink : C.surface, borderRadius: 14, padding: "22px 20px", transform: hov ? "translateY(-4px)" : "none", boxShadow: hov ? "0 18px 44px rgba(0,0,0,0.16)" : "none", transition: "background 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s", cursor: "default" }}>
+        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: hov ? C.ink : C.surface, borderRadius: 14, padding: "22px 20px", transform: hov ? "translateY(-4px)" : "none", boxShadow: hov ? "0 18px 44px rgba(0,0,0,0.16)" : "none", transition: "background 0.25s, transform 0.22s cubic-bezier(0.22,1,0.36,1), box-shadow 0.22s", cursor: "default" }}>
             <div style={{ fontSize: 20, marginBottom: 12 }}>{icon}</div>
             <p style={{ fontFamily: Z, fontWeight: 700, fontSize: 14.5, color: hov ? "#fff" : C.ink, marginBottom: 8, transition: "color 0.25s" }}>{title}</p>
             <p style={{ fontFamily: I, fontSize: 13, lineHeight: 1.65, color: hov ? "rgba(255,255,255,0.6)" : C.ink3, marginBottom: 12, transition: "color 0.25s" }}>{body}</p>
@@ -432,7 +432,7 @@ function PhoneCard({ src, label, num, desc, index, visible }: { src: string; lab
 function ResultCard({ num, label }: { num: string; label: string }) {
     const [hov, setHov] = useState(false)
     return (
-        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: hov ? C.ink : C.surface, borderRadius: 12, padding: "20px", transition: "background 0.22s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1)", transform: hov ? "translateY(-3px)" : "none", cursor: "default" }}>
+        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: hov ? C.ink : C.surface, borderRadius: 12, padding: "20px", transition: "background 0.22s, transform 0.22s cubic-bezier(0.22,1,0.36,1)", transform: hov ? "translateY(-3px)" : "none", cursor: "default" }}>
             <p style={{ fontFamily: Z, fontStyle: "italic", fontSize: 26, color: hov ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.09)", marginBottom: 6, lineHeight: 1, transition: "color 0.22s" }}>{num}</p>
             <p style={{ fontFamily: I, fontSize: 13.5, color: hov ? "rgba(255,255,255,0.88)" : C.ink, lineHeight: 1.5, margin: 0, transition: "color 0.22s" }}>{label}</p>
         </div>

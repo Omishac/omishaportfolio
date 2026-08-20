@@ -23,7 +23,7 @@ const CURSOR_STYLES = `
   }
   @keyframes bubble-rise {
     0% { transform: translate(0, 0) scale(1); opacity: 0.9; }
-    100% { transform: translate(var(--bx), -60px) scale(0); opacity: 0; }
+    100% { transform: translate(var(--bx), -60px) scale(0.3); opacity: 0; }
   }
   @keyframes word-in {
     from { opacity: 0; transform: translateY(14px); }
@@ -45,11 +45,10 @@ const CURSOR_STYLES = `
     animation-play-state: paused;
   }
   .logo-img {
-    filter: none;
-    transition: filter 0.35s ease;
+    transition: opacity 0.35s ease;
   }
-  .logo-img:hover {
-    filter: opacity(0.7);
+  @media (hover: hover) and (pointer: fine) {
+    .logo-img:hover { opacity: 0.7; }
   }
 `
 
@@ -64,6 +63,33 @@ const C = {
     muted: "#9A9A9A",
     border: "rgba(0,0,0,0.08)",
     bg: "#FFFFFF",
+}
+
+const EASE_SPRING = "cubic-bezier(0.22,1,0.36,1)"
+const EASE_OUT    = "cubic-bezier(0.23,1,0.32,1)"
+
+function useReducedMotion() {
+    const [reduced, setReduced] = useState(false)
+    useEffect(() => {
+        const mq = window.matchMedia("(prefers-reduced-motion: reduce)")
+        setReduced(mq.matches)
+        const h = (e: MediaQueryListEvent) => setReduced(e.matches)
+        mq.addEventListener("change", h)
+        return () => mq.removeEventListener("change", h)
+    }, [])
+    return reduced
+}
+
+function useFinePointer() {
+    const [fine, setFine] = useState(true)
+    useEffect(() => {
+        const mq = window.matchMedia("(hover: hover) and (pointer: fine)")
+        setFine(mq.matches)
+        const h = (e: MediaQueryListEvent) => setFine(e.matches)
+        mq.addEventListener("change", h)
+        return () => mq.removeEventListener("change", h)
+    }, [])
+    return fine
 }
 
 function useBP() {
@@ -197,6 +223,8 @@ function Hero({
     const hiW = phone ? 100 : tablet ? 150 : large ? 260 : 210
     const hiH = Math.round(hiW / 1.615)
 
+    const reducedMotion = useReducedMotion()
+
     type Particle = { id: number; color: string; x: number; angle: number; size: number }
     const [hiAnim, setHiAnim] = useState<"idle" | "hover" | "pop">("idle")
     const [particles, setParticles] = useState<Particle[]>([])
@@ -272,8 +300,9 @@ function Hero({
                                 marginLeft: "-10px",
                                 filter: "saturate(1.6) brightness(1.05)",
                                 animation:
-                                    hiAnim === "pop" ? "hi-pop 0.55s cubic-bezier(0.34,1.56,0.64,1) forwards" :
-                                    hiAnim === "hover" ? "hi-wiggle 0.5s cubic-bezier(0.22,1,0.36,1) forwards" :
+                                    reducedMotion ? "none" :
+                                    hiAnim === "pop" ? `hi-pop 0.55s ${EASE_SPRING} forwards` :
+                                    hiAnim === "hover" ? `hi-wiggle 0.5s ${EASE_SPRING} forwards` :
                                     "hi-float 3s ease-in-out infinite",
                             }}
                         />
@@ -469,6 +498,7 @@ function Card({
     const ref = useRef<HTMLDivElement>(null)
     const videoContainerRef = useRef<HTMLDivElement>(null)
     const [hov, setHov] = useState(false)
+    const finePointer = useFinePointer()
     const pos = useRef({ x: 0.5, y: 0.5 })
     const cur = useRef({ x: 0.5, y: 0.5 })
     const raf = useRef(0)
@@ -513,10 +543,10 @@ function Card({
     }
 
     return (
-        <a href={href} style={{ textDecoration: "none", display: "flex", flexDirection: "column", gap: 14 }}>
+        <a href={href} className="card-link" style={{ textDecoration: "none", display: "flex", flexDirection: "column", gap: 14 }}>
             <div
                 ref={ref}
-                onMouseEnter={() => setHov(true)}
+                onMouseEnter={() => finePointer && setHov(true)}
                 onMouseLeave={() => {
                     setHov(false)
                     pos.current = { x: 0.5, y: 0.5 }
@@ -530,15 +560,15 @@ function Card({
                     backgroundColor: "#F5F5F3",
                     position: "relative",
                     cursor: "pointer",
-                    transform: hov
+                    transform: finePointer && hov
                         ? `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1.02)`
                         : "perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)",
                     boxShadow: hov
                         ? "0 28px 56px rgba(0,0,0,0.16), 0 8px 24px rgba(0,0,0,0.08)"
                         : "0 1px 8px rgba(0,0,0,0.05)",
                     transition: hov
-                        ? "box-shadow 0.4s cubic-bezier(0.22,1,0.36,1)"
-                        : "transform 0.8s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s cubic-bezier(0.22,1,0.36,1)",
+                        ? `box-shadow 0.4s ${EASE_SPRING}`
+                        : `transform 0.45s ${EASE_SPRING}, box-shadow 0.4s ${EASE_SPRING}`,
                     willChange: "transform",
                 }}
             >
@@ -658,6 +688,7 @@ function FeaturedCard({
     const cardRef = useRef<HTMLDivElement>(null)
     const videoContainerRef = useRef<HTMLDivElement>(null)
     const [hov, setHov] = useState(false)
+    const finePointer = useFinePointer()
     const pos = useRef({ x: 0.5, y: 0.5 })
     const cur = useRef({ x: 0.5, y: 0.5 })
     const raf = useRef(0)
@@ -699,10 +730,10 @@ function FeaturedCard({
     }
 
     return (
-        <a href={href} style={{ textDecoration: "none", display: "block" }}>
+        <a href={href} className="card-link" style={{ textDecoration: "none", display: "block" }}>
             <div
                 ref={cardRef}
-                onMouseEnter={() => setHov(true)}
+                onMouseEnter={() => finePointer && setHov(true)}
                 onMouseLeave={() => { setHov(false); pos.current = { x: 0.5, y: 0.5 } }}
                 onMouseMove={onMove}
                 style={{
@@ -712,15 +743,15 @@ function FeaturedCard({
                     overflow: "hidden",
                     height: phone ? "auto" : cardH,
                     cursor: "pointer",
-                    transform: hov
+                    transform: finePointer && hov
                         ? `perspective(1400px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1.01)`
                         : "perspective(1400px) rotateX(0deg) rotateY(0deg) scale(1)",
                     boxShadow: hov
                         ? "0 28px 56px rgba(0,0,0,0.16), 0 8px 24px rgba(0,0,0,0.08)"
                         : "0 2px 12px rgba(0,0,0,0.05)",
                     transition: hov
-                        ? "box-shadow 0.4s cubic-bezier(0.22,1,0.36,1)"
-                        : "transform 0.8s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s cubic-bezier(0.22,1,0.36,1)",
+                        ? `box-shadow 0.4s ${EASE_SPRING}`
+                        : `transform 0.45s ${EASE_SPRING}, box-shadow 0.4s ${EASE_SPRING}`,
                     willChange: "transform",
                 }}
             >

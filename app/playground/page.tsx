@@ -183,8 +183,7 @@ function PhotoCard({ src, aspectRatio = "3/2" }: { src: string; aspectRatio?: st
                 overflow: "hidden",
                 width: "100%",
                 aspectRatio,
-                transition: "box-shadow 0.3s",
-                boxShadow: hov ? "0 16px 40px rgba(0,0,0,0.13)" : "0 1px 6px rgba(0,0,0,0.05)",
+                boxShadow: "0 1px 6px rgba(0,0,0,0.05)",
             }}
         >
             <img
