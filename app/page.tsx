@@ -914,6 +914,9 @@ function WorkSection({
     const cardTitleSize = phone ? 16 : tablet ? 17 : large ? 21 : 19
     const sectionRef = useRef<HTMLElement>(null)
     const [cardsShown, setCardsShown] = useState(false)
+    const [parallaxY, setParallaxY] = useState(0)
+    const reducedMotion = useReducedMotion()
+
     useEffect(() => {
         const el = sectionRef.current
         if (!el) return
@@ -924,10 +927,27 @@ function WorkSection({
         return () => obs.disconnect()
     }, [])
 
+    useEffect(() => {
+        if (reducedMotion) { setParallaxY(0); return }
+        const onScroll = () => {
+            const el = sectionRef.current
+            if (!el) return
+            const rect = el.getBoundingClientRect()
+            const elMid = rect.top + rect.height / 2
+            const vMid = window.innerHeight / 2
+            const progress = (vMid - elMid) / window.innerHeight
+            // Cards rise to meet you as you scroll toward them, recede as you scroll past
+            setParallaxY(Math.max(-36, Math.min(36, -progress * 90)))
+        }
+        window.addEventListener("scroll", onScroll, { passive: true })
+        onScroll()
+        return () => window.removeEventListener("scroll", onScroll)
+    }, [reducedMotion])
+
     const reveal = (idx: number) => ({
         opacity: cardsShown ? 1 : 0,
         transform: cardsShown ? "translateY(0)" : "translateY(40px)",
-        transition: `opacity 0.72s cubic-bezier(0.22,1,0.36,1) ${idx * 120}ms, transform 0.72s cubic-bezier(0.22,1,0.36,1) ${idx * 120}ms`,
+        transition: `opacity 0.72s ${EASE_SPRING} ${idx * 120}ms, transform 0.72s ${EASE_SPRING} ${idx * 120}ms`,
     })
 
     return (
@@ -940,7 +960,13 @@ function WorkSection({
                 boxSizing: "border-box",
             }}
         >
-            <div style={{ maxWidth: maxW, width: "100%", margin: "0 auto" }}>
+            <div style={{
+                maxWidth: maxW,
+                width: "100%",
+                margin: "0 auto",
+                transform: `translateY(${parallaxY}px)`,
+                willChange: "transform",
+            }}>
                 <SectionLabel
                     tag="UX Strategy · Research · Digital Commerce"
                     title="Inside My Work"
