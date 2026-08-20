@@ -25,6 +25,15 @@ const CURSOR_STYLES = `
     0% { transform: translate(0, 0) scale(1); opacity: 0.9; }
     100% { transform: translate(var(--bx), -60px) scale(0.3); opacity: 0; }
   }
+  @keyframes illust-float {
+    0%, 100% { transform: translateY(0px); }
+    40%       { transform: translateY(-5px); }
+    70%       { transform: translateY(-3px); }
+  }
+  @keyframes clip-in {
+    from { clip-path: inset(0 100% 0 0); }
+    to   { clip-path: inset(0 0% 0 0); }
+  }
   html { scroll-behavior: smooth; }
   html, body { max-width: 100%; overflow-x: hidden; }
   @keyframes marquee {
@@ -140,11 +149,11 @@ function Hero({
     sp: ReturnType<typeof useBP>["sp"]
 }) {
     const [revealed, setRevealed] = useState(false)
-    const [scrollY, setScrollY] = useState(0)
-    const reducedMotion = useReducedMotion()
+    const [scrollY, setScrollY]   = useState(0)
+    const reducedMotion            = useReducedMotion()
 
     useEffect(() => {
-        const t = setTimeout(() => setRevealed(true), 60)
+        const t = setTimeout(() => setRevealed(true), 80)
         return () => clearTimeout(t)
     }, [])
 
@@ -155,20 +164,36 @@ function Hero({
         return () => window.removeEventListener("scroll", onScroll)
     }, [reducedMotion])
 
-    // Text drifts up slightly faster than scroll; illustration lags behind (slower) for depth
-    const textParallax   = reducedMotion ? 0 : -scrollY * 0.08
-    const illustParallax = reducedMotion ? 0 :  scrollY * 0.14
-    const ctaParallax    = reducedMotion ? 0 : -scrollY * 0.04
+    // Subtle parallax — text slightly faster, illustration slightly slower
+    const textParallax   = reducedMotion ? 0 : -scrollY * 0.04
+    const illustParallax = reducedMotion ? 0 :  scrollY * 0.09
 
-    const isStack = phone || tablet
-    const illustH = phone ? 280 : tablet ? 360 : large ? 520 : 460
+    // Reusable staggered entrance helper
+    const enter = (delayMs: number) => ({
+        opacity:    revealed ? 1 : 0,
+        transform:  `translateY(${revealed ? 0 : 14}px)`,
+        transition: reducedMotion
+            ? "none"
+            : `opacity 0.55s ${EASE_SPRING} ${delayMs}ms, transform 0.55s ${EASE_SPRING} ${delayMs}ms`,
+    })
+
+    // Two-column on tablet+; stacked on phone
+    const isStack   = phone
+    const illustMax = tablet ? 300 : large ? 460 : 420
+
+    const headSize = phone
+        ? "clamp(30px, 9vw, 44px)"
+        : tablet
+            ? "clamp(28px, 4.4vw, 42px)"
+            : large
+                ? "clamp(48px, 3.8vw, 64px)"
+                : "clamp(36px, 3.6vw, 52px)"
 
     return (
         <section
             style={{
                 width: "100%",
-                minHeight: "100vh",
-                maxHeight: "1000px",
+                minHeight: "100svh",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
@@ -177,123 +202,149 @@ function Hero({
                 overflow: "hidden",
             }}
         >
-            {/* Two-column content */}
-            <div style={{
-                maxWidth: maxW,
-                width: "100%",
-                margin: "0 auto",
-                display: "flex",
-                flexDirection: isStack ? "column" : "row",
-                alignItems: isStack ? "flex-start" : "center",
-                justifyContent: "space-between",
-                gap: isStack ? 40 : 0,
-                flex: 1,
-            }}>
-                {/* Left: bold headline — fades in, then parallaxes on scroll */}
-                <div style={{
-                    flex: isStack ? "none" : "0 0 52%",
-                    display: "flex",
-                    alignItems: "flex-start",
-                    opacity: revealed ? 1 : 0,
-                    transform: `translateY(${textParallax}px)`,
-                    transition: `opacity 0.7s ${EASE_SPRING}`,
-                    willChange: "transform",
-                }}>
-                    <h1 style={{
-                        fontFamily: I,
-                        fontWeight: 900,
-                        fontSize: phone ? "clamp(36px, 10vw, 52px)" : tablet ? "clamp(40px, 6vw, 58px)" : large ? "clamp(56px, 4.2vw, 80px)" : "clamp(44px, 4vw, 68px)",
-                        lineHeight: 1.05,
-                        letterSpacing: "-0.04em",
-                        color: C.ink,
-                        margin: 0,
-                        whiteSpace: "nowrap",
-                    }}>
-                        product designer,<br />
-                        data analyst,<br />
-                        brand storyteller.
-                    </h1>
-                </div>
-
-                {/* Right: illustration — fades in with slight delay, lags on scroll for depth */}
-                {!phone && (
-                    <div style={{
-                        flex: "0 0 44%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        opacity: revealed ? 1 : 0,
-                        transform: `translateY(${illustParallax}px)`,
-                        transition: `opacity 0.85s ${EASE_SPRING} 150ms`,
-                        willChange: "transform",
-                    }}>
-                        <img
-                            src="/images/ChatGPT Image Aug 20, 2026, 03_52_59 PM.png"
-                            alt="Person sitting on a bubble couch holding up a laptop, with an arc floor lamp beside them"
-                            style={{
-                                width: "100%",
-                                maxWidth: illustH,
-                                height: "auto",
-                                objectFit: "contain",
-                                display: "block",
-                            }}
-                        />
-                    </div>
-                )}
-            </div>
-
-            {/* CTA pinned to bottom — subtle parallax */}
+            {/* ── Main content row ── */}
             <div
                 style={{
+                    maxWidth: maxW,
                     width: "100%",
+                    margin: "0 auto",
                     display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 6,
-                    paddingTop: phone ? 40 : 0,
-                    opacity: revealed ? 1 : 0,
-                    transform: `translateY(${ctaParallax}px)`,
-                    transition: `opacity 0.6s ${EASE_OUT} 300ms`,
-                    willChange: "transform",
+                    flexDirection: isStack ? "column" : "row",
+                    alignItems: isStack ? "flex-start" : "center",
+                    justifyContent: "space-between",
+                    flex: 1,
+                    gap: isStack ? 32 : 0,
                 }}
             >
-                <p
+                {/* Left — greeting + headline + tagline */}
+                <div
                     style={{
-                        fontFamily: Z,
-                        fontStyle: "normal",
-                        fontWeight: 300,
-                        fontSize: 16,
-                        lineHeight: 1,
-                        color: C.ink,
-                        margin: 0,
+                        flex: isStack ? "none" : "0 0 55%",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        transform: `translateY(${textParallax}px)`,
+                        willChange: "transform",
+                    }}
+                >
+                    {/* Greeting */}
+                    <div style={{ ...enter(0), marginBottom: phone ? 18 : 24 }}>
+                        <span
+                            style={{
+                                fontFamily: I,
+                                fontSize: phone ? 13 : 14,
+                                fontWeight: 400,
+                                color: C.ink3,
+                                letterSpacing: "-0.005em",
+                            }}
+                        >
+                            Hi, I&apos;m Omisha&nbsp;:)
+                        </span>
+                    </div>
+
+                    {/* Headline — each line staggers in independently */}
+                    <h1
+                        style={{
+                            fontFamily: I,
+                            fontWeight: 900,
+                            fontSize: headSize,
+                            lineHeight: 1.0,
+                            letterSpacing: "-0.04em",
+                            color: C.ink,
+                            margin: `0 0 ${phone ? 20 : 28}px`,
+                            whiteSpace: "nowrap",
+                        }}
+                    >
+                        {[
+                            { text: "product designer,", delay: 80  },
+                            { text: "data analyst,",     delay: 190 },
+                            { text: "brand storyteller.", delay: 300 },
+                        ].map(({ text, delay }) => (
+                            <span key={text} style={{ display: "block", ...enter(delay) }}>
+                                {text}
+                            </span>
+                        ))}
+                    </h1>
+
+                    {/* Tagline */}
+                    <p
+                        style={{
+                            ...enter(400),
+                            fontFamily: I,
+                            fontSize: phone ? 14 : 15,
+                            lineHeight: 1.65,
+                            color: C.ink3,
+                            margin: 0,
+                            maxWidth: 360,
+                        }}
+                    >
+                        Curious about what makes people click, choose, and come back.
+                    </p>
+                </div>
+
+                {/* Right — illustration (visible on tablet+; compact version on phone) */}
+                <div
+                    style={{
+                        flex: isStack ? "none" : "0 0 41%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: isStack ? "flex-end" : "center",
+                        alignSelf: isStack ? "flex-end" : "center",
+                        width: isStack ? "62%" : "auto",
+                        opacity: revealed ? 1 : 0,
+                        transition: reducedMotion ? "none" : `opacity 0.7s ${EASE_SPRING} 220ms`,
+                        transform: `translateY(${illustParallax}px)`,
+                        willChange: "transform",
+                    }}
+                >
+                    <div
+                        style={{
+                            width: "100%",
+                            maxWidth: isStack ? 220 : illustMax,
+                            animation: reducedMotion ? "none" : "illust-float 5.5s ease-in-out infinite",
+                        }}
+                    >
+                        <img
+                            src="/images/ChatGPT Image Aug 20, 2026, 03_52_59 PM.png"
+                            alt="Person reclining on a bubble couch holding a laptop, arc floor lamp beside them"
+                            style={{ width: "100%", height: "auto", display: "block" }}
+                        />
+                    </div>
+                </div>
+            </div>
+
+            {/* ── CTA pinned to bottom ── */}
+            <div
+                style={{
+                    maxWidth: maxW,
+                    width: "100%",
+                    margin: "0 auto",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    paddingTop: phone ? 32 : 0,
+                    opacity: revealed ? 1 : 0,
+                    transition: reducedMotion ? "none" : `opacity 0.5s ${EASE_OUT} 500ms`,
+                }}
+            >
+                <span
+                    style={{
+                        fontFamily: I,
+                        fontSize: 13,
+                        fontWeight: 400,
+                        color: C.ink3,
                         letterSpacing: "-0.01em",
                     }}
                 >
                     Here&apos;s a closer look at what that means
-                </p>
-                <svg
-                    width={36}
-                    height={36}
-                    viewBox="0 0 48 48"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    style={{ display: "block", flexShrink: 0, verticalAlign: "middle", marginTop: "28px" }}
-                >
+                </span>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0 }}>
                     <path
-                        d="M 8 6 C 12 6, 40 14, 40 40"
+                        d="M7 2V12M3 8L7 12L11 8"
                         stroke="#E8B4C8"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        fill="none"
-                    />
-                    <path
-                        d="M 33 32 L 40 42 L 47 32"
-                        stroke="#E8B4C8"
-                        strokeWidth="3"
+                        strokeWidth="1.5"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        fill="none"
                     />
                 </svg>
             </div>
@@ -445,11 +496,11 @@ function Card({
                     position: "relative",
                     cursor: "pointer",
                     transform: finePointer && hov
-                        ? `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1.02)`
+                        ? `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1.015)`
                         : "perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)",
                     boxShadow: hov
-                        ? "0 28px 56px rgba(0,0,0,0.16), 0 8px 24px rgba(0,0,0,0.08)"
-                        : "0 1px 8px rgba(0,0,0,0.05)",
+                        ? "0 12px 32px rgba(0,0,0,0.10), 0 3px 10px rgba(0,0,0,0.06)"
+                        : "0 1px 6px rgba(0,0,0,0.05)",
                     transition: hov
                         ? `box-shadow 0.4s ${EASE_SPRING}`
                         : `transform 0.45s ${EASE_SPRING}, box-shadow 0.4s ${EASE_SPRING}`,
@@ -467,6 +518,8 @@ function Card({
                             height: "100%",
                             objectFit: "cover",
                             display: "block",
+                            transform: hov ? "scale(1.04)" : "scale(1)",
+                            transition: `transform 0.55s ${EASE_SPRING}`,
                         }}
                     />
                 )}
@@ -526,7 +579,7 @@ function Card({
                             fontWeight: 400,
                             letterSpacing: "-0.02em",
                             lineHeight: 1.25,
-                            color: C.ink2,
+                            color: C.ink,
                         }}
                     >
                         {title}
@@ -597,7 +650,7 @@ function FeaturedCard({
     const animate = useCallback(() => {
         cur.current.x += (pos.current.x - cur.current.x) * 0.07
         cur.current.y += (pos.current.y - cur.current.y) * 0.07
-        setTilt({ x: (cur.current.y - 0.5) * -5, y: (cur.current.x - 0.5) * 5 })
+        setTilt({ x: (cur.current.y - 0.5) * -3, y: (cur.current.x - 0.5) * 3 })
         raf.current = requestAnimationFrame(animate)
     }, [])
 
@@ -628,11 +681,11 @@ function FeaturedCard({
                     height: phone ? "auto" : cardH,
                     cursor: "pointer",
                     transform: finePointer && hov
-                        ? `perspective(1400px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1.01)`
+                        ? `perspective(1400px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1.006)`
                         : "perspective(1400px) rotateX(0deg) rotateY(0deg) scale(1)",
                     boxShadow: hov
-                        ? "0 28px 56px rgba(0,0,0,0.16), 0 8px 24px rgba(0,0,0,0.08)"
-                        : "0 2px 12px rgba(0,0,0,0.05)",
+                        ? "0 12px 36px rgba(0,0,0,0.09), 0 3px 10px rgba(0,0,0,0.05)"
+                        : "0 2px 8px rgba(0,0,0,0.05)",
                     transition: hov
                         ? `box-shadow 0.4s ${EASE_SPRING}`
                         : `transform 0.45s ${EASE_SPRING}, box-shadow 0.4s ${EASE_SPRING}`,
@@ -651,6 +704,8 @@ function FeaturedCard({
                     ) : (
                         <img src={image} alt={title} style={{
                             width: "100%", height: "100%", objectFit: "cover", display: "block",
+                            transform: hov ? "scale(1.03)" : "scale(1)",
+                            transition: `transform 0.6s ${EASE_SPRING}`,
                         }} />
                     )}
                 </div>
@@ -754,26 +809,43 @@ function AboutBlock({
     px: number
     maxW: number
 }) {
+    const [visible, setVisible] = useState(false)
+    const ref = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        const el = ref.current
+        if (!el) return
+        const obs = new IntersectionObserver(
+            ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect() } },
+            { threshold: 0.25 }
+        )
+        obs.observe(el)
+        return () => obs.disconnect()
+    }, [])
+
     return (
         <section
             style={{
                 width: "100%",
-                padding: `0 ${px}px ${phone ? 48 : tablet ? 64 : 80}px`,
+                padding: `0 ${px}px ${phone ? 56 : tablet ? 72 : 88}px`,
                 boxSizing: "border-box",
             }}
         >
-            <div style={{ maxWidth: maxW, width: "100%", margin: "0 auto" }}>
+            <div ref={ref} style={{ maxWidth: maxW, width: "100%", margin: "0 auto" }}>
                 <p
                     style={{
                         fontFamily: I,
-                        fontSize: phone ? 15 : tablet ? 16 : 17,
+                        fontSize: phone ? 15 : tablet ? 17 : 19,
                         lineHeight: 1.7,
-                        color: C.ink3,
+                        color: C.ink2,
                         margin: 0,
-                        maxWidth: 620,
+                        maxWidth: 540,
+                        opacity: visible ? 1 : 0,
+                        transform: `translateY(${visible ? 0 : 12}px)`,
+                        transition: `opacity 0.6s ${EASE_SPRING}, transform 0.6s ${EASE_SPRING}`,
                     }}
                 >
-                    Part designer, part analyst, part-time chronically online. I spend a lot of time thinking about the tiny decisions people make online and how thoughtful design can shape them.
+                    Part designer, part analyst, part-time chronically online. I spend a lot of time thinking about the tiny decisions people make online — and how thoughtful design can shape them.
                 </p>
             </div>
         </section>
@@ -821,7 +893,7 @@ function WorkSection({
             const vMid = window.innerHeight / 2
             const progress = (vMid - elMid) / window.innerHeight
             // Cards rise to meet you as you scroll toward them, recede as you scroll past
-            setParallaxY(Math.max(-36, Math.min(36, -progress * 90)))
+            setParallaxY(Math.max(-20, Math.min(20, -progress * 52)))
         }
         window.addEventListener("scroll", onScroll, { passive: true })
         onScroll()
@@ -830,8 +902,8 @@ function WorkSection({
 
     const reveal = (idx: number) => ({
         opacity: cardsShown ? 1 : 0,
-        transform: cardsShown ? "translateY(0)" : "translateY(40px)",
-        transition: `opacity 0.72s ${EASE_SPRING} ${idx * 120}ms, transform 0.72s ${EASE_SPRING} ${idx * 120}ms`,
+        transform: cardsShown ? "translateY(0)" : "translateY(16px)",
+        transition: `opacity 0.6s ${EASE_SPRING} ${idx * 100}ms, transform 0.6s ${EASE_SPRING} ${idx * 100}ms`,
     })
 
     return (
@@ -852,8 +924,8 @@ function WorkSection({
                 willChange: "transform",
             }}>
                 <SectionLabel
-                    tag="UX Strategy · Research · Digital Commerce"
-                    title="Inside My Work"
+                    tag="Product Design · Research · Digital Commerce"
+                    title="Selected Work"
                     phone={phone}
                     tablet={tablet}
                     large={large}
@@ -943,8 +1015,8 @@ function LogoTicker({
         >
             <div style={{ maxWidth: maxW, width: "100%", margin: "0 auto", transform: `translateY(${tickerY}px)`, willChange: "transform" }}>
                 <SectionLabel
-                    tag="Application"
-                    title="Industry Experience:"
+                    tag="Brands"
+                    title="Industry Experience"
                     phone={phone}
                     tablet={tablet}
                     large={large}
@@ -980,11 +1052,26 @@ const SKILLS = [
     { num: "04", title: "Branding & Content Creation", sub: "Brand kits · Photography · Video Content" },
 ]
 
-function SkillRow({ num, title, sub, phone, tablet }: { num: string; title: string; sub: string; phone: boolean; tablet: boolean }) {
+function SkillRow({ num, title, sub, phone, tablet, revealDelay }: { num: string; title: string; sub: string; phone: boolean; tablet: boolean; revealDelay: number }) {
     const [hov, setHov] = useState(false)
+    const [visible, setVisible] = useState(false)
+    const ref = useRef<HTMLDivElement>(null)
     const isColumn = phone
+
+    useEffect(() => {
+        const el = ref.current
+        if (!el) return
+        const obs = new IntersectionObserver(
+            ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect() } },
+            { threshold: 0.15 }
+        )
+        obs.observe(el)
+        return () => obs.disconnect()
+    }, [])
+
     return (
         <div
+            ref={ref}
             onMouseEnter={() => setHov(true)}
             onMouseLeave={() => setHov(false)}
             style={{
@@ -996,6 +1083,8 @@ function SkillRow({ num, title, sub, phone, tablet }: { num: string; title: stri
                 alignItems: isColumn ? "flex-start" : "center",
                 justifyContent: "space-between",
                 gap: isColumn ? 5 : 0,
+                opacity: visible ? 1 : 0,
+                transition: `opacity 0.5s ${EASE_OUT} ${revealDelay}ms`,
             }}
         >
             <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
@@ -1066,8 +1155,8 @@ function SkillsSection({
             <div style={{ maxWidth: maxW, width: "100%", margin: "0 auto" }}>
                 <SectionLabel tag="Skills" title="What I offer" phone={phone} tablet={tablet} large={large} />
                 <div>
-                    {SKILLS.map((s) => (
-                        <SkillRow key={s.num} {...s} phone={phone} tablet={tablet} />
+                    {SKILLS.map((s, i) => (
+                        <SkillRow key={s.num} {...s} phone={phone} tablet={tablet} revealDelay={i * 80} />
                     ))}
                 </div>
             </div>
