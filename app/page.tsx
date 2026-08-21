@@ -314,7 +314,7 @@ function Hero({
                 </h1>
             </div>
 
-            {/* ── CTA: pinned to the bottom of the viewport, text then jumping character above the curved arrow ── */}
+            {/* ── CTA: pinned to the bottom of the viewport, arrow inline beside the text (matches the main branch's CTA arrow), jumping character on top of the arrow ── */}
             <div
                 style={{
                     position: "absolute",
@@ -322,13 +322,13 @@ function Hero({
                     bottom: sp.heroBottom,
                     transform: "translateX(-50%)",
                     display: "flex",
-                    flexDirection: "column",
+                    flexDirection: "row",
                     alignItems: "center",
+                    gap: 6,
                     opacity: revealed ? 1 : 0,
                     transition: reducedMotion ? "none" : `opacity 0.5s ${EASE_OUT} 500ms`,
                 }}
             >
-                {/* Text row */}
                 <span
                     style={{
                         fontFamily: I,
@@ -341,41 +341,41 @@ function Hero({
                 >
                     Here&apos;s a closer look at what that means
                 </span>
-                {/* Jumping character above the curved arrow */}
-                <div style={{ position: "relative", width: 40, height: illW.jump + 36, marginTop: 6 }}>
+                {/* Arrow — same path/stroke as the main branch's CTA arrow, jumping character floats on top of it */}
+                <div style={{ position: "relative", width: 30, height: 30, flexShrink: 0, marginTop: 22 }}>
                     <img
                         src="/images/image 8.svg"
                         alt=""
                         aria-hidden="true"
                         style={{
                             position: "absolute",
-                            top: 0,
-                            right: 0,
+                            top: -illW.jump * 0.65,
+                            left: "50%",
+                            transform: "translateX(-50%)",
                             width: illW.jump,
                             height: "auto",
                             display: "block",
                             animation: reducedMotion ? "none" : "illust-float 6.5s ease-in-out infinite 2s",
                         }}
                     />
-                    {/* Pink curved arrow, matching the main site's CTA arrow */}
                     <svg
-                        width="22"
-                        height="32"
-                        viewBox="0 0 22 32"
+                        width="30"
+                        height="30"
+                        viewBox="0 0 48 48"
                         fill="none"
-                        style={{ position: "absolute", left: 4, bottom: 0, display: "block" }}
+                        style={{ display: "block" }}
                     >
                         <path
-                            d="M3 3 C3 12 8 20 18 24"
+                            d="M 8 6 C 12 6, 40 14, 40 40"
                             stroke="#E8B4C8"
-                            strokeWidth="1.3"
+                            strokeWidth="3"
                             strokeLinecap="round"
                             fill="none"
                         />
                         <path
-                            d="M11 21 L18 24 L15 29"
+                            d="M 33 32 L 40 42 L 47 32"
                             stroke="#E8B4C8"
-                            strokeWidth="1.3"
+                            strokeWidth="3"
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             fill="none"
