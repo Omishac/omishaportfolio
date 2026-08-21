@@ -203,25 +203,24 @@ function Hero({
     return (
         <section
             style={{
+                position: "relative",
                 width: "100%",
                 minHeight: "100svh",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: `${sp.heroTop}px ${px}px ${sp.heroBottom}px`,
                 boxSizing: "border-box",
             }}
         >
             {/* ── Centered headline block ── */}
             <div
                 style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: `translate(-50%, calc(-50% + ${textParallax}px))`,
+                    willChange: "transform",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    transform: `translateY(${textParallax}px)`,
-                    willChange: "transform",
-                    width: "100%",
+                    width: `calc(100% - ${px * 2}px)`,
                     maxWidth: maxW,
                 }}
             >
@@ -259,7 +258,7 @@ function Hero({
                     <span
                         style={{
                             position: "absolute",
-                            top: "1.0em",
+                            top: "1.3em",
                             left: `calc(6% - ${illW.write}px)`,
                             width: illW.write,
                             display: "block",
@@ -307,71 +306,75 @@ function Hero({
                         </span>
                     ))}
                 </h1>
+            </div>
 
-                {/* ── CTA: text, then jumping character above the curved arrow ── */}
-                <div
+            {/* ── CTA: pinned to the bottom of the viewport, text then jumping character above the curved arrow ── */}
+            <div
+                style={{
+                    position: "absolute",
+                    left: "50%",
+                    bottom: sp.heroBottom,
+                    transform: "translateX(-50%)",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    opacity: revealed ? 1 : 0,
+                    transition: reducedMotion ? "none" : `opacity 0.5s ${EASE_OUT} 500ms`,
+                }}
+            >
+                {/* Text row */}
+                <span
                     style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        marginTop: phone ? 40 : tablet ? 52 : 64,
-                        opacity: revealed ? 1 : 0,
-                        transition: reducedMotion ? "none" : `opacity 0.5s ${EASE_OUT} 500ms`,
+                        fontFamily: I,
+                        fontSize: 13,
+                        fontWeight: 400,
+                        color: C.ink3,
+                        letterSpacing: "-0.01em",
+                        whiteSpace: "nowrap",
                     }}
                 >
-                    {/* Text row */}
-                    <span
+                    Here&apos;s a closer look at what that means
+                </span>
+                {/* Jumping character above the curved arrow */}
+                <div style={{ position: "relative", width: 40, height: illW.jump + 36, marginTop: 6 }}>
+                    <img
+                        src="/images/image 8.svg"
+                        alt=""
+                        aria-hidden="true"
                         style={{
-                            fontFamily: I,
-                            fontSize: 13,
-                            fontWeight: 400,
-                            color: C.ink3,
-                            letterSpacing: "-0.01em",
+                            position: "absolute",
+                            top: 0,
+                            right: 0,
+                            width: illW.jump,
+                            height: "auto",
+                            display: "block",
+                            animation: reducedMotion ? "none" : "illust-float 6.5s ease-in-out infinite 2s",
                         }}
+                    />
+                    {/* Pink curved arrow, matching the main site's CTA arrow */}
+                    <svg
+                        width="22"
+                        height="32"
+                        viewBox="0 0 22 32"
+                        fill="none"
+                        style={{ position: "absolute", left: 4, bottom: 0, display: "block" }}
                     >
-                        Here&apos;s a closer look at what that means
-                    </span>
-                    {/* Jumping character above the curved arrow */}
-                    <div style={{ position: "relative", width: 44, height: illW.jump + 30, marginTop: 4 }}>
-                        <img
-                            src="/images/image 8.svg"
-                            alt=""
-                            aria-hidden="true"
-                            style={{
-                                position: "absolute",
-                                top: 0,
-                                right: 2,
-                                width: illW.jump,
-                                height: "auto",
-                                display: "block",
-                                animation: reducedMotion ? "none" : "illust-float 6.5s ease-in-out infinite 2s",
-                            }}
-                        />
-                        {/* Pink curved arrow pointing down-right */}
-                        <svg
-                            width="36"
-                            height="28"
-                            viewBox="0 0 36 28"
+                        <path
+                            d="M3 3 C3 12 8 20 18 24"
+                            stroke="#E8B4C8"
+                            strokeWidth="1.3"
+                            strokeLinecap="round"
                             fill="none"
-                            style={{ position: "absolute", left: 4, bottom: 0, display: "block" }}
-                        >
-                            <path
-                                d="M2 3 C8 3 22 4 30 18"
-                                stroke="#E8B4C8"
-                                strokeWidth="1.4"
-                                strokeLinecap="round"
-                                fill="none"
-                            />
-                            <path
-                                d="M25 16 L30 18 L28 23"
-                                stroke="#E8B4C8"
-                                strokeWidth="1.4"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                fill="none"
-                            />
-                        </svg>
-                    </div>
+                        />
+                        <path
+                            d="M11 21 L18 24 L15 29"
+                            stroke="#E8B4C8"
+                            strokeWidth="1.3"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            fill="none"
+                        />
+                    </svg>
                 </div>
             </div>
         </section>
