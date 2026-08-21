@@ -174,26 +174,17 @@ function Hero({
             : `opacity 0.6s ${EASE_SPRING} ${delayMs}ms, transform 0.6s ${EASE_SPRING} ${delayMs}ms`,
     })
 
-    const illustEnter = (delayMs: number) => ({
-        opacity:    revealed ? 1 : 0,
-        transition: reducedMotion ? "none" : `opacity 0.7s ${EASE_SPRING} ${delayMs}ms`,
-    })
-
+    // Figma: Inter Black, 74.622px at 1440px, color #303432, normal line-height
     const headSize = phone
-        ? "clamp(34px, 9.5vw, 50px)"
+        ? "clamp(32px, 9vw, 46px)"
         : tablet
-            ? "clamp(44px, 6.5vw, 62px)"
+            ? "clamp(42px, 6vw, 58px)"
             : large
-                ? "clamp(64px, 5vw, 88px)"
-                : "clamp(52px, 5.5vw, 78px)"
+                ? "clamp(68px, 5.2vw, 82px)"
+                : "clamp(52px, 5.2vw, 75px)"
 
-    // Illustration sizes relative to font size
-    const illW = {
-        laptop: phone ? 72 : tablet ? 90 : large ? 130 : 110,
-        reader: phone ? 60 : tablet ? 76 : large ? 110 : 94,
-        ghost:  phone ? 80 : tablet ? 100 : large ? 144 : 122,
-        small:  phone ? 52 : tablet ? 66 : large ? 96 : 82,
-    }
+    // Ghost figure size (small, shown beside CTA)
+    const ghostW = phone ? 22 : tablet ? 26 : 31
 
     return (
         <section
@@ -206,10 +197,9 @@ function Hero({
                 alignItems: "center",
                 padding: `${sp.heroTop}px ${px}px ${sp.heroBottom}px`,
                 boxSizing: "border-box",
-                position: "relative",
             }}
         >
-            {/* ── Centered headline block with floating illustrations ── */}
+            {/* ── Centered headline ── */}
             <div
                 style={{
                     display: "flex",
@@ -226,68 +216,13 @@ function Hero({
                         fontFamily: I,
                         fontWeight: 900,
                         fontSize: headSize,
-                        lineHeight: 1.08,
-                        letterSpacing: "-0.04em",
-                        color: C.ink,
+                        lineHeight: "normal",
+                        letterSpacing: "normal",
+                        color: "#303432",
                         margin: 0,
                         textAlign: "center",
-                        position: "relative",
-                        // Extra horizontal padding so illustrations don't overlap text on small screens
-                        padding: phone ? "0 0" : tablet ? "0 0" : "0 0",
                     }}
                 >
-                    {/* ── Octopus reader — top right above line 1 ── */}
-                    <span
-                        style={{
-                            position: "absolute",
-                            top: phone ? "-2.4em" : "-2.2em",
-                            right: phone ? "-2%" : tablet ? "0%" : "4%",
-                            width: illW.laptop,
-                            ...illustEnter(200),
-                            animation: reducedMotion ? "none" : "illust-float 6s ease-in-out infinite 0.4s",
-                            pointerEvents: "none",
-                            display: "block",
-                        }}
-                    >
-                        <img src="/images/image 9.svg" alt="" aria-hidden="true"
-                            style={{ width: "100%", height: "auto", display: "block" }} />
-                    </span>
-
-                    {/* ── Ghost — left of line 2, clear of text ── */}
-                    <span
-                        style={{
-                            position: "absolute",
-                            top: phone ? "0.9em" : "0.95em",
-                            left: phone ? "-6%" : tablet ? "-8%" : "-18%",
-                            width: illW.reader,
-                            ...illustEnter(350),
-                            animation: reducedMotion ? "none" : "illust-float 7s ease-in-out infinite 1.1s",
-                            pointerEvents: "none",
-                            display: "block",
-                        }}
-                    >
-                        <img src="/images/image 8.svg" alt="" aria-hidden="true"
-                            style={{ width: "100%", height: "auto", display: "block" }} />
-                    </span>
-
-                    {/* ── Ghost+megaphone — right of line 3, clear of text ── */}
-                    <span
-                        style={{
-                            position: "absolute",
-                            top: phone ? "1.95em" : "1.9em",
-                            right: phone ? "-6%" : tablet ? "-8%" : "-22%",
-                            width: illW.ghost,
-                            ...illustEnter(500),
-                            animation: reducedMotion ? "none" : "illust-float 5.5s ease-in-out infinite 0s",
-                            pointerEvents: "none",
-                            display: "block",
-                        }}
-                    >
-                        <img src="/images/image 8-1.svg" alt="" aria-hidden="true"
-                            style={{ width: "100%", height: "auto", display: "block" }} />
-                    </span>
-
-                    {/* Headline lines */}
                     {[
                         { text: "product designer,",  delay: 60  },
                         { text: "digital analyst,",    delay: 170 },
@@ -306,54 +241,67 @@ function Hero({
                     ))}
                 </h1>
 
-                {/* ── CTA below headline ── */}
+                {/* ── CTA: text + ghost inline, curved arrow below ── */}
                 <div
                     style={{
                         display: "flex",
+                        flexDirection: "column",
                         alignItems: "center",
-                        gap: 8,
                         marginTop: phone ? 40 : tablet ? 52 : 64,
-                        position: "relative",
                         opacity: revealed ? 1 : 0,
                         transition: reducedMotion ? "none" : `opacity 0.5s ${EASE_OUT} 500ms`,
                     }}
                 >
-                    {/* Small laptop character — sits left of CTA, no overlap */}
-                    <span
-                        style={{
-                            position: "absolute",
-                            left: phone ? -70 : tablet ? -88 : -110,
-                            bottom: phone ? -6 : -8,
-                            width: illW.small,
-                            opacity: revealed ? 1 : 0,
-                            transition: reducedMotion ? "none" : `opacity 0.7s ${EASE_SPRING} 700ms`,
-                            animation: reducedMotion ? "none" : "illust-float 6.5s ease-in-out infinite 2s",
-                            pointerEvents: "none",
-                            display: "block",
-                        }}
+                    {/* Text + ghost row */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <span
+                            style={{
+                                fontFamily: I,
+                                fontSize: 13,
+                                fontWeight: 400,
+                                color: C.ink3,
+                                letterSpacing: "-0.01em",
+                            }}
+                        >
+                            Here&apos;s a closer look at what that means
+                        </span>
+                        {/* Small ghost figure — mirrored horizontally to match Figma */}
+                        <img
+                            src="/images/image 8.svg"
+                            alt=""
+                            aria-hidden="true"
+                            style={{
+                                width: ghostW,
+                                height: "auto",
+                                display: "block",
+                                flexShrink: 0,
+                                transform: "scaleX(-1)",
+                                animation: reducedMotion ? "none" : "illust-float 6.5s ease-in-out infinite 2s",
+                            }}
+                        />
+                    </div>
+                    {/* Pink curved arrow pointing down-right */}
+                    <svg
+                        width="36"
+                        height="28"
+                        viewBox="0 0 36 28"
+                        fill="none"
+                        style={{ marginTop: 4, marginLeft: 32, display: "block" }}
                     >
-                        <img src="/images/image 10.svg" alt="" aria-hidden="true"
-                            style={{ width: "100%", height: "auto", display: "block" }} />
-                    </span>
-
-                    <span
-                        style={{
-                            fontFamily: I,
-                            fontSize: 13,
-                            fontWeight: 400,
-                            color: C.ink3,
-                            letterSpacing: "-0.01em",
-                        }}
-                    >
-                        Here&apos;s a closer look at what that means
-                    </span>
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0 }}>
                         <path
-                            d="M7 2V12M3 8L7 12L11 8"
+                            d="M2 3 C8 3 22 4 30 18"
                             stroke="#E8B4C8"
-                            strokeWidth="1.5"
+                            strokeWidth="1.4"
+                            strokeLinecap="round"
+                            fill="none"
+                        />
+                        <path
+                            d="M25 16 L30 18 L28 23"
+                            stroke="#E8B4C8"
+                            strokeWidth="1.4"
                             strokeLinecap="round"
                             strokeLinejoin="round"
+                            fill="none"
                         />
                     </svg>
                 </div>
