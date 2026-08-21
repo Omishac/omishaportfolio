@@ -200,12 +200,18 @@ function Hero({
         jump:   phone ? 20 : tablet ? 24 : 28,
     }
 
+    // SharedNav is `position: sticky` and sits in normal flow above this section,
+    // so the section itself must be shorter than 100svh by the nav's height —
+    // otherwise the centered headline and the bottom-pinned CTA both drift
+    // below the visible viewport instead of centering/anchoring within it.
+    const navH = phone ? 54 : 64
+
     return (
         <section
             style={{
                 position: "relative",
                 width: "100%",
-                minHeight: "100svh",
+                minHeight: `calc(100svh - ${navH}px)`,
                 boxSizing: "border-box",
             }}
         >
