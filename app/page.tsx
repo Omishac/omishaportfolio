@@ -250,13 +250,14 @@ function Hero({
                         textAlign: "center",
                     }}
                 >
-                    {/* Reader — left beside "digital analyst," line */}
+                    {/* Reader — left beside "digital analyst,"
+                        left: calc(6% - reader_width) puts right edge near start of "digital analyst,"
+                        (the 6% accounts for "digital analyst," being narrower than "brand storyteller." and centered) */}
                     <span
                         style={{
                             position: "absolute",
                             top: "1.0em",
-                            left: "-5%",
-                            transform: `translateX(-${illW.reader}px)`,
+                            left: `calc(6% - ${illW.reader}px)`,
                             width: illW.reader,
                             display: "block",
                             pointerEvents: "none",
@@ -268,13 +269,13 @@ function Hero({
                             style={{ width: "100%", height: "auto", display: "block" }} />
                     </span>
 
-                    {/* Ghost+megaphone — right beside "brand storyteller." line */}
+                    {/* Ghost+megaphone — right beside "brand storyteller."
+                        left: calc(100% + 5px) puts left edge just past h1 right = end of "brand storyteller." */}
                     <span
                         style={{
                             position: "absolute",
                             top: "2.2em",
-                            right: "-5%",
-                            transform: `translateX(${illW.ghost}px)`,
+                            left: "calc(100% + 5px)",
                             width: illW.ghost,
                             display: "block",
                             pointerEvents: "none",
