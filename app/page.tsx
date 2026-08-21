@@ -349,9 +349,8 @@ function Hero({
                         aria-hidden="true"
                         style={{
                             position: "absolute",
-                            top: -illW.jump * 0.65,
-                            left: "50%",
-                            transform: "translateX(-50%)",
+                            top: -18.2,
+                            left: "-2%",
                             width: illW.jump,
                             height: "auto",
                             display: "block",
