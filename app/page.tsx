@@ -167,9 +167,9 @@ function Hero({
     const textParallax = reducedMotion ? 0 : -scrollY * 0.03
 
     // Dramatic recede as the hero scrolls out — tilts away and shrinks into
-    // the screen, pairing with the About section's tilt-up entrance below
+    // the screen, pairing with the Work section's tilt-up entrance below
     // for a continuous "passing through 3D space" feel.
-    const heroExit = reducedMotion ? 0 : Math.min(1, scrollY / 650)
+    const heroExit = reducedMotion ? 0 : Math.min(1, scrollY / 480)
 
     const enter = (delayMs: number) => ({
         opacity:    revealed ? 1 : 0,
@@ -218,7 +218,7 @@ function Hero({
                 width: "100%",
                 minHeight: `calc(100svh - ${navH}px)`,
                 boxSizing: "border-box",
-                perspective: 900,
+                perspective: 700,
             }}
         >
             {/* ── Centered headline block ── */}
@@ -227,8 +227,8 @@ function Hero({
                     position: "absolute",
                     top: "40%",
                     left: "50%",
-                    transform: `translate(-50%, calc(-50% + ${textParallax}px)) rotateX(${heroExit * -24}deg) scale(${1 - heroExit * 0.2})`,
-                    opacity: 1 - heroExit * 0.8,
+                    transform: `translate(-50%, calc(-50% + ${textParallax}px)) rotateX(${heroExit * -42}deg) rotateY(${heroExit * -10}deg) scale(${1 - heroExit * 0.35})`,
+                    opacity: 1 - heroExit * 0.9,
                     transformOrigin: "center top",
                     willChange: "transform, opacity",
                     display: "flex",
@@ -910,14 +910,14 @@ function WorkSection({
                 width: "100%",
                 padding: `0 ${px}px ${sp.sectionGap}px`,
                 boxSizing: "border-box",
-                perspective: 600,
+                perspective: 450,
             }}
         >
             <div style={{
                 maxWidth: maxW,
                 width: "100%",
                 margin: "0 auto",
-                transform: `translateY(${parallaxY}px) rotateX(${(1 - entryProgress) * 55}deg) scale(${0.72 + entryProgress * 0.28})`,
+                transform: `translateY(${parallaxY}px) rotateX(${(1 - entryProgress) * 75}deg) rotateY(${(1 - entryProgress) * 10}deg) scale(${0.55 + entryProgress * 0.45})`,
                 opacity: entryProgress,
                 transformOrigin: "center bottom",
                 willChange: "transform, opacity",
