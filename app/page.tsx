@@ -166,6 +166,11 @@ function Hero({
 
     const textParallax = reducedMotion ? 0 : -scrollY * 0.03
 
+    // Dramatic recede as the hero scrolls out — tilts away and shrinks into
+    // the screen, pairing with the About section's tilt-up entrance below
+    // for a continuous "passing through 3D space" feel.
+    const heroExit = reducedMotion ? 0 : Math.min(1, scrollY / 650)
+
     const enter = (delayMs: number) => ({
         opacity:    revealed ? 1 : 0,
         transform:  `translateY(${revealed ? 0 : 16}px)`,
@@ -213,6 +218,7 @@ function Hero({
                 width: "100%",
                 minHeight: `calc(100svh - ${navH}px)`,
                 boxSizing: "border-box",
+                perspective: 900,
             }}
         >
             {/* ── Centered headline block ── */}
@@ -221,8 +227,10 @@ function Hero({
                     position: "absolute",
                     top: "40%",
                     left: "50%",
-                    transform: `translate(-50%, calc(-50% + ${textParallax}px))`,
-                    willChange: "transform",
+                    transform: `translate(-50%, calc(-50% + ${textParallax}px)) rotateX(${heroExit * -24}deg) scale(${1 - heroExit * 0.2})`,
+                    opacity: 1 - heroExit * 0.8,
+                    transformOrigin: "center top",
+                    willChange: "transform, opacity",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
@@ -870,8 +878,8 @@ function AboutBlock({
         const update = () => {
             const rect = el.getBoundingClientRect()
             const vh = window.innerHeight
-            const start = vh * 0.9   // reveal begins once the group's top nears the bottom of the viewport
-            const end = vh * 0.55    // fully settled once it reaches the lower-middle of the viewport
+            const start = vh * 0.95  // reveal begins right as the group's top crosses into the viewport
+            const end = vh * 0.35    // fully settled once it reaches well past the middle of the viewport
             const raw = (start - rect.top) / (start - end)
             const clamped = Math.min(1, Math.max(0, raw))
             setProgress(1 - Math.pow(1 - clamped, 3)) // ease-out — this is an entrance
@@ -917,7 +925,7 @@ function AboutBlock({
                     top: "50%",
                     left: "50%",
                     transform: "translate(-50%, -50%)",
-                    perspective: 900,
+                    perspective: 600,
                     width: `calc(100% - ${px * 2}px)`,
                     maxWidth: maxW,
                 }}
@@ -939,7 +947,7 @@ function AboutBlock({
                               }
                             : {
                                   opacity: progress,
-                                  transform: `rotateX(${(1 - progress) * 14}deg) translateY(${(1 - progress) * 40}px) scale(${0.96 + progress * 0.04})`,
+                                  transform: `rotateX(${(1 - progress) * 55}deg) translateY(${(1 - progress) * 140}px) scale(${0.72 + progress * 0.28})`,
                                   willChange: "transform, opacity",
                               }),
                     }}
