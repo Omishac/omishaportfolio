@@ -843,10 +843,15 @@ function AboutBlock({
     px: number
     maxW: number
 }) {
+    const ref = useRef<HTMLParagraphElement>(null)
+    const reducedMotion = useReducedMotion()
     const [visible, setVisible] = useState(false)
-    const ref = useRef<HTMLDivElement>(null)
+    const [progress, setProgress] = useState(0)
+    const raf = useRef(0)
 
+    // Reduced motion: simple one-shot opacity/position fade, no 3D movement
     useEffect(() => {
+        if (!reducedMotion) return
         const el = ref.current
         if (!el) return
         const obs = new IntersectionObserver(
@@ -855,7 +860,33 @@ function AboutBlock({
         )
         obs.observe(el)
         return () => obs.disconnect()
-    }, [])
+    }, [reducedMotion])
+
+    // Full motion: continuous scroll-driven 3D tilt-up as the paragraph enters view
+    useEffect(() => {
+        if (reducedMotion) return
+        const el = ref.current
+        if (!el) return
+        const update = () => {
+            const rect = el.getBoundingClientRect()
+            const vh = window.innerHeight
+            const start = vh * 0.9   // reveal begins once the paragraph's top nears the bottom of the viewport
+            const end = vh * 0.55    // fully settled once it reaches the lower-middle of the viewport
+            const raw = (start - rect.top) / (start - end)
+            const clamped = Math.min(1, Math.max(0, raw))
+            setProgress(1 - Math.pow(1 - clamped, 3)) // ease-out — this is an entrance
+        }
+        const onScroll = () => {
+            cancelAnimationFrame(raf.current)
+            raf.current = requestAnimationFrame(update)
+        }
+        update()
+        window.addEventListener("scroll", onScroll, { passive: true })
+        return () => {
+            window.removeEventListener("scroll", onScroll)
+            cancelAnimationFrame(raf.current)
+        }
+    }, [reducedMotion])
 
     return (
         <section
@@ -865,8 +896,9 @@ function AboutBlock({
                 boxSizing: "border-box",
             }}
         >
-            <div ref={ref} style={{ maxWidth: maxW, width: "100%", margin: "0 auto" }}>
+            <div style={{ maxWidth: maxW, width: "100%", margin: "0 auto", perspective: 900 }}>
                 <p
+                    ref={ref}
                     style={{
                         fontFamily: I,
                         fontSize: phone ? 15 : tablet ? 17 : 19,
@@ -874,9 +906,18 @@ function AboutBlock({
                         color: C.ink2,
                         margin: 0,
                         maxWidth: 540,
-                        opacity: visible ? 1 : 0,
-                        transform: `translateY(${visible ? 0 : 12}px)`,
-                        transition: `opacity 0.6s ${EASE_SPRING}, transform 0.6s ${EASE_SPRING}`,
+                        transformOrigin: "center bottom",
+                        ...(reducedMotion
+                            ? {
+                                  opacity: visible ? 1 : 0,
+                                  transform: `translateY(${visible ? 0 : 12}px)`,
+                                  transition: `opacity 0.6s ${EASE_SPRING}, transform 0.6s ${EASE_SPRING}`,
+                              }
+                            : {
+                                  opacity: progress,
+                                  transform: `rotateX(${(1 - progress) * 14}deg) translateY(${(1 - progress) * 40}px) scale(${0.96 + progress * 0.04})`,
+                                  willChange: "transform, opacity",
+                              }),
                     }}
                 >
                     Part designer, part analyst, part-time chronically online. I spend a lot of time thinking about the tiny decisions people make online — and how thoughtful design can shape them.
