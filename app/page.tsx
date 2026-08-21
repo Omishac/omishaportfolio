@@ -843,7 +843,7 @@ function AboutBlock({
     px: number
     maxW: number
 }) {
-    const ref = useRef<HTMLParagraphElement>(null)
+    const ref = useRef<HTMLDivElement>(null)
     const reducedMotion = useReducedMotion()
     const [visible, setVisible] = useState(false)
     const [progress, setProgress] = useState(0)
@@ -862,7 +862,7 @@ function AboutBlock({
         return () => obs.disconnect()
     }, [reducedMotion])
 
-    // Full motion: continuous scroll-driven 3D tilt-up as the paragraph enters view
+    // Full motion: continuous scroll-driven 3D tilt-up as the group enters view
     useEffect(() => {
         if (reducedMotion) return
         const el = ref.current
@@ -870,7 +870,7 @@ function AboutBlock({
         const update = () => {
             const rect = el.getBoundingClientRect()
             const vh = window.innerHeight
-            const start = vh * 0.9   // reveal begins once the paragraph's top nears the bottom of the viewport
+            const start = vh * 0.9   // reveal begins once the group's top nears the bottom of the viewport
             const end = vh * 0.55    // fully settled once it reaches the lower-middle of the viewport
             const raw = (start - rect.top) / (start - end)
             const clamped = Math.min(1, Math.max(0, raw))
@@ -888,24 +888,48 @@ function AboutBlock({
         }
     }, [reducedMotion])
 
+    // SharedNav is sticky and sits in normal flow above every section — see Hero's navH comment.
+    const navH = phone ? 54 : 64
+
+    // Figma node 54:24 "Desktop - 4": Inter Light, 43.49px at 1440px, centered, max-width 954px
+    const fontSize = phone
+        ? "clamp(20px, 6vw, 27px)"
+        : tablet
+            ? "clamp(26px, 3.6vw, 34px)"
+            : large
+                ? "clamp(34px, 3vw, 48px)"
+                : "clamp(28px, 3vw, 43.49px)"
+
+    const imgW = phone ? 90 : tablet ? 120 : large ? 176 : 150
+
     return (
         <section
             style={{
+                position: "relative",
                 width: "100%",
-                padding: `0 ${px}px ${phone ? 56 : tablet ? 72 : 88}px`,
+                minHeight: `calc(100svh - ${navH}px)`,
                 boxSizing: "border-box",
             }}
         >
-            <div style={{ maxWidth: maxW, width: "100%", margin: "0 auto", perspective: 900 }}>
-                <p
+            <div
+                style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    perspective: 900,
+                    width: `calc(100% - ${px * 2}px)`,
+                    maxWidth: maxW,
+                }}
+            >
+                <div
                     ref={ref}
                     style={{
-                        fontFamily: I,
-                        fontSize: phone ? 15 : tablet ? 17 : 19,
-                        lineHeight: 1.7,
-                        color: C.ink2,
-                        margin: 0,
-                        maxWidth: 540,
+                        display: "flex",
+                        flexDirection: phone || tablet ? "column" : "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: phone ? 20 : tablet ? 28 : 40,
                         transformOrigin: "center bottom",
                         ...(reducedMotion
                             ? {
@@ -920,8 +944,34 @@ function AboutBlock({
                               }),
                     }}
                 >
-                    Part designer, part analyst, part-time chronically online. I spend a lot of time thinking about the tiny decisions people make online — and how thoughtful design can shape them.
-                </p>
+                    <img
+                        src="/images/image 9.svg"
+                        alt=""
+                        aria-hidden="true"
+                        style={{
+                            width: imgW,
+                            height: "auto",
+                            display: "block",
+                            flexShrink: 0,
+                            transform: "scaleY(-1) rotate(169.73deg)",
+                        }}
+                    />
+                    <p
+                        style={{
+                            fontFamily: I,
+                            fontWeight: 300,
+                            fontSize,
+                            lineHeight: "normal",
+                            letterSpacing: "normal",
+                            color: "#000000",
+                            margin: 0,
+                            maxWidth: 700,
+                            textAlign: "center",
+                        }}
+                    >
+                        Part designer, part analyst, part-time chronically online. I spend a lot of time thinking about the tiny decisions people make online — and how thoughtful design can shape them.
+                    </p>
+                </div>
             </div>
         </section>
     )
