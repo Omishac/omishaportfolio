@@ -174,6 +174,11 @@ function Hero({
             : `opacity 0.6s ${EASE_SPRING} ${delayMs}ms, transform 0.6s ${EASE_SPRING} ${delayMs}ms`,
     })
 
+    const illustEnter = (delayMs: number) => ({
+        opacity:    revealed ? 1 : 0,
+        transition: reducedMotion ? "none" : `opacity 0.7s ${EASE_SPRING} ${delayMs}ms`,
+    })
+
     // Figma: Inter Black, 74.622px at 1440px, color #303432, normal line-height
     const headSize = phone
         ? "clamp(32px, 9vw, 46px)"
@@ -183,8 +188,14 @@ function Hero({
                 ? "clamp(68px, 5.2vw, 82px)"
                 : "clamp(52px, 5.2vw, 75px)"
 
-    // Ghost figure size (small, shown beside CTA)
-    const ghostW = phone ? 22 : tablet ? 26 : 31
+    // illustration widths (px). image 10 = laptop+face (above), image 8 = reader (left),
+    // image 8-1 = ghost+megaphone (right), image 9 = small ghost (CTA)
+    const illW = {
+        laptop: phone ? 62 : tablet ? 76 : large ? 104 : 88,  // image 10.svg 111:69
+        reader: phone ? 44 : tablet ? 56 : large ? 80 : 68,   // image 8.svg  27:31
+        ghost:  phone ? 70 : tablet ? 88 : large ? 124 : 104, // image 8-1.svg 115:105
+        cta:    phone ? 22 : tablet ? 26 : 31,                 // image 9.svg  small ghost
+    }
 
     return (
         <section
@@ -199,7 +210,7 @@ function Hero({
                 boxSizing: "border-box",
             }}
         >
-            {/* ── Centered headline ── */}
+            {/* ── Centered headline block ── */}
             <div
                 style={{
                     display: "flex",
@@ -211,8 +222,24 @@ function Hero({
                     maxWidth: maxW,
                 }}
             >
+                {/* Laptop+face — centered above headline, natural flex child */}
+                <img
+                    src="/images/image 10.svg"
+                    alt=""
+                    aria-hidden="true"
+                    style={{
+                        width: illW.laptop,
+                        height: "auto",
+                        display: "block",
+                        marginBottom: phone ? 8 : 12,
+                        ...illustEnter(160),
+                        animation: reducedMotion ? "none" : "illust-float 6s ease-in-out infinite 0.4s",
+                    }}
+                />
+
                 <h1
                     style={{
+                        position: "relative",
                         fontFamily: I,
                         fontWeight: 900,
                         fontSize: headSize,
@@ -223,6 +250,42 @@ function Hero({
                         textAlign: "center",
                     }}
                 >
+                    {/* Reader — left beside "digital analyst," line */}
+                    <span
+                        style={{
+                            position: "absolute",
+                            top: "1.0em",
+                            left: "-5%",
+                            transform: `translateX(-${illW.reader}px)`,
+                            width: illW.reader,
+                            display: "block",
+                            pointerEvents: "none",
+                            ...illustEnter(320),
+                            animation: reducedMotion ? "none" : "illust-float 7s ease-in-out infinite 1.1s",
+                        }}
+                    >
+                        <img src="/images/image 8.svg" alt="" aria-hidden="true"
+                            style={{ width: "100%", height: "auto", display: "block" }} />
+                    </span>
+
+                    {/* Ghost+megaphone — right beside "brand storyteller." line */}
+                    <span
+                        style={{
+                            position: "absolute",
+                            top: "2.2em",
+                            right: "-5%",
+                            transform: `translateX(${illW.ghost}px)`,
+                            width: illW.ghost,
+                            display: "block",
+                            pointerEvents: "none",
+                            ...illustEnter(480),
+                            animation: reducedMotion ? "none" : "illust-float 5.5s ease-in-out infinite 0s",
+                        }}
+                    >
+                        <img src="/images/image 8-1.svg" alt="" aria-hidden="true"
+                            style={{ width: "100%", height: "auto", display: "block" }} />
+                    </span>
+
                     {[
                         { text: "product designer,",  delay: 60  },
                         { text: "digital analyst,",    delay: 170 },
@@ -241,7 +304,7 @@ function Hero({
                     ))}
                 </h1>
 
-                {/* ── CTA: text + ghost inline, curved arrow below ── */}
+                {/* ── CTA: text + small ghost inline, curved arrow below ── */}
                 <div
                     style={{
                         display: "flex",
@@ -252,7 +315,7 @@ function Hero({
                         transition: reducedMotion ? "none" : `opacity 0.5s ${EASE_OUT} 500ms`,
                     }}
                 >
-                    {/* Text + ghost row */}
+                    {/* Text + small ghost row */}
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <span
                             style={{
@@ -265,17 +328,15 @@ function Hero({
                         >
                             Here&apos;s a closer look at what that means
                         </span>
-                        {/* Small ghost figure — mirrored horizontally to match Figma */}
                         <img
-                            src="/images/image 8.svg"
+                            src="/images/image 9.svg"
                             alt=""
                             aria-hidden="true"
                             style={{
-                                width: ghostW,
+                                width: illW.cta,
                                 height: "auto",
                                 display: "block",
                                 flexShrink: 0,
-                                transform: "scaleX(-1)",
                                 animation: reducedMotion ? "none" : "illust-float 6.5s ease-in-out infinite 2s",
                             }}
                         />
