@@ -236,12 +236,12 @@ function Hero({
                         padding: phone ? "0 0" : tablet ? "0 0" : "0 0",
                     }}
                 >
-                    {/* ── Laptop/face character — top right of line 1 ── */}
+                    {/* ── Octopus reader — top right above line 1 ── */}
                     <span
                         style={{
                             position: "absolute",
-                            top: phone ? "-2.2em" : "-2em",
-                            right: phone ? "0%" : tablet ? "2%" : "6%",
+                            top: phone ? "-2.4em" : "-2.2em",
+                            right: phone ? "-2%" : tablet ? "0%" : "4%",
                             width: illW.laptop,
                             ...illustEnter(200),
                             animation: reducedMotion ? "none" : "illust-float 6s ease-in-out infinite 0.4s",
@@ -253,12 +253,12 @@ function Hero({
                             style={{ width: "100%", height: "auto", display: "block" }} />
                     </span>
 
-                    {/* ── Reader character — left of line 2 ── */}
+                    {/* ── Ghost — left of line 2, clear of text ── */}
                     <span
                         style={{
                             position: "absolute",
-                            top: phone ? "1.1em" : "1.1em",
-                            left: phone ? "-4%" : tablet ? "-2%" : "-8%",
+                            top: phone ? "0.9em" : "0.95em",
+                            left: phone ? "-6%" : tablet ? "-8%" : "-18%",
                             width: illW.reader,
                             ...illustEnter(350),
                             animation: reducedMotion ? "none" : "illust-float 7s ease-in-out infinite 1.1s",
@@ -270,12 +270,12 @@ function Hero({
                             style={{ width: "100%", height: "auto", display: "block" }} />
                     </span>
 
-                    {/* ── Ghost/megaphone — right of line 3 ── */}
+                    {/* ── Ghost+megaphone — right of line 3, clear of text ── */}
                     <span
                         style={{
                             position: "absolute",
-                            top: phone ? "2.15em" : "2.1em",
-                            right: phone ? "-4%" : tablet ? "-3%" : "-10%",
+                            top: phone ? "1.95em" : "1.9em",
+                            right: phone ? "-6%" : tablet ? "-8%" : "-22%",
                             width: illW.ghost,
                             ...illustEnter(500),
                             animation: reducedMotion ? "none" : "illust-float 5.5s ease-in-out infinite 0s",
@@ -318,12 +318,12 @@ function Hero({
                         transition: reducedMotion ? "none" : `opacity 0.5s ${EASE_OUT} 500ms`,
                     }}
                 >
-                    {/* Small character near CTA */}
+                    {/* Small laptop character — sits left of CTA, no overlap */}
                     <span
                         style={{
                             position: "absolute",
-                            left: phone ? -44 : -60,
-                            bottom: phone ? 0 : -4,
+                            left: phone ? -70 : tablet ? -88 : -110,
+                            bottom: phone ? -6 : -8,
                             width: illW.small,
                             opacity: revealed ? 1 : 0,
                             transition: reducedMotion ? "none" : `opacity 0.7s ${EASE_SPRING} 700ms`,
