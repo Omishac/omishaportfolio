@@ -986,7 +986,13 @@ function LogoTicker({
     const sectionPad = phone ? 64 : tablet ? 80 : large ? 120 : 100
     const outerRef = useRef<HTMLDivElement>(null)
     const [tickerY, setTickerY] = useState(0)
+    const [recede, setRecede] = useState(0)
+    const reducedMotion = useReducedMotion()
+
+    // Dramatic recede as Brands scrolls out — pairs with Skills' tilt-up
+    // entrance below, same treatment as Hero receding into Work.
     useEffect(() => {
+        if (reducedMotion) { setTickerY(0); setRecede(0); return }
         const onScroll = () => {
             const el = outerRef.current
             if (!el) return
@@ -995,11 +1001,17 @@ function LogoTicker({
             const vMid = window.innerHeight / 2
             const progress = (vMid - elMid) / window.innerHeight
             setTickerY(Math.max(-12, Math.min(12, progress * 80)))
+
+            const vh = window.innerHeight
+            const start = vh * 0.5   // recede begins once the section's top crosses the middle of the viewport
+            const end = 0             // fully receded once its top reaches the very top of the viewport
+            const raw = (start - rect.top) / (start - end)
+            setRecede(Math.min(1, Math.max(0, raw)))
         }
         window.addEventListener("scroll", onScroll, { passive: true })
         onScroll()
         return () => window.removeEventListener("scroll", onScroll)
-    }, [])
+    }, [reducedMotion])
 
     return (
         <section
@@ -1010,9 +1022,20 @@ function LogoTicker({
                 boxSizing: "border-box",
                 borderTop: `1px solid ${C.border}`,
                 overflow: "hidden",
+                perspective: 700,
             }}
         >
-            <div style={{ maxWidth: maxW, width: "100%", margin: "0 auto", transform: `translateY(${tickerY}px)`, willChange: "transform" }}>
+            <div
+                style={{
+                    maxWidth: maxW,
+                    width: "100%",
+                    margin: "0 auto",
+                    transform: `translateY(${tickerY}px) rotateX(${recede * -42}deg) rotateY(${recede * -10}deg) scale(${1 - recede * 0.35})`,
+                    opacity: 1 - recede * 0.9,
+                    transformOrigin: "center top",
+                    willChange: "transform, opacity",
+                }}
+            >
                 <SectionLabel
                     tag="Brands"
                     title="Industry Experience"
@@ -1142,16 +1165,60 @@ function SkillsSection({
     sp: ReturnType<typeof useBP>["sp"]
 }) {
     const sectionPad = phone ? 64 : tablet ? 80 : large ? 120 : 100
+    const sectionRef = useRef<HTMLElement>(null)
+    const [entryProgress, setEntryProgress] = useState(0)
+    const reducedMotion = useReducedMotion()
+    const raf = useRef(0)
+
+    // Dramatic scroll-driven 3D tilt-up as Skills enters — same treatment as
+    // Work's entrance, pairing with Brands' recede-on-scroll above.
+    useEffect(() => {
+        if (reducedMotion) { setEntryProgress(1); return }
+        const el = sectionRef.current
+        if (!el) return
+        const update = () => {
+            const rect = el.getBoundingClientRect()
+            const vh = window.innerHeight
+            const start = vh * 0.95
+            const end = vh * 0.35
+            const raw = (start - rect.top) / (start - end)
+            const clamped = Math.min(1, Math.max(0, raw))
+            setEntryProgress(1 - Math.pow(1 - clamped, 3))
+        }
+        const onScroll = () => {
+            cancelAnimationFrame(raf.current)
+            raf.current = requestAnimationFrame(update)
+        }
+        update()
+        window.addEventListener("scroll", onScroll, { passive: true })
+        return () => {
+            window.removeEventListener("scroll", onScroll)
+            cancelAnimationFrame(raf.current)
+        }
+    }, [reducedMotion])
+
     return (
         <section
+            ref={sectionRef}
             style={{
                 width: "100%",
                 padding: `${sectionPad}px ${px}px`,
                 boxSizing: "border-box",
                 borderTop: `1px solid ${C.border}`,
+                perspective: 450,
             }}
         >
-            <div style={{ maxWidth: maxW, width: "100%", margin: "0 auto" }}>
+            <div
+                style={{
+                    maxWidth: maxW,
+                    width: "100%",
+                    margin: "0 auto",
+                    transform: `rotateX(${(1 - entryProgress) * 75}deg) rotateY(${(1 - entryProgress) * 10}deg) scale(${0.55 + entryProgress * 0.45})`,
+                    opacity: entryProgress,
+                    transformOrigin: "center bottom",
+                    willChange: "transform, opacity",
+                }}
+            >
                 <SectionLabel tag="Skills" title="What I offer" phone={phone} tablet={tablet} large={large} />
                 <div>
                     {SKILLS.map((s, i) => (
