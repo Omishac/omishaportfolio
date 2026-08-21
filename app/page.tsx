@@ -838,153 +838,6 @@ function FeaturedCard({
     )
 }
 
-function AboutBlock({
-    phone,
-    tablet,
-    large,
-    px,
-    maxW,
-}: {
-    phone: boolean
-    tablet: boolean
-    large: boolean
-    px: number
-    maxW: number
-}) {
-    const ref = useRef<HTMLDivElement>(null)
-    const reducedMotion = useReducedMotion()
-    const [visible, setVisible] = useState(false)
-    const [progress, setProgress] = useState(0)
-    const raf = useRef(0)
-
-    // Reduced motion: simple one-shot opacity/position fade, no 3D movement
-    useEffect(() => {
-        if (!reducedMotion) return
-        const el = ref.current
-        if (!el) return
-        const obs = new IntersectionObserver(
-            ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect() } },
-            { threshold: 0.25 }
-        )
-        obs.observe(el)
-        return () => obs.disconnect()
-    }, [reducedMotion])
-
-    // Full motion: continuous scroll-driven 3D tilt-up as the group enters view
-    useEffect(() => {
-        if (reducedMotion) return
-        const el = ref.current
-        if (!el) return
-        const update = () => {
-            const rect = el.getBoundingClientRect()
-            const vh = window.innerHeight
-            const start = vh * 0.95  // reveal begins right as the group's top crosses into the viewport
-            const end = vh * 0.35    // fully settled once it reaches well past the middle of the viewport
-            const raw = (start - rect.top) / (start - end)
-            const clamped = Math.min(1, Math.max(0, raw))
-            setProgress(1 - Math.pow(1 - clamped, 3)) // ease-out — this is an entrance
-        }
-        const onScroll = () => {
-            cancelAnimationFrame(raf.current)
-            raf.current = requestAnimationFrame(update)
-        }
-        update()
-        window.addEventListener("scroll", onScroll, { passive: true })
-        return () => {
-            window.removeEventListener("scroll", onScroll)
-            cancelAnimationFrame(raf.current)
-        }
-    }, [reducedMotion])
-
-    // SharedNav is sticky and sits in normal flow above every section — see Hero's navH comment.
-    const navH = phone ? 54 : 64
-
-    // Figma node 54:24 "Desktop - 4": Inter Light, 43.49px at 1440px, centered, max-width 954px
-    const fontSize = phone
-        ? "clamp(20px, 6vw, 27px)"
-        : tablet
-            ? "clamp(26px, 3.6vw, 34px)"
-            : large
-                ? "clamp(34px, 3vw, 48px)"
-                : "clamp(28px, 3vw, 43.49px)"
-
-    const imgW = phone ? 90 : tablet ? 120 : large ? 176 : 150
-
-    return (
-        <section
-            style={{
-                position: "relative",
-                width: "100%",
-                minHeight: `calc(100svh - ${navH}px)`,
-                boxSizing: "border-box",
-            }}
-        >
-            <div
-                style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    perspective: 600,
-                    width: `calc(100% - ${px * 2}px)`,
-                    maxWidth: maxW,
-                }}
-            >
-                <div
-                    ref={ref}
-                    style={{
-                        display: "flex",
-                        flexDirection: phone || tablet ? "column" : "row",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: phone ? 20 : tablet ? 28 : 40,
-                        transformOrigin: "center bottom",
-                        ...(reducedMotion
-                            ? {
-                                  opacity: visible ? 1 : 0,
-                                  transform: `translateY(${visible ? 0 : 12}px)`,
-                                  transition: `opacity 0.6s ${EASE_SPRING}, transform 0.6s ${EASE_SPRING}`,
-                              }
-                            : {
-                                  opacity: progress,
-                                  transform: `rotateX(${(1 - progress) * 55}deg) translateY(${(1 - progress) * 140}px) scale(${0.72 + progress * 0.28})`,
-                                  willChange: "transform, opacity",
-                              }),
-                    }}
-                >
-                    <img
-                        src="/images/image 9.svg"
-                        alt=""
-                        aria-hidden="true"
-                        style={{
-                            width: imgW,
-                            height: "auto",
-                            display: "block",
-                            flexShrink: 0,
-                            transform: "scaleY(-1) rotate(169.73deg)",
-                        }}
-                    />
-                    <p
-                        style={{
-                            fontFamily: I,
-                            fontWeight: 300,
-                            fontSize,
-                            lineHeight: "normal",
-                            letterSpacing: "normal",
-                            color: "#000000",
-                            margin: 0,
-                            maxWidth: 700,
-                            textAlign: "center",
-                        }}
-                    >
-                        Part designer, part analyst, part-time chronically online. I spend a lot of time thinking about the tiny decisions people make online — and how thoughtful design can shape them.
-                    </p>
-                </div>
-            </div>
-        </section>
-    )
-}
-
 function WorkSection({
     phone,
     tablet,
@@ -1004,6 +857,7 @@ function WorkSection({
     const sectionRef = useRef<HTMLElement>(null)
     const [cardsShown, setCardsShown] = useState(false)
     const [parallaxY, setParallaxY] = useState(0)
+    const [entryProgress, setEntryProgress] = useState(0)
     const reducedMotion = useReducedMotion()
 
     useEffect(() => {
@@ -1016,8 +870,10 @@ function WorkSection({
         return () => obs.disconnect()
     }, [])
 
+    // Dramatic scroll-driven 3D tilt-up as the section enters — pairs with Hero's
+    // recede-on-scroll (see Hero's heroExit) for a continuous pass-through feel.
     useEffect(() => {
-        if (reducedMotion) { setParallaxY(0); return }
+        if (reducedMotion) { setParallaxY(0); setEntryProgress(1); return }
         const onScroll = () => {
             const el = sectionRef.current
             if (!el) return
@@ -1027,6 +883,13 @@ function WorkSection({
             const progress = (vMid - elMid) / window.innerHeight
             // Cards rise to meet you as you scroll toward them, recede as you scroll past
             setParallaxY(Math.max(-20, Math.min(20, -progress * 52)))
+
+            const vh = window.innerHeight
+            const start = vh * 0.95  // reveal begins right as the section's top crosses into the viewport
+            const end = vh * 0.35    // fully settled once it reaches well past the middle of the viewport
+            const raw = (start - rect.top) / (start - end)
+            const clamped = Math.min(1, Math.max(0, raw))
+            setEntryProgress(1 - Math.pow(1 - clamped, 3)) // ease-out — this is an entrance
         }
         window.addEventListener("scroll", onScroll, { passive: true })
         onScroll()
@@ -1047,14 +910,17 @@ function WorkSection({
                 width: "100%",
                 padding: `0 ${px}px ${sp.sectionGap}px`,
                 boxSizing: "border-box",
+                perspective: 600,
             }}
         >
             <div style={{
                 maxWidth: maxW,
                 width: "100%",
                 margin: "0 auto",
-                transform: `translateY(${parallaxY}px)`,
-                willChange: "transform",
+                transform: `translateY(${parallaxY}px) rotateX(${(1 - entryProgress) * 55}deg) scale(${0.72 + entryProgress * 0.28})`,
+                opacity: entryProgress,
+                transformOrigin: "center bottom",
+                willChange: "transform, opacity",
             }}>
                 <SectionLabel
                     tag="Product Design · Research · Digital Commerce"
@@ -1414,7 +1280,6 @@ export default function ResponsiveHome() {
                 <div style={{ width: "100%" }}>
                     <SharedNav />
                     <Hero phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
-                    <AboutBlock phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
                     <WorkSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
                     <LogoTicker phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
                     <SkillsSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
