@@ -164,30 +164,36 @@ function Hero({
         return () => window.removeEventListener("scroll", onScroll)
     }, [reducedMotion])
 
-    // Subtle parallax — text slightly faster, illustration slightly slower
-    const textParallax   = reducedMotion ? 0 : -scrollY * 0.04
-    const illustParallax = reducedMotion ? 0 :  scrollY * 0.09
+    const textParallax = reducedMotion ? 0 : -scrollY * 0.03
 
-    // Reusable staggered entrance helper
     const enter = (delayMs: number) => ({
         opacity:    revealed ? 1 : 0,
-        transform:  `translateY(${revealed ? 0 : 14}px)`,
+        transform:  `translateY(${revealed ? 0 : 16}px)`,
         transition: reducedMotion
             ? "none"
-            : `opacity 0.55s ${EASE_SPRING} ${delayMs}ms, transform 0.55s ${EASE_SPRING} ${delayMs}ms`,
+            : `opacity 0.6s ${EASE_SPRING} ${delayMs}ms, transform 0.6s ${EASE_SPRING} ${delayMs}ms`,
     })
 
-    // Two-column on tablet+; stacked on phone
-    const isStack   = phone
-    const illustMax = tablet ? 300 : large ? 460 : 420
+    const illustEnter = (delayMs: number) => ({
+        opacity:    revealed ? 1 : 0,
+        transition: reducedMotion ? "none" : `opacity 0.7s ${EASE_SPRING} ${delayMs}ms`,
+    })
 
     const headSize = phone
-        ? "clamp(30px, 9vw, 44px)"
+        ? "clamp(34px, 9.5vw, 50px)"
         : tablet
-            ? "clamp(28px, 4.4vw, 42px)"
+            ? "clamp(44px, 6.5vw, 62px)"
             : large
-                ? "clamp(48px, 3.8vw, 64px)"
-                : "clamp(36px, 3.6vw, 52px)"
+                ? "clamp(64px, 5vw, 88px)"
+                : "clamp(52px, 5.5vw, 78px)"
+
+    // Illustration sizes relative to font size
+    const illW = {
+        laptop: phone ? 72 : tablet ? 90 : large ? 130 : 110,
+        reader: phone ? 60 : tablet ? 76 : large ? 110 : 94,
+        ghost:  phone ? 80 : tablet ? 100 : large ? 144 : 122,
+        small:  phone ? 52 : tablet ? 66 : large ? 96 : 82,
+    }
 
     return (
         <section
@@ -196,157 +202,161 @@ function Hero({
                 minHeight: "100svh",
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "space-between",
+                justifyContent: "center",
+                alignItems: "center",
                 padding: `${sp.heroTop}px ${px}px ${sp.heroBottom}px`,
                 boxSizing: "border-box",
-                overflow: "hidden",
+                position: "relative",
             }}
         >
-            {/* ── Main content row ── */}
+            {/* ── Centered headline block with floating illustrations ── */}
             <div
                 style={{
-                    maxWidth: maxW,
-                    width: "100%",
-                    margin: "0 auto",
                     display: "flex",
-                    flexDirection: isStack ? "column" : "row",
-                    alignItems: isStack ? "flex-start" : "center",
-                    justifyContent: "space-between",
-                    flex: 1,
-                    gap: isStack ? 32 : 0,
-                }}
-            >
-                {/* Left — greeting + headline + tagline */}
-                <div
-                    style={{
-                        flex: isStack ? "none" : "0 0 55%",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        transform: `translateY(${textParallax}px)`,
-                        willChange: "transform",
-                    }}
-                >
-                    {/* Greeting */}
-                    <div style={{ ...enter(0), marginBottom: phone ? 18 : 24 }}>
-                        <span
-                            style={{
-                                fontFamily: I,
-                                fontSize: phone ? 13 : 14,
-                                fontWeight: 400,
-                                color: C.ink3,
-                                letterSpacing: "-0.005em",
-                            }}
-                        >
-                            Hi, I&apos;m Omisha&nbsp;:)
-                        </span>
-                    </div>
-
-                    {/* Headline — each line staggers in independently */}
-                    <h1
-                        style={{
-                            fontFamily: I,
-                            fontWeight: 900,
-                            fontSize: headSize,
-                            lineHeight: 1.0,
-                            letterSpacing: "-0.04em",
-                            color: C.ink,
-                            margin: `0 0 ${phone ? 20 : 28}px`,
-                            whiteSpace: "nowrap",
-                        }}
-                    >
-                        {[
-                            { text: "product designer,", delay: 80  },
-                            { text: "data analyst,",     delay: 190 },
-                            { text: "brand storyteller.", delay: 300 },
-                        ].map(({ text, delay }) => (
-                            <span key={text} style={{ display: "block", ...enter(delay) }}>
-                                {text}
-                            </span>
-                        ))}
-                    </h1>
-
-                    {/* Tagline */}
-                    <p
-                        style={{
-                            ...enter(400),
-                            fontFamily: I,
-                            fontSize: phone ? 14 : 15,
-                            lineHeight: 1.65,
-                            color: C.ink3,
-                            margin: 0,
-                            maxWidth: 360,
-                        }}
-                    >
-                        Curious about what makes people click, choose, and come back.
-                    </p>
-                </div>
-
-                {/* Right — illustration (visible on tablet+; compact version on phone) */}
-                <div
-                    style={{
-                        flex: isStack ? "none" : "0 0 41%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: isStack ? "flex-end" : "center",
-                        alignSelf: isStack ? "flex-end" : "center",
-                        width: isStack ? "62%" : "auto",
-                        opacity: revealed ? 1 : 0,
-                        transition: reducedMotion ? "none" : `opacity 0.7s ${EASE_SPRING} 220ms`,
-                        transform: `translateY(${illustParallax}px)`,
-                        willChange: "transform",
-                    }}
-                >
-                    <div
-                        style={{
-                            width: "100%",
-                            maxWidth: isStack ? 220 : illustMax,
-                            animation: reducedMotion ? "none" : "illust-float 5.5s ease-in-out infinite",
-                        }}
-                    >
-                        <img
-                            src="/images/ChatGPT Image Aug 20, 2026, 03_52_59 PM.png"
-                            alt="Person reclining on a bubble couch holding a laptop, arc floor lamp beside them"
-                            style={{ width: "100%", height: "auto", display: "block" }}
-                        />
-                    </div>
-                </div>
-            </div>
-
-            {/* ── CTA pinned to bottom ── */}
-            <div
-                style={{
-                    maxWidth: maxW,
-                    width: "100%",
-                    margin: "0 auto",
-                    display: "flex",
+                    flexDirection: "column",
                     alignItems: "center",
-                    gap: 8,
-                    paddingTop: phone ? 32 : 0,
-                    opacity: revealed ? 1 : 0,
-                    transition: reducedMotion ? "none" : `opacity 0.5s ${EASE_OUT} 500ms`,
+                    transform: `translateY(${textParallax}px)`,
+                    willChange: "transform",
+                    width: "100%",
+                    maxWidth: maxW,
                 }}
             >
-                <span
+                <h1
                     style={{
                         fontFamily: I,
-                        fontSize: 13,
-                        fontWeight: 400,
-                        color: C.ink3,
-                        letterSpacing: "-0.01em",
+                        fontWeight: 900,
+                        fontSize: headSize,
+                        lineHeight: 1.08,
+                        letterSpacing: "-0.04em",
+                        color: C.ink,
+                        margin: 0,
+                        textAlign: "center",
+                        position: "relative",
+                        // Extra horizontal padding so illustrations don't overlap text on small screens
+                        padding: phone ? "0 0" : tablet ? "0 0" : "0 0",
                     }}
                 >
-                    Here&apos;s a closer look at what that means
-                </span>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0 }}>
-                    <path
-                        d="M7 2V12M3 8L7 12L11 8"
-                        stroke="#E8B4C8"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    />
-                </svg>
+                    {/* ── Laptop/face character — top right of line 1 ── */}
+                    <span
+                        style={{
+                            position: "absolute",
+                            top: phone ? "-2.2em" : "-2em",
+                            right: phone ? "0%" : tablet ? "2%" : "6%",
+                            width: illW.laptop,
+                            ...illustEnter(200),
+                            animation: reducedMotion ? "none" : "illust-float 6s ease-in-out infinite 0.4s",
+                            pointerEvents: "none",
+                            display: "block",
+                        }}
+                    >
+                        <img src="/images/image 9.svg" alt="" aria-hidden="true"
+                            style={{ width: "100%", height: "auto", display: "block" }} />
+                    </span>
+
+                    {/* ── Reader character — left of line 2 ── */}
+                    <span
+                        style={{
+                            position: "absolute",
+                            top: phone ? "1.1em" : "1.1em",
+                            left: phone ? "-4%" : tablet ? "-2%" : "-8%",
+                            width: illW.reader,
+                            ...illustEnter(350),
+                            animation: reducedMotion ? "none" : "illust-float 7s ease-in-out infinite 1.1s",
+                            pointerEvents: "none",
+                            display: "block",
+                        }}
+                    >
+                        <img src="/images/image 8.svg" alt="" aria-hidden="true"
+                            style={{ width: "100%", height: "auto", display: "block" }} />
+                    </span>
+
+                    {/* ── Ghost/megaphone — right of line 3 ── */}
+                    <span
+                        style={{
+                            position: "absolute",
+                            top: phone ? "2.15em" : "2.1em",
+                            right: phone ? "-4%" : tablet ? "-3%" : "-10%",
+                            width: illW.ghost,
+                            ...illustEnter(500),
+                            animation: reducedMotion ? "none" : "illust-float 5.5s ease-in-out infinite 0s",
+                            pointerEvents: "none",
+                            display: "block",
+                        }}
+                    >
+                        <img src="/images/image 8-1.svg" alt="" aria-hidden="true"
+                            style={{ width: "100%", height: "auto", display: "block" }} />
+                    </span>
+
+                    {/* Headline lines */}
+                    {[
+                        { text: "product designer,",  delay: 60  },
+                        { text: "digital analyst,",    delay: 170 },
+                        { text: "brand storyteller.",  delay: 280 },
+                    ].map(({ text, delay }) => (
+                        <span
+                            key={text}
+                            style={{
+                                display: "block",
+                                whiteSpace: "nowrap",
+                                ...enter(delay),
+                            }}
+                        >
+                            {text}
+                        </span>
+                    ))}
+                </h1>
+
+                {/* ── CTA below headline ── */}
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        marginTop: phone ? 40 : tablet ? 52 : 64,
+                        position: "relative",
+                        opacity: revealed ? 1 : 0,
+                        transition: reducedMotion ? "none" : `opacity 0.5s ${EASE_OUT} 500ms`,
+                    }}
+                >
+                    {/* Small character near CTA */}
+                    <span
+                        style={{
+                            position: "absolute",
+                            left: phone ? -44 : -60,
+                            bottom: phone ? 0 : -4,
+                            width: illW.small,
+                            opacity: revealed ? 1 : 0,
+                            transition: reducedMotion ? "none" : `opacity 0.7s ${EASE_SPRING} 700ms`,
+                            animation: reducedMotion ? "none" : "illust-float 6.5s ease-in-out infinite 2s",
+                            pointerEvents: "none",
+                            display: "block",
+                        }}
+                    >
+                        <img src="/images/image 10.svg" alt="" aria-hidden="true"
+                            style={{ width: "100%", height: "auto", display: "block" }} />
+                    </span>
+
+                    <span
+                        style={{
+                            fontFamily: I,
+                            fontSize: 13,
+                            fontWeight: 400,
+                            color: C.ink3,
+                            letterSpacing: "-0.01em",
+                        }}
+                    >
+                        Here&apos;s a closer look at what that means
+                    </span>
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0 }}>
+                        <path
+                            d="M7 2V12M3 8L7 12L11 8"
+                            stroke="#E8B4C8"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        />
+                    </svg>
+                </div>
             </div>
         </section>
     )
