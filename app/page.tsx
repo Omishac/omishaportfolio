@@ -188,13 +188,16 @@ function Hero({
                 ? "clamp(68px, 5.2vw, 82px)"
                 : "clamp(52px, 5.2vw, 75px)"
 
-    // illustration widths (px). image 10 = laptop+face (above), image 8 = reader (left),
-    // image 8-1 = ghost+megaphone (right), image 9 = small ghost (CTA)
+    // illustration widths (px), matched to Figma node-id 41:2 by asset aspect ratio:
+    // image 10.svg (111:69) = laptop+face, above headline
+    // image 9.svg  (63:69)  = writing character, beside "digital analyst,"
+    // image 8-1.svg (115:105) = shouting character, beside "brand storyteller."
+    // image 8.svg  (27:31)  = jumping character, above the CTA arrow
     const illW = {
-        laptop: phone ? 62 : tablet ? 76 : large ? 104 : 88,  // image 10.svg 111:69
-        reader: phone ? 44 : tablet ? 56 : large ? 80 : 68,   // image 8.svg  27:31
-        ghost:  phone ? 70 : tablet ? 88 : large ? 124 : 104, // image 8-1.svg 115:105
-        cta:    phone ? 22 : tablet ? 26 : 31,                 // image 9.svg  small ghost
+        laptop: phone ? 62 : tablet ? 76 : large ? 104 : 88,
+        write:  phone ? 44 : tablet ? 56 : large ? 80 : 68,
+        shout:  phone ? 70 : tablet ? 88 : large ? 124 : 104,
+        jump:   phone ? 20 : tablet ? 24 : 28,
     }
 
     return (
@@ -250,33 +253,33 @@ function Hero({
                         textAlign: "center",
                     }}
                 >
-                    {/* Reader — left beside "digital analyst,"
-                        left: calc(6% - reader_width) puts right edge near start of "digital analyst,"
+                    {/* Writing character — left beside "digital analyst,"
+                        left: calc(6% - write_width) puts right edge near start of "digital analyst,"
                         (the 6% accounts for "digital analyst," being narrower than "brand storyteller." and centered) */}
                     <span
                         style={{
                             position: "absolute",
                             top: "1.0em",
-                            left: `calc(6% - ${illW.reader}px)`,
-                            width: illW.reader,
+                            left: `calc(6% - ${illW.write}px)`,
+                            width: illW.write,
                             display: "block",
                             pointerEvents: "none",
                             ...illustEnter(320),
                             animation: reducedMotion ? "none" : "illust-float 7s ease-in-out infinite 1.1s",
                         }}
                     >
-                        <img src="/images/image 8.svg" alt="" aria-hidden="true"
+                        <img src="/images/image 9.svg" alt="" aria-hidden="true"
                             style={{ width: "100%", height: "auto", display: "block" }} />
                     </span>
 
-                    {/* Ghost+megaphone — right beside "brand storyteller."
+                    {/* Shouting character — right beside "brand storyteller."
                         left: calc(100% + 5px) puts left edge just past h1 right = end of "brand storyteller." */}
                     <span
                         style={{
                             position: "absolute",
                             top: "2.2em",
                             left: "calc(100% + 5px)",
-                            width: illW.ghost,
+                            width: illW.shout,
                             display: "block",
                             pointerEvents: "none",
                             ...illustEnter(480),
@@ -305,7 +308,7 @@ function Hero({
                     ))}
                 </h1>
 
-                {/* ── CTA: text + small ghost inline, curved arrow below ── */}
+                {/* ── CTA: text, then jumping character above the curved arrow ── */}
                 <div
                     style={{
                         display: "flex",
@@ -316,56 +319,59 @@ function Hero({
                         transition: reducedMotion ? "none" : `opacity 0.5s ${EASE_OUT} 500ms`,
                     }}
                 >
-                    {/* Text + small ghost row */}
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                        <span
-                            style={{
-                                fontFamily: I,
-                                fontSize: 13,
-                                fontWeight: 400,
-                                color: C.ink3,
-                                letterSpacing: "-0.01em",
-                            }}
-                        >
-                            Here&apos;s a closer look at what that means
-                        </span>
+                    {/* Text row */}
+                    <span
+                        style={{
+                            fontFamily: I,
+                            fontSize: 13,
+                            fontWeight: 400,
+                            color: C.ink3,
+                            letterSpacing: "-0.01em",
+                        }}
+                    >
+                        Here&apos;s a closer look at what that means
+                    </span>
+                    {/* Jumping character above the curved arrow */}
+                    <div style={{ position: "relative", width: 44, height: illW.jump + 30, marginTop: 4 }}>
                         <img
-                            src="/images/image 9.svg"
+                            src="/images/image 8.svg"
                             alt=""
                             aria-hidden="true"
                             style={{
-                                width: illW.cta,
+                                position: "absolute",
+                                top: 0,
+                                right: 2,
+                                width: illW.jump,
                                 height: "auto",
                                 display: "block",
-                                flexShrink: 0,
                                 animation: reducedMotion ? "none" : "illust-float 6.5s ease-in-out infinite 2s",
                             }}
                         />
+                        {/* Pink curved arrow pointing down-right */}
+                        <svg
+                            width="36"
+                            height="28"
+                            viewBox="0 0 36 28"
+                            fill="none"
+                            style={{ position: "absolute", left: 4, bottom: 0, display: "block" }}
+                        >
+                            <path
+                                d="M2 3 C8 3 22 4 30 18"
+                                stroke="#E8B4C8"
+                                strokeWidth="1.4"
+                                strokeLinecap="round"
+                                fill="none"
+                            />
+                            <path
+                                d="M25 16 L30 18 L28 23"
+                                stroke="#E8B4C8"
+                                strokeWidth="1.4"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                fill="none"
+                            />
+                        </svg>
                     </div>
-                    {/* Pink curved arrow pointing down-right */}
-                    <svg
-                        width="36"
-                        height="28"
-                        viewBox="0 0 36 28"
-                        fill="none"
-                        style={{ marginTop: 4, marginLeft: 32, display: "block" }}
-                    >
-                        <path
-                            d="M2 3 C8 3 22 4 30 18"
-                            stroke="#E8B4C8"
-                            strokeWidth="1.4"
-                            strokeLinecap="round"
-                            fill="none"
-                        />
-                        <path
-                            d="M25 16 L30 18 L28 23"
-                            stroke="#E8B4C8"
-                            strokeWidth="1.4"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            fill="none"
-                        />
-                    </svg>
                 </div>
             </div>
         </section>
