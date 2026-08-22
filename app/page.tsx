@@ -1043,16 +1043,18 @@ function LogoTicker({
         return () => window.removeEventListener("scroll", onScroll)
     }, [reducedMotion])
 
-    // Scattered positions (top%, left%) matching the reference layout — logos
-    // loosely surrounding the centered title instead of lining up in a row.
+    // Positions (top%, left%) matching Figma node 54:24's fixed layout: a
+    // 2-3-2 grid — Anthropologie/J&J on top, Budweiser-title-Drexel in the
+    // middle row, URBN/Lakmé on bottom. Percentages are relative to the
+    // section's background rect (Figma y=63..672 of a 786-tall frame).
     // Order matches LOGOS: Anthropologie, Budweiser, Drexel, J&J, Lakmé, URBN.
     const SCATTER = [
-        { top: "10%", left: "32%" },
-        { top: "42%", left: "13%" },
-        { top: "84%", left: "21%" },
-        { top: "16%", left: "74%" },
-        { top: "90%", left: "49%" },
-        { top: "61%", left: "80%" },
+        { top: "23%", left: "32%" },
+        { top: "54%", left: "17%" },
+        { top: "54%", left: "83%" },
+        { top: "24%", left: "75%" },
+        { top: "89%", left: "65%" },
+        { top: "89%", left: "36%" },
     ]
     const logoH = phone ? 26 : tablet ? 32 : large ? 46 : 40
 
@@ -1124,7 +1126,7 @@ function LogoTicker({
                     </div>
                 ) : (
                     <>
-                        <div style={{ position: "absolute", top: "49%", left: "49%", transform: "translate(-50%, -50%)" }}>
+                        <div style={{ position: "absolute", top: "54%", left: "50%", transform: "translate(-50%, -50%)" }}>
                             <SectionLabel tag="Brands" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
                         </div>
                         {LOGOS.map(({ src, alt }, i) => (
