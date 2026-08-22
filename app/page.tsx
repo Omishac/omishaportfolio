@@ -1003,42 +1003,11 @@ function LogoTicker({
     maxW: number
 }) {
     const outerRef = useRef<HTMLDivElement>(null)
-    const labelRef = useRef<HTMLDivElement>(null)
+    const logoRefs = useRef<(HTMLDivElement | null)[]>([])
     const [tickerY, setTickerY] = useState(0)
-    const [logosShown, setLogosShown] = useState(false)
-    const [labelProgress, setLabelProgress] = useState(0)
+    const [logoProgress, setLogoProgress] = useState<number[]>(() => LOGOS.map(() => 0))
     const reducedMotion = useReducedMotion()
     const navH = phone ? 54 : 64
-
-    // Continuous scroll-in for "Industry Experience" — the same kind of
-    // scroll-position-driven fade/scale/translate as the hero's scroll-out,
-    // just running forward: 0 while the label is still below the viewport,
-    // 1 once it has risen to roughly two-thirds up. Tracks raw scroll
-    // directly (like the hero) rather than a triggered CSS transition, so it
-    // has the same "tied to your scroll, not a timer" impact.
-    useEffect(() => {
-        if (reducedMotion) { setLabelProgress(1); return }
-        const onScroll = () => {
-            const el = labelRef.current
-            if (!el) return
-            const rect = el.getBoundingClientRect()
-            const raw = (window.innerHeight - rect.top) / (window.innerHeight * 0.65)
-            setLabelProgress(Math.max(0, Math.min(1, raw)))
-        }
-        window.addEventListener("scroll", onScroll, { passive: true })
-        window.addEventListener("resize", onScroll, { passive: true })
-        onScroll()
-        return () => {
-            window.removeEventListener("scroll", onScroll)
-            window.removeEventListener("resize", onScroll)
-        }
-    }, [reducedMotion])
-
-    const labelEnterStyle = {
-        opacity: labelProgress,
-        transform: `translateY(${(1 - labelProgress) * 90}px) scale(${0.8 + labelProgress * 0.2})`,
-        willChange: "transform, opacity",
-    }
 
     useEffect(() => {
         if (reducedMotion) { setTickerY(0); return }
@@ -1056,23 +1025,38 @@ function LogoTicker({
         return () => window.removeEventListener("scroll", onScroll)
     }, [reducedMotion])
 
-    // "Industry Experience" is static and shows the moment the section is in
-    // view; the logos start hidden and only reveal, staggered, once you've
-    // scrolled further into the section — so the label reads first and the
-    // logos visibly appear on scroll rather than all at once.
+    // Each logo fades and scales in as it scrolls toward the vertical center
+    // of the viewport, then fades and scales back out as it continues past —
+    // the same continuous, scroll-position-driven technique as the hero's
+    // fade/scale, just mirrored on both sides instead of running one way, so
+    // it plays as a scroll-in *and* scroll-out on every logo individually.
     useEffect(() => {
-        const el = outerRef.current
-        if (!el) return
-        const obs = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting) { setLogosShown(true); obs.disconnect() }
-        }, { threshold: 0.35 })
-        obs.observe(el)
-        return () => obs.disconnect()
-    }, [])
+        if (reducedMotion) { setLogoProgress(LOGOS.map(() => 1)); return }
+        const onScroll = () => {
+            setLogoProgress(
+                logoRefs.current.map((el) => {
+                    if (!el) return 0
+                    const rect = el.getBoundingClientRect()
+                    const elMid = rect.top + rect.height / 2
+                    const vMid = window.innerHeight / 2
+                    const dist = Math.abs(elMid - vMid)
+                    return Math.max(0, 1 - dist / (window.innerHeight * 0.55))
+                })
+            )
+        }
+        window.addEventListener("scroll", onScroll, { passive: true })
+        window.addEventListener("resize", onScroll, { passive: true })
+        onScroll()
+        return () => {
+            window.removeEventListener("scroll", onScroll)
+            window.removeEventListener("resize", onScroll)
+        }
+    }, [reducedMotion])
 
-    const logoReveal = (idx: number) => ({
-        opacity: logosShown ? 1 : 0,
-        transition: reducedMotion ? "none" : `opacity 0.7s ${EASE_SPRING} ${idx * 140}ms`,
+    const logoScrollStyle = (idx: number) => ({
+        opacity: logoProgress[idx] ?? 0,
+        transform: `scale(${0.75 + (logoProgress[idx] ?? 0) * 0.25})`,
+        willChange: "transform, opacity",
     })
 
     // Positions (top%, left%) matching Figma node 54:24's fixed layout: a
@@ -1124,9 +1108,7 @@ function LogoTicker({
                             width: `calc(100% - ${px * 2}px)`,
                         }}
                     >
-                        <div ref={labelRef} style={labelEnterStyle}>
-                            <SectionLabel tag="Application" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
-                        </div>
+                        <SectionLabel tag="Application" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
                         <div
                             style={{
                                 display: "flex",
@@ -1140,7 +1122,7 @@ function LogoTicker({
                             }}
                         >
                             {LOGOS.map(({ src, alt }, i) => (
-                                <div key={alt} style={logoReveal(i)}>
+                                <div key={alt} ref={(el) => { logoRefs.current[i] = el }} style={logoScrollStyle(i)}>
                                     <img
                                         src={src}
                                         alt={alt}
@@ -1161,16 +1143,15 @@ function LogoTicker({
                 ) : (
                     <>
                         <div style={{ position: "absolute", top: "54%", left: "50%", transform: "translate(-50%, -50%)" }}>
-                            <div ref={labelRef} style={labelEnterStyle}>
-                                <SectionLabel tag="Application" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
-                            </div>
+                            <SectionLabel tag="Application" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
                         </div>
                         {LOGOS.map(({ src, alt }, i) => (
                             // Positioning transform lives on this wrapper, not the img — the
                             // img's own transform gets overwritten each frame by the
                             // illust-float keyframes, which would otherwise fight the centering.
-                            // The reveal (opacity-only, so it doesn't fight either transform)
-                            // lives on the middle wrapper.
+                            // The scroll-in/out fade+scale (no translate, so it doesn't fight
+                            // either transform) lives on the middle wrapper, which is also what
+                            // its own scroll position is measured from.
                             <div
                                 key={alt}
                                 style={{
@@ -1180,7 +1161,7 @@ function LogoTicker({
                                     transform: "translate(-50%, -50%)",
                                 }}
                             >
-                                <div style={logoReveal(i)}>
+                                <div ref={(el) => { logoRefs.current[i] = el }} style={logoScrollStyle(i)}>
                                     <img
                                         src={src}
                                         alt={alt}
