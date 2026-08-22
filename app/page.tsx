@@ -157,8 +157,8 @@ function useBP() {
     const sp = {
         sectionGap: phone ? 64 : tablet ? 96 : 120,
         headerGap: phone ? 24 : tablet ? 40 : 56,
-        cardRowGap: phone ? 20 : tablet ? 28 : 36,
-        cardColGap: phone ? 0 : tablet ? 20 : 24,
+        cardRowGap: phone ? 16 : tablet ? 20 : 24,
+        cardColGap: phone ? 0 : tablet ? 16 : 20,
         heroTop: phone ? 40 : tablet ? 64 : 96,
         heroBottom: phone ? 64 : tablet ? 100 : 120,
         colOffset: tablet ? 0 : 80,
@@ -476,7 +476,7 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
         tags: ["Product Design", "Design Systems", "E-Commerce"],
         company: "URBN",
         desc: "Redesigning the filter experience across four retail brands, balancing discoverability with speed for millions of shoppers.",
-        aspect: "4 / 3",
+        aspect: "16 / 9",
     },
     {
         href: "/ios-review-accessibility",
@@ -603,7 +603,7 @@ function CoverCard({
                 textDecoration: "none",
                 display: side ? "flex" : "block",
                 alignItems: side ? "flex-start" : undefined,
-                gap: side ? 32 : undefined,
+                gap: side ? 24 : undefined,
                 breakInside: "avoid" as const,
             }}
             onMouseEnter={() => finePointer && setHov(true)}
