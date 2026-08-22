@@ -1047,12 +1047,12 @@ function LogoTicker({
     // loosely surrounding the centered title instead of lining up in a row.
     // Order matches LOGOS: Anthropologie, Budweiser, Drexel, J&J, Lakmé, URBN.
     const SCATTER = [
-        { top: "30%", left: "32%" },
-        { top: "52%", left: "13%" },
-        { top: "81%", left: "21%" },
-        { top: "34%", left: "74%" },
-        { top: "85%", left: "49%" },
-        { top: "65%", left: "80%" },
+        { top: "10%", left: "32%" },
+        { top: "42%", left: "13%" },
+        { top: "84%", left: "21%" },
+        { top: "16%", left: "74%" },
+        { top: "90%", left: "49%" },
+        { top: "61%", left: "80%" },
     ]
     const logoH = phone ? 26 : tablet ? 32 : large ? 46 : 40
 
