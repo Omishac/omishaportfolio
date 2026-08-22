@@ -35,7 +35,13 @@ const CURSOR_STYLES = `
     to   { clip-path: inset(0 0% 0 0); }
   }
   html { scroll-behavior: smooth; }
-  html, body { max-width: 100%; overflow-x: hidden; }
+  /* overflow-x: clip, not hidden — hidden without an explicit overflow-y
+     forces overflow-y: auto (CSS overflow computed-value fixup), which
+     turns body into a scroll container that never actually scrolls
+     (the document element does), so any position: sticky descendant like
+     SharedNav resolves against that inert scrollport and never sticks.
+     clip prevents the horizontal bleed without establishing one. */
+  html, body { max-width: 100%; overflow-x: clip; }
   .logo-img {
     transition: opacity 0.35s ease;
   }
@@ -122,6 +128,65 @@ function useLerp(target: number, reducedMotion: boolean, factor: number = 0.12) 
     return value
 }
 
+// Scroll parallax backdrop. Tracks each layer's own distance from the
+// viewport center and offsets it by a fraction (`rate`) of that distance, so
+// as a section scrolls through the viewport its backdrop visibly drifts at a
+// different rate than the foreground content over it — a bounded, JS-driven
+// stand-in for the classic `perspective` + `translateZ` trick. That trick
+// needs the perspective-bearing element to *also* be the page's scrolling
+// container, which collides with `SharedNav`'s `position: sticky` (sticky
+// resolves against the nearest scrolling ancestor); this version needs no
+// `perspective`/`transform-style` anywhere, so it can't touch nav at all.
+// Must live inside a `position: relative; overflow: hidden` section — the
+// oversized `inset` bleed keeps the drifting layer from showing a gap at the
+// section edges.
+function ParallaxBackdrop({ rate, gradient }: { rate: number; gradient: string }) {
+    const ref = useRef<HTMLDivElement>(null)
+    const [offset, setOffset] = useState(0)
+    const reducedMotion = useReducedMotion()
+
+    useEffect(() => {
+        if (reducedMotion) { setOffset(0); return }
+        let raf = 0
+        const measure = () => {
+            const el = ref.current
+            if (el) {
+                const rect = el.getBoundingClientRect()
+                const centerDelta = rect.top + rect.height / 2 - window.innerHeight / 2
+                const clamped = Math.max(-1400, Math.min(1400, centerDelta))
+                setOffset(-clamped * rate)
+            }
+        }
+        const onScroll = () => {
+            cancelAnimationFrame(raf)
+            raf = requestAnimationFrame(measure)
+        }
+        measure()
+        window.addEventListener("scroll", onScroll, { passive: true })
+        window.addEventListener("resize", onScroll, { passive: true })
+        return () => {
+            window.removeEventListener("scroll", onScroll)
+            window.removeEventListener("resize", onScroll)
+            cancelAnimationFrame(raf)
+        }
+    }, [rate, reducedMotion])
+
+    return (
+        <div
+            ref={ref}
+            aria-hidden="true"
+            style={{
+                position: "absolute",
+                inset: -150,
+                transform: `translate3d(0, ${offset}px, 0)`,
+                background: gradient,
+                pointerEvents: "none",
+                willChange: "transform",
+            }}
+        />
+    )
+}
+
 function useBP() {
     const ref = useRef<HTMLDivElement>(null)
     const [w, setW] = useState(1280)
@@ -191,12 +256,6 @@ function Hero({
 
     const textParallax = reducedMotion ? 0 : -scrollY * 0.03
 
-    // Hero fades out flat as it scrolls out — no tilt, just a gentle fade +
-    // upward drift — as if the Work section is sliding up over it. Lerped so
-    // it trails the scroll position instead of snapping to it.
-    const heroExitRaw = reducedMotion ? 0 : Math.min(1, scrollY / 480)
-    const heroExit = useLerp(heroExitRaw, reducedMotion)
-
     const enter = (delayMs: number) => ({
         opacity:    revealed ? 1 : 0,
         transform:  `translateY(${revealed ? 0 : 16}px)`,
@@ -245,17 +304,18 @@ function Hero({
                 minHeight: `calc(100svh - ${navH}px)`,
                 boxSizing: "border-box",
                 backgroundColor: C.bg,
+                overflow: "hidden",
             }}
         >
+            <ParallaxBackdrop rate={0.05} gradient="radial-gradient(circle at 30% 20%, rgba(232,180,200,0.16) 0%, transparent 55%)" />
             {/* ── Centered headline block ── */}
             <div
                 style={{
                     position: "absolute",
                     top: "40%",
                     left: "50%",
-                    transform: `translate(-50%, calc(-50% + ${textParallax - heroExit * 40}px))`,
-                    opacity: 1 - heroExit * 0.9,
-                    willChange: "transform, opacity",
+                    transform: `translate(-50%, calc(-50% + ${textParallax}px))`,
+                    willChange: "transform",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
@@ -882,11 +942,7 @@ function WorkSection({
     const sectionRef = useRef<HTMLElement>(null)
     const [cardsShown, setCardsShown] = useState(false)
     const [parallaxY, setParallaxY] = useState(0)
-    const [entryProgressRaw, setEntryProgressRaw] = useState(0)
-    const [exitProgressRaw, setExitProgressRaw] = useState(0)
     const reducedMotion = useReducedMotion()
-    const entryProgress = useLerp(entryProgressRaw, reducedMotion)
-    const exitProgress = useLerp(exitProgressRaw, reducedMotion)
 
     useEffect(() => {
         const el = sectionRef.current
@@ -898,11 +954,9 @@ function WorkSection({
         return () => obs.disconnect()
     }, [])
 
-    // Flat slide-up-and-fade as the section enters, fading out (still flat,
-    // no tilt) as it scrolls past — so it reads as the next section sliding
-    // up and taking over, rather than a 3D card flip.
+    // Cards rise to meet you as you scroll toward them, recede as you scroll past.
     useEffect(() => {
-        if (reducedMotion) { setParallaxY(0); setEntryProgressRaw(1); setExitProgressRaw(0); return }
+        if (reducedMotion) { setParallaxY(0); return }
         const onScroll = () => {
             const el = sectionRef.current
             if (!el) return
@@ -910,20 +964,7 @@ function WorkSection({
             const elMid = rect.top + rect.height / 2
             const vMid = window.innerHeight / 2
             const progress = (vMid - elMid) / window.innerHeight
-            // Cards rise to meet you as you scroll toward them, recede as you scroll past
             setParallaxY(Math.max(-20, Math.min(20, -progress * 52)))
-
-            const vh = window.innerHeight
-            const start = vh * 0.95  // reveal begins right as the section's top crosses into the viewport
-            const end = vh * 0.35    // fully settled once it reaches well past the middle of the viewport
-            const raw = (start - rect.top) / (start - end)
-            const clamped = Math.min(1, Math.max(0, raw))
-            setEntryProgressRaw(1 - Math.pow(1 - clamped, 3)) // ease-out — this is an entrance
-
-            const exitStart = vh * 0.25   // fade begins once the section's bottom nears the top of the viewport
-            const exitEnd = vh * -0.55    // fully faded once it's well above
-            const exitRaw = (exitStart - rect.bottom) / (exitStart - exitEnd)
-            setExitProgressRaw(Math.min(1, Math.max(0, exitRaw)))
         }
         window.addEventListener("scroll", onScroll, { passive: true })
         onScroll()
@@ -946,16 +987,17 @@ function WorkSection({
                 padding: `0 ${px}px ${sp.sectionGap}px`,
                 boxSizing: "border-box",
                 backgroundColor: C.bg,
-                zIndex: 2,
+                overflow: "hidden",
             }}
         >
+            <ParallaxBackdrop rate={0.08} gradient="radial-gradient(circle at 70% 10%, rgba(232,180,200,0.14) 0%, transparent 50%)" />
             <div style={{
+                position: "relative",
                 maxWidth: maxW,
                 width: "100%",
                 margin: "0 auto",
-                transform: `translateY(${parallaxY + (1 - entryProgress) * 100 - exitProgress * 40}px)`,
-                opacity: entryProgress * (1 - exitProgress),
-                willChange: "transform, opacity",
+                transform: `translateY(${parallaxY}px)`,
+                willChange: "transform",
             }}>
                 <SectionLabel
                     tag="UX Strategy · Research · Digital Commerce"
@@ -1020,17 +1062,11 @@ function LogoTicker({
 }) {
     const outerRef = useRef<HTMLDivElement>(null)
     const [tickerY, setTickerY] = useState(0)
-    const [entryProgressRaw, setEntryProgressRaw] = useState(0)
-    const [exitProgressRaw, setExitProgressRaw] = useState(0)
     const reducedMotion = useReducedMotion()
-    const entryProgress = useLerp(entryProgressRaw, reducedMotion)
-    const exitProgress = useLerp(exitProgressRaw, reducedMotion)
     const navH = phone ? 54 : 64
 
-    // Flat slide-up-and-fade as Brands enters, fading out (still flat, no
-    // tilt) as it scrolls past — matches Work's entrance/exit treatment.
     useEffect(() => {
-        if (reducedMotion) { setTickerY(0); setEntryProgressRaw(1); setExitProgressRaw(0); return }
+        if (reducedMotion) { setTickerY(0); return }
         const onScroll = () => {
             const el = outerRef.current
             if (!el) return
@@ -1039,18 +1075,6 @@ function LogoTicker({
             const vMid = window.innerHeight / 2
             const progress = (vMid - elMid) / window.innerHeight
             setTickerY(Math.max(-12, Math.min(12, progress * 80)))
-
-            const vh = window.innerHeight
-            const start = vh * 0.95  // reveal begins right as the section's top crosses into the viewport
-            const end = vh * 0.35    // fully settled once it reaches well past the middle of the viewport
-            const raw = (start - rect.top) / (start - end)
-            const clamped = Math.min(1, Math.max(0, raw))
-            setEntryProgressRaw(1 - Math.pow(1 - clamped, 3)) // ease-out — this is an entrance
-
-            const exitStart = vh * 0.25   // fade begins once the section's bottom nears the top of the viewport
-            const exitEnd = vh * -0.55    // fully faded once it's well above
-            const exitRaw = (exitStart - rect.bottom) / (exitStart - exitEnd)
-            setExitProgressRaw(Math.min(1, Math.max(0, exitRaw)))
         }
         window.addEventListener("scroll", onScroll, { passive: true })
         onScroll()
@@ -1083,16 +1107,16 @@ function LogoTicker({
                 minHeight: `calc(100svh - ${navH}px)`,
                 boxSizing: "border-box",
                 backgroundColor: C.bg,
-                zIndex: 3,
+                overflow: "hidden",
             }}
         >
+            <ParallaxBackdrop rate={0.11} gradient="radial-gradient(circle at 50% 60%, rgba(232,180,200,0.14) 0%, transparent 55%)" />
             <div
                 style={{
                     position: "absolute",
                     inset: 0,
-                    transform: `translateY(${tickerY + (1 - entryProgress) * 100 - exitProgress * 40}px)`,
-                    opacity: entryProgress * (1 - exitProgress),
-                    willChange: "transform, opacity",
+                    transform: `translateY(${tickerY}px)`,
+                    willChange: "transform",
                 }}
             >
                 {phone ? (
@@ -1277,37 +1301,6 @@ function SkillsSection({
 }) {
     const sectionPad = phone ? 64 : tablet ? 80 : large ? 120 : 100
     const sectionRef = useRef<HTMLElement>(null)
-    const [entryProgressRaw, setEntryProgressRaw] = useState(0)
-    const reducedMotion = useReducedMotion()
-    const entryProgress = useLerp(entryProgressRaw, reducedMotion)
-    const raf = useRef(0)
-
-    // Dramatic scroll-driven 3D tilt-up as Skills enters — same treatment as
-    // Work's and Brands' entrances above.
-    useEffect(() => {
-        if (reducedMotion) { setEntryProgressRaw(1); return }
-        const el = sectionRef.current
-        if (!el) return
-        const update = () => {
-            const rect = el.getBoundingClientRect()
-            const vh = window.innerHeight
-            const start = vh * 0.95
-            const end = vh * 0.35
-            const raw = (start - rect.top) / (start - end)
-            const clamped = Math.min(1, Math.max(0, raw))
-            setEntryProgressRaw(1 - Math.pow(1 - clamped, 3))
-        }
-        const onScroll = () => {
-            cancelAnimationFrame(raf.current)
-            raf.current = requestAnimationFrame(update)
-        }
-        update()
-        window.addEventListener("scroll", onScroll, { passive: true })
-        return () => {
-            window.removeEventListener("scroll", onScroll)
-            cancelAnimationFrame(raf.current)
-        }
-    }, [reducedMotion])
 
     return (
         <section
@@ -1318,17 +1311,16 @@ function SkillsSection({
                 padding: `${sectionPad}px ${px}px`,
                 boxSizing: "border-box",
                 backgroundColor: C.bg,
-                zIndex: 4,
+                overflow: "hidden",
             }}
         >
+            <ParallaxBackdrop rate={0.14} gradient="radial-gradient(circle at 25% 40%, rgba(232,180,200,0.12) 0%, transparent 50%)" />
             <div
                 style={{
+                    position: "relative",
                     maxWidth: maxW,
                     width: "100%",
                     margin: "0 auto",
-                    transform: `translateY(${(1 - entryProgress) * 100}px)`,
-                    opacity: entryProgress,
-                    willChange: "transform, opacity",
                 }}
             >
                 <SectionLabel tag="Skills" title="What I offer" phone={phone} tablet={tablet} large={large} />
@@ -1456,14 +1448,12 @@ export default function ResponsiveHome() {
                 }}
             >
                 <style>{CURSOR_STYLES}</style>
-                <div style={{ width: "100%" }}>
-                    <SharedNav />
-                    <Hero phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
-                    <WorkSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
-                    <LogoTicker phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
-                    <SkillsSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
-                    <Footer phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
-                </div>
+                <SharedNav />
+                <Hero phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
+                <WorkSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
+                <LogoTicker phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
+                <SkillsSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
+                <Footer phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
             </div>
         </>
     )
