@@ -34,10 +34,6 @@ const CURSOR_STYLES = `
     from { clip-path: inset(0 100% 0 0); }
     to   { clip-path: inset(0 0% 0 0); }
   }
-  @keyframes marker-pulse {
-    0%   { transform: scale(1);   opacity: 0.5; }
-    100% { transform: scale(2.6); opacity: 0; }
-  }
   html { scroll-behavior: smooth; }
   /* overflow-x: clip, not hidden — hidden without an explicit overflow-y
      forces overflow-y: auto (CSS overflow computed-value fixup), which
@@ -1217,10 +1213,10 @@ function Footer({
 }
 
 const FOLDERS = [
-    { id: "restaurants", label: "List of restaurants i want to try", icon: "/explore/icon-eats.png" },
-    { id: "travel",      label: "My fav travel memories",            icon: "/explore/icon-travel.png" },
-    { id: "songs",       label: "My recent fav songs",                icon: "/explore/icon-music.png" },
-    { id: "film",        label: "Recent film photos",                 icon: "/explore/icon-film.png" },
+    { id: "restaurants", label: "list of restaurants i want to try", icon: "/explore/icon-eats.png" },
+    { id: "travel",      label: "my fav travel memories",            icon: "/explore/icon-travel.png" },
+    { id: "songs",       label: "my recent fav songs",                icon: "/explore/icon-music.png" },
+    { id: "film",        label: "recent film photos",                 icon: "/explore/icon-film.png" },
     { id: "moodboard",   label: "my moodboard (aka pinterest)",       icon: "/explore/icon-moodboard.png" },
 ]
 
@@ -1307,55 +1303,41 @@ function HScrollGallery({ images }: { images: { src: string; alt: string }[] }) 
 
 const FILM_PHOTOS = [1, 2, 3, 4, 5, 6].map((n) => ({ src: `/explore/film-${n}.jpg`, alt: `Film photo ${n}` }))
 
-const BELI_CARDS = [
-    { src: "/explore/beli-dining-map.png",    alt: "Beli — Your Dining Map" },
-    { src: "/explore/beli-top10-mumbai.png",  alt: "Beli — Top 10 Mumbai" },
-    { src: "/explore/beli-top10-philly.png",  alt: "Beli — Top 10 Philadelphia" },
-    { src: "/explore/beli-top10-nyc.png",     alt: "Beli — Top 10 New York" },
-    { src: "/explore/beli-top-diner.png",     alt: "Beli — Top 62% Diner" },
-]
-
-// Simple equirectangular projection (lat/lng -> x/y over a 1000x500 viewBox)
-// — guarantees markers land in correct relative position (north/south,
-// east/west) to each other without hand-guessing pixel coordinates.
-const MAP_W = 1000
-const MAP_H = 500
-function project(lat: number, lng: number) {
-    return { x: (lng + 180) / 360 * MAP_W, y: (90 - lat) / 180 * MAP_H }
+// Two stacked summary cards on the left (dining map + diner stats), the
+// three city Top 10 guides scrolling on the right — matches Omisha's
+// original mockup layout rather than one flat row of five.
+function EatsGallery() {
+    return (
+        <div style={{ display: "flex", gap: 12, alignItems: "flex-start", flexWrap: "wrap" as const }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <img
+                    src="/explore/beli-dining-map.png"
+                    alt="Beli — Your Dining Map"
+                    style={{ height: 190, width: "auto", borderRadius: 10, objectFit: "cover", display: "block" }}
+                />
+                <img
+                    src="/explore/beli-top-diner.png"
+                    alt="Beli — Top 62% Diner"
+                    style={{ height: 190, width: "auto", borderRadius: 10, objectFit: "cover", display: "block" }}
+                />
+            </div>
+            <div className="hscroll" style={{ display: "flex", gap: 10, overflowX: "auto", flex: "1 1 300px", minWidth: 0 }}>
+                {[
+                    { src: "/explore/beli-top10-mumbai.png", alt: "Beli — Top 10 Mumbai" },
+                    { src: "/explore/beli-top10-philly.png", alt: "Beli — Top 10 Philadelphia" },
+                    { src: "/explore/beli-top10-nyc.png",    alt: "Beli — Top 10 New York" },
+                ].map((img) => (
+                    <img
+                        key={img.src}
+                        src={img.src}
+                        alt={img.alt}
+                        style={{ height: 390, width: "auto", flexShrink: 0, borderRadius: 10, objectFit: "cover", display: "block" }}
+                    />
+                ))}
+            </div>
+        </div>
+    )
 }
-
-// Rough, stylized continent silhouettes (not survey-accurate coastlines —
-// intentionally simplified per the "minimal" brief) built from the same
-// projection so they sit in the right place relative to the markers.
-const CONTINENTS: [number, number][][] = [
-    [[71, -156], [60, -140], [49, -125], [32, -117], [25, -110], [18, -95], [25, -97], [30, -81], [45, -67], [47, -52], [60, -65], [68, -83], [71, -100]],
-    [[12, -72], [10, -61], [-2, -50], [-23, -43], [-34, -58], [-53, -68], [-33, -72], [-18, -70], [4, -77]],
-    [[60, 5], [55, 15], [45, 15], [37, -9], [43, -9], [51, -5], [51, 4], [55, 10], [60, 25], [50, 30], [45, 29]],
-    [[37, 10], [31, 32], [12, 43], [-1, 42], [-26, 33], [-34, 18], [-15, 12], [4, 9], [15, -17], [33, -6]],
-    [[41, 29], [30, 48], [25, 55], [24, 67], [8, 77], [22, 88], [10, 106], [1, 104], [10, 124], [35, 140], [55, 160], [70, 100], [55, 40]],
-    [[-11, 131], [-16, 145], [-28, 153], [-38, 145], [-35, 117], [-20, 114]],
-]
-
-function continentPath(points: [number, number][]) {
-    return points.map(([lat, lng], i) => {
-        const { x, y } = project(lat, lng)
-        return `${i === 0 ? "M" : "L"} ${x.toFixed(1)} ${y.toFixed(1)}`
-    }).join(" ") + " Z"
-}
-
-const TRAVEL_MARKERS = [
-    { id: "us", label: "United States", lat: 39.95, lng: -75.16, places: "Philadelphia, California, Florida, New York, Boston, and North Carolina" },
-    { id: "ca", label: "Canada",        lat: 43.65, lng: -79.38, places: "Canada" },
-    { id: "uk", label: "United Kingdom",lat: 51.51, lng: -0.13,  places: "London" },
-    { id: "ae", label: "United Arab Emirates", lat: 25.20, lng: 55.27, places: "Dubai" },
-    { id: "in", label: "India",         lat: 19.08, lng: 72.88,  places: "Mumbai, Delhi, Kolkata, Mussoorie, Darjeeling, Gangtok, Jaipur, Udaipur, and Tirupati" },
-    { id: "sg", label: "Singapore",     lat: 1.35,  lng: 103.82, places: "Singapore" },
-    { id: "vn", label: "Vietnam",       lat: 10.82, lng: 106.63, places: "Ho Chi Minh City" },
-]
-
-const FLIGHT_PATHS: [string, string][] = [
-    ["us", "uk"], ["uk", "ae"], ["ae", "in"], ["in", "sg"], ["sg", "vn"],
-]
 
 const OLIVE = "#BDC762"
 
@@ -1382,232 +1364,93 @@ function KeychainIcon() {
 }
 
 function TravelDashboard() {
-    const [active, setActive] = useState<string | null>(null)
-    const reducedMotion = useReducedMotion()
-
-    const activeMarker = TRAVEL_MARKERS.find((m) => m.id === active) || null
-
     return (
         <div>
-            <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 24 }}>
-                {/* Map column */}
-                <div style={{ flex: "1 1 400px", minWidth: 280 }}>
-                    <div style={{ position: "relative", width: "100%", aspectRatio: `${MAP_W} / ${MAP_H}` }}>
-                        <svg
-                            viewBox={`0 0 ${MAP_W} ${MAP_H}`}
-                            style={{ width: "100%", height: "100%", display: "block" }}
-                            role="img"
-                            aria-label="World map showing countries I've visited"
-                        >
-                            {CONTINENTS.map((pts, i) => (
-                                <path key={i} d={continentPath(pts)} fill="#EDEDED" />
-                            ))}
-
-                            {FLIGHT_PATHS.map(([fromId, toId], i) => {
-                                const from = TRAVEL_MARKERS.find((m) => m.id === fromId)!
-                                const to = TRAVEL_MARKERS.find((m) => m.id === toId)!
-                                const p1 = project(from.lat, from.lng)
-                                const p2 = project(to.lat, to.lng)
-                                const mx = (p1.x + p2.x) / 2
-                                const my = Math.min(p1.y, p2.y) - 30
-                                const d = `M ${p1.x} ${p1.y} Q ${mx} ${my} ${p2.x} ${p2.y}`
-                                return (
-                                    <path
-                                        key={i}
-                                        id={`flight-path-${i}`}
-                                        d={d}
-                                        fill="none"
-                                        stroke={OLIVE}
-                                        strokeWidth="1"
-                                        strokeDasharray="3 4"
-                                        opacity={0.45}
-                                    />
-                                )
-                            })}
-
-                            {!reducedMotion && (
-                                <g>
-                                    <circle r="3.5" fill={OLIVE}>
-                                        <animateMotion dur="6s" repeatCount="indefinite" rotate="auto">
-                                            <mpath href="#flight-path-2" />
-                                        </animateMotion>
-                                    </circle>
-                                </g>
-                            )}
-
-                            {TRAVEL_MARKERS.map((m) => {
-                                const { x, y } = project(m.lat, m.lng)
-                                const isActive = active === m.id
-                                return (
-                                    <g
-                                        key={m.id}
-                                        tabIndex={0}
-                                        role="button"
-                                        aria-label={`${m.label}: ${m.places}`}
-                                        onMouseEnter={() => setActive(m.id)}
-                                        onMouseLeave={() => setActive((a) => (a === m.id ? null : a))}
-                                        onFocus={() => setActive(m.id)}
-                                        onBlur={() => setActive((a) => (a === m.id ? null : a))}
-                                        onClick={() => setActive((a) => (a === m.id ? null : m.id))}
-                                        onKeyDown={(e) => {
-                                            if (e.key === "Enter" || e.key === " ") {
-                                                e.preventDefault()
-                                                setActive((a) => (a === m.id ? null : m.id))
-                                            }
-                                        }}
-                                        style={{ cursor: "pointer", outline: "none" }}
-                                    >
-                                        {/* Generous invisible hit target centered on the pin itself — the
-                                            visible dot is small and the label sits above it, so without
-                                            this, hovering the label (which is pointer-events: none) misses
-                                            the marker's interactive area entirely. */}
-                                        <circle cx={x} cy={y} r="14" fill="rgba(0,0,0,0.001)" />
-                                        {isActive && !reducedMotion && (
-                                            <circle cx={x} cy={y} r="5" fill={OLIVE} style={{ animation: "marker-pulse 1.1s ease-out infinite" }} />
-                                        )}
-                                        <circle
-                                            cx={x}
-                                            cy={y}
-                                            r={isActive ? 6 : 4.5}
-                                            fill={OLIVE}
-                                            stroke="#fff"
-                                            strokeWidth="1.5"
-                                            style={{ transition: reducedMotion ? "none" : `r 0.2s ${EASE_OUT}` }}
-                                        />
-                                        <text
-                                            x={x}
-                                            y={y - 10}
-                                            textAnchor="middle"
-                                            style={{
-                                                fontFamily: I,
-                                                fontSize: 9,
-                                                fill: C.ink2,
-                                                pointerEvents: "none",
-                                                opacity: isActive ? 1 : 0.75,
-                                            }}
-                                        >
-                                            {m.label}
-                                        </text>
-                                    </g>
-                                )
-                            })}
-                        </svg>
-
-                        {activeMarker && (
-                            <div
-                                role="tooltip"
-                                style={{
-                                    position: "absolute",
-                                    left: `${(project(activeMarker.lat, activeMarker.lng).x / MAP_W) * 100}%`,
-                                    top: `${(project(activeMarker.lat, activeMarker.lng).y / MAP_H) * 100}%`,
-                                    transform: "translate(-50%, calc(-100% - 14px))",
-                                    backgroundColor: C.ink,
-                                    color: C.bg,
-                                    borderRadius: 8,
-                                    padding: "8px 12px",
-                                    fontSize: 11,
-                                    fontFamily: I,
-                                    whiteSpace: "nowrap" as const,
-                                    maxWidth: 220,
-                                    pointerEvents: "none",
-                                    zIndex: 2,
-                                    boxShadow: "0 6px 16px rgba(0,0,0,0.18)",
-                                }}
-                            >
-                                <div style={{ fontWeight: 600, marginBottom: 2 }}>{activeMarker.label}</div>
-                                <div style={{ opacity: 0.8, whiteSpace: "normal" as const }}>{activeMarker.places}</div>
-                            </div>
-                        )}
+            <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+                {[
+                    { value: "200+", label: "flights" },
+                    { value: "7", label: "countries" },
+                    { value: "PHL", label: "home base" },
+                ].map((s) => (
+                    <div
+                        key={s.label}
+                        style={{
+                            flex: 1,
+                            border: `1px solid ${C.border}`,
+                            borderRadius: 10,
+                            padding: "12px 8px",
+                            textAlign: "center",
+                        }}
+                    >
+                        <div style={{ fontFamily: I, fontWeight: 700, fontSize: 20, color: OLIVE }}>{s.value}</div>
+                        <div style={{ fontFamily: I, fontSize: 10, color: C.ink3, marginTop: 2 }}>{s.label}</div>
                     </div>
+                ))}
+            </div>
 
-                    {/* Destination pills — hovering/focusing highlights the matching marker */}
-                    <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6, marginTop: 12 }}>
-                        {[
-                            { label: "mumbai", id: "in" },
-                            { label: "london", id: "uk" },
-                            { label: "vietnam", id: "vn" },
-                            { label: "singapore", id: "sg" },
-                            { label: "dubai", id: "ae" },
-                        ].map((p) => (
-                            <button
-                                key={p.id}
-                                onMouseEnter={() => setActive(p.id)}
-                                onMouseLeave={() => setActive((a) => (a === p.id ? null : a))}
-                                onFocus={() => setActive(p.id)}
-                                onBlur={() => setActive((a) => (a === p.id ? null : a))}
-                                style={{
-                                    fontFamily: I,
-                                    fontSize: 11,
-                                    color: active === p.id ? C.ink : C.ink3,
-                                    backgroundColor: active === p.id ? "rgba(189,199,98,0.18)" : "rgba(0,0,0,0.03)",
-                                    border: "none",
-                                    borderRadius: 40,
-                                    padding: "5px 12px",
-                                    cursor: "pointer",
-                                    transition: reducedMotion ? "none" : "background-color 0.2s, color 0.2s",
-                                }}
-                            >
-                                {p.label}
-                            </button>
-                        ))}
+            <div style={{
+                border: `1px solid ${C.border}`,
+                borderRadius: 10,
+                padding: 16,
+                display: "flex",
+                alignItems: "center",
+                gap: 16,
+                marginBottom: 12,
+            }}>
+                {/* TODO: swap in Omisha's real tuk-tuk photo — placeholder path until uploaded */}
+                <img
+                    src="/explore/tuktuk.jpg"
+                    alt="Driving a tuk-tuk in Mumbai"
+                    style={{ width: 96, height: 96, objectFit: "cover", borderRadius: 8, flexShrink: 0 }}
+                />
+                <div>
+                    <div style={{ fontFamily: I, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.ink3, marginBottom: 4 }}>
+                        favorite memory
                     </div>
+                    <div style={{ fontFamily: I, fontSize: 14, color: C.ink }}>that's driving a tuk-tuk in mumbai</div>
                 </div>
+            </div>
 
-                {/* Stats column */}
-                <div style={{ flex: "1 1 240px", minWidth: 220, display: "flex", flexDirection: "column", gap: 10 }}>
-                    <div style={{ display: "flex", gap: 8 }}>
-                        {[
-                            { value: "200+", label: "flights" },
-                            { value: "7", label: "countries" },
-                            { value: "PHL", label: "home base" },
-                        ].map((s) => (
-                            <div
-                                key={s.label}
-                                style={{
-                                    flex: 1,
-                                    border: `1px solid ${C.border}`,
-                                    borderRadius: 10,
-                                    padding: "10px 8px",
-                                    textAlign: "center",
-                                }}
-                            >
-                                <div style={{ fontFamily: I, fontWeight: 700, fontSize: 18, color: OLIVE }}>{s.value}</div>
-                                <div style={{ fontFamily: I, fontSize: 10, color: C.ink3, marginTop: 2 }}>{s.label}</div>
-                            </div>
-                        ))}
-                    </div>
-
-                    <div style={{ border: `1px solid ${C.border}`, borderRadius: 10, padding: "14px 16px" }}>
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-                            <span style={{ fontFamily: I, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.ink3 }}>
-                                Favorite Memory
-                            </span>
-                            <TukTukIcon />
-                        </div>
-                        <div style={{ fontFamily: I, fontSize: 13, color: C.ink }}>driving a tuk-tuk in mumbai</div>
-                    </div>
-
-                    <div style={{ border: `1px solid ${C.border}`, borderRadius: 10, padding: "12px 16px" }}>
-                        <div style={{ fontFamily: I, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.ink3, marginBottom: 4 }}>
-                            Next Stops
-                        </div>
-                        <div style={{ fontFamily: I, fontSize: 13, color: C.ink }}>bali · mumbai · thailand</div>
-                    </div>
-
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 2 }}>
-                        <KeychainIcon />
-                        <span style={{ fontFamily: I, fontSize: 11, color: C.muted }}>
-                            collecting keychains &amp; beli recommendations
-                        </span>
-                    </div>
-                </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <KeychainIcon />
+                <span style={{ fontFamily: I, fontSize: 11, color: C.muted }}>
+                    collecting keychains &amp; beli ratings
+                </span>
             </div>
         </div>
     )
 }
 
+
+function PinterestButton() {
+    const [hov, setHov] = useState(false)
+    return (
+        <a
+            href="#"
+            target="_blank"
+            rel="noreferrer"
+            onMouseEnter={() => setHov(true)}
+            onMouseLeave={() => setHov(false)}
+            style={{
+                display: "inline-block",
+                fontFamily: I,
+                fontSize: 13,
+                fontWeight: 500,
+                color: C.bg,
+                backgroundColor: hov ? "#E60023" : C.ink,
+                borderRadius: 40,
+                padding: "10px 22px",
+                textDecoration: "none",
+                transition: "background-color 0.2s ease",
+            }}
+        >
+            explore
+        </a>
+    )
+}
+
 function FolderModalContent({ id }: { id: string }) {
-    if (id === "restaurants") return <HScrollGallery images={BELI_CARDS} />
+    if (id === "restaurants") return <EatsGallery />
     if (id === "film") return <HScrollGallery images={FILM_PHOTOS} />
 
     if (id === "songs") {
@@ -1625,27 +1468,10 @@ function FolderModalContent({ id }: { id: string }) {
                     interested in my inspo?
                 </p>
                 <p style={{ fontFamily: I, fontSize: 14, color: C.ink2, margin: "0 0 20px" }}>
-                    Explore my Pinterest page!
+                    explore my pinterest page!
                 </p>
                 {/* TODO: swap in Omisha's real Pinterest URL */}
-                <a
-                    href="#"
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{
-                        display: "inline-block",
-                        fontFamily: I,
-                        fontSize: 13,
-                        fontWeight: 500,
-                        color: C.bg,
-                        backgroundColor: C.ink,
-                        borderRadius: 40,
-                        padding: "10px 22px",
-                        textDecoration: "none",
-                    }}
-                >
-                    explore
-                </a>
+                <PinterestButton />
             </div>
         )
     }
@@ -1688,7 +1514,7 @@ function FolderModal({ folder, onClose }: { folder: (typeof FOLDERS)[0] | null; 
                     backgroundColor: C.bg,
                     borderRadius: 16,
                     width: "100%",
-                    maxWidth: folder.id === "travel" ? 820 : 620,
+                    maxWidth: folder.id === "restaurants" ? 720 : 620,
                     maxHeight: "80vh",
                     overflow: "auto",
                     padding: "32px 28px",
