@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   title: "Omisha Chabria — Product Designer",
   description:
     "I design digital products by balancing Creativity & Insights; always grounded in how people experience them.",
+  icons: {
+    icon: "/favicon.png",
+  },
 }
 
 export default function RootLayout({
