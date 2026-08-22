@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useRef, useEffect, useCallback } from "react"
-import SharedNav from "../components/SharedNav"
 
 const CURSOR_STYLES = `
   @keyframes hi-float {
@@ -36,11 +35,9 @@ const CURSOR_STYLES = `
   }
   html { scroll-behavior: smooth; }
   /* overflow-x: clip, not hidden — hidden without an explicit overflow-y
-     forces overflow-y: auto (CSS overflow computed-value fixup), which
-     turns body into a scroll container that never actually scrolls
-     (the document element does), so any position: sticky descendant like
-     SharedNav resolves against that inert scrollport and never sticks.
-     clip prevents the horizontal bleed without establishing one. */
+     forces overflow-y: auto (CSS overflow computed-value fixup), turning
+     body into a scroll container that never actually scrolls (the document
+     element does). clip prevents horizontal bleed without establishing one. */
   html, body { max-width: 100%; overflow-x: clip; }
   .logo-img {
     transition: opacity 0.35s ease;
@@ -217,7 +214,230 @@ function useBP() {
     return { ref, w, phone, tablet, desktop, large, px, maxW, sp }
 }
 
+const NAV_Z = "Zodiak, 'Times New Roman', serif"
+const NAV_YB = "var(--font-yuji-boku), serif"
 
+// Homepage-only nav: same look as SharedNav, but instead of sticking to the
+// top permanently, it hides on scroll-down and slides back in on scroll-up
+// (SharedNav itself stays untouched — it's shared with the case study pages,
+// which keep the always-sticky behavior).
+function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean; large: boolean; px: number }) {
+    const [scrolled, setScrolled] = useState(false)
+    const [hidden, setHidden] = useState(false)
+    const [menuOpen, setMenuOpen] = useState(false)
+    const [hoveredLink, setHoveredLink] = useState<string | null>(null)
+    const lastY = useRef(0)
+    const overlayRef = useRef<HTMLDivElement>(null)
+    const reducedMotion = useReducedMotion()
+
+    useEffect(() => {
+        lastY.current = window.scrollY
+        const onScroll = () => {
+            const y = window.scrollY
+            setScrolled(y > 12)
+            const goingDown = y > lastY.current
+            if (y < 80) {
+                setHidden(false)
+            } else if (goingDown && y - lastY.current > 2) {
+                setHidden(true)
+            } else if (!goingDown && lastY.current - y > 2) {
+                setHidden(false)
+            }
+            lastY.current = y
+        }
+        window.addEventListener("scroll", onScroll, { passive: true })
+        return () => window.removeEventListener("scroll", onScroll)
+    }, [])
+
+    useEffect(() => { if (!phone) setMenuOpen(false) }, [phone])
+
+    useEffect(() => {
+        document.body.style.overflow = menuOpen ? "hidden" : ""
+        return () => { document.body.style.overflow = "" }
+    }, [menuOpen])
+
+    const navH = phone ? 54 : 64
+    const allLinks = [
+        { label: "Work",       href: "#work" },
+        { label: "Playground", href: "/playground" },
+        { label: "LinkedIn",   href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
+        { label: "Resume",     href: "/slides/resume.pdf", ext: true },
+    ]
+
+    return (
+        <>
+            <nav
+                style={{
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    zIndex: 200,
+                    width: "100%",
+                    height: navH,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: `0 ${px}px`,
+                    boxSizing: "border-box",
+                    backgroundColor: scrolled || menuOpen ? "rgba(255,255,255,0.98)" : C.bg,
+                    backdropFilter: scrolled || menuOpen ? "blur(20px)" : "none",
+                    WebkitBackdropFilter: scrolled || menuOpen ? "blur(20px)" : "none",
+                    borderBottom: `1px solid ${scrolled || menuOpen ? "rgba(0,0,0,0.09)" : C.border}`,
+                    transform: `translateY(${hidden && !menuOpen ? -110 : 0}%)`,
+                    transition: reducedMotion
+                        ? "background 0.25s, border-color 0.25s"
+                        : "background 0.25s, border-color 0.25s, transform 0.3s ease",
+                }}
+            >
+                <a href="/" style={{ display: "block", lineHeight: 0, zIndex: 201 }}>
+                    <img
+                        src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png"
+                        alt="OC"
+                        style={{ width: phone ? 48 : 58, height: phone ? 48 : 58, objectFit: "contain", display: "block" }}
+                    />
+                </a>
+
+                {!phone && (
+                    <div style={{ display: "flex", gap: tablet ? 24 : 32, alignItems: "center" }}>
+                        {allLinks.map(({ label, href, ext }) => {
+                            const hovered = hoveredLink === label
+                            return (
+                                <a
+                                    key={label}
+                                    href={href}
+                                    target={ext ? "_blank" : "_self"}
+                                    rel="noreferrer"
+                                    style={{
+                                        position: "relative",
+                                        fontFamily: I,
+                                        fontSize: 14,
+                                        fontWeight: 500,
+                                        color: hovered ? C.ink : C.ink3,
+                                        textDecoration: "none",
+                                        letterSpacing: "-0.01em",
+                                        transition: "color 0.25s",
+                                    }}
+                                    onMouseEnter={() => setHoveredLink(label)}
+                                    onMouseLeave={() => setHoveredLink(null)}
+                                >
+                                    <span style={{
+                                        opacity: hovered ? 0 : 1,
+                                        transition: "opacity 0.25s ease",
+                                    }}>{label}</span>
+                                    <span style={{
+                                        position: "absolute",
+                                        left: 0,
+                                        top: "50%",
+                                        transform: "translateY(-50%)",
+                                        fontFamily: NAV_YB,
+                                        fontSize: 15,
+                                        fontWeight: 700,
+                                        fontStyle: "italic",
+                                        color: C.ink,
+                                        whiteSpace: "nowrap",
+                                        opacity: hovered ? 1 : 0,
+                                        transition: "opacity 0.25s ease",
+                                        pointerEvents: "none",
+                                    }}>{label}</span>
+                                </a>
+                            )
+                        })}
+                    </div>
+                )}
+
+                {phone && (
+                    <button
+                        onClick={() => setMenuOpen(o => !o)}
+                        aria-label={menuOpen ? "Close menu" : "Open menu"}
+                        style={{
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            padding: "10px",
+                            margin: "-10px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            zIndex: 201,
+                            minWidth: 44,
+                            minHeight: 44,
+                        }}
+                    >
+                        {menuOpen ? (
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                <path d="M2 2 L16 16" stroke={C.ink} strokeWidth="1.6" strokeLinecap="round"/>
+                                <path d="M16 2 L2 16" stroke={C.ink} strokeWidth="1.6" strokeLinecap="round"/>
+                            </svg>
+                        ) : (
+                            <svg width="5" height="21" viewBox="0 0 5 21" fill="none">
+                                <circle cx="2.5" cy="2.5" r="2.5" fill={C.ink}/>
+                                <circle cx="2.5" cy="10.5" r="2.5" fill={C.ink}/>
+                                <circle cx="2.5" cy="18.5" r="2.5" fill={C.ink}/>
+                            </svg>
+                        )}
+                    </button>
+                )}
+            </nav>
+
+            {phone && (
+                <div
+                    ref={overlayRef}
+                    onClick={(e) => { if (e.target === overlayRef.current) setMenuOpen(false) }}
+                    style={{
+                        position: "fixed",
+                        inset: 0,
+                        zIndex: 199,
+                        backgroundColor: "rgba(255,255,255,0.98)",
+                        backdropFilter: "blur(20px)",
+                        WebkitBackdropFilter: "blur(20px)",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "flex-start",
+                        padding: "0 32px",
+                        gap: 0,
+                        opacity: menuOpen ? 1 : 0,
+                        pointerEvents: menuOpen ? "auto" : "none",
+                        transition: "opacity 0.25s cubic-bezier(0.22,1,0.36,1)",
+                    }}
+                >
+                    {allLinks.map(({ label, href, ext }, i) => (
+                        <a
+                            key={label}
+                            href={href}
+                            target={ext ? "_blank" : "_self"}
+                            rel="noreferrer"
+                            onClick={() => setMenuOpen(false)}
+                            style={{
+                                fontFamily: NAV_Z,
+                                fontSize: 36,
+                                fontWeight: 400,
+                                color: C.ink3,
+                                textDecoration: "none",
+                                letterSpacing: "-0.02em",
+                                display: "flex",
+                                alignItems: "center",
+                                minHeight: 64,
+                                width: "100%",
+                                borderBottom: `1px solid ${C.border}`,
+                                opacity: menuOpen ? 1 : 0,
+                                transform: menuOpen ? "translateY(0)" : "translateY(16px)",
+                                transition: `opacity 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 55}ms, transform 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 55}ms`,
+                            }}
+                        >
+                            {label}
+                        </a>
+                    ))}
+                </div>
+            )}
+
+            {/* Reserves the flow space the fixed nav no longer occupies, so
+                Hero/LogoTicker's `calc(100svh - navH)` sizing still lands
+                exactly under the initial (visible) nav position. */}
+            <div style={{ width: "100%", height: navH, flexShrink: 0 }} aria-hidden="true" />
+        </>
+    )
+}
 
 function Hero({
     phone,
@@ -288,10 +508,11 @@ function Hero({
         jump:   phone ? 20 : tablet ? 24 : 28,
     }
 
-    // SharedNav is `position: sticky` and sits in normal flow above this section,
-    // so the section itself must be shorter than 100svh by the nav's height —
-    // otherwise the centered headline and the bottom-pinned CTA both drift
-    // below the visible viewport instead of centering/anchoring within it.
+    // HomeNav is `position: fixed` and reserves its own flow space via a
+    // spacer div, so this section still needs to be shorter than 100svh by
+    // the nav's height — otherwise the centered headline and the
+    // bottom-pinned CTA both drift below the visible viewport instead of
+    // centering/anchoring within it.
     const navH = phone ? 54 : 64
 
     return (
@@ -1657,7 +1878,7 @@ export default function ResponsiveHome() {
                 }}
             >
                 <style>{CURSOR_STYLES}</style>
-                <SharedNav />
+                <HomeNav phone={phone} tablet={tablet} large={large} px={px} />
                 <Hero phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
                 <WorkSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
                 <LogoTicker phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
