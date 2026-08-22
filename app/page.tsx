@@ -1206,6 +1206,250 @@ function Footer({
     )
 }
 
+const FOLDERS = [
+    { id: "restaurants", label: "List of restaurants i want to try" },
+    { id: "travel",      label: "My fav travel memories" },
+    { id: "songs",       label: "My recent fav songs" },
+    { id: "film",        label: "Recent film photos" },
+    { id: "moodboard",   label: "my moodboard (aka pinterest)" },
+]
+
+function FolderIcon({ color }: { color: string }) {
+    return (
+        <svg width="72" height="56" viewBox="0 0 72 56" fill="none" aria-hidden="true">
+            <path
+                d="M4 10a4 4 0 0 1 4-4h15l6 6h35a4 4 0 0 1 4 4v32a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V10z"
+                fill={color}
+            />
+            <rect x="4" y="17" width="64" height="3" fill="rgba(255,255,255,0.4)" />
+        </svg>
+    )
+}
+
+function Folder({ label, color, onClick }: { label: string; color: string; onClick: () => void }) {
+    const [hov, setHov] = useState(false)
+    const reducedMotion = useReducedMotion()
+    return (
+        <button
+            onClick={onClick}
+            onMouseEnter={() => setHov(true)}
+            onMouseLeave={() => setHov(false)}
+            style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 10,
+                width: 140,
+            }}
+        >
+            <div style={{ position: "relative", transform: hov ? "scale(1.05)" : "scale(1)", transition: `transform 0.3s ${EASE_SPRING}` }}>
+                <img
+                    src="/images/image 8.svg"
+                    alt=""
+                    aria-hidden="true"
+                    style={{
+                        position: "absolute",
+                        bottom: "78%",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        width: 26,
+                        display: "block",
+                        animation: reducedMotion ? "none" : "illust-float 5.5s ease-in-out infinite",
+                    }}
+                />
+                <FolderIcon color={color} />
+            </div>
+            <span style={{
+                fontFamily: I,
+                fontSize: 12,
+                fontWeight: 400,
+                color: C.ink2,
+                textAlign: "center",
+                lineHeight: 1.4,
+            }}>
+                {label}
+            </span>
+        </button>
+    )
+}
+
+function FolderModal({ folder, onClose }: { folder: (typeof FOLDERS)[0] | null; onClose: () => void }) {
+    useEffect(() => {
+        if (!folder) return
+        const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose() }
+        document.addEventListener("keydown", onKey)
+        document.body.style.overflow = "hidden"
+        return () => {
+            document.removeEventListener("keydown", onKey)
+            document.body.style.overflow = ""
+        }
+    }, [folder, onClose])
+
+    if (!folder) return null
+
+    return (
+        <div
+            onClick={onClose}
+            style={{
+                position: "fixed",
+                inset: 0,
+                zIndex: 300,
+                backgroundColor: "rgba(0,0,0,0.4)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 20,
+            }}
+        >
+            <div
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                    position: "relative",
+                    backgroundColor: C.bg,
+                    borderRadius: 16,
+                    width: "100%",
+                    maxWidth: 480,
+                    maxHeight: "80vh",
+                    overflow: "auto",
+                    padding: "32px 28px",
+                    boxShadow: "0 20px 60px rgba(0,0,0,0.18)",
+                }}
+            >
+                <button
+                    onClick={onClose}
+                    aria-label="Close"
+                    style={{
+                        position: "absolute",
+                        top: 16,
+                        right: 16,
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: 8,
+                        fontSize: 18,
+                        color: C.ink3,
+                        lineHeight: 1,
+                    }}
+                >
+                    ×
+                </button>
+                <h3 style={{
+                    fontFamily: I,
+                    fontWeight: 500,
+                    fontSize: 20,
+                    color: C.ink,
+                    margin: "0 24px 8px 0",
+                }}>
+                    {folder.label}
+                </h3>
+                {/* Content for this folder is a placeholder — Omisha's designing what
+                    actually lives here. */}
+                <p style={{ fontFamily: I, fontSize: 13, color: C.muted, margin: 0 }}>
+                    Coming soon.
+                </p>
+            </div>
+        </div>
+    )
+}
+
+function ExploreSection({
+    phone,
+    px,
+    maxW,
+}: {
+    phone: boolean
+    px: number
+    maxW: number
+}) {
+    const [open, setOpen] = useState(false)
+    const [shown, setShown] = useState(false)
+    const [activeFolder, setActiveFolder] = useState<(typeof FOLDERS)[0] | null>(null)
+    const reducedMotion = useReducedMotion()
+
+    useEffect(() => {
+        if (!open) { setShown(false); return }
+        const t = setTimeout(() => setShown(true), 20)
+        return () => clearTimeout(t)
+    }, [open])
+
+    return (
+        <section
+            style={{
+                width: "100%",
+                padding: `${phone ? 48 : 72}px ${px}px`,
+                boxSizing: "border-box",
+                backgroundColor: C.bg,
+            }}
+        >
+            <div style={{ maxWidth: maxW, width: "100%", margin: "0 auto", textAlign: "center" }}>
+                <button
+                    onClick={() => setOpen((o) => !o)}
+                    style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: 0,
+                        display: "inline-flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: 4,
+                    }}
+                >
+                    <span style={{ fontFamily: I, fontSize: 14, color: C.ink2 }}>
+                        want to learn more about Omisha?
+                    </span>
+                    <span style={{
+                        fontFamily: I,
+                        fontSize: 13,
+                        fontWeight: 500,
+                        color: C.ink,
+                        textDecoration: "underline",
+                        textUnderlineOffset: 3,
+                    }}>
+                        {open ? "hide folders" : "click to explore"}
+                    </span>
+                </button>
+
+                {open && (
+                    <div
+                        style={{
+                            marginTop: 56,
+                            opacity: shown || reducedMotion ? 1 : 0,
+                            transform: shown || reducedMotion ? "translateY(0)" : "translateY(16px)",
+                            transition: `opacity 0.5s ${EASE_OUT}, transform 0.5s ${EASE_OUT}`,
+                        }}
+                    >
+                        <div style={{ fontFamily: I, fontWeight: 200, fontSize: 28, color: C.ink, marginBottom: 40 }}>
+                            <HoverLetters text="explore folders" />
+                        </div>
+                        <div style={{
+                            display: "flex",
+                            flexWrap: "wrap" as const,
+                            justifyContent: "center",
+                            gap: phone ? 28 : 40,
+                        }}>
+                            {FOLDERS.map((f, i) => (
+                                <Folder
+                                    key={f.id}
+                                    label={f.label}
+                                    color={HOVER_COLORS[i % HOVER_COLORS.length]}
+                                    onClick={() => setActiveFolder(f)}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            <FolderModal folder={activeFolder} onClose={() => setActiveFolder(null)} />
+        </section>
+    )
+}
+
 export default function ResponsiveHome() {
     const { ref, phone, tablet, desktop, large, px, maxW, sp } = useBP()
 
@@ -1227,6 +1471,7 @@ export default function ResponsiveHome() {
                 <WorkSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
                 <LogoTicker phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
                 <SkillsSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
+                <ExploreSection phone={phone} px={px} maxW={maxW} />
                 <Footer phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
             </div>
         </>
