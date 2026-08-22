@@ -542,7 +542,6 @@ function CoverCard({
                     width: "100%",
                     aspectRatio: aspect,
                     overflow: "hidden",
-                    backgroundColor: "#F5F5F3",
                     position: "relative",
                 }}
             >
