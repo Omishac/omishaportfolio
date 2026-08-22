@@ -49,10 +49,10 @@ const CURSOR_STYLES = `
     .logo-img:hover { opacity: 0.7; }
   }
   .footer-icon {
-    transition: opacity 0.25s ease;
+    transition: transform 0.25s ease;
   }
   @media (hover: hover) and (pointer: fine) {
-    .footer-icon:hover { opacity: 1; }
+    .footer-icon:hover { transform: scale(1.1); }
   }
 `
 
@@ -1359,7 +1359,7 @@ function Footer({
     maxW: number
 }) {
     const logoW = phone ? 75 : tablet ? 85 : 90
-    const iconSize = phone ? 18 : 20
+    const iconSize = phone ? 26 : 30
     return (
         <footer
             style={{
@@ -1409,7 +1409,7 @@ function Footer({
                                 alt=""
                                 aria-hidden="true"
                                 className="footer-icon"
-                                style={{ width: iconSize, height: iconSize, display: "block", opacity: 0.65 }}
+                                style={{ width: iconSize, height: iconSize, display: "block" }}
                             />
                         </a>
                     ))}
