@@ -983,6 +983,7 @@ const SKILLS = [
 
 function SkillRow({ num, title, sub, phone, tablet, revealDelay }: { num: string; title: string; sub: string; phone: boolean; tablet: boolean; revealDelay: number }) {
     const [hov, setHov] = useState(false)
+    const [lineColor, setLineColor] = useState(C.ink)
     const [visible, setVisible] = useState(false)
     const ref = useRef<HTMLDivElement>(null)
     const isColumn = phone
@@ -1001,7 +1002,10 @@ function SkillRow({ num, title, sub, phone, tablet, revealDelay }: { num: string
     return (
         <div
             ref={ref}
-            onMouseEnter={() => setHov(true)}
+            onMouseEnter={() => {
+                setHov(true)
+                setLineColor(HOVER_COLORS[Math.floor(Math.random() * HOVER_COLORS.length)])
+            }}
             onMouseLeave={() => setHov(false)}
             style={{
                 padding: phone ? "14px 0" : "18px 0",
@@ -1046,10 +1050,10 @@ function SkillRow({ num, title, sub, phone, tablet, revealDelay }: { num: string
                     position: "absolute",
                     bottom: 0,
                     left: 0,
-                    height: "1px",
+                    height: "2px",
                     width: hov ? "100%" : "0%",
-                    backgroundColor: C.ink,
-                    transition: "width 0.4s cubic-bezier(0.22,1,0.36,1)",
+                    backgroundColor: lineColor,
+                    transition: "width 0.4s cubic-bezier(0.22,1,0.36,1), background-color 0.2s ease",
                 }}
             />
         </div>
