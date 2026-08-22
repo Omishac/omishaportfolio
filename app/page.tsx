@@ -523,7 +523,7 @@ function CoverCard({
         v.setAttribute("playsinline", "")
         v.setAttribute("preload", "auto")
         v.muted = true
-        v.style.cssText = "width:100%;height:100%;object-fit:cover;display:block;"
+        v.style.cssText = "width:100%;height:100%;object-fit:contain;display:block;"
         videoContainerRef.current.appendChild(v)
         v.play().catch(() => {})
         return () => { v.pause(); v.remove() }
@@ -541,7 +541,6 @@ function CoverCard({
                 style={{
                     width: "100%",
                     aspectRatio: aspect,
-                    borderRadius: 8,
                     overflow: "hidden",
                     backgroundColor: "#F5F5F3",
                     position: "relative",
@@ -556,7 +555,7 @@ function CoverCard({
                         style={{
                             width: "100%",
                             height: "100%",
-                            objectFit: "cover",
+                            objectFit: "contain",
                             display: "block",
                             transform: hov ? "scale(1.03)" : "scale(1)",
                             transition: `transform 0.6s ${EASE_SPRING}`,
