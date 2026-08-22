@@ -128,65 +128,6 @@ function useLerp(target: number, reducedMotion: boolean, factor: number = 0.12) 
     return value
 }
 
-// Scroll parallax backdrop. Tracks each layer's own distance from the
-// viewport center and offsets it by a fraction (`rate`) of that distance, so
-// as a section scrolls through the viewport its backdrop visibly drifts at a
-// different rate than the foreground content over it — a bounded, JS-driven
-// stand-in for the classic `perspective` + `translateZ` trick. That trick
-// needs the perspective-bearing element to *also* be the page's scrolling
-// container, which collides with `SharedNav`'s `position: sticky` (sticky
-// resolves against the nearest scrolling ancestor); this version needs no
-// `perspective`/`transform-style` anywhere, so it can't touch nav at all.
-// Must live inside a `position: relative; overflow: hidden` section — the
-// oversized `inset` bleed keeps the drifting layer from showing a gap at the
-// section edges.
-function ParallaxBackdrop({ rate, gradient }: { rate: number; gradient: string }) {
-    const ref = useRef<HTMLDivElement>(null)
-    const [offset, setOffset] = useState(0)
-    const reducedMotion = useReducedMotion()
-
-    useEffect(() => {
-        if (reducedMotion) { setOffset(0); return }
-        let raf = 0
-        const measure = () => {
-            const el = ref.current
-            if (el) {
-                const rect = el.getBoundingClientRect()
-                const centerDelta = rect.top + rect.height / 2 - window.innerHeight / 2
-                const clamped = Math.max(-1400, Math.min(1400, centerDelta))
-                setOffset(-clamped * rate)
-            }
-        }
-        const onScroll = () => {
-            cancelAnimationFrame(raf)
-            raf = requestAnimationFrame(measure)
-        }
-        measure()
-        window.addEventListener("scroll", onScroll, { passive: true })
-        window.addEventListener("resize", onScroll, { passive: true })
-        return () => {
-            window.removeEventListener("scroll", onScroll)
-            window.removeEventListener("resize", onScroll)
-            cancelAnimationFrame(raf)
-        }
-    }, [rate, reducedMotion])
-
-    return (
-        <div
-            ref={ref}
-            aria-hidden="true"
-            style={{
-                position: "absolute",
-                inset: -150,
-                transform: `translate3d(0, ${offset}px, 0)`,
-                background: gradient,
-                pointerEvents: "none",
-                willChange: "transform",
-            }}
-        />
-    )
-}
-
 function useBP() {
     const ref = useRef<HTMLDivElement>(null)
     const [w, setW] = useState(1280)
@@ -254,7 +195,9 @@ function Hero({
         return () => window.removeEventListener("scroll", onScroll)
     }, [reducedMotion])
 
-    const textParallax = reducedMotion ? 0 : -scrollY * 0.03
+    const textParallax = reducedMotion ? 0 : -scrollY * 0.18
+    const heroFade = reducedMotion ? 1 : Math.max(0, 1 - scrollY / 500)
+    const heroScale = reducedMotion ? 1 : Math.max(0.85, 1 - scrollY / 3200)
 
     const enter = (delayMs: number) => ({
         opacity:    revealed ? 1 : 0,
@@ -307,15 +250,15 @@ function Hero({
                 overflow: "hidden",
             }}
         >
-            <ParallaxBackdrop rate={0.05} gradient="radial-gradient(circle at 30% 20%, rgba(232,180,200,0.16) 0%, transparent 55%)" />
             {/* ── Centered headline block ── */}
             <div
                 style={{
                     position: "absolute",
                     top: "40%",
                     left: "50%",
-                    transform: `translate(-50%, calc(-50% + ${textParallax}px))`,
-                    willChange: "transform",
+                    transform: `translate(-50%, calc(-50% + ${textParallax}px)) scale(${heroScale})`,
+                    opacity: heroFade,
+                    willChange: "transform, opacity",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
@@ -413,12 +356,12 @@ function Hero({
                     position: "absolute",
                     left: "50%",
                     bottom: sp.heroBottom,
-                    transform: "translateX(-50%)",
+                    transform: `translateX(-50%) translateY(${(1 - heroFade) * 24}px)`,
                     display: "flex",
                     flexDirection: "row",
                     alignItems: "center",
                     gap: 6,
-                    opacity: revealed ? 1 : 0,
+                    opacity: revealed ? heroFade : 0,
                     transition: reducedMotion ? "none" : `opacity 0.5s ${EASE_OUT} 500ms`,
                 }}
             >
@@ -964,7 +907,7 @@ function WorkSection({
             const elMid = rect.top + rect.height / 2
             const vMid = window.innerHeight / 2
             const progress = (vMid - elMid) / window.innerHeight
-            setParallaxY(Math.max(-20, Math.min(20, -progress * 52)))
+            setParallaxY(Math.max(-90, Math.min(90, -progress * 170)))
         }
         window.addEventListener("scroll", onScroll, { passive: true })
         onScroll()
@@ -990,7 +933,6 @@ function WorkSection({
                 overflow: "hidden",
             }}
         >
-            <ParallaxBackdrop rate={0.08} gradient="radial-gradient(circle at 70% 10%, rgba(232,180,200,0.14) 0%, transparent 50%)" />
             <div style={{
                 position: "relative",
                 maxWidth: maxW,
@@ -1074,7 +1016,7 @@ function LogoTicker({
             const elMid = rect.top + rect.height / 2
             const vMid = window.innerHeight / 2
             const progress = (vMid - elMid) / window.innerHeight
-            setTickerY(Math.max(-12, Math.min(12, progress * 80)))
+            setTickerY(Math.max(-70, Math.min(70, progress * 240)))
         }
         window.addEventListener("scroll", onScroll, { passive: true })
         onScroll()
@@ -1110,7 +1052,6 @@ function LogoTicker({
                 overflow: "hidden",
             }}
         >
-            <ParallaxBackdrop rate={0.11} gradient="radial-gradient(circle at 50% 60%, rgba(232,180,200,0.14) 0%, transparent 55%)" />
             <div
                 style={{
                     position: "absolute",
@@ -1301,6 +1242,27 @@ function SkillsSection({
 }) {
     const sectionPad = phone ? 64 : tablet ? 80 : large ? 120 : 100
     const sectionRef = useRef<HTMLElement>(null)
+    const [skillsY, setSkillsY] = useState(0)
+    const reducedMotion = useReducedMotion()
+
+    // Same "rise to meet you, recede as you pass" parallax as Work/Brands,
+    // so the skills block feels like it's on its own layer sliding up over
+    // the section above rather than just appearing in place.
+    useEffect(() => {
+        if (reducedMotion) { setSkillsY(0); return }
+        const onScroll = () => {
+            const el = sectionRef.current
+            if (!el) return
+            const rect = el.getBoundingClientRect()
+            const elMid = rect.top + rect.height / 2
+            const vMid = window.innerHeight / 2
+            const progress = (vMid - elMid) / window.innerHeight
+            setSkillsY(Math.max(-90, Math.min(90, -progress * 170)))
+        }
+        window.addEventListener("scroll", onScroll, { passive: true })
+        onScroll()
+        return () => window.removeEventListener("scroll", onScroll)
+    }, [reducedMotion])
 
     return (
         <section
@@ -1314,13 +1276,14 @@ function SkillsSection({
                 overflow: "hidden",
             }}
         >
-            <ParallaxBackdrop rate={0.14} gradient="radial-gradient(circle at 25% 40%, rgba(232,180,200,0.12) 0%, transparent 50%)" />
             <div
                 style={{
                     position: "relative",
                     maxWidth: maxW,
                     width: "100%",
                     margin: "0 auto",
+                    transform: `translateY(${skillsY}px)`,
+                    willChange: "transform",
                 }}
             >
                 <SectionLabel tag="Skills" title="What I offer" phone={phone} tablet={tablet} large={large} />
