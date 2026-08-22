@@ -191,10 +191,9 @@ function Hero({
 
     const textParallax = reducedMotion ? 0 : -scrollY * 0.03
 
-    // Dramatic recede as the hero scrolls out — tilts away and shrinks into
-    // the screen, pairing with the Work section's tilt-up entrance below
-    // for a continuous "passing through 3D space" feel. Lerped so it trails
-    // the scroll position instead of snapping to it, for a smoother feel.
+    // Hero fades out flat as it scrolls out — no tilt, just a gentle fade +
+    // upward drift — as if the Work section is sliding up over it. Lerped so
+    // it trails the scroll position instead of snapping to it.
     const heroExitRaw = reducedMotion ? 0 : Math.min(1, scrollY / 480)
     const heroExit = useLerp(heroExitRaw, reducedMotion)
 
@@ -245,7 +244,7 @@ function Hero({
                 width: "100%",
                 minHeight: `calc(100svh - ${navH}px)`,
                 boxSizing: "border-box",
-                perspective: 700,
+                backgroundColor: C.bg,
             }}
         >
             {/* ── Centered headline block ── */}
@@ -254,9 +253,8 @@ function Hero({
                     position: "absolute",
                     top: "40%",
                     left: "50%",
-                    transform: `translate(-50%, calc(-50% + ${textParallax}px)) rotateX(${heroExit * -42}deg) rotateY(${heroExit * -10}deg) scale(${1 - heroExit * 0.35})`,
+                    transform: `translate(-50%, calc(-50% + ${textParallax - heroExit * 40}px))`,
                     opacity: 1 - heroExit * 0.9,
-                    transformOrigin: "center top",
                     willChange: "transform, opacity",
                     display: "flex",
                     flexDirection: "column",
@@ -885,8 +883,10 @@ function WorkSection({
     const [cardsShown, setCardsShown] = useState(false)
     const [parallaxY, setParallaxY] = useState(0)
     const [entryProgressRaw, setEntryProgressRaw] = useState(0)
+    const [exitProgressRaw, setExitProgressRaw] = useState(0)
     const reducedMotion = useReducedMotion()
     const entryProgress = useLerp(entryProgressRaw, reducedMotion)
+    const exitProgress = useLerp(exitProgressRaw, reducedMotion)
 
     useEffect(() => {
         const el = sectionRef.current
@@ -898,10 +898,11 @@ function WorkSection({
         return () => obs.disconnect()
     }, [])
 
-    // Dramatic scroll-driven 3D tilt-up as the section enters — pairs with Hero's
-    // recede-on-scroll (see Hero's heroExit) for a continuous pass-through feel.
+    // Flat slide-up-and-fade as the section enters, fading out (still flat,
+    // no tilt) as it scrolls past — so it reads as the next section sliding
+    // up and taking over, rather than a 3D card flip.
     useEffect(() => {
-        if (reducedMotion) { setParallaxY(0); setEntryProgressRaw(1); return }
+        if (reducedMotion) { setParallaxY(0); setEntryProgressRaw(1); setExitProgressRaw(0); return }
         const onScroll = () => {
             const el = sectionRef.current
             if (!el) return
@@ -918,6 +919,11 @@ function WorkSection({
             const raw = (start - rect.top) / (start - end)
             const clamped = Math.min(1, Math.max(0, raw))
             setEntryProgressRaw(1 - Math.pow(1 - clamped, 3)) // ease-out — this is an entrance
+
+            const exitStart = vh * 0.25   // fade begins once the section's bottom nears the top of the viewport
+            const exitEnd = vh * -0.55    // fully faded once it's well above
+            const exitRaw = (exitStart - rect.bottom) / (exitStart - exitEnd)
+            setExitProgressRaw(Math.min(1, Math.max(0, exitRaw)))
         }
         window.addEventListener("scroll", onScroll, { passive: true })
         onScroll()
@@ -935,23 +941,24 @@ function WorkSection({
             ref={sectionRef}
             id="work"
             style={{
+                position: "relative",
                 width: "100%",
                 padding: `0 ${px}px ${sp.sectionGap}px`,
                 boxSizing: "border-box",
-                perspective: 450,
+                backgroundColor: C.bg,
+                zIndex: 2,
             }}
         >
             <div style={{
                 maxWidth: maxW,
                 width: "100%",
                 margin: "0 auto",
-                transform: `translateY(${parallaxY}px) rotateX(${(1 - entryProgress) * 75}deg) rotateY(${(1 - entryProgress) * 10}deg) scale(${0.55 + entryProgress * 0.45})`,
-                opacity: entryProgress,
-                transformOrigin: "center bottom",
+                transform: `translateY(${parallaxY + (1 - entryProgress) * 100 - exitProgress * 40}px)`,
+                opacity: entryProgress * (1 - exitProgress),
                 willChange: "transform, opacity",
             }}>
                 <SectionLabel
-                    tag="Product Design · Research · Digital Commerce"
+                    tag="UX Strategy · Research · Digital Commerce"
                     title="Selected Work"
                     phone={phone}
                     tablet={tablet}
@@ -1014,14 +1021,16 @@ function LogoTicker({
     const outerRef = useRef<HTMLDivElement>(null)
     const [tickerY, setTickerY] = useState(0)
     const [entryProgressRaw, setEntryProgressRaw] = useState(0)
+    const [exitProgressRaw, setExitProgressRaw] = useState(0)
     const reducedMotion = useReducedMotion()
     const entryProgress = useLerp(entryProgressRaw, reducedMotion)
+    const exitProgress = useLerp(exitProgressRaw, reducedMotion)
     const navH = phone ? 54 : 64
 
-    // Dramatic scroll-driven 3D tilt-up as Brands enters — same treatment as
-    // Work's and Skills' entrance, instead of a recede-on-exit.
+    // Flat slide-up-and-fade as Brands enters, fading out (still flat, no
+    // tilt) as it scrolls past — matches Work's entrance/exit treatment.
     useEffect(() => {
-        if (reducedMotion) { setTickerY(0); setEntryProgressRaw(1); return }
+        if (reducedMotion) { setTickerY(0); setEntryProgressRaw(1); setExitProgressRaw(0); return }
         const onScroll = () => {
             const el = outerRef.current
             if (!el) return
@@ -1037,6 +1046,11 @@ function LogoTicker({
             const raw = (start - rect.top) / (start - end)
             const clamped = Math.min(1, Math.max(0, raw))
             setEntryProgressRaw(1 - Math.pow(1 - clamped, 3)) // ease-out — this is an entrance
+
+            const exitStart = vh * 0.25   // fade begins once the section's bottom nears the top of the viewport
+            const exitEnd = vh * -0.55    // fully faded once it's well above
+            const exitRaw = (exitStart - rect.bottom) / (exitStart - exitEnd)
+            setExitProgressRaw(Math.min(1, Math.max(0, exitRaw)))
         }
         window.addEventListener("scroll", onScroll, { passive: true })
         onScroll()
@@ -1068,18 +1082,16 @@ function LogoTicker({
                 width: "100%",
                 minHeight: `calc(100svh - ${navH}px)`,
                 boxSizing: "border-box",
-                borderTop: `1px solid ${C.border}`,
-                overflow: "hidden",
-                perspective: 450,
+                backgroundColor: C.bg,
+                zIndex: 3,
             }}
         >
             <div
                 style={{
                     position: "absolute",
                     inset: 0,
-                    transform: `translateY(${tickerY}px) rotateX(${(1 - entryProgress) * 75}deg) rotateY(${(1 - entryProgress) * 10}deg) scale(${0.55 + entryProgress * 0.45})`,
-                    opacity: entryProgress,
-                    transformOrigin: "center bottom",
+                    transform: `translateY(${tickerY + (1 - entryProgress) * 100 - exitProgress * 40}px)`,
+                    opacity: entryProgress * (1 - exitProgress),
                     willChange: "transform, opacity",
                 }}
             >
@@ -1301,11 +1313,12 @@ function SkillsSection({
         <section
             ref={sectionRef}
             style={{
+                position: "relative",
                 width: "100%",
                 padding: `${sectionPad}px ${px}px`,
                 boxSizing: "border-box",
-                borderTop: `1px solid ${C.border}`,
-                perspective: 450,
+                backgroundColor: C.bg,
+                zIndex: 4,
             }}
         >
             <div
@@ -1313,9 +1326,8 @@ function SkillsSection({
                     maxWidth: maxW,
                     width: "100%",
                     margin: "0 auto",
-                    transform: `rotateX(${(1 - entryProgress) * 75}deg) rotateY(${(1 - entryProgress) * 10}deg) scale(${0.55 + entryProgress * 0.45})`,
+                    transform: `translateY(${(1 - entryProgress) * 100}px)`,
                     opacity: entryProgress,
-                    transformOrigin: "center bottom",
                     willChange: "transform, opacity",
                 }}
             >
@@ -1352,7 +1364,7 @@ function Footer({
                 width: "100%",
                 padding: `${phone ? 24 : 32}px ${px}px`,
                 boxSizing: "border-box",
-                borderTop: `1px solid ${C.border}`,
+                backgroundColor: C.bg,
             }}
         >
             <div
