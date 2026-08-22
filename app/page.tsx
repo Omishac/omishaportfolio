@@ -1013,12 +1013,12 @@ function LogoTicker({
     px: number
     maxW: number
 }) {
-    const sectionPad = phone ? 64 : tablet ? 80 : large ? 120 : 100
     const outerRef = useRef<HTMLDivElement>(null)
     const [tickerY, setTickerY] = useState(0)
     const [recedeRaw, setRecedeRaw] = useState(0)
     const reducedMotion = useReducedMotion()
     const recede = useLerp(recedeRaw, reducedMotion)
+    const navH = phone ? 54 : 64
 
     // Dramatic recede as Brands scrolls out — pairs with Skills' tilt-up
     // entrance below, same treatment as Hero receding into Work.
@@ -1044,12 +1044,26 @@ function LogoTicker({
         return () => window.removeEventListener("scroll", onScroll)
     }, [reducedMotion])
 
+    // Scattered positions (top%, left%) matching the reference layout — logos
+    // loosely surrounding the centered title instead of lining up in a row.
+    // Order matches LOGOS: Anthropologie, Budweiser, Drexel, J&J, Lakmé, URBN.
+    const SCATTER = [
+        { top: "30%", left: "32%" },
+        { top: "52%", left: "13%" },
+        { top: "81%", left: "21%" },
+        { top: "34%", left: "74%" },
+        { top: "85%", left: "49%" },
+        { top: "65%", left: "80%" },
+    ]
+    const logoH = phone ? 26 : tablet ? 32 : large ? 46 : 40
+
     return (
         <section
             ref={outerRef}
             style={{
+                position: "relative",
                 width: "100%",
-                padding: `${sectionPad}px ${px}px`,
+                minHeight: `calc(100svh - ${navH}px)`,
                 boxSizing: "border-box",
                 borderTop: `1px solid ${C.border}`,
                 overflow: "hidden",
@@ -1058,51 +1072,92 @@ function LogoTicker({
         >
             <div
                 style={{
-                    maxWidth: maxW,
-                    width: "100%",
-                    margin: "0 auto",
+                    position: "absolute",
+                    inset: 0,
                     transform: `translateY(${tickerY}px) rotateX(${recede * -42}deg) rotateY(${recede * -10}deg) scale(${1 - recede * 0.35})`,
                     opacity: 1 - recede * 0.9,
                     transformOrigin: "center top",
                     willChange: "transform, opacity",
                 }}
             >
-                <SectionLabel
-                    tag="Brands"
-                    title="Industry Experience"
-                    phone={phone}
-                    tablet={tablet}
-                    large={large}
-                />
-                <div
-                    style={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        columnGap: phone ? 32 : tablet ? 44 : 64,
-                        rowGap: phone ? 24 : 32,
-                        width: "100%",
-                        marginTop: phone ? 16 : 24,
-                    }}
-                >
-                    {LOGOS.map(({ src, alt }, i) => (
-                        <img
-                            key={alt}
-                            src={src}
-                            alt={alt}
-                            className="logo-img"
+                {phone ? (
+                    // Scattering six logos across a phone-width viewport reads as
+                    // clutter, not a composition — keep the simple centered cluster.
+                    <div
+                        style={{
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            width: `calc(100% - ${px * 2}px)`,
+                        }}
+                    >
+                        <SectionLabel tag="Brands" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
+                        <div
                             style={{
-                                height: phone ? 30 : tablet ? 34 : large ? 46 : 40,
-                                width: "auto",
-                                display: "block",
-                                animation: reducedMotion
-                                    ? "none"
-                                    : `illust-float ${5.5 + (i % 3) * 0.6}s ease-in-out infinite ${i * 0.35}s`,
+                                display: "flex",
+                                flexWrap: "wrap",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                columnGap: 28,
+                                rowGap: 22,
+                                width: "100%",
+                                marginTop: 16,
                             }}
-                        />
-                    ))}
-                </div>
+                        >
+                            {LOGOS.map(({ src, alt }, i) => (
+                                <img
+                                    key={alt}
+                                    src={src}
+                                    alt={alt}
+                                    className="logo-img"
+                                    style={{
+                                        height: logoH,
+                                        width: "auto",
+                                        display: "block",
+                                        animation: reducedMotion
+                                            ? "none"
+                                            : `illust-float ${5.5 + (i % 3) * 0.6}s ease-in-out infinite ${i * 0.35}s`,
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        <div style={{ position: "absolute", top: "49%", left: "49%", transform: "translate(-50%, -50%)" }}>
+                            <SectionLabel tag="Brands" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
+                        </div>
+                        {LOGOS.map(({ src, alt }, i) => (
+                            // Positioning transform lives on this wrapper, not the img — the
+                            // img's own transform gets overwritten each frame by the
+                            // illust-float keyframes, which would otherwise fight the centering.
+                            <div
+                                key={alt}
+                                style={{
+                                    position: "absolute",
+                                    top: SCATTER[i].top,
+                                    left: SCATTER[i].left,
+                                    transform: "translate(-50%, -50%)",
+                                }}
+                            >
+                                <img
+                                    src={src}
+                                    alt={alt}
+                                    className="logo-img"
+                                    style={{
+                                        height: logoH,
+                                        width: "auto",
+                                        display: "block",
+                                        animation: reducedMotion
+                                            ? "none"
+                                            : `illust-float ${5.5 + (i % 3) * 0.6}s ease-in-out infinite ${i * 0.35}s`,
+                                    }}
+                                />
+                            </div>
+                        ))}
+                    </>
+                )}
             </div>
         </section>
     )
