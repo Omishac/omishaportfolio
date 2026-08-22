@@ -54,6 +54,12 @@ const CURSOR_STYLES = `
   @media (hover: hover) and (pointer: fine) {
     .footer-icon:hover { transform: scale(1.1); }
   }
+  .hscroll {
+    scrollbar-width: none;
+  }
+  .hscroll::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 const I = "Inter, system-ui, sans-serif"
@@ -1207,28 +1213,15 @@ function Footer({
 }
 
 const FOLDERS = [
-    { id: "restaurants", label: "List of restaurants i want to try" },
-    { id: "travel",      label: "My fav travel memories" },
-    { id: "songs",       label: "My recent fav songs" },
-    { id: "film",        label: "Recent film photos" },
-    { id: "moodboard",   label: "my moodboard (aka pinterest)" },
+    { id: "restaurants", label: "List of restaurants i want to try", icon: "/explore/icon-eats.png" },
+    { id: "travel",      label: "My fav travel memories",            icon: "/explore/icon-travel.png" },
+    { id: "songs",       label: "My recent fav songs",                icon: "/explore/icon-music.png" },
+    { id: "film",        label: "Recent film photos",                 icon: "/explore/icon-film.png" },
+    { id: "moodboard",   label: "my moodboard (aka pinterest)",       icon: "/explore/icon-moodboard.png" },
 ]
 
-function FolderIcon({ color }: { color: string }) {
-    return (
-        <svg width="72" height="56" viewBox="0 0 72 56" fill="none" aria-hidden="true">
-            <path
-                d="M4 10a4 4 0 0 1 4-4h15l6 6h35a4 4 0 0 1 4 4v32a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V10z"
-                fill={color}
-            />
-            <rect x="4" y="17" width="64" height="3" fill="rgba(255,255,255,0.4)" />
-        </svg>
-    )
-}
-
-function Folder({ label, color, onClick }: { label: string; color: string; onClick: () => void }) {
+function Folder({ label, icon, onClick }: { label: string; icon: string; onClick: () => void }) {
     const [hov, setHov] = useState(false)
-    const reducedMotion = useReducedMotion()
     return (
         <button
             onClick={onClick}
@@ -1246,23 +1239,18 @@ function Folder({ label, color, onClick }: { label: string; color: string; onCli
                 width: 140,
             }}
         >
-            <div style={{ position: "relative", transform: hov ? "scale(1.05)" : "scale(1)", transition: `transform 0.3s ${EASE_SPRING}` }}>
-                <img
-                    src="/images/image 8.svg"
-                    alt=""
-                    aria-hidden="true"
-                    style={{
-                        position: "absolute",
-                        bottom: "78%",
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        width: 26,
-                        display: "block",
-                        animation: reducedMotion ? "none" : "illust-float 5.5s ease-in-out infinite",
-                    }}
-                />
-                <FolderIcon color={color} />
-            </div>
+            <img
+                src={icon}
+                alt=""
+                aria-hidden="true"
+                style={{
+                    width: 84,
+                    height: "auto",
+                    display: "block",
+                    transform: hov ? "scale(1.08)" : "scale(1)",
+                    transition: `transform 0.3s ${EASE_SPRING}`,
+                }}
+            />
             <span style={{
                 fontFamily: I,
                 fontSize: 12,
@@ -1275,6 +1263,134 @@ function Folder({ label, color, onClick }: { label: string; color: string; onCli
             </span>
         </button>
     )
+}
+
+// Horizontally scrollable strip of images, used by the "eats" and "film"
+// folder contents — snaps per-card and hides the scrollbar (.hscroll, in
+// CURSOR_STYLES) while staying native-scrollable for touch/trackpad.
+function HScrollGallery({ images }: { images: { src: string; alt: string }[] }) {
+    return (
+        <div
+            className="hscroll"
+            style={{
+                display: "flex",
+                gap: 12,
+                overflowX: "auto",
+                scrollSnapType: "x mandatory",
+                margin: "0 -28px",
+                padding: "0 28px",
+            }}
+        >
+            {images.map((img, i) => (
+                <img
+                    key={i}
+                    src={img.src}
+                    alt={img.alt}
+                    style={{
+                        height: 260,
+                        width: "auto",
+                        flexShrink: 0,
+                        borderRadius: 10,
+                        objectFit: "cover",
+                        scrollSnapAlign: "start",
+                        display: "block",
+                    }}
+                />
+            ))}
+        </div>
+    )
+}
+
+const FILM_PHOTOS = [1, 2, 3, 4, 5, 6].map((n) => ({ src: `/explore/film-${n}.jpg`, alt: `Film photo ${n}` }))
+
+const BELI_CARDS = [
+    { src: "/explore/beli-dining-map.png",    alt: "Beli — Your Dining Map" },
+    { src: "/explore/beli-top10-mumbai.png",  alt: "Beli — Top 10 Mumbai" },
+    { src: "/explore/beli-top10-philly.png",  alt: "Beli — Top 10 Philadelphia" },
+    { src: "/explore/beli-top10-nyc.png",     alt: "Beli — Top 10 New York" },
+    { src: "/explore/beli-top-diner.png",     alt: "Beli — Top 62% Diner" },
+]
+
+function FolderModalContent({ id }: { id: string }) {
+    if (id === "restaurants") return <HScrollGallery images={BELI_CARDS} />
+    if (id === "film") return <HScrollGallery images={FILM_PHOTOS} />
+
+    if (id === "songs") {
+        // Spotify integration is pending API credentials — see prior
+        // conversation. Placeholder until that's wired up.
+        return <p style={{ fontFamily: I, fontSize: 13, color: C.muted, margin: 0 }}>Coming soon.</p>
+    }
+
+    if (id === "travel") {
+        // Transcribed from Omisha's mockup — double-check these numbers/copy.
+        return (
+            <div>
+                <div style={{ display: "flex", gap: 32, marginBottom: 24 }}>
+                    <div>
+                        <div style={{ fontFamily: I, fontWeight: 700, fontSize: 22, color: C.ink }}>200+</div>
+                        <div style={{ fontFamily: I, fontSize: 11, color: C.muted }}>flights</div>
+                    </div>
+                    <div>
+                        <div style={{ fontFamily: I, fontWeight: 700, fontSize: 22, color: C.ink }}>7</div>
+                        <div style={{ fontFamily: I, fontSize: 11, color: C.muted }}>countries</div>
+                    </div>
+                    <div>
+                        <div style={{ fontFamily: I, fontWeight: 700, fontSize: 22, color: C.ink }}>PHL</div>
+                        <div style={{ fontFamily: I, fontSize: 11, color: C.muted }}>home base</div>
+                    </div>
+                </div>
+                <div style={{ padding: "14px 16px", backgroundColor: "rgba(0,0,0,0.03)", borderRadius: 10, marginBottom: 16 }}>
+                    <div style={{ fontFamily: I, fontSize: 10, letterSpacing: "0.06em", textTransform: "uppercase" as const, color: C.muted, marginBottom: 4 }}>
+                        favorite memory
+                    </div>
+                    <div style={{ fontFamily: I, fontSize: 13, color: C.ink2 }}>driving a tuk-tuk in mumbai</div>
+                </div>
+                <div style={{ marginBottom: 16 }}>
+                    <div style={{ fontFamily: I, fontSize: 10, letterSpacing: "0.06em", textTransform: "uppercase" as const, color: C.muted, marginBottom: 4 }}>
+                        best trips
+                    </div>
+                    <div style={{ fontFamily: I, fontSize: 13, color: C.ink2 }}>bali · mumbai · thailand</div>
+                </div>
+                <div style={{ fontFamily: I, fontSize: 12, color: C.muted }}>
+                    ask me about: orlando premium outlets &amp; bali recommendations
+                </div>
+            </div>
+        )
+    }
+
+    if (id === "moodboard") {
+        return (
+            <div style={{ textAlign: "center", padding: "12px 0" }}>
+                <p style={{ fontFamily: I, fontWeight: 500, fontSize: 15, color: C.ink, margin: "0 0 4px" }}>
+                    interested in my inspo?
+                </p>
+                <p style={{ fontFamily: I, fontSize: 14, color: C.ink2, margin: "0 0 20px" }}>
+                    Explore my Pinterest page!
+                </p>
+                {/* TODO: swap in Omisha's real Pinterest URL */}
+                <a
+                    href="#"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                        display: "inline-block",
+                        fontFamily: I,
+                        fontSize: 13,
+                        fontWeight: 500,
+                        color: C.bg,
+                        backgroundColor: C.ink,
+                        borderRadius: 40,
+                        padding: "10px 22px",
+                        textDecoration: "none",
+                    }}
+                >
+                    explore
+                </a>
+            </div>
+        )
+    }
+
+    return null
 }
 
 function FolderModal({ folder, onClose }: { folder: (typeof FOLDERS)[0] | null; onClose: () => void }) {
@@ -1312,7 +1428,7 @@ function FolderModal({ folder, onClose }: { folder: (typeof FOLDERS)[0] | null; 
                     backgroundColor: C.bg,
                     borderRadius: 16,
                     width: "100%",
-                    maxWidth: 480,
+                    maxWidth: 620,
                     maxHeight: "80vh",
                     overflow: "auto",
                     padding: "32px 28px",
@@ -1342,15 +1458,11 @@ function FolderModal({ folder, onClose }: { folder: (typeof FOLDERS)[0] | null; 
                     fontWeight: 500,
                     fontSize: 20,
                     color: C.ink,
-                    margin: "0 24px 8px 0",
+                    margin: "0 24px 16px 0",
                 }}>
                     {folder.label}
                 </h3>
-                {/* Content for this folder is a placeholder — Omisha's designing what
-                    actually lives here. */}
-                <p style={{ fontFamily: I, fontSize: 13, color: C.muted, margin: 0 }}>
-                    Coming soon.
-                </p>
+                <FolderModalContent id={folder.id} />
             </div>
         </div>
     )
@@ -1432,11 +1544,11 @@ function ExploreSection({
                             justifyContent: "center",
                             gap: phone ? 28 : 40,
                         }}>
-                            {FOLDERS.map((f, i) => (
+                            {FOLDERS.map((f) => (
                                 <Folder
                                     key={f.id}
                                     label={f.label}
-                                    color={HOVER_COLORS[i % HOVER_COLORS.length]}
+                                    icon={f.icon}
                                     onClick={() => setActiveFolder(f)}
                                 />
                             ))}
