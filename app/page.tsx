@@ -48,6 +48,12 @@ const CURSOR_STYLES = `
   @media (hover: hover) and (pointer: fine) {
     .logo-img:hover { opacity: 0.7; }
   }
+  .footer-icon {
+    transition: opacity 0.25s ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .footer-icon:hover { opacity: 1; }
+  }
 `
 
 const I = "Inter, system-ui, sans-serif"
@@ -1353,8 +1359,7 @@ function Footer({
     maxW: number
 }) {
     const logoW = phone ? 75 : tablet ? 85 : 90
-    const [hovFooter, setHovFooter] = useState<string | null>(null)
-    const YB = "var(--font-yuji-boku), serif"
+    const iconSize = phone ? 18 : 20
     return (
         <footer
             style={{
@@ -1386,51 +1391,28 @@ function Footer({
                         © {new Date().getFullYear()} Omisha Chabria
                     </p>
                 </div>
-                <div style={{ display: "flex", gap: phone ? 20 : tablet ? 24 : 32, alignItems: "center" }}>
+                <div style={{ display: "flex", gap: phone ? 18 : 22, alignItems: "center" }}>
                     {[
-                        { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-                        { label: "Email", href: "mailto:omishachabria3@gmail.com" },
-                        { label: "Resume", href: "/slides/resume.pdf", ext: true },
-                    ].map(({ label, href, ext }) => {
-                        const hovered = hovFooter === label
-                        return (
-                            <a
-                                key={label}
-                                href={href}
-                                target={ext ? "_blank" : "_self"}
-                                rel="noreferrer"
-                                style={{
-                                    position: "relative",
-                                    fontFamily: I,
-                                    fontSize: phone ? 13 : 14,
-                                    fontWeight: 500,
-                                    color: hovered ? C.ink : C.ink3,
-                                    textDecoration: "none",
-                                    letterSpacing: "-0.01em",
-                                    transition: "color 0.25s",
-                                }}
-                                onMouseEnter={() => setHovFooter(label)}
-                                onMouseLeave={() => setHovFooter(null)}
-                            >
-                                <span style={{ opacity: hovered ? 0 : 1, transition: "opacity 0.25s ease" }}>{label}</span>
-                                <span style={{
-                                    position: "absolute",
-                                    left: 0,
-                                    top: "50%",
-                                    transform: "translateY(-50%)",
-                                    fontFamily: YB,
-                                    fontSize: phone ? 14 : 15,
-                                    fontWeight: 700,
-                                    fontStyle: "italic",
-                                    color: C.ink,
-                                    whiteSpace: "nowrap",
-                                    opacity: hovered ? 1 : 0,
-                                    transition: "opacity 0.25s ease",
-                                    pointerEvents: "none",
-                                }}>{label}</span>
-                            </a>
-                        )
-                    })}
+                        { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true, icon: "/icons/linkedin.svg" },
+                        { label: "Email", href: "mailto:omishachabria3@gmail.com", ext: false, icon: "/icons/mail.svg" },
+                    ].map(({ label, href, ext, icon }) => (
+                        <a
+                            key={label}
+                            href={href}
+                            target={ext ? "_blank" : "_self"}
+                            rel="noreferrer"
+                            aria-label={label}
+                            style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+                        >
+                            <img
+                                src={icon}
+                                alt=""
+                                aria-hidden="true"
+                                className="footer-icon"
+                                style={{ width: iconSize, height: iconSize, display: "block", opacity: 0.65 }}
+                            />
+                        </a>
+                    ))}
                 </div>
             </div>
         </footer>
