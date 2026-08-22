@@ -476,7 +476,7 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
         tags: ["Product Design", "Design Systems", "E-Commerce"],
         company: "URBN",
         desc: "Redesigning the filter experience across four retail brands, balancing discoverability with speed for millions of shoppers.",
-        aspect: "4 / 3",
+        aspect: "2.2 / 1",
     },
     {
         href: "/ios-review-accessibility",
@@ -494,7 +494,7 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
         tags: ["A/B Testing", "Strategy", "iOS"],
         company: "URBN",
         desc: "Testing and refining the mobile shopping journey to lift conversion across the app.",
-        aspect: "4 / 5",
+        aspect: "3 / 4",
     },
 ]
 
@@ -681,15 +681,22 @@ function WorkSection({
                     tablet={tablet}
                     large={large}
                 />
-                <div style={{
-                    columns: phone ? 1 : 2,
-                    columnGap: sp.cardColGap || 24,
-                }}>
-                    {CARDS.map((c, i) => (
-                        <div key={i} style={{ ...reveal(i), breakInside: "avoid" as const, marginBottom: sp.cardRowGap }}>
-                            <CoverCard {...c} titleSize={cardTitleSize} />
+                <div style={{ display: "flex", flexDirection: "column", gap: sp.cardRowGap }}>
+                    <div style={reveal(0)}>
+                        <CoverCard {...CARDS[0]} titleSize={cardTitleSize} />
+                    </div>
+                    <div style={{
+                        display: "flex",
+                        flexDirection: phone ? "column" : "row",
+                        gap: phone ? sp.cardRowGap : sp.cardColGap,
+                    }}>
+                        <div style={{ flex: 1 }}>
+                            <div style={reveal(1)}><CoverCard {...CARDS[1]} titleSize={cardTitleSize} /></div>
                         </div>
-                    ))}
+                        <div style={{ flex: 1 }}>
+                            <div style={reveal(2)}><CoverCard {...CARDS[2]} titleSize={cardTitleSize} /></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
