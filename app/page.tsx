@@ -467,7 +467,7 @@ function SectionLabel({
     )
 }
 
-const CARDS: { href: string; image: string; video?: string; title: string; tags: string[]; company: string; desc: string; aspect: string }[] = [
+const CARDS: { href: string; image: string; video?: string; title: string; tags: string[]; company: string; desc: string }[] = [
     {
         href: "/anthropologie-product-discovery",
         image: "https://framerusercontent.com/images/vE5NBaasSteSM6lORQbcDZsAU.png",
@@ -476,7 +476,6 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
         tags: ["Product Design", "Design Systems", "E-Commerce"],
         company: "URBN",
         desc: "Redesigning the filter experience across four retail brands, balancing discoverability with speed for millions of shoppers.",
-        aspect: "4 / 3",
     },
     {
         href: "/ios-review-accessibility",
@@ -485,7 +484,6 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
         tags: ["Research", "UX/UI", "iOS"],
         company: "URBN",
         desc: "Improving how shoppers read and trust customer reviews inside the iOS app.",
-        aspect: "3 / 4",
     },
     {
         href: "/anthropologie-mcommerce",
@@ -494,7 +492,6 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
         tags: ["A/B Testing", "Strategy", "iOS"],
         company: "URBN",
         desc: "Testing and refining the mobile shopping journey to lift conversion across the app.",
-        aspect: "3 / 4",
     },
 ]
 
@@ -506,7 +503,6 @@ function CoverCard({
     company,
     tags,
     desc,
-    aspect,
     titleSize,
     captionPosition = "below",
     phone,
@@ -526,32 +522,27 @@ function CoverCard({
         v.setAttribute("playsinline", "")
         v.setAttribute("preload", "auto")
         v.muted = true
-        v.style.cssText = "width:100%;height:100%;object-fit:contain;display:block;"
+        v.style.cssText = "width:100%;height:auto;display:block;"
         videoContainerRef.current.appendChild(v)
         v.play().catch(() => {})
         return () => { v.pause(); v.remove() }
     }, [video])
 
+    // No fixed aspect-ratio box: the image/video renders at its own natural
+    // height for the given width, so the container hugs it exactly instead
+    // of leaving letterboxed empty space when the asset's real aspect ratio
+    // doesn't match a forced box.
     const media = (
-        <div
-            style={{
-                width: side ? undefined : "100%",
-                flex: side ? "1 1 60%" : undefined,
-                aspectRatio: aspect,
-                overflow: "hidden",
-                position: "relative",
-            }}
-        >
+        <div style={{ width: side ? undefined : "100%", flex: side ? "1 1 60%" : undefined, overflow: "hidden" }}>
             {video ? (
-                <div ref={videoContainerRef} style={{ width: "100%", height: "100%" }} />
+                <div ref={videoContainerRef} style={{ width: "100%" }} />
             ) : (
                 <img
                     src={image}
                     alt={title}
                     style={{
                         width: "100%",
-                        height: "100%",
-                        objectFit: "contain",
+                        height: "auto",
                         display: "block",
                         transform: hov ? "scale(1.03)" : "scale(1)",
                         transition: `transform 0.6s ${EASE_SPRING}`,
