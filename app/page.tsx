@@ -1309,16 +1309,16 @@ const FILM_PHOTOS = [1, 2, 3, 4, 5, 6].map((n) => ({ src: `/explore/film-${n}.jp
 function EatsGallery() {
     return (
         <div style={{ display: "flex", gap: 12, alignItems: "flex-start", flexWrap: "wrap" as const }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, width: 270, flexShrink: 0 }}>
                 <img
                     src="/explore/beli-dining-map.png"
                     alt="Beli — Your Dining Map"
-                    style={{ height: 190, width: "auto", borderRadius: 10, objectFit: "cover", display: "block" }}
+                    style={{ width: "100%", height: "auto", borderRadius: 10, objectFit: "cover", display: "block" }}
                 />
                 <img
                     src="/explore/beli-top-diner.png"
                     alt="Beli — Top 62% Diner"
-                    style={{ height: 190, width: "auto", borderRadius: 10, objectFit: "cover", display: "block" }}
+                    style={{ width: "100%", height: "auto", borderRadius: 10, objectFit: "cover", display: "block" }}
                 />
             </div>
             <div className="hscroll" style={{ display: "flex", gap: 10, overflowX: "auto", flex: "1 1 300px", minWidth: 0 }}>
@@ -1340,18 +1340,6 @@ function EatsGallery() {
 }
 
 const OLIVE = "#BDC762"
-
-function TukTukIcon() {
-    return (
-        <svg width="30" height="24" viewBox="0 0 30 24" fill="none" aria-hidden="true">
-            <path d="M4 16V9a2 2 0 0 1 2-2h9l4 4h5a2 2 0 0 1 2 2v3" stroke={C.ink} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M9 7V4a1 1 0 0 1 1-1h3" stroke={C.ink} strokeWidth="1.4" strokeLinecap="round" />
-            <circle cx="8" cy="19" r="3" stroke={C.ink} strokeWidth="1.4" />
-            <circle cx="22" cy="19" r="3" stroke={C.ink} strokeWidth="1.4" />
-            <path d="M4 16h22" stroke={C.ink} strokeWidth="1.4" strokeLinecap="round" />
-        </svg>
-    )
-}
 
 function KeychainIcon() {
     return (
@@ -1397,9 +1385,8 @@ function TravelDashboard() {
                 gap: 16,
                 marginBottom: 12,
             }}>
-                {/* TODO: swap in Omisha's real tuk-tuk photo — placeholder path until uploaded */}
                 <img
-                    src="/explore/tuktuk.jpg"
+                    src="/explore/tuktuk.png"
                     alt="Driving a tuk-tuk in Mumbai"
                     style={{ width: 96, height: 96, objectFit: "cover", borderRadius: 8, flexShrink: 0 }}
                 />
