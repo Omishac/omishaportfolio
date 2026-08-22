@@ -57,8 +57,6 @@ const CURSOR_STYLES = `
 `
 
 const I = "Inter, system-ui, sans-serif"
-const Z = "Zodiak, 'Times New Roman', serif"
-const YB = "var(--font-yuji-boku), serif"
 
 const C = {
     ink: "#111111",
@@ -94,6 +92,52 @@ function useFinePointer() {
         return () => mq.removeEventListener("change", h)
     }, [])
     return fine
+}
+
+const HOVER_COLORS = ["#94AAD9", "#E7BEF8", "#EDE986", "#F2619C"]
+
+// Splits text into individually hoverable letters — hovering one picks a
+// random color from HOVER_COLORS just for that letter, reverting on
+// mouse-leave. Spaces stay as plain text (not hoverable) so word wrapping
+// behaves normally. The wrapper carries `aria-label` with the real text and
+// each letter span is aria-hidden, so screen readers get the coherent
+// string instead of one character at a time.
+function HoverLetters({ text }: { text: string }) {
+    const [colors, setColors] = useState<Record<number, string>>({})
+    const finePointer = useFinePointer()
+
+    return (
+        <span aria-label={text}>
+            {Array.from(text).map((ch, i) =>
+                ch === " " ? (
+                    <span key={i} aria-hidden="true"> </span>
+                ) : (
+                    <span
+                        key={i}
+                        aria-hidden="true"
+                        onMouseEnter={() => {
+                            if (!finePointer) return
+                            const color = HOVER_COLORS[Math.floor(Math.random() * HOVER_COLORS.length)]
+                            setColors((c) => ({ ...c, [i]: color }))
+                        }}
+                        onMouseLeave={() => {
+                            setColors((c) => {
+                                const next = { ...c }
+                                delete next[i]
+                                return next
+                            })
+                        }}
+                        style={{
+                            color: colors[i] ?? "inherit",
+                            transition: "color 0.15s ease",
+                        }}
+                    >
+                        {ch}
+                    </span>
+                )
+            )}
+        </span>
+    )
 }
 
 // Smooths a raw scroll-derived value (0-1 progress, degrees, px — whatever)
@@ -349,7 +393,7 @@ function Hero({
                                 ...enter(delay),
                             }}
                         >
-                            {text}
+                            <HoverLetters text={text} />
                         </span>
                     ))}
                 </h1>
@@ -445,15 +489,15 @@ function SectionLabel({
         <div style={{ marginBottom: phone ? 28 : tablet ? 40 : 52 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 10 }}>
                 <span style={{ fontFamily: I, fontSize: 12, color: C.muted }}>[</span>
-                <span style={{ fontFamily: Z, fontWeight: 700, fontSize: 12, color: C.ink, letterSpacing: "-0.01em" }}>
+                <span style={{ fontFamily: I, fontWeight: 300, fontSize: 12, color: C.ink, letterSpacing: "-0.01em" }}>
                     {tag}
                 </span>
                 <span style={{ fontFamily: I, fontSize: 12, color: C.muted }}>]</span>
             </div>
             <h2
                 style={{
-                    fontFamily: YB,
-                    fontWeight: 400,
+                    fontFamily: I,
+                    fontWeight: 200,
                     fontSize: titleSize,
                     color: C.ink,
                     margin: 0,
@@ -461,7 +505,7 @@ function SectionLabel({
                     letterSpacing: "-0.02em",
                 }}
             >
-                {title}
+                <HoverLetters text={title} />
             </h2>
         </div>
     )
@@ -565,8 +609,8 @@ function CoverCard({
                 </div>
             )}
             <div style={{
-                fontFamily: Z,
-                fontWeight: 400,
+                fontFamily: I,
+                fontWeight: 200,
                 fontSize: titleSize,
                 letterSpacing: "-0.01em",
                 lineHeight: 1.3,
@@ -698,7 +742,7 @@ function WorkSection({
             }}>
                 <SectionLabel
                     tag="UX Strategy · Research · Digital Commerce"
-                    title="Selected Work"
+                    title="inside my work"
                     phone={phone}
                     tablet={tablet}
                     large={large}
