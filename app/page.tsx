@@ -1053,10 +1053,12 @@ function LogoTicker({
         { top: "54%", left: "17%" },
         { top: "54%", left: "83%" },
         { top: "24%", left: "75%" },
-        { top: "89%", left: "65%" },
-        { top: "89%", left: "36%" },
+        { top: "76%", left: "65%" },
+        { top: "76%", left: "36%" },
     ]
     const logoH = phone ? 26 : tablet ? 32 : large ? 46 : 40
+    // Lakmé and URBN read small next to the wordmarks around them — scale them up.
+    const SIZE_MULT = [1, 1, 1, 1, 1.4, 1.4]
 
     return (
         <section
@@ -1147,7 +1149,7 @@ function LogoTicker({
                                     alt={alt}
                                     className="logo-img"
                                     style={{
-                                        height: logoH,
+                                        height: logoH * SIZE_MULT[i],
                                         width: "auto",
                                         display: "block",
                                         animation: reducedMotion
