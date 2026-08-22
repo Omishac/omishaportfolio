@@ -467,7 +467,7 @@ function SectionLabel({
     )
 }
 
-const CARDS: { href: string; image: string; video?: string; title: string; tags: string[]; company: string; desc: string }[] = [
+const CARDS: { href: string; image: string; video?: string; title: string; tags: string[]; company: string; desc: string; live?: boolean }[] = [
     {
         href: "/anthropologie-product-discovery",
         image: "https://framerusercontent.com/images/vE5NBaasSteSM6lORQbcDZsAU.png",
@@ -476,6 +476,7 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
         tags: ["Product Design", "Design Systems", "E-Commerce"],
         company: "URBN",
         desc: "Redesigning the filter experience across four retail brands, balancing discoverability with speed for millions of shoppers.",
+        live: true,
     },
     {
         href: "/ios-review-accessibility",
@@ -500,9 +501,9 @@ function CoverCard({
     image,
     video,
     title,
-    company,
     tags,
     desc,
+    live,
     titleSize,
     captionPosition = "below",
     phone,
@@ -554,15 +555,14 @@ function CoverCard({
 
     const caption = (
         <div style={{ marginTop: side ? 0 : 14, flex: side ? "1 1 30%" : undefined }}>
-            <div style={{
-                fontFamily: I,
-                fontSize: 10,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase" as const,
-                color: C.muted,
-            }}>
-                {company} · {tags[0]}
-            </div>
+            {live && (
+                <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
+                    <span style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: "#6EBF8B", display: "inline-block" }} />
+                    <span style={{ fontFamily: I, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#6EBF8B" }}>
+                        Live
+                    </span>
+                </div>
+            )}
             <div style={{
                 fontFamily: Z,
                 fontWeight: 400,
@@ -570,7 +570,6 @@ function CoverCard({
                 letterSpacing: "-0.01em",
                 lineHeight: 1.3,
                 color: C.ink,
-                marginTop: 5,
             }}>
                 {title}
             </div>
@@ -583,6 +582,20 @@ function CoverCard({
             }}>
                 {desc}
             </p>
+            <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 5, marginTop: 10 }}>
+                {tags.map((t, i) => (
+                    <span key={i} style={{
+                        fontFamily: I,
+                        fontSize: 10,
+                        color: C.muted,
+                        backgroundColor: "rgba(0,0,0,0.04)",
+                        borderRadius: 40,
+                        padding: "3px 9px",
+                    }}>
+                        {t}
+                    </span>
+                ))}
+            </div>
         </div>
     )
 
