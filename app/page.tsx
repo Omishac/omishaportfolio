@@ -1003,10 +1003,42 @@ function LogoTicker({
     maxW: number
 }) {
     const outerRef = useRef<HTMLDivElement>(null)
+    const labelRef = useRef<HTMLDivElement>(null)
     const [tickerY, setTickerY] = useState(0)
     const [logosShown, setLogosShown] = useState(false)
+    const [labelProgress, setLabelProgress] = useState(0)
     const reducedMotion = useReducedMotion()
     const navH = phone ? 54 : 64
+
+    // Continuous scroll-in for "Industry Experience" — the same kind of
+    // scroll-position-driven fade/scale/translate as the hero's scroll-out,
+    // just running forward: 0 while the label is still below the viewport,
+    // 1 once it has risen to roughly two-thirds up. Tracks raw scroll
+    // directly (like the hero) rather than a triggered CSS transition, so it
+    // has the same "tied to your scroll, not a timer" impact.
+    useEffect(() => {
+        if (reducedMotion) { setLabelProgress(1); return }
+        const onScroll = () => {
+            const el = labelRef.current
+            if (!el) return
+            const rect = el.getBoundingClientRect()
+            const raw = (window.innerHeight - rect.top) / (window.innerHeight * 0.65)
+            setLabelProgress(Math.max(0, Math.min(1, raw)))
+        }
+        window.addEventListener("scroll", onScroll, { passive: true })
+        window.addEventListener("resize", onScroll, { passive: true })
+        onScroll()
+        return () => {
+            window.removeEventListener("scroll", onScroll)
+            window.removeEventListener("resize", onScroll)
+        }
+    }, [reducedMotion])
+
+    const labelEnterStyle = {
+        opacity: labelProgress,
+        transform: `translateY(${(1 - labelProgress) * 90}px) scale(${0.8 + labelProgress * 0.2})`,
+        willChange: "transform, opacity",
+    }
 
     useEffect(() => {
         if (reducedMotion) { setTickerY(0); return }
@@ -1092,7 +1124,9 @@ function LogoTicker({
                             width: `calc(100% - ${px * 2}px)`,
                         }}
                     >
-                        <SectionLabel tag="Application" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
+                        <div ref={labelRef} style={labelEnterStyle}>
+                            <SectionLabel tag="Application" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
+                        </div>
                         <div
                             style={{
                                 display: "flex",
@@ -1127,7 +1161,9 @@ function LogoTicker({
                 ) : (
                     <>
                         <div style={{ position: "absolute", top: "54%", left: "50%", transform: "translate(-50%, -50%)" }}>
-                            <SectionLabel tag="Application" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
+                            <div ref={labelRef} style={labelEnterStyle}>
+                                <SectionLabel tag="Application" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
+                            </div>
                         </div>
                         {LOGOS.map(({ src, alt }, i) => (
                             // Positioning transform lives on this wrapper, not the img — the
