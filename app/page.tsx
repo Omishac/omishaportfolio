@@ -476,7 +476,7 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
         tags: ["Product Design", "Design Systems", "E-Commerce"],
         company: "URBN",
         desc: "Redesigning the filter experience across four retail brands, balancing discoverability with speed for millions of shoppers.",
-        aspect: "2.2 / 1",
+        aspect: "4 / 3",
     },
     {
         href: "/ios-review-accessibility",
@@ -508,10 +508,13 @@ function CoverCard({
     desc,
     aspect,
     titleSize,
-}: (typeof CARDS)[0] & { titleSize: number }) {
+    captionPosition = "below",
+    phone,
+}: (typeof CARDS)[0] & { titleSize: number; captionPosition?: "below" | "side"; phone?: boolean }) {
     const videoContainerRef = useRef<HTMLDivElement>(null)
     const [hov, setHov] = useState(false)
     const finePointer = useFinePointer()
+    const side = captionPosition === "side" && !phone
 
     useEffect(() => {
         if (!video || !videoContainerRef.current) return
@@ -529,70 +532,85 @@ function CoverCard({
         return () => { v.pause(); v.remove() }
     }, [video])
 
+    const media = (
+        <div
+            style={{
+                width: side ? undefined : "100%",
+                flex: side ? "1 1 60%" : undefined,
+                aspectRatio: aspect,
+                overflow: "hidden",
+                position: "relative",
+            }}
+        >
+            {video ? (
+                <div ref={videoContainerRef} style={{ width: "100%", height: "100%" }} />
+            ) : (
+                <img
+                    src={image}
+                    alt={title}
+                    style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                        display: "block",
+                        transform: hov ? "scale(1.03)" : "scale(1)",
+                        transition: `transform 0.6s ${EASE_SPRING}`,
+                    }}
+                />
+            )}
+        </div>
+    )
+
+    const caption = (
+        <div style={{ marginTop: side ? 0 : 14, flex: side ? "1 1 30%" : undefined }}>
+            <div style={{
+                fontFamily: I,
+                fontSize: 10,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase" as const,
+                color: C.muted,
+            }}>
+                {company} · {tags[0]}
+            </div>
+            <div style={{
+                fontFamily: Z,
+                fontWeight: 400,
+                fontSize: titleSize,
+                letterSpacing: "-0.01em",
+                lineHeight: 1.3,
+                color: C.ink,
+                marginTop: 5,
+            }}>
+                {title}
+            </div>
+            <p style={{
+                fontFamily: I,
+                fontSize: 12.5,
+                lineHeight: 1.55,
+                color: C.ink3,
+                margin: "5px 0 0",
+            }}>
+                {desc}
+            </p>
+        </div>
+    )
+
     return (
         <a
             href={href}
             className="card-link"
-            style={{ textDecoration: "none", display: "block", breakInside: "avoid" as const }}
+            style={{
+                textDecoration: "none",
+                display: side ? "flex" : "block",
+                alignItems: side ? "flex-start" : undefined,
+                gap: side ? 32 : undefined,
+                breakInside: "avoid" as const,
+            }}
             onMouseEnter={() => finePointer && setHov(true)}
             onMouseLeave={() => setHov(false)}
         >
-            <div
-                style={{
-                    width: "100%",
-                    aspectRatio: aspect,
-                    overflow: "hidden",
-                    position: "relative",
-                }}
-            >
-                {video ? (
-                    <div ref={videoContainerRef} style={{ width: "100%", height: "100%" }} />
-                ) : (
-                    <img
-                        src={image}
-                        alt={title}
-                        style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "contain",
-                            display: "block",
-                            transform: hov ? "scale(1.03)" : "scale(1)",
-                            transition: `transform 0.6s ${EASE_SPRING}`,
-                        }}
-                    />
-                )}
-            </div>
-            <div style={{ marginTop: 14 }}>
-                <div style={{
-                    fontFamily: I,
-                    fontSize: 10,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase" as const,
-                    color: C.muted,
-                }}>
-                    {company} · {tags[0]}
-                </div>
-                <div style={{
-                    fontFamily: Z,
-                    fontWeight: 400,
-                    fontSize: titleSize,
-                    letterSpacing: "-0.01em",
-                    lineHeight: 1.3,
-                    color: C.ink,
-                    marginTop: 5,
-                }}>
-                    {title}
-                </div>
-                <p style={{
-                    fontFamily: I,
-                    fontSize: 12.5,
-                    lineHeight: 1.55,
-                    color: C.ink3,
-                    margin: "5px 0 0",
-                }}>
-                    {desc}
-                </p>
-            </div>
+            {media}
+            {caption}
         </a>
     )
 }
@@ -682,7 +700,7 @@ function WorkSection({
                 />
                 <div style={{ display: "flex", flexDirection: "column", gap: sp.cardRowGap }}>
                     <div style={reveal(0)}>
-                        <CoverCard {...CARDS[0]} titleSize={cardTitleSize} />
+                        <CoverCard {...CARDS[0]} titleSize={cardTitleSize} captionPosition="side" phone={phone} />
                     </div>
                     <div style={{
                         display: "flex",
