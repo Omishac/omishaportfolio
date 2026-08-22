@@ -159,7 +159,6 @@ function useBP() {
         headerGap: phone ? 24 : tablet ? 40 : 56,
         cardRowGap: phone ? 20 : tablet ? 28 : 36,
         cardColGap: phone ? 0 : tablet ? 20 : 24,
-        cardH: phone ? 200 : tablet ? 280 : large ? 460 : 390,
         heroTop: phone ? 40 : tablet ? 64 : 96,
         heroBottom: phone ? 64 : tablet ? 100 : 120,
         colOffset: tablet ? 0 : 80,
@@ -468,7 +467,7 @@ function SectionLabel({
     )
 }
 
-const CARDS: { href: string; image: string; video?: string; title: string; tags: string[]; company: string; desc?: string; year?: string; highlight?: { value: string; label: string }; live?: boolean }[] = [
+const CARDS: { href: string; image: string; video?: string; title: string; tags: string[]; company: string; desc: string; aspect: string }[] = [
     {
         href: "/anthropologie-product-discovery",
         image: "https://framerusercontent.com/images/vE5NBaasSteSM6lORQbcDZsAU.png",
@@ -477,8 +476,7 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
         tags: ["Product Design", "Design Systems", "E-Commerce"],
         company: "URBN",
         desc: "Redesigning the filter experience across four retail brands, balancing discoverability with speed for millions of shoppers.",
-        highlight: { value: "+30%", label: "task success" },
-        live: true,
+        aspect: "4 / 3",
     },
     {
         href: "/ios-review-accessibility",
@@ -486,6 +484,8 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
         title: "iOS Review Accessibility",
         tags: ["Research", "UX/UI", "iOS"],
         company: "URBN",
+        desc: "Improving how shoppers read and trust customer reviews inside the iOS app.",
+        aspect: "3 / 4",
     },
     {
         href: "/anthropologie-mcommerce",
@@ -493,27 +493,25 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
         title: "Anthropologie M-Commerce",
         tags: ["A/B Testing", "Strategy", "iOS"],
         company: "URBN",
+        desc: "Testing and refining the mobile shopping journey to lift conversion across the app.",
+        aspect: "4 / 5",
     },
 ]
 
-function Card({
+function CoverCard({
     href,
     image,
     video,
     title,
-    tags,
     company,
-    cardH,
+    tags,
+    desc,
+    aspect,
     titleSize,
-}: (typeof CARDS)[0] & { cardH: number; titleSize: number }) {
-    const ref = useRef<HTMLDivElement>(null)
+}: (typeof CARDS)[0] & { titleSize: number }) {
     const videoContainerRef = useRef<HTMLDivElement>(null)
     const [hov, setHov] = useState(false)
     const finePointer = useFinePointer()
-    const pos = useRef({ x: 0.5, y: 0.5 })
-    const cur = useRef({ x: 0.5, y: 0.5 })
-    const raf = useRef(0)
-    const [tilt, setTilt] = useState({ x: 0, y: 0 })
 
     useEffect(() => {
         if (!video || !videoContainerRef.current) return
@@ -531,56 +529,22 @@ function Card({
         return () => { v.pause(); v.remove() }
     }, [video])
 
-    const animate = useCallback(() => {
-        cur.current.x += (pos.current.x - cur.current.x) * 0.07
-        cur.current.y += (pos.current.y - cur.current.y) * 0.07
-        setTilt({ x: (cur.current.y - 0.5) * -8, y: (cur.current.x - 0.5) * 8 })
-        raf.current = requestAnimationFrame(animate)
-    }, [])
-
-    useEffect(() => {
-        if (!hov) { cancelAnimationFrame(raf.current); return }
-        raf.current = requestAnimationFrame(animate)
-        return () => cancelAnimationFrame(raf.current)
-    }, [animate, hov])
-
-    const onMove = (e: React.MouseEvent) => {
-        const r = ref.current?.getBoundingClientRect()
-        if (!r) return
-        pos.current = {
-            x: (e.clientX - r.left) / r.width,
-            y: (e.clientY - r.top) / r.height,
-        }
-    }
-
     return (
-        <a href={href} className="card-link" style={{ textDecoration: "none", display: "flex", flexDirection: "column", gap: 14 }}>
+        <a
+            href={href}
+            className="card-link"
+            style={{ textDecoration: "none", display: "block", breakInside: "avoid" as const }}
+            onMouseEnter={() => finePointer && setHov(true)}
+            onMouseLeave={() => setHov(false)}
+        >
             <div
-                ref={ref}
-                onMouseEnter={() => finePointer && setHov(true)}
-                onMouseLeave={() => {
-                    setHov(false)
-                    pos.current = { x: 0.5, y: 0.5 }
-                }}
-                onMouseMove={onMove}
                 style={{
                     width: "100%",
-                    height: cardH,
-                    borderRadius: 14,
+                    aspectRatio: aspect,
+                    borderRadius: 8,
                     overflow: "hidden",
                     backgroundColor: "#F5F5F3",
                     position: "relative",
-                    cursor: "pointer",
-                    transform: finePointer && hov
-                        ? `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1.015)`
-                        : "perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)",
-                    boxShadow: hov
-                        ? "0 12px 32px rgba(0,0,0,0.10), 0 3px 10px rgba(0,0,0,0.06)"
-                        : "0 1px 6px rgba(0,0,0,0.05)",
-                    transition: hov
-                        ? `box-shadow 0.4s ${EASE_SPRING}`
-                        : `transform 0.45s ${EASE_SPRING}, box-shadow 0.4s ${EASE_SPRING}`,
-                    willChange: "transform",
                 }}
             >
                 {video ? (
@@ -594,283 +558,47 @@ function Card({
                             height: "100%",
                             objectFit: "cover",
                             display: "block",
-                            transform: hov ? "scale(1.04)" : "scale(1)",
-                            transition: `transform 0.55s ${EASE_SPRING}`,
+                            transform: hov ? "scale(1.03)" : "scale(1)",
+                            transition: `transform 0.6s ${EASE_SPRING}`,
                         }}
                     />
                 )}
-                <div
-                    style={{
-                        position: "absolute",
-                        inset: 0,
-                        background: "linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%)",
-                        opacity: hov ? 1 : 0,
-                        transition: "opacity 0.35s",
-                        pointerEvents: "none",
-                    }}
-                />
-                <div
-                    style={{
-                        position: "absolute",
-                        bottom: 14,
-                        left: "50%",
-                        transform: hov
-                            ? "translateX(-50%) translateY(0)"
-                            : "translateX(-50%) translateY(10px)",
-                        opacity: hov ? 1 : 0,
-                        transition: "opacity 0.3s, transform 0.3s",
-                        backgroundColor: "rgba(255,255,255,0.96)",
-                        backdropFilter: "blur(16px)",
-                        WebkitBackdropFilter: "blur(16px)",
-                        borderRadius: 40,
-                        padding: "7px 16px",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 6,
-                        whiteSpace: "nowrap" as const,
-                        pointerEvents: "none",
-                        zIndex: 10,
-                    }}
-                >
-                    <span style={{ fontFamily: I, fontSize: 12, fontWeight: 600, color: C.ink, letterSpacing: "-0.01em" }}>
-                        View project
-                    </span>
-                    <span style={{ fontSize: 12, color: C.ink }}>→</span>
-                </div>
             </div>
-            <div
-                style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    justifyContent: "space-between",
-                    gap: 12,
-                    padding: "0 2px",
-                }}
-            >
-                <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-                    <span
-                        style={{
-                            fontFamily: Z,
-                            fontSize: titleSize,
-                            fontWeight: 400,
-                            letterSpacing: "-0.02em",
-                            lineHeight: 1.25,
-                            color: C.ink,
-                        }}
-                    >
-                        {title}
-                    </span>
-                    <span style={{ fontFamily: I, fontSize: 11, color: C.muted, letterSpacing: "0.02em" }}>
-                        {company}
-                    </span>
+            <div style={{ marginTop: 14 }}>
+                <div style={{
+                    fontFamily: I,
+                    fontSize: 10,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase" as const,
+                    color: C.muted,
+                }}>
+                    {company} · {tags[0]}
                 </div>
-                <div
-                    style={{
-                        display: "flex",
-                        flexWrap: "wrap" as const,
-                        gap: 4,
-                        flexShrink: 0,
-                        paddingTop: 2,
-                        justifyContent: "flex-end",
-                    }}
-                >
-                    {tags.map((t, i) => (
-                        <span
-                            key={i}
-                            style={{
-                                fontFamily: I,
-                                fontSize: 10,
-                                color: C.muted,
-                                backgroundColor: "rgba(0,0,0,0.04)",
-                                borderRadius: 40,
-                                padding: "3px 9px",
-                            }}
-                        >
-                            {t}
-                        </span>
-                    ))}
+                <div style={{
+                    fontFamily: Z,
+                    fontWeight: 400,
+                    fontSize: titleSize,
+                    letterSpacing: "-0.01em",
+                    lineHeight: 1.3,
+                    color: C.ink,
+                    marginTop: 5,
+                }}>
+                    {title}
                 </div>
+                <p style={{
+                    fontFamily: I,
+                    fontSize: 12.5,
+                    lineHeight: 1.55,
+                    color: C.ink3,
+                    margin: "5px 0 0",
+                }}>
+                    {desc}
+                </p>
             </div>
         </a>
     )
 }
 
-function FeaturedCard({
-    href, image, video, title, tags, company, desc, year, highlight, live, phone, tablet, large, cardH,
-}: (typeof CARDS)[0] & { phone: boolean; tablet: boolean; large: boolean; cardH: number }) {
-    const cardRef = useRef<HTMLDivElement>(null)
-    const videoContainerRef = useRef<HTMLDivElement>(null)
-    const [hov, setHov] = useState(false)
-    const finePointer = useFinePointer()
-    const pos = useRef({ x: 0.5, y: 0.5 })
-    const cur = useRef({ x: 0.5, y: 0.5 })
-    const raf = useRef(0)
-    const [tilt, setTilt] = useState({ x: 0, y: 0 })
-
-    useEffect(() => {
-        if (!video || !videoContainerRef.current) return
-        const v = document.createElement("video")
-        v.src = video
-        v.setAttribute("autoplay", "")
-        v.setAttribute("loop", "")
-        v.setAttribute("muted", "")
-        v.setAttribute("playsinline", "")
-        v.setAttribute("preload", "auto")
-        v.muted = true
-        v.style.cssText = "width:100%;height:100%;object-fit:cover;display:block;"
-        videoContainerRef.current.appendChild(v)
-        v.play().catch(() => {})
-        return () => { v.pause(); v.remove() }
-    }, [video])
-
-    const animate = useCallback(() => {
-        cur.current.x += (pos.current.x - cur.current.x) * 0.07
-        cur.current.y += (pos.current.y - cur.current.y) * 0.07
-        setTilt({ x: (cur.current.y - 0.5) * -3, y: (cur.current.x - 0.5) * 3 })
-        raf.current = requestAnimationFrame(animate)
-    }, [])
-
-    useEffect(() => {
-        if (!hov) { cancelAnimationFrame(raf.current); return }
-        raf.current = requestAnimationFrame(animate)
-        return () => cancelAnimationFrame(raf.current)
-    }, [animate, hov])
-
-    const onMove = (e: React.MouseEvent) => {
-        const r = cardRef.current?.getBoundingClientRect()
-        if (!r) return
-        pos.current = { x: (e.clientX - r.left) / r.width, y: (e.clientY - r.top) / r.height }
-    }
-
-    return (
-        <a href={href} className="card-link" style={{ textDecoration: "none", display: "block" }}>
-            <div
-                ref={cardRef}
-                onMouseEnter={() => finePointer && setHov(true)}
-                onMouseLeave={() => { setHov(false); pos.current = { x: 0.5, y: 0.5 } }}
-                onMouseMove={onMove}
-                style={{
-                    display: "flex",
-                    flexDirection: phone ? "column" : "row",
-                    borderRadius: 16,
-                    overflow: "hidden",
-                    height: phone ? "auto" : cardH,
-                    cursor: "pointer",
-                    transform: finePointer && hov
-                        ? `perspective(1400px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1.006)`
-                        : "perspective(1400px) rotateX(0deg) rotateY(0deg) scale(1)",
-                    boxShadow: hov
-                        ? "0 12px 36px rgba(0,0,0,0.09), 0 3px 10px rgba(0,0,0,0.05)"
-                        : "0 2px 8px rgba(0,0,0,0.05)",
-                    transition: hov
-                        ? `box-shadow 0.4s ${EASE_SPRING}`
-                        : `transform 0.45s ${EASE_SPRING}, box-shadow 0.4s ${EASE_SPRING}`,
-                    willChange: "transform",
-                }}
-            >
-                {/* Image — 62% left */}
-                <div style={{
-                    flex: phone ? "none" : "0 0 62%",
-                    height: phone ? 240 : "100%",
-                    overflow: "hidden",
-                    backgroundColor: "#F5F5F3",
-                }}>
-                    {video ? (
-                        <div ref={videoContainerRef} style={{ width: "100%", height: "100%" }} />
-                    ) : (
-                        <img src={image} alt={title} style={{
-                            width: "100%", height: "100%", objectFit: "cover", display: "block",
-                            transform: hov ? "scale(1.03)" : "scale(1)",
-                            transition: `transform 0.6s ${EASE_SPRING}`,
-                        }} />
-                    )}
-                </div>
-
-                {/* Text — 38% right */}
-                <div style={{
-                    flex: 1,
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    padding: phone ? "24px" : tablet ? "28px 24px" : "36px 32px",
-                    backgroundColor: hov ? "#f9f8f7" : "#fff",
-                    transition: "background-color 0.35s ease",
-                }}>
-                    <div>
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-                            <span style={{ fontFamily: I, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: C.muted }}>
-                                {company}
-                            </span>
-                            {live && (
-                                <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-                                    <span style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: "#6EBF8B", display: "inline-block" }} />
-                                    <span style={{ fontFamily: I, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#6EBF8B" }}>Live</span>
-                                </span>
-                            )}
-                        </div>
-                        <h2 style={{
-                            fontFamily: Z, fontWeight: 400,
-                            fontSize: phone ? 22 : tablet ? 22 : large ? 30 : 26,
-                            letterSpacing: "-0.02em", lineHeight: 1.15,
-                            color: C.ink2, margin: "0 0 14px",
-                        }}>
-                            {title}
-                        </h2>
-                        {desc && (
-                            <p style={{
-                                fontFamily: I, fontSize: 13, lineHeight: 1.7,
-                                color: C.ink3, margin: "0 0 16px",
-                            }}>
-                                {desc}
-                            </p>
-                        )}
-                        <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 5 }}>
-                            {tags.map((t, i) => (
-                                <span key={i} style={{
-                                    fontFamily: I, fontSize: 10, color: C.muted,
-                                    backgroundColor: "rgba(0,0,0,0.04)", borderRadius: 40, padding: "3px 9px",
-                                }}>
-                                    {t}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 20 }}>
-                        {highlight && (
-                            <div style={{
-                                display: "inline-flex", alignItems: "baseline", gap: 7,
-                                padding: "9px 14px",
-                                backgroundColor: "rgba(232,180,200,0.13)",
-                                borderRadius: 10, alignSelf: "flex-start",
-                            }}>
-                                <span style={{ fontFamily: Z, fontSize: 22, fontWeight: 400, color: C.ink, letterSpacing: "-0.03em" }}>
-                                    {highlight.value}
-                                </span>
-                                <span style={{ fontFamily: I, fontSize: 11, color: C.ink3 }}>
-                                    {highlight.label}
-                                </span>
-                            </div>
-                        )}
-                        <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                            <span style={{
-                                fontFamily: I, fontSize: 12, fontWeight: 500,
-                                color: hov ? C.ink : C.ink3, transition: "color 0.2s",
-                            }}>
-                                View Case Study
-                            </span>
-                            <span style={{
-                                color: hov ? C.ink : C.ink3, fontSize: 13, display: "inline-block",
-                                transform: hov ? "translateX(4px)" : "translateX(0)",
-                                transition: "color 0.2s, transform 0.25s",
-                            }}>→</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-    )
-}
 
 function WorkSection({
     phone,
@@ -954,33 +682,16 @@ function WorkSection({
                     tablet={tablet}
                     large={large}
                 />
-                {phone ? (
-                    <div style={{ display: "flex", flexDirection: "column", gap: sp.cardRowGap }}>
-                        {CARDS.map((c, i) => (
-                            <div key={i} style={reveal(i)}>
-                                <Card {...c} cardH={sp.cardH} titleSize={cardTitleSize} />
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: sp.cardRowGap }}>
-                    <div style={reveal(0)}>
-                        <FeaturedCard
-                            {...CARDS[0]}
-                            phone={phone} tablet={tablet} large={large}
-                            cardH={Math.round(sp.cardH * 1.3)}
-                        />
-                    </div>
-                    <div style={{ display: "flex", gap: sp.cardColGap }}>
-                        <div style={{ flex: 1 }}>
-                            <div style={reveal(1)}><Card {...CARDS[1]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
+                <div style={{
+                    columns: phone ? 1 : 2,
+                    columnGap: sp.cardColGap || 24,
+                }}>
+                    {CARDS.map((c, i) => (
+                        <div key={i} style={{ ...reveal(i), breakInside: "avoid" as const, marginBottom: sp.cardRowGap }}>
+                            <CoverCard {...c} titleSize={cardTitleSize} />
                         </div>
-                        <div style={{ flex: 1 }}>
-                            <div style={reveal(2)}><Card {...CARDS[2]} cardH={sp.cardH} titleSize={cardTitleSize} /></div>
-                        </div>
-                    </div>
+                    ))}
                 </div>
-                )}
             </div>
         </section>
     )
