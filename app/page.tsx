@@ -1004,6 +1004,7 @@ function LogoTicker({
 }) {
     const outerRef = useRef<HTMLDivElement>(null)
     const [tickerY, setTickerY] = useState(0)
+    const [logosShown, setLogosShown] = useState(false)
     const reducedMotion = useReducedMotion()
     const navH = phone ? 54 : 64
 
@@ -1022,6 +1023,25 @@ function LogoTicker({
         onScroll()
         return () => window.removeEventListener("scroll", onScroll)
     }, [reducedMotion])
+
+    // "Industry Experience" is static and shows the moment the section is in
+    // view; the logos start hidden and only reveal, staggered, once you've
+    // scrolled further into the section — so the label reads first and the
+    // logos visibly appear on scroll rather than all at once.
+    useEffect(() => {
+        const el = outerRef.current
+        if (!el) return
+        const obs = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) { setLogosShown(true); obs.disconnect() }
+        }, { threshold: 0.35 })
+        obs.observe(el)
+        return () => obs.disconnect()
+    }, [])
+
+    const logoReveal = (idx: number) => ({
+        opacity: logosShown ? 1 : 0,
+        transition: reducedMotion ? "none" : `opacity 0.7s ${EASE_SPRING} ${idx * 140}ms`,
+    })
 
     // Positions (top%, left%) matching Figma node 54:24's fixed layout: a
     // 2-3-2 grid — Anthropologie/J&J on top, Budweiser-title-Drexel in the
@@ -1086,20 +1106,21 @@ function LogoTicker({
                             }}
                         >
                             {LOGOS.map(({ src, alt }, i) => (
-                                <img
-                                    key={alt}
-                                    src={src}
-                                    alt={alt}
-                                    className="logo-img"
-                                    style={{
-                                        height: logoH,
-                                        width: "auto",
-                                        display: "block",
-                                        animation: reducedMotion
-                                            ? "none"
-                                            : `illust-float ${5.5 + (i % 3) * 0.6}s ease-in-out infinite ${i * 0.35}s`,
-                                    }}
-                                />
+                                <div key={alt} style={logoReveal(i)}>
+                                    <img
+                                        src={src}
+                                        alt={alt}
+                                        className="logo-img"
+                                        style={{
+                                            height: logoH,
+                                            width: "auto",
+                                            display: "block",
+                                            animation: reducedMotion
+                                                ? "none"
+                                                : `illust-float ${5.5 + (i % 3) * 0.6}s ease-in-out infinite ${i * 0.35}s`,
+                                        }}
+                                    />
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -1112,6 +1133,8 @@ function LogoTicker({
                             // Positioning transform lives on this wrapper, not the img — the
                             // img's own transform gets overwritten each frame by the
                             // illust-float keyframes, which would otherwise fight the centering.
+                            // The reveal (opacity-only, so it doesn't fight either transform)
+                            // lives on the middle wrapper.
                             <div
                                 key={alt}
                                 style={{
@@ -1121,19 +1144,21 @@ function LogoTicker({
                                     transform: "translate(-50%, -50%)",
                                 }}
                             >
-                                <img
-                                    src={src}
-                                    alt={alt}
-                                    className="logo-img"
-                                    style={{
-                                        height: logoH * SIZE_MULT[i],
-                                        width: "auto",
-                                        display: "block",
-                                        animation: reducedMotion
-                                            ? "none"
-                                            : `illust-float ${5.5 + (i % 3) * 0.6}s ease-in-out infinite ${i * 0.35}s`,
-                                    }}
-                                />
+                                <div style={logoReveal(i)}>
+                                    <img
+                                        src={src}
+                                        alt={alt}
+                                        className="logo-img"
+                                        style={{
+                                            height: logoH * SIZE_MULT[i],
+                                            width: "auto",
+                                            display: "block",
+                                            animation: reducedMotion
+                                                ? "none"
+                                                : `illust-float ${5.5 + (i % 3) * 0.6}s ease-in-out infinite ${i * 0.35}s`,
+                                        }}
+                                    />
+                                </div>
                             </div>
                         ))}
                     </>
