@@ -485,6 +485,7 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
         tags: ["Research", "UX/UI", "iOS"],
         company: "URBN",
         desc: "Improving how shoppers read and trust customer reviews inside the iOS app.",
+        live: true,
     },
     {
         href: "/anthropologie-mcommerce",
