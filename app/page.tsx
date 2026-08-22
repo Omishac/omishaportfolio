@@ -87,29 +87,27 @@ function useFinePointer() {
 // Smooths a raw scroll-derived value (0-1 progress, degrees, px — whatever)
 // by chasing it each frame instead of snapping to it, so scroll-linked
 // transforms trail the scroll position like inertial/smooth-scroll sites
-// instead of updating in lockstep with it. Skips the lerp entirely under
-// reduced motion so the value lands on target immediately.
+// instead of updating in lockstep with it. Under reduced motion, the same
+// loop converges in a single frame (factor 1) instead of gradually — it
+// must stay the same continuous loop rather than a one-time snap, since
+// callers often set their raw target in a later effect (e.g. to 1 once
+// reducedMotion is known), which a one-time snap at mount would miss.
 function useLerp(target: number, reducedMotion: boolean, factor: number = 0.12) {
     const [value, setValue] = useState(target)
     const current = useRef(target)
     const targetRef = useRef(target)
     const raf = useRef(0)
     targetRef.current = target
+    const effectiveFactor = reducedMotion ? 1 : factor
 
     useEffect(() => {
-        if (reducedMotion) {
-            cancelAnimationFrame(raf.current)
-            current.current = targetRef.current
-            setValue(targetRef.current)
-            return
-        }
         // Runs once and keeps ticking every frame, reading targetRef.current
         // fresh each time — decoupled from target updates so a fast-firing
         // scroll listener can't restart (and starve) the loop.
         const tick = () => {
             const diff = targetRef.current - current.current
             if (Math.abs(diff) > 0.0008) {
-                current.current += diff * factor
+                current.current += diff * effectiveFactor
                 setValue(current.current)
             } else if (current.current !== targetRef.current) {
                 current.current = targetRef.current
@@ -119,7 +117,7 @@ function useLerp(target: number, reducedMotion: boolean, factor: number = 0.12) 
         }
         raf.current = requestAnimationFrame(tick)
         return () => cancelAnimationFrame(raf.current)
-    }, [reducedMotion, factor])
+    }, [effectiveFactor])
 
     return value
 }
@@ -1015,15 +1013,15 @@ function LogoTicker({
 }) {
     const outerRef = useRef<HTMLDivElement>(null)
     const [tickerY, setTickerY] = useState(0)
-    const [recedeRaw, setRecedeRaw] = useState(0)
+    const [entryProgressRaw, setEntryProgressRaw] = useState(0)
     const reducedMotion = useReducedMotion()
-    const recede = useLerp(recedeRaw, reducedMotion)
+    const entryProgress = useLerp(entryProgressRaw, reducedMotion)
     const navH = phone ? 54 : 64
 
-    // Dramatic recede as Brands scrolls out — pairs with Skills' tilt-up
-    // entrance below, same treatment as Hero receding into Work.
+    // Dramatic scroll-driven 3D tilt-up as Brands enters — same treatment as
+    // Work's and Skills' entrance, instead of a recede-on-exit.
     useEffect(() => {
-        if (reducedMotion) { setTickerY(0); setRecedeRaw(0); return }
+        if (reducedMotion) { setTickerY(0); setEntryProgressRaw(1); return }
         const onScroll = () => {
             const el = outerRef.current
             if (!el) return
@@ -1034,10 +1032,11 @@ function LogoTicker({
             setTickerY(Math.max(-12, Math.min(12, progress * 80)))
 
             const vh = window.innerHeight
-            const start = vh * 0.5   // recede begins once the section's top crosses the middle of the viewport
-            const end = 0             // fully receded once its top reaches the very top of the viewport
+            const start = vh * 0.95  // reveal begins right as the section's top crosses into the viewport
+            const end = vh * 0.35    // fully settled once it reaches well past the middle of the viewport
             const raw = (start - rect.top) / (start - end)
-            setRecedeRaw(Math.min(1, Math.max(0, raw)))
+            const clamped = Math.min(1, Math.max(0, raw))
+            setEntryProgressRaw(1 - Math.pow(1 - clamped, 3)) // ease-out — this is an entrance
         }
         window.addEventListener("scroll", onScroll, { passive: true })
         onScroll()
@@ -1067,16 +1066,16 @@ function LogoTicker({
                 boxSizing: "border-box",
                 borderTop: `1px solid ${C.border}`,
                 overflow: "hidden",
-                perspective: 700,
+                perspective: 450,
             }}
         >
             <div
                 style={{
                     position: "absolute",
                     inset: 0,
-                    transform: `translateY(${tickerY}px) rotateX(${recede * -42}deg) rotateY(${recede * -10}deg) scale(${1 - recede * 0.35})`,
-                    opacity: 1 - recede * 0.9,
-                    transformOrigin: "center top",
+                    transform: `translateY(${tickerY}px) rotateX(${(1 - entryProgress) * 75}deg) rotateY(${(1 - entryProgress) * 10}deg) scale(${0.55 + entryProgress * 0.45})`,
+                    opacity: entryProgress,
+                    transformOrigin: "center bottom",
                     willChange: "transform, opacity",
                 }}
             >
@@ -1268,7 +1267,7 @@ function SkillsSection({
     const raf = useRef(0)
 
     // Dramatic scroll-driven 3D tilt-up as Skills enters — same treatment as
-    // Work's entrance, pairing with Brands' recede-on-scroll above.
+    // Work's and Brands' entrances above.
     useEffect(() => {
         if (reducedMotion) { setEntryProgressRaw(1); return }
         const el = sectionRef.current
