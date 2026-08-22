@@ -368,13 +368,16 @@ function Hero({
                             style={{ width: "100%", height: "auto", display: "block" }} />
                     </span>
 
-                    {/* Shouting character — right beside "brand storyteller."
-                        left: calc(100% + 5px) puts left edge just past h1 right = end of "brand storyteller." */}
+                    {/* Shouting character — beside "brand storyteller." on tablet/desktop
+                        (left: calc(100% + 5px) puts left edge just past h1 right = end of the line);
+                        on phone there's no room to its right, so it sits centered underneath
+                        the headline block instead. */}
                     <span
                         style={{
                             position: "absolute",
-                            top: "2.2em",
-                            left: "calc(100% + 5px)",
+                            ...(phone
+                                ? { top: "100%", left: "50%", transform: "translateX(-50%)", marginTop: 6 }
+                                : { top: "2.2em", left: "calc(100% + 5px)" }),
                             width: illW.shout,
                             display: "block",
                             pointerEvents: "none",
@@ -1111,7 +1114,10 @@ function SkillsSection({
             style={{
                 position: "relative",
                 width: "100%",
-                padding: `${sectionPad}px ${px}px`,
+                paddingTop: sectionPad,
+                paddingBottom: phone ? 24 : sectionPad,
+                paddingLeft: px,
+                paddingRight: px,
                 boxSizing: "border-box",
                 backgroundColor: C.bg,
                 overflow: "hidden",
@@ -1565,7 +1571,10 @@ function ExploreSection({
         <section
             style={{
                 width: "100%",
-                padding: `${phone ? 48 : 72}px ${px}px`,
+                paddingTop: phone ? 20 : 72,
+                paddingBottom: phone ? 48 : 72,
+                paddingLeft: px,
+                paddingRight: px,
                 boxSizing: "border-box",
                 backgroundColor: C.bg,
             }}
