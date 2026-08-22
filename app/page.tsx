@@ -1393,8 +1393,8 @@ function Footer({
                 </div>
                 <div style={{ display: "flex", gap: phone ? 18 : 22, alignItems: "center" }}>
                     {[
-                        { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true, icon: "/icons/linkedin.svg" },
-                        { label: "Email", href: "mailto:omishachabria3@gmail.com", ext: false, icon: "/icons/mail.svg" },
+                        { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true, icon: "/icons/linkedin.png" },
+                        { label: "Email", href: "mailto:omishachabria3@gmail.com", ext: false, icon: "/icons/mail.png" },
                     ].map(({ label, href, ext, icon }) => (
                         <a
                             key={label}
