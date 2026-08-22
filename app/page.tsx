@@ -36,19 +36,6 @@ const CURSOR_STYLES = `
   }
   html { scroll-behavior: smooth; }
   html, body { max-width: 100%; overflow-x: hidden; }
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-  }
-  .logo-track {
-    display: flex;
-    align-items: center;
-    width: max-content;
-    animation: marquee 28s linear infinite;
-  }
-  .logo-track:hover {
-    animation-play-state: paused;
-  }
   .logo-img {
     transition: opacity 0.35s ease;
   }
@@ -1087,24 +1074,34 @@ function LogoTicker({
                     tablet={tablet}
                     large={large}
                 />
-                <div style={{ overflow: "hidden", width: "100%", marginTop: phone ? 8 : 16 }}>
-                    <div className="logo-track">
-                        {[...LOGOS, ...LOGOS].map(({ src, alt }, i) => (
-                            <img
-                                key={i}
-                                src={src}
-                                alt={alt}
-                                className="logo-img"
-                                style={{
-                                    height: phone ? 28 : 40,
-                                    width: "auto",
-                                    display: "block",
-                                    flexShrink: 0,
-                                    marginRight: phone ? 48 : 80,
-                                }}
-                            />
-                        ))}
-                    </div>
+                <div
+                    style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        columnGap: phone ? 32 : tablet ? 44 : 64,
+                        rowGap: phone ? 24 : 32,
+                        width: "100%",
+                        marginTop: phone ? 16 : 24,
+                    }}
+                >
+                    {LOGOS.map(({ src, alt }, i) => (
+                        <img
+                            key={alt}
+                            src={src}
+                            alt={alt}
+                            className="logo-img"
+                            style={{
+                                height: phone ? 30 : tablet ? 34 : large ? 46 : 40,
+                                width: "auto",
+                                display: "block",
+                                animation: reducedMotion
+                                    ? "none"
+                                    : `illust-float ${5.5 + (i % 3) * 0.6}s ease-in-out infinite ${i * 0.35}s`,
+                            }}
+                        />
+                    ))}
                 </div>
             </div>
         </section>
