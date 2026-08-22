@@ -1058,7 +1058,7 @@ function LogoTicker({
     ]
     const logoH = phone ? 26 : tablet ? 32 : large ? 46 : 40
     // Lakmé and URBN read small next to the wordmarks around them — scale them up.
-    const SIZE_MULT = [1, 1, 1, 1, 1.4, 1.4]
+    const SIZE_MULT = [1, 1, 1, 1, 1.7, 1.7]
 
     return (
         <section
@@ -1095,7 +1095,7 @@ function LogoTicker({
                             width: `calc(100% - ${px * 2}px)`,
                         }}
                     >
-                        <SectionLabel tag="Brands" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
+                        <SectionLabel tag="Application" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
                         <div
                             style={{
                                 display: "flex",
@@ -1129,7 +1129,7 @@ function LogoTicker({
                 ) : (
                     <>
                         <div style={{ position: "absolute", top: "54%", left: "50%", transform: "translate(-50%, -50%)" }}>
-                            <SectionLabel tag="Brands" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
+                            <SectionLabel tag="Application" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
                         </div>
                         {LOGOS.map(({ src, alt }, i) => (
                             // Positioning transform lives on this wrapper, not the img — the
