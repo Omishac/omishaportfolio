@@ -1413,7 +1413,7 @@ function PinterestButton() {
     const [hov, setHov] = useState(false)
     return (
         <a
-            href="#"
+            href="https://pin.it/Y5vM7o1m2"
             target="_blank"
             rel="noreferrer"
             onMouseEnter={() => setHov(true)}
