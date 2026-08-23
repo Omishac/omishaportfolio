@@ -1336,7 +1336,7 @@ function SkillsSection({
                 position: "relative",
                 width: "100%",
                 paddingTop: sectionPad,
-                paddingBottom: phone ? 24 : sectionPad,
+                paddingBottom: phone ? 16 : 40,
                 paddingLeft: px,
                 paddingRight: px,
                 boxSizing: "border-box",
@@ -1440,11 +1440,11 @@ function Footer({
 }
 
 const FOLDERS = [
-    { id: "restaurants", label: "list of restaurants i want to try", icon: "/explore/icon-eats.png" },
-    { id: "travel",      label: "my fav travel memories",            icon: "/explore/icon-travel.png" },
-    { id: "songs",       label: "my recent fav songs",                icon: "/explore/icon-music.png" },
-    { id: "film",        label: "recent film photos",                 icon: "/explore/icon-film.png" },
-    { id: "moodboard",   label: "my moodboard (aka pinterest)",       icon: "/explore/icon-moodboard.png" },
+    { id: "restaurants", label: "my eats",                     icon: "/explore/icon-eats.png" },
+    { id: "travel",      label: "travels",                     icon: "/explore/icon-travel.png" },
+    { id: "songs",       label: "my recent fav songs",         icon: "/explore/icon-music.png" },
+    { id: "film",        label: "recent film photos",          icon: "/explore/icon-film.png" },
+    { id: "moodboard",   label: "my moodboard (aka pinterest)", icon: "/explore/icon-moodboard.png" },
 ]
 
 function Folder({ label, icon, onClick }: { label: string; icon: string; onClick: () => void }) {
@@ -1504,6 +1504,12 @@ function HScrollGallery({ images }: { images: { src: string; alt: string }[] }) 
                 gap: 12,
                 overflowX: "auto",
                 scrollSnapType: "x mandatory",
+                // scroll-padding tells the snap algorithm to treat this inset
+                // as reserved space rather than scrollable slack — without it,
+                // the mandatory snap resolves an initial scrollLeft that eats
+                // the left padding entirely, leaving the first photo flush
+                // with the card edge instead of aligned under the title.
+                scrollPaddingLeft: 28,
                 margin: "0 -28px",
                 padding: "0 28px",
             }}
@@ -1621,7 +1627,7 @@ function TravelDashboard() {
                     <div style={{ fontFamily: I, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.ink3, marginBottom: 4 }}>
                         favorite memory
                     </div>
-                    <div style={{ fontFamily: I, fontSize: 14, color: C.ink }}>that's driving a tuk-tuk in mumbai</div>
+                    <div style={{ fontFamily: I, fontSize: 14, color: C.ink }}>is driving a tuk-tuk in mumbai</div>
                 </div>
             </div>
 
@@ -1792,7 +1798,7 @@ function ExploreSection({
         <section
             style={{
                 width: "100%",
-                paddingTop: phone ? 20 : 72,
+                paddingTop: phone ? 12 : 32,
                 paddingBottom: phone ? 48 : 72,
                 paddingLeft: px,
                 paddingRight: px,
@@ -1825,7 +1831,7 @@ function ExploreSection({
                         textDecoration: "underline",
                         textUnderlineOffset: 3,
                     }}>
-                        {open ? "hide folders" : "click to explore"}
+                        {open ? "done exploring" : "click to explore"}
                     </span>
                 </button>
 
