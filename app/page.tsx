@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect, useCallback } from "react"
+import NextImage from "next/image"
 
 const CURSOR_STYLES = `
   @keyframes hi-float {
@@ -813,9 +814,12 @@ function CoverCard({
             {video ? (
                 <div ref={videoContainerRef} style={{ width: "100%" }} />
             ) : (
-                <img
+                <NextImage
                     src={image}
                     alt={title}
+                    width={1200}
+                    height={900}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 700px"
                     style={{
                         width: "100%",
                         height: "auto",
