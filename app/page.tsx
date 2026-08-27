@@ -545,7 +545,7 @@ function Hero({
             >
                 {/* Laptop+face — centered above headline, natural flex child */}
                 <img
-                    src="/images/image 10.svg"
+                    src="/public/image-10-transparent.png"
                     alt=""
                     aria-hidden="true"
                     style={{
@@ -586,7 +586,7 @@ function Hero({
                             animation: reducedMotion ? "none" : "illust-float 7s ease-in-out infinite 1.1s",
                         }}
                     >
-                        <img src="/images/image 9.svg" alt="" aria-hidden="true"
+                        <img src="/public/image-9-transparent.png" alt="" aria-hidden="true"
                             style={{ width: "100%", height: "auto", display: "block" }} />
                     </span>
 
@@ -607,7 +607,7 @@ function Hero({
                             animation: reducedMotion ? "none" : "illust-float 5.5s ease-in-out infinite 0s",
                         }}
                     >
-                        <img src="/images/image 8-1.svg" alt="" aria-hidden="true"
+                        <img src="/public/image-8-1-transparent.png" alt="" aria-hidden="true"
                             style={{ width: "100%", height: "auto", display: "block" }} />
                     </span>
 
@@ -660,7 +660,7 @@ function Hero({
                 {/* Arrow — same path/stroke as the main branch's CTA arrow, jumping character floats on top of it */}
                 <div style={{ position: "relative", width: 30, height: 30, flexShrink: 0, marginTop: 22 }}>
                     <img
-                        src="/images/image 8.svg"
+                        src="/public/image-8-transparent.png"
                         alt=""
                         aria-hidden="true"
                         style={{
