@@ -608,7 +608,7 @@ function Hero({
                         }}
                     >
                         <img src="/public/image-8-1-transparent.png" alt="" aria-hidden="true"
-                            style={{ width: "100%", height: "auto", display: "block" }} />
+                            style={{ width: "100%", height: "auto", display: "block", transform: "scaleX(-1)" }} />
                     </span>
 
                     {[
