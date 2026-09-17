@@ -1392,13 +1392,13 @@ function Footer({
                 backgroundColor: C.bg,
             }}
         >
-            <ExploreSection phone={phone} px={px} maxW={maxW} />
-            <div style={{ width: "100%", padding: `${phone ? 24 : 32}px ${px}px`, boxSizing: "border-box" }}>
             <div
                 style={{
                     maxWidth: maxW,
                     width: "100%",
                     margin: "0 auto",
+                    padding: `${phone ? 24 : 32}px ${px}px`,
+                    boxSizing: "border-box",
                     display: "flex",
                     alignItems: phone ? "flex-start" : "center",
                     flexDirection: phone ? "column" : "row",
@@ -1406,7 +1406,8 @@ function Footer({
                     gap: phone ? 20 : 0,
                 }}
             >
-                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                {/* Logo + copyright */}
+                <div style={{ display: "flex", alignItems: "center", gap: 14, flexShrink: 0 }}>
                     <img
                         src="https://framerusercontent.com/images/NdNFLxKwhpMzm0XHgjDRNkrRRg.png"
                         alt="OC"
@@ -1416,7 +1417,12 @@ function Footer({
                         © {new Date().getFullYear()} Omisha Chabria
                     </p>
                 </div>
-                <div style={{ display: "flex", gap: phone ? 18 : 22, alignItems: "center" }}>
+
+                {/* Explore — center */}
+                <ExploreSection phone={phone} px={0} maxW={99999} inFooter />
+
+                {/* Social icons */}
+                <div style={{ display: "flex", gap: phone ? 18 : 22, alignItems: "center", flexShrink: 0 }}>
                     {[
                         { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true, icon: "/icons/linkedin.png" },
                         { label: "Email", href: "mailto:omishachabria3@gmail.com", ext: false, icon: "/icons/mail.png" },
@@ -1439,7 +1445,6 @@ function Footer({
                         </a>
                     ))}
                 </div>
-            </div>
             </div>
         </footer>
     )
@@ -1784,10 +1789,12 @@ function ExploreSection({
     phone,
     px,
     maxW,
+    inFooter = false,
 }: {
     phone: boolean
     px: number
     maxW: number
+    inFooter?: boolean
 }) {
     const [open, setOpen] = useState(false)
     const [shown, setShown] = useState(false)
@@ -1803,16 +1810,16 @@ function ExploreSection({
     return (
         <section
             style={{
-                width: "100%",
-                paddingTop: phone ? 12 : 32,
-                paddingBottom: phone ? 48 : 72,
-                paddingLeft: px,
-                paddingRight: px,
+                width: inFooter ? "auto" : "100%",
+                paddingTop: inFooter ? 0 : phone ? 12 : 32,
+                paddingBottom: inFooter ? 0 : phone ? 48 : 72,
+                paddingLeft: inFooter ? 0 : px,
+                paddingRight: inFooter ? 0 : px,
                 boxSizing: "border-box",
-                backgroundColor: C.bg,
+                backgroundColor: "transparent",
             }}
         >
-            <div style={{ maxWidth: maxW, width: "100%", margin: "0 auto", textAlign: "center" }}>
+            <div style={{ maxWidth: inFooter ? "none" : maxW, width: "100%", margin: "0 auto", textAlign: "center" }}>
                 <button
                     onClick={() => setOpen((o) => !o)}
                     style={{
