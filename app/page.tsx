@@ -1388,6 +1388,7 @@ function Footer({
         <footer
             style={{
                 width: "100%",
+                padding: `${phone ? 24 : 32}px ${px}px`,
                 boxSizing: "border-box",
                 backgroundColor: C.bg,
             }}
@@ -1397,16 +1398,13 @@ function Footer({
                     maxWidth: maxW,
                     width: "100%",
                     margin: "0 auto",
-                    padding: `${phone ? 24 : 32}px ${px}px`,
-                    boxSizing: "border-box",
-                    display: phone ? "flex" : "grid",
-                    gridTemplateColumns: phone ? undefined : "1fr auto 1fr",
-                    flexDirection: phone ? "column" as const : undefined,
-                    alignItems: "center",
+                    display: "flex",
+                    alignItems: phone ? "flex-start" : "center",
+                    flexDirection: phone ? "column" : "row",
+                    justifyContent: "space-between",
                     gap: phone ? 20 : 0,
                 }}
             >
-                {/* Logo + copyright — left edge */}
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                     <img
                         src="https://framerusercontent.com/images/NdNFLxKwhpMzm0XHgjDRNkrRRg.png"
@@ -1417,12 +1415,7 @@ function Footer({
                         © {new Date().getFullYear()} Omisha Chabria
                     </p>
                 </div>
-
-                {/* Explore — true center */}
-                <ExploreSection phone={phone} px={0} maxW={99999} inFooter />
-
-                {/* Social icons — right edge */}
-                <div style={{ display: "flex", gap: phone ? 18 : 22, alignItems: "center", justifyContent: phone ? "flex-start" : "flex-end" }}>
+                <div style={{ display: "flex", gap: phone ? 18 : 22, alignItems: "center" }}>
                     {[
                         { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true, icon: "/icons/linkedin.png" },
                         { label: "Email", href: "mailto:omishachabria3@gmail.com", ext: false, icon: "/icons/mail.png" },
@@ -1789,12 +1782,10 @@ function ExploreSection({
     phone,
     px,
     maxW,
-    inFooter = false,
 }: {
     phone: boolean
     px: number
     maxW: number
-    inFooter?: boolean
 }) {
     const [open, setOpen] = useState(false)
     const [shown, setShown] = useState(false)
@@ -1810,16 +1801,16 @@ function ExploreSection({
     return (
         <section
             style={{
-                width: inFooter ? "auto" : "100%",
-                paddingTop: inFooter ? 0 : phone ? 12 : 32,
-                paddingBottom: inFooter ? 0 : phone ? 48 : 72,
-                paddingLeft: inFooter ? 0 : px,
-                paddingRight: inFooter ? 0 : px,
+                width: "100%",
+                paddingTop: phone ? 12 : 32,
+                paddingBottom: phone ? 48 : 72,
+                paddingLeft: px,
+                paddingRight: px,
                 boxSizing: "border-box",
-                backgroundColor: "transparent",
+                backgroundColor: C.bg,
             }}
         >
-            <div style={{ maxWidth: inFooter ? "none" : maxW, width: "100%", margin: "0 auto", textAlign: "center" }}>
+            <div style={{ maxWidth: maxW, width: "100%", margin: "0 auto", textAlign: "center" }}>
                 <button
                     onClick={() => setOpen((o) => !o)}
                     style={{
@@ -1902,6 +1893,7 @@ export default function ResponsiveHome() {
                 <WorkSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
                 <LogoTicker phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
                 <SkillsSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
+                <ExploreSection phone={phone} px={px} maxW={maxW} />
                 <Footer phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
             </div>
         </>
