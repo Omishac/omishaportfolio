@@ -1388,11 +1388,12 @@ function Footer({
         <footer
             style={{
                 width: "100%",
-                padding: `${phone ? 24 : 32}px ${px}px`,
                 boxSizing: "border-box",
                 backgroundColor: C.bg,
             }}
         >
+            <ExploreSection phone={phone} px={px} maxW={maxW} />
+            <div style={{ width: "100%", padding: `${phone ? 24 : 32}px ${px}px`, boxSizing: "border-box" }}>
             <div
                 style={{
                     maxWidth: maxW,
@@ -1438,6 +1439,7 @@ function Footer({
                         </a>
                     ))}
                 </div>
+            </div>
             </div>
         </footer>
     )
@@ -1893,7 +1895,6 @@ export default function ResponsiveHome() {
                 <WorkSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
                 <LogoTicker phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
                 <SkillsSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
-                <ExploreSection phone={phone} px={px} maxW={maxW} />
                 <Footer phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
             </div>
         </>
