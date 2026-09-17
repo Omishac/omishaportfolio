@@ -1399,15 +1399,15 @@ function Footer({
                     margin: "0 auto",
                     padding: `${phone ? 24 : 32}px ${px}px`,
                     boxSizing: "border-box",
-                    display: "flex",
-                    alignItems: phone ? "flex-start" : "center",
-                    flexDirection: phone ? "column" : "row",
-                    justifyContent: "space-between",
+                    display: phone ? "flex" : "grid",
+                    gridTemplateColumns: phone ? undefined : "1fr auto 1fr",
+                    flexDirection: phone ? "column" as const : undefined,
+                    alignItems: "center",
                     gap: phone ? 20 : 0,
                 }}
             >
-                {/* Logo + copyright */}
-                <div style={{ display: "flex", alignItems: "center", gap: 14, flexShrink: 0 }}>
+                {/* Logo + copyright — left edge */}
+                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                     <img
                         src="https://framerusercontent.com/images/NdNFLxKwhpMzm0XHgjDRNkrRRg.png"
                         alt="OC"
@@ -1418,11 +1418,11 @@ function Footer({
                     </p>
                 </div>
 
-                {/* Explore — center */}
+                {/* Explore — true center */}
                 <ExploreSection phone={phone} px={0} maxW={99999} inFooter />
 
-                {/* Social icons */}
-                <div style={{ display: "flex", gap: phone ? 18 : 22, alignItems: "center", flexShrink: 0 }}>
+                {/* Social icons — right edge */}
+                <div style={{ display: "flex", gap: phone ? 18 : 22, alignItems: "center", justifyContent: phone ? "flex-start" : "flex-end" }}>
                     {[
                         { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true, icon: "/icons/linkedin.png" },
                         { label: "Email", href: "mailto:omishachabria3@gmail.com", ext: false, icon: "/icons/mail.png" },
