@@ -1,7 +1,7 @@
 # Omisha Portfolio — Claude Context
 
 ## Active branch
-`landing-page-redesign` — all homepage work goes here. Never touch case study pages.
+`redesign-1` — all homepage work goes here. Never touch case study pages.
 
 ## Stack
 Next.js 14 App Router, TypeScript, inline styles (no Tailwind), "use client" components.
@@ -53,5 +53,5 @@ Do NOT modify case study pages or shared components in ways that affect them:
 If a shared component needs a homepage-specific change, create a homepage-only variant instead.
 
 ## Git
-- Push to `landing-page-redesign` branch
-- Always `git push -u origin landing-page-redesign`
+- Push to `redesign-1` branch
+- Always `git push -u origin redesign-1`
