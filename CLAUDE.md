@@ -27,15 +27,13 @@ const EASE_OUT    = "cubic-bezier(0.23,1,0.32,1)"
 - px: phone=20, tablet=40, large=120, desktop=80
 - maxW: large=1280, else=1040
 
-## Hero (current state — matches Figma node 41:2)
-- Figma file: https://www.figma.com/design/HT6JZC5NjxGzIoWlNrVllH/Untitled?node-id=41-2
-- Centered headline, no floating characters around text
-- Font: Inter Black (900), color `#303432`, normal line-height and letter-spacing
-- Font size: `clamp(52px, 5.2vw, 75px)` desktop — matches Figma's 74.6px at 1440px
-- Three lines: "product designer," / "digital analyst," / "brand storyteller."
-- Staggered entrance animation (opacity + translateY, EASE_SPRING)
-- Scroll parallax on text block (`-scrollY * 0.03`)
-- CTA: "Here's a closer look at what that means" + `image 8.svg` ghost (scaleX mirrored, 31px) inline + pink curved SVG arrow below
+## Hero (current state — matches Figma node 83:2, "Desktop - 5")
+- Figma file: https://www.figma.com/design/HT6JZC5NjxGzIoWlNrVllH/Untitled?node-id=83-2
+- Tear-off paper flyer (blue `#94BDD3` + crumpled texture + tape) on a fixed 540×590 stage using Figma coordinates; stage scales down to fit `w - 2*px`
+- Assets in `public/hero-flyer/` (tape PNG is rotated −21.8° in CSS to match Figma's rotated image fill)
+- Text: role line + "Take what you need:" Inter Bold 10.2px `#365144`; intro Inter Light 16.1px `#303432` ("Hi, I'm Omisha!" is the h1)
+- Tabs (Inter SemiBold 16.1px, rotated 92.3°): Redesign, Mobile Design, Digital Strategy, Freelancing, Say hello (mailto); two tabs shown torn off
+- Entrance: fade + translateY/rotate settle (EASE_SPRING), off under reduced motion
 
 ## Keyframes (in CURSOR_STYLES string at top of page.tsx)
 - `illust-float` — 5px vertical float, 5.5s cycle

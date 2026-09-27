@@ -440,262 +440,195 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
     )
 }
 
+// Tear-off flyer hero — Figma node 83:2 ("Desktop - 5"), group 96:148.
+// The flyer is a rotated paper collage, so it's laid out on a fixed
+// 540×590 stage using the Figma coordinates (relative to the group origin)
+// and the whole stage is scaled down to fit narrower viewports.
+const FLYER_W = 540
+const FLYER_H = 590
+const FLYER_BLUE = "#94BDD3"
+const FLYER_GREEN = "#365144"
+const FLYER_INK = "#303432"
+
+// Figma exports each rotated layer as a bounding box with a rotated child of
+// its own size centered inside it; `rotBox` reproduces that placement.
+function rotBox(
+    box: { l: number; t: number; w: number; h: number },
+    inner: { w: number; h: number },
+    deg: number,
+): React.CSSProperties {
+    return {
+        position: "absolute",
+        left: box.l + box.w / 2 - inner.w / 2,
+        top: box.t + box.h / 2 - inner.h / 2,
+        width: inner.w,
+        height: inner.h,
+        transform: `rotate(${deg}deg)`,
+    }
+}
+
+// Centered text layer: (cx, cy) is the center of Figma's bounding box.
+function rotText(cx: number, cy: number, deg: number): React.CSSProperties {
+    return {
+        position: "absolute",
+        left: cx,
+        top: cy,
+        transform: `translate(-50%, -50%) rotate(${deg}deg)`,
+        margin: 0,
+        fontFamily: I,
+        lineHeight: "normal",
+        textAlign: "center",
+    }
+}
+
+// Perforations between tabs (vertical dashed lines).
+const PERFS = [
+    { src: "/hero-flyer/perf-a.svg", l: 79.79,  t: 358.42, h: 209.784, len: 209.994, deg: -87.44 },
+    { src: "/hero-flyer/perf-b.svg", l: 155.99, t: 361.24, h: 206.964, len: 207.176, deg: -87.41 },
+    { src: "/hero-flyer/perf-a.svg", l: 232.19, t: 364.07, h: 209.784, len: 209.994, deg: -87.44 },
+    { src: "/hero-flyer/perf-c.svg", l: 308.39, t: 364.07, h: 209.784, len: 209.995, deg: -87.43 },
+    { src: "/hero-flyer/perf-a.svg", l: 384.59, t: 366.89, h: 209.784, len: 209.994, deg: -87.44 },
+    { src: "/hero-flyer/perf-d.svg", l: 460.79, t: 369.71, h: 209.784, len: 209.994, deg: -87.43 },
+]
+
+const TABS: { label: string; cx: number; cy: number; href?: string }[] = [
+    { label: "Redesign",         cx: 42.83,  cy: 457.34 },
+    { label: "Mobile Design",    cx: 121.87, cy: 457.57 },
+    { label: "Digital Strategy", cx: 197.12, cy: 458.78 },
+    { label: "Freelancing",      cx: 351.35, cy: 469.67 },
+    { label: "Say hello",        cx: 496.27, cy: 472.33, href: "mailto:omishachabria3@gmail.com" },
+]
+
 function Hero({
     phone,
     tablet,
-    large,
     px,
-    maxW,
-    sp,
+    w,
 }: {
     phone: boolean
     tablet: boolean
-    large: boolean
     px: number
-    maxW: number
-    sp: ReturnType<typeof useBP>["sp"]
+    w: number
 }) {
     const [revealed, setRevealed] = useState(false)
-    const [scrollY, setScrollY]   = useState(0)
-    const reducedMotion            = useReducedMotion()
+    const reducedMotion = useReducedMotion()
 
     useEffect(() => {
         const t = setTimeout(() => setRevealed(true), 80)
         return () => clearTimeout(t)
     }, [])
 
-    useEffect(() => {
-        if (reducedMotion) { setScrollY(0); return }
-        const onScroll = () => setScrollY(window.scrollY)
-        window.addEventListener("scroll", onScroll, { passive: true })
-        return () => window.removeEventListener("scroll", onScroll)
-    }, [reducedMotion])
-
-    const textParallax = reducedMotion ? 0 : -scrollY * 0.18
-    const heroFade = reducedMotion ? 1 : Math.max(0, 1 - scrollY / 500)
-    const heroScale = reducedMotion ? 1 : Math.max(0.85, 1 - scrollY / 3200)
-
-    const enter = (delayMs: number) => ({
-        opacity:    revealed ? 1 : 0,
-        transform:  `translateY(${revealed ? 0 : 16}px)`,
-        transition: reducedMotion
-            ? "none"
-            : `opacity 0.6s ${EASE_SPRING} ${delayMs}ms, transform 0.6s ${EASE_SPRING} ${delayMs}ms`,
-    })
-
-    const illustEnter = (delayMs: number) => ({
-        opacity:    revealed ? 1 : 0,
-        transition: reducedMotion ? "none" : `opacity 0.7s ${EASE_SPRING} ${delayMs}ms`,
-    })
-
-    // Figma: Inter Black, 74.622px at 1440px, color #303432, normal line-height
-    const headSize = phone
-        ? "clamp(32px, 9vw, 46px)"
-        : tablet
-            ? "clamp(42px, 6vw, 58px)"
-            : large
-                ? "clamp(68px, 5.2vw, 82px)"
-                : "clamp(52px, 5.2vw, 75px)"
-
-    // illustration widths (px), matched to Figma node-id 41:2 by asset aspect ratio:
-    // image 10.svg (111:69) = laptop+face, above headline
-    // image 9.svg  (63:69)  = writing character, beside "digital analyst,"
-    // image 8-1.svg (115:105) = shouting character, beside "brand storyteller."
-    // image 8.svg  (27:31)  = jumping character, above the CTA arrow
-    const illW = {
-        laptop: phone ? 62 : tablet ? 76 : large ? 104 : 88,
-        write:  phone ? 44 : tablet ? 56 : large ? 80 : 68,
-        shout:  phone ? 70 : tablet ? 88 : large ? 124 : 104,
-        jump:   phone ? 20 : tablet ? 24 : 28,
-    }
-
-    // HomeNav is `position: fixed` and reserves its own flow space via a
-    // spacer div, so this section still needs to be shorter than 100svh by
-    // the nav's height — otherwise the centered headline and the
-    // bottom-pinned CTA both drift below the visible viewport instead of
-    // centering/anchoring within it.
-    const navH = phone ? 54 : 64
+    const scale = Math.min(1, (w - px * 2) / FLYER_W)
+    const padTop = phone ? 24 : tablet ? 32 : 40
+    const padBottom = phone ? 48 : tablet ? 64 : 90
 
     return (
         <section
             style={{
-                position: "relative",
                 width: "100%",
-                minHeight: `calc(100svh - ${navH}px)`,
                 boxSizing: "border-box",
                 backgroundColor: C.bg,
+                display: "flex",
+                justifyContent: "center",
+                paddingTop: padTop,
+                paddingBottom: padBottom,
                 overflow: "hidden",
             }}
         >
-            {/* ── Centered headline block ── */}
+            {/* Outer box reserves the scaled footprint; inner stage keeps Figma coordinates */}
             <div
                 style={{
-                    position: "absolute",
-                    top: "40%",
-                    left: "50%",
-                    transform: `translate(-50%, calc(-50% + ${textParallax}px)) scale(${heroScale})`,
-                    opacity: heroFade,
-                    willChange: "transform, opacity",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    width: `calc(100% - ${px * 2}px)`,
-                    maxWidth: maxW,
+                    width: FLYER_W * scale,
+                    height: FLYER_H * scale,
+                    opacity: revealed ? 1 : 0,
+                    transform: revealed ? "none" : "translateY(16px) rotate(-1deg)",
+                    transition: reducedMotion
+                        ? "none"
+                        : `opacity 0.6s ${EASE_SPRING}, transform 0.8s ${EASE_SPRING}`,
                 }}
             >
-                {/* Laptop+face — centered above headline, natural flex child */}
-                <img
-                    src="/public/image-10-transparent.png"
-                    alt=""
-                    aria-hidden="true"
-                    style={{
-                        width: illW.laptop,
-                        height: "auto",
-                        display: "block",
-                        marginBottom: phone ? 8 : 12,
-                        ...illustEnter(160),
-                        animation: reducedMotion ? "none" : "illust-float 6s ease-in-out infinite 0.4s",
-                    }}
-                />
-
-                <h1
+                <div
                     style={{
                         position: "relative",
-                        fontFamily: I,
-                        fontWeight: 900,
-                        fontSize: headSize,
-                        lineHeight: "normal",
-                        letterSpacing: "normal",
-                        color: "#303432",
-                        margin: 0,
-                        textAlign: "center",
+                        width: FLYER_W,
+                        height: FLYER_H,
+                        transform: `scale(${scale})`,
+                        transformOrigin: "top left",
                     }}
                 >
-                    {/* Writing character — left beside "digital analyst,"
-                        left: calc(6% - write_width) puts right edge near start of "digital analyst,"
-                        (the 6% accounts for "digital analyst," being narrower than "brand storyteller." and centered) */}
-                    <span
-                        style={{
-                            position: "absolute",
-                            top: "1.3em",
-                            left: `calc(6% - ${illW.write}px)`,
-                            width: illW.write,
-                            display: "block",
-                            pointerEvents: "none",
-                            ...illustEnter(320),
-                            animation: reducedMotion ? "none" : "illust-float 7s ease-in-out infinite 1.1s",
-                        }}
-                    >
-                        <img src="/public/image-9-transparent.png" alt="" aria-hidden="true"
-                            style={{ width: "100%", height: "auto", display: "block" }} />
-                    </span>
+                    {/* Paper */}
+                    <div style={{ ...rotBox({ l: 0, t: 22.44, w: 536.739, h: 558.96 }, { w: 519.911, h: 542.866 }, 1.8), backgroundColor: FLYER_BLUE }} />
 
-                    {/* Shouting character — beside "brand storyteller." on tablet/desktop
-                        (left: calc(100% + 5px) puts left edge just past h1 right = end of the line);
-                        on phone there's no room to its right, so it sits centered underneath
-                        the headline block instead. */}
-                    <span
-                        style={{
-                            position: "absolute",
-                            ...(phone
-                                ? { top: "100%", left: "50%", transform: "translateX(-50%)", marginTop: 6 }
-                                : { top: "2.2em", left: "calc(100% + 5px)" }),
-                            width: illW.shout,
-                            display: "block",
-                            pointerEvents: "none",
-                            ...illustEnter(480),
-                            animation: reducedMotion ? "none" : "illust-float 5.5s ease-in-out infinite 0s",
-                        }}
-                    >
-                        <img src="/public/image-8-1-transparent.png" alt="" aria-hidden="true"
-                            style={{ width: "100%", height: "auto", display: "block", transform: "scaleX(-1)" }} />
-                    </span>
+                    {/* Tear line above the tabs */}
+                    <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
+                        style={{ ...rotBox({ l: 7.35, t: 355.6, w: 518.343, h: 16.964 }, { w: 518.621, h: 0.941 }, 1.87), display: "block" }} />
 
-                    {[
-                        { text: "product designer,",  delay: 60  },
-                        { text: "digital analyst,",    delay: 170 },
-                        { text: "brand storyteller.",  delay: 280 },
-                    ].map(({ text, delay }) => (
-                        <span
-                            key={text}
-                            style={{
-                                display: "block",
-                                whiteSpace: "nowrap",
-                                ...enter(delay),
-                            }}
-                        >
-                            <HoverLetters text={text} />
-                        </span>
+                    {PERFS.map((p, i) => (
+                        <img key={i} src={p.src} alt="" aria-hidden="true"
+                            style={{ ...rotBox({ l: p.l, t: p.t, w: 9.39, h: p.h }, { w: p.len, h: 0.941 }, p.deg), display: "block" }} />
                     ))}
-                </h1>
-            </div>
 
-            {/* ── CTA: pinned to the bottom of the viewport, arrow inline beside the text (matches the main branch's CTA arrow), jumping character on top of the arrow ── */}
-            <div
-                style={{
-                    position: "absolute",
-                    left: "50%",
-                    bottom: sp.heroBottom,
-                    transform: `translateX(-50%) translateY(${(1 - heroFade) * 24}px)`,
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 6,
-                    opacity: revealed ? heroFade : 0,
-                    transition: reducedMotion ? "none" : `opacity 0.5s ${EASE_OUT} 500ms`,
-                }}
-            >
-                <span
-                    style={{
-                        fontFamily: I,
-                        fontSize: 13,
-                        fontWeight: 400,
-                        color: C.ink3,
-                        letterSpacing: "-0.01em",
-                        whiteSpace: "nowrap",
-                    }}
-                >
-                    Here&apos;s a closer look at what that means
-                </span>
-                {/* Arrow — same path/stroke as the main branch's CTA arrow, jumping character floats on top of it */}
-                <div style={{ position: "relative", width: 30, height: 30, flexShrink: 0, marginTop: 22 }}>
-                    <img
-                        src="/public/image-8-transparent.png"
-                        alt=""
-                        aria-hidden="true"
-                        style={{
-                            position: "absolute",
-                            top: -18.2,
-                            left: "-2%",
-                            width: illW.jump,
-                            height: "auto",
-                            display: "block",
-                            animation: reducedMotion ? "none" : "illust-float 6.5s ease-in-out infinite 2s",
-                        }}
-                    />
-                    <svg
-                        width="30"
-                        height="30"
-                        viewBox="0 0 48 48"
-                        fill="none"
-                        style={{ display: "block" }}
-                    >
-                        <path
-                            d="M 8 6 C 12 6, 40 14, 40 40"
-                            stroke="#E8B4C8"
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                            fill="none"
-                        />
-                        <path
-                            d="M 33 32 L 40 42 L 47 32"
-                            stroke="#E8B4C8"
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            fill="none"
-                        />
-                    </svg>
+                    {/* Crumpled paper texture */}
+                    <div style={{ ...rotBox({ l: 0.67, t: 19.15, w: 539.273, h: 564.109 }, { w: 523.46, h: 549.055 }, 1.67), opacity: 0.38, overflow: "hidden", pointerEvents: "none" }}>
+                        <img src="/hero-flyer/paper-texture.png" alt="" aria-hidden="true"
+                            style={{ position: "absolute", left: "-1.62%", top: "-20.7%", width: "103.15%", height: "141.73%", maxWidth: "none" }} />
+                    </div>
+
+                    <p style={{ ...rotText(295.95, 82.12, 1.41), width: 260.905, whiteSpace: "nowrap", fontSize: 10.245, fontWeight: 700, color: FLYER_GREEN }}>
+                        product designer . digital analyst . brand storyteller.
+                    </p>
+
+                    <div style={{ ...rotText(274.07, 186.76, 2.02), width: 416.088, fontSize: 16.113, fontWeight: 300, color: FLYER_INK }}>
+                        <h1 style={{ margin: "0 0 1.2em", font: "inherit" }}>Hi, I&rsquo;m Omisha!</h1>
+                        <p style={{ margin: 0 }}>I turn what people do, say, and feel into digital experiences that make sense.</p>
+                    </div>
+
+                    <p style={{ ...rotText(266.3, 334.74, 1.89), width: 111.227, fontSize: 10.245, fontWeight: 700, color: FLYER_GREEN }}>
+                        Take what you need:
+                    </p>
+
+                    {TABS.map(({ label, cx, cy, href }) => {
+                        const style: React.CSSProperties = {
+                            ...rotText(cx, cy, 92.31),
+                            fontSize: 16.113,
+                            fontWeight: 600,
+                            color: FLYER_INK,
+                            whiteSpace: "nowrap",
+                            textDecoration: "none",
+                        }
+                        return href
+                            ? <a key={label} href={href} style={style}>{label}</a>
+                            : <span key={label} style={style}>{label}</span>
+                    })}
+
+                    {/* Two tabs already torn off, with ragged edges left behind */}
+                    <div style={{ ...rotBox({ l: 232.7, t: 363.13, w: 83.361, h: 222.432 }, { w: 73.559, h: 219.342 }, 2.58), backgroundColor: C.bg }} />
+                    <div style={{ ...rotBox({ l: 387.07, t: 368.77, w: 81.625, h: 221.589 }, { w: 73.559, h: 219.013 }, 2.12), backgroundColor: C.bg }} />
+                    <img src="/hero-flyer/torn-edge-1.svg" alt="" aria-hidden="true"
+                        style={{ ...rotBox({ l: 242.54, t: 363.13, w: 74.504, h: 13.1 }, { w: 74.33, h: 12.908 }, 0.87), display: "block" }} />
+                    <img src="/hero-flyer/torn-edge-2.svg" alt="" aria-hidden="true"
+                        style={{ ...rotBox({ l: 394.98, t: 358.73, w: 73.674, h: 13.692 }, { w: 73.725, h: 13.482 }, 179.1), display: "block" }} />
+
+                    {/* Ragged bottom of the "Mobile Design" tab */}
+                    <img src="/hero-flyer/torn-bottom.svg" alt="" aria-hidden="true"
+                        style={{ ...rotBox({ l: 79.37, t: 549.33, w: 76.092, h: 28.687 }, { w: 75.021, h: 25.31 }, 2.6), display: "block" }} />
+
+                    {/* Tape */}
+                    <div style={{ ...rotBox({ l: 165.4, t: 0, w: 249.37, h: 55.598 }, { w: 248.376, h: 50.448 }, 1.19), overflow: "hidden", pointerEvents: "none" }}>
+                        <img src="/hero-flyer/tape.png" alt="" aria-hidden="true"
+                            style={{
+                                position: "absolute",
+                                // Source PNG has the tape on a ~22° diagonal; Figma rotates the
+                                // fill so the tape runs flat across this clip box.
+                                left: -47.7,
+                                top: -65,
+                                width: 343.6,
+                                height: 193.3,
+                                maxWidth: "none",
+                                transformOrigin: "171.9px 90.2px",
+                                transform: "rotate(-21.8deg)",
+                            }} />
+                    </div>
                 </div>
             </div>
         </section>
@@ -1873,7 +1806,7 @@ function ExploreSection({
 }
 
 export default function ResponsiveHome() {
-    const { ref, phone, tablet, desktop, large, px, maxW, sp } = useBP()
+    const { ref, w, phone, tablet, desktop, large, px, maxW, sp } = useBP()
 
     return (
         <>
@@ -1889,7 +1822,7 @@ export default function ResponsiveHome() {
             >
                 <style>{CURSOR_STYLES}</style>
                 <HomeNav phone={phone} tablet={tablet} large={large} px={px} />
-                <Hero phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
+                <Hero phone={phone} tablet={tablet} px={px} w={w} />
                 <WorkSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
                 <LogoTicker phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
                 <SkillsSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
