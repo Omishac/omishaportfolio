@@ -1728,8 +1728,7 @@ function Footer({
                 width: "100%",
                 padding: `${phone ? 24 : 32}px ${px}px`,
                 boxSizing: "border-box",
-                backgroundColor: GAME_BG,
-                borderTop: "1px solid rgba(60,40,20,0.14)",
+                backgroundColor: C.bg,
             }}
         >
             <div
@@ -2215,7 +2214,6 @@ function ExploreSection({
 // Write a thought, crumple it into the paper ball, then pull back and release
 // to toss it into the can. Aiming and hit detection use the measured on-screen
 // positions of the ball and can at throw time, so they follow any layout.
-const GAME_BG = "#F5F0E8"
 const GAME_PINK = "#D33361"
 
 // Transparent space under each asset, as a fraction of its height, so the
@@ -2352,6 +2350,56 @@ function FooterGame({
     const focusInputNext = useRef(false)
     const drag = useRef<{ id: number; rest: Vec; world: TossWorld; power: number; maxPull: number; pull: Vec } | null>(null)
     const raf = useRef(0)
+    const sectionRef = useRef<HTMLElement>(null)
+    const headRef = useRef<HTMLDivElement>(null)
+    const tiltRef = useRef<HTMLDivElement>(null)
+    const settled = useRef(false)
+
+    // Scroll-linked 3D reveal: the play area starts tipped back like a sheet of
+    // paper on a desk and stands up as it scrolls into view. p = how much of the
+    // play area is on screen (it's the last thing on the page, so it reaches 1
+    // at the bottom).
+    const applyReveal = (p: number) => {
+        const q = 1 - p
+        const tilt = tiltRef.current, head = headRef.current
+        if (tilt) {
+            tilt.style.transform = q < 0.002 ? "" : `perspective(1000px) translateY(${q * 48}px) rotateX(${q * 34}deg) scale(${1 - q * 0.05})`
+            tilt.style.opacity = String(0.3 + 0.7 * p)
+        }
+        if (head) {
+            head.style.transform = q < 0.002 ? "" : `translateY(${q * 28}px)`
+            head.style.opacity = String(0.15 + 0.85 * p)
+        }
+    }
+    // Once someone starts playing, lock it upright so aiming is exact.
+    const settle = () => {
+        if (settled.current) return
+        settled.current = true
+        applyReveal(1)
+    }
+
+    useEffect(() => {
+        if (reducedMotion) { applyReveal(1); return }
+        let frame = 0
+        const update = () => {
+            frame = 0
+            const el = sectionRef.current, tilt = tiltRef.current
+            if (!el || !tilt || settled.current) return
+            // offsetTop ignores the transform, so this is the play area's resting position
+            const top = el.getBoundingClientRect().top + tilt.offsetTop - el.offsetTop
+            const raw = Math.min(1, Math.max(0, (window.innerHeight - top) / (tilt.offsetHeight * 0.95)))
+            applyReveal(1 - Math.pow(1 - raw, 2))
+        }
+        const onScroll = () => { if (!frame) frame = requestAnimationFrame(update) }
+        update()
+        window.addEventListener("scroll", onScroll, { passive: true })
+        window.addEventListener("resize", onScroll)
+        return () => {
+            cancelAnimationFrame(frame)
+            window.removeEventListener("scroll", onScroll)
+            window.removeEventListener("resize", onScroll)
+        }
+    }, [reducedMotion])
 
     const playH = phone ? 214 : tablet ? 250 : 270
     const pileW = phone ? 118 : tablet ? 160 : 190
@@ -2450,6 +2498,7 @@ function FooterGame({
     const crumple = (e: React.FormEvent) => {
         e.preventDefault()
         if (phase !== "writing") return
+        settle()
         const note = noteRef.current, ball = ballRef.current
         if (reducedMotion || !note || !ball) { setPhase("ready"); return }
         setPhase("crumpling")
@@ -2482,6 +2531,7 @@ function FooterGame({
 
     const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
         if (phase !== "ready" || !e.isPrimary) return
+        settle()
         const m = measure()
         if (!m) return
         e.preventDefault()
@@ -2526,6 +2576,7 @@ function FooterGame({
     // ── Keyboard / no-drag throw: a clean shot at the can ──
     const autoToss = () => {
         if (phase !== "ready") return
+        settle()
         const m = measure()
         if (!m) return
         const { world, rest } = m
@@ -2554,17 +2605,19 @@ function FooterGame({
 
     return (
         <section
+            ref={sectionRef}
             aria-labelledby="toss-heading"
             style={{
                 width: "100%",
-                backgroundColor: GAME_BG,
-                padding: `${phone ? 40 : 56}px ${px}px 0`,
+                backgroundColor: C.bg,
+                padding: `${phone ? 16 : 24}px ${px}px ${phone ? 40 : 64}px`,
                 boxSizing: "border-box",
                 overflow: "hidden",
             }}
         >
             <style dangerouslySetInnerHTML={{ __html: GAME_STYLES }} />
             <div style={{ maxWidth: Math.min(maxW, 780), width: "100%", margin: "0 auto" }}>
+                <div ref={headRef} style={{ willChange: "transform, opacity" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
                     <span style={{ fontFamily: I, fontSize: 12, color: C.muted }}>[</span>
                     <span style={{ fontFamily: I, fontWeight: 300, fontSize: 12, color: C.ink, letterSpacing: "-0.01em" }}>before you go</span>
@@ -2576,12 +2629,14 @@ function FooterGame({
                 <p style={{ fontFamily: I, fontSize: 13, lineHeight: 1.55, color: C.ink3, margin: "8px 0 0", maxWidth: 420 }}>
                     Write down what&rsquo;s on your mind, crumple it, then pull the ball back and let go to toss it in the can.
                 </p>
+                </div>
 
+                <div ref={tiltRef} style={{ transformOrigin: "50% 100%", willChange: "transform, opacity" }}>
                 <div
                     ref={areaRef}
                     role="group"
                     aria-label="Paper toss"
-                    style={{ position: "relative", height: playH, marginTop: phone ? 20 : 28 }}
+                    style={{ position: "relative", height: playH, marginTop: phone ? 20 : 28, borderBottom: "1px solid rgba(17,17,17,0.08)" }}
                 >
                     {/* Decorative pile */}
                     <NextImage src="/footer-game/paper-pile.png" alt="" aria-hidden="true" draggable={false}
@@ -2666,6 +2721,7 @@ function FooterGame({
                                 className="toss-input"
                                 value={thought}
                                 onChange={(e) => setThought(e.target.value)}
+                                onFocus={settle}
                                 maxLength={60}
                                 autoComplete="off"
                                 placeholder="a worry, a to-do, a bad idea…"
@@ -2728,6 +2784,7 @@ function FooterGame({
                         )}
                     </div>
                 </div>
+                </div>
             </div>
         </section>
     )
@@ -2755,8 +2812,8 @@ export default function ResponsiveHome() {
                 <LogoTicker phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
                 <SkillsSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
                 <ExploreSection phone={phone} px={px} maxW={maxW} />
-                <FooterGame phone={phone} tablet={tablet} px={px} maxW={maxW} />
                 <Footer phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
+                <FooterGame phone={phone} tablet={tablet} px={px} maxW={maxW} />
             </div>
         </>
     )
