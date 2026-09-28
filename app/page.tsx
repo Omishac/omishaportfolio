@@ -2812,6 +2812,10 @@ function FooterGame({
     )
 }
 
+// "want to learn more about Omisha?" section is hidden for now; the code is
+// kept (ExploreSection, FOLDERS, etc.) — flip to true to bring it back.
+const SHOW_EXPLORE = false
+
 export default function ResponsiveHome() {
     const { ref, w, phone, tablet, desktop, large, px, maxW, sp } = useBP()
 
@@ -2833,7 +2837,7 @@ export default function ResponsiveHome() {
                 <WorkSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
                 <LogoTicker phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
                 <SkillsSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
-                <ExploreSection phone={phone} px={px} maxW={maxW} />
+                {SHOW_EXPLORE && <ExploreSection phone={phone} px={px} maxW={maxW} />}
                 <FooterGame phone={phone} tablet={tablet} px={px} maxW={maxW}
                     footer={<Footer phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />} />
             </div>
