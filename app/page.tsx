@@ -1060,7 +1060,7 @@ const CARDS: CaseStudy[] = [
     },
     {
         href: "/ios-review-accessibility",
-        image: "https://framerusercontent.com/images/kDMnpjfRqLhIvdEi1aQ3Jp0wkg.png",
+        image: "/case-studies/ios-review-cover.png",
         title: "iOS Review Accessibility",
         tags: ["Research", "UX/UI", "iOS"],
         company: "URBN",
