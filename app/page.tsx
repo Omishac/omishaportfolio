@@ -1003,7 +1003,20 @@ function SectionLabel({
     )
 }
 
-const CARDS: { href: string; image: string; video?: string; title: string; tags: string[]; company: string; desc: string; live?: boolean }[] = [
+type CaseStudy = {
+    href?: string          // leave empty until the case study page exists — the card renders unlinked
+    image: string
+    video?: string
+    title: string
+    tags: string[]
+    company: string
+    desc: string
+    live?: boolean
+    comingSoon?: boolean   // shows the "Coming soon" badge on the cover
+}
+
+// Case study grid, in display order: 2 × 2 on tablet/desktop, one column on phone.
+const CARDS: CaseStudy[] = [
     {
         href: "/anthropologie-product-discovery",
         image: "https://framerusercontent.com/images/vE5NBaasSteSM6lORQbcDZsAU.png",
@@ -1023,6 +1036,16 @@ const CARDS: { href: string; image: string; video?: string; title: string; tags:
         desc: "Improving how shoppers read and trust customer reviews inside the iOS app.",
         live: true,
     },
+    // ── New case study: fill in the placeholders below ──
+    {
+        href: "",                                     // TODO: case study URL, e.g. "/aurevion"
+        image: "/case-studies/aurevion-cover.png",   // cover from Figma node 120:203
+        title: "Aurevion",                            // TODO: project title
+        tags: [],                                     // TODO: e.g. ["Web Design", "Branding"]
+        company: "Aurevion",
+        desc: "Case study coming soon.",              // TODO: one-sentence description
+        comingSoon: true,                             // remove once the case study is live
+    },
     {
         href: "/anthropologie-mcommerce",
         image: "https://framerusercontent.com/images/vE5NBaasSteSM6lORQbcDZsAU.png",
@@ -1041,14 +1064,17 @@ function CoverCard({
     tags,
     desc,
     live,
+    comingSoon,
     titleSize,
-    captionPosition = "below",
+    tilt = 0,
     phone,
-}: (typeof CARDS)[0] & { titleSize: number; captionPosition?: "below" | "side"; phone?: boolean }) {
+}: CaseStudy & { titleSize: number; tilt?: number; phone?: boolean }) {
     const videoContainerRef = useRef<HTMLDivElement>(null)
     const [hov, setHov] = useState(false)
     const finePointer = useFinePointer()
-    const side = captionPosition === "side" && !phone
+    const reducedMotion = useReducedMotion()
+    const linked = Boolean(href)
+    const lifted = hov && linked
 
     useEffect(() => {
         if (!video || !videoContainerRef.current) return
@@ -1060,41 +1086,60 @@ function CoverCard({
         v.setAttribute("playsinline", "")
         v.setAttribute("preload", "auto")
         v.muted = true
-        v.style.cssText = "width:100%;height:auto;display:block;"
+        v.style.cssText = "width:100%;height:100%;object-fit:cover;display:block;"
         videoContainerRef.current.appendChild(v)
         v.play().catch(() => {})
         return () => { v.pause(); v.remove() }
     }, [video])
 
-    // No fixed aspect-ratio box: the image/video renders at its own natural
-    // height for the given width, so the container hugs it exactly instead
-    // of leaving letterboxed empty space when the asset's real aspect ratio
-    // doesn't match a forced box.
+    // Every cover sits in the same 4:3 frame (the existing covers are ~4:3
+    // already) and lifts off the page like a sheet of paper on hover/focus.
     const media = (
-        <div style={{ width: side ? undefined : "100%", flex: side ? "1 1 60%" : undefined, overflow: "hidden" }}>
+        <div style={{
+            position: "relative",
+            width: "100%",
+            aspectRatio: "4 / 3",
+            overflow: "hidden",
+            backgroundColor: "#F4F2EF",
+            transform: lifted && !reducedMotion ? `translateY(-5px) rotate(${tilt}deg)` : "none",
+            boxShadow: lifted
+                ? "0 18px 28px -18px rgba(17,17,17,0.28), 0 2px 6px rgba(17,17,17,0.06)"
+                : "0 0 0 rgba(17,17,17,0), 0 0 0 rgba(17,17,17,0)",
+            transition: `transform 0.5s ${EASE_OUT}, box-shadow 0.5s ${EASE_OUT}`,
+        }}>
             {video ? (
-                <div ref={videoContainerRef} style={{ width: "100%" }} />
+                <div ref={videoContainerRef} style={{ width: "100%", height: "100%" }} />
             ) : (
                 <NextImage
                     src={image}
                     alt={title}
-                    width={1200}
-                    height={900}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 700px"
-                    style={{
-                        width: "100%",
-                        height: "auto",
-                        display: "block",
-                        transform: hov ? "scale(1.03)" : "scale(1)",
-                        transition: `transform 0.6s ${EASE_SPRING}`,
-                    }}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1440px) 50vw, 640px"
+                    style={{ objectFit: "cover" }}
                 />
+            )}
+            {comingSoon && (
+                <span style={{
+                    position: "absolute",
+                    top: 0,
+                    left: phone ? 12 : 15,
+                    padding: phone ? "6px 10px" : "7px 11px",
+                    backgroundColor: "rgba(0,0,0,0.61)",
+                    borderRadius: "0 0 3.5px 3.5px",
+                    fontFamily: I,
+                    fontSize: phone ? 13 : 14.7,
+                    lineHeight: 1.2,
+                    color: "#FFFFFF",
+                    whiteSpace: "nowrap",
+                }}>
+                    Coming soon
+                </span>
             )}
         </div>
     )
 
     const caption = (
-        <div style={{ marginTop: side ? 0 : 14, flex: side ? "1 1 30%" : undefined }}>
+        <div style={{ marginTop: phone ? 14 : 18 }}>
             {live && (
                 <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
                     <span style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: "#6EBF8B", display: "inline-block" }} />
@@ -1119,39 +1164,42 @@ function CoverCard({
                 lineHeight: 1.55,
                 color: C.ink3,
                 margin: "5px 0 0",
+                maxWidth: 460,
             }}>
                 {desc}
             </p>
-            <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 5, marginTop: 10 }}>
-                {tags.map((t, i) => (
-                    <span key={i} style={{
-                        fontFamily: I,
-                        fontSize: 10,
-                        color: C.muted,
-                        backgroundColor: "rgba(0,0,0,0.04)",
-                        borderRadius: 40,
-                        padding: "3px 9px",
-                    }}>
-                        {t}
-                    </span>
-                ))}
-            </div>
+            {tags.length > 0 && (
+                <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 5, marginTop: 10 }}>
+                    {tags.map((t, i) => (
+                        <span key={i} style={{
+                            fontFamily: I,
+                            fontSize: 10,
+                            color: C.muted,
+                            backgroundColor: "rgba(0,0,0,0.04)",
+                            borderRadius: 40,
+                            padding: "3px 9px",
+                        }}>
+                            {t}
+                        </span>
+                    ))}
+                </div>
+            )}
         </div>
     )
+
+    if (!linked) {
+        return <div>{media}{caption}</div>
+    }
 
     return (
         <a
             href={href}
             className="card-link"
-            style={{
-                textDecoration: "none",
-                display: side ? "flex" : "block",
-                alignItems: side ? "flex-start" : undefined,
-                gap: side ? 32 : undefined,
-                breakInside: "avoid" as const,
-            }}
+            style={{ textDecoration: "none", display: "block" }}
             onMouseEnter={() => finePointer && setHov(true)}
             onMouseLeave={() => setHov(false)}
+            onFocus={() => setHov(true)}
+            onBlur={() => setHov(false)}
         >
             {media}
             {caption}
@@ -1176,6 +1224,8 @@ function WorkSection({
     sp: ReturnType<typeof useBP>["sp"]
 }) {
     const cardTitleSize = phone ? 16 : tablet ? 17 : large ? 21 : 19
+    const colGap = tablet ? 28 : large ? 56 : 40
+    const rowGap = phone ? 44 : tablet ? 56 : large ? 80 : 68
     const sectionRef = useRef<HTMLElement>(null)
     const [cardsShown, setCardsShown] = useState(false)
     const [parallaxY, setParallaxY] = useState(0)
@@ -1242,22 +1292,19 @@ function WorkSection({
                     tablet={tablet}
                     large={large}
                 />
-                <div style={{ display: "flex", flexDirection: "column", gap: sp.cardRowGap }}>
-                    <div style={reveal(0)}>
-                        <CoverCard {...CARDS[0]} titleSize={cardTitleSize} captionPosition="side" phone={phone} />
-                    </div>
-                    <div style={{
-                        display: "flex",
-                        flexDirection: phone ? "column" : "row",
-                        gap: phone ? sp.cardRowGap : sp.cardColGap,
-                    }}>
-                        <div style={{ flex: 1 }}>
-                            <div style={reveal(1)}><CoverCard {...CARDS[1]} titleSize={cardTitleSize} /></div>
+                <div style={{
+                    display: "grid",
+                    gridTemplateColumns: phone ? "1fr" : "1fr 1fr",
+                    columnGap: colGap,
+                    rowGap,
+                    alignItems: "start",
+                }}>
+                    {CARDS.map((card, i) => (
+                        <div key={card.title} style={reveal(i)}>
+                            {/* alternate the lift tilt so the grid feels hand-placed */}
+                            <CoverCard {...card} titleSize={cardTitleSize} tilt={i % 2 ? 0.45 : -0.45} phone={phone} />
                         </div>
-                        <div style={{ flex: 1 }}>
-                            <div style={reveal(2)}><CoverCard {...CARDS[2]} titleSize={cardTitleSize} /></div>
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
         </section>
