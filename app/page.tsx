@@ -216,7 +216,71 @@ function useBP() {
 }
 
 const NAV_Z = "Zodiak, 'Times New Roman', serif"
-const NAV_YB = "var(--font-yuji-boku), serif"
+
+// Nav type: Zodiak (the serif already used for the hero CTA), lowercase to
+// match "inside my work", with a hand-drawn pink underline in the poster's
+// colour and a dashed, perforation-like focus ring.
+const NAV_PINK = "#D33361"
+const NAV_STYLES = `
+.home-nav-link {
+    position: relative;
+    display: inline-block;
+    padding: 6px 1px 8px;
+    font-family: ${NAV_Z};
+    font-weight: 400;
+    text-transform: lowercase;
+    letter-spacing: 0.005em;
+    line-height: 1;
+    color: ${C.ink2};
+    text-decoration: none;
+    border-radius: 3px;
+    transition: color 0.25s ${EASE_OUT}, transform 0.2s ${EASE_OUT};
+    -webkit-tap-highlight-color: transparent;
+}
+.home-nav-link svg {
+    position: absolute;
+    left: -2px;
+    right: -2px;
+    bottom: 1px;
+    width: calc(100% + 4px);
+    height: 6px;
+    overflow: visible;
+    pointer-events: none;
+}
+.home-nav-link path {
+    stroke: ${NAV_PINK};
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    fill: none;
+    /* offset past the gap so not even a round cap shows at rest */
+    stroke-dasharray: 1 1.1;
+    stroke-dashoffset: 1.05;
+    transition: stroke-dashoffset 0.38s ${EASE_OUT};
+}
+.home-nav-link:hover, .home-nav-link:focus-visible { color: ${C.ink}; }
+.home-nav-link:hover path, .home-nav-link:focus-visible path, .home-nav-link:active path { stroke-dashoffset: 0; }
+.home-nav-link:focus-visible { outline: 1.5px dashed ${NAV_PINK}; outline-offset: 5px; }
+.home-nav-link:active { color: ${C.ink}; transform: translateY(1px); }
+.home-nav-link--menu { padding: 0 0 10px; }
+.home-nav-item { outline: none; -webkit-tap-highlight-color: transparent; }
+.home-nav-item:is(:hover, :focus-visible, :active) .home-nav-link { color: ${C.ink}; }
+.home-nav-item:is(:hover, :focus-visible, :active) .home-nav-link path { stroke-dashoffset: 0; }
+.home-nav-item:focus-visible .home-nav-link { outline: 1.5px dashed ${NAV_PINK}; outline-offset: 6px; }
+.home-nav-link--menu svg { height: 8px; bottom: 4px; }
+@media (prefers-reduced-motion: reduce) {
+    .home-nav-link, .home-nav-link path { transition: none; }
+    .home-nav-link:active { transform: none; }
+}
+`
+
+// Slightly uneven stroke so the underline reads as drawn by hand.
+function NavUnderline() {
+    return (
+        <svg viewBox="0 0 100 6" preserveAspectRatio="none" aria-hidden="true">
+            <path pathLength={1} d="M1 3.8 C 14 2.6, 27 4.6, 42 3.4 S 70 2.4, 84 3.6 S 96 3.1, 99 2.5" />
+        </svg>
+    )
+}
 
 // Homepage-only nav: same look as SharedNav, but instead of sticking to the
 // top permanently, it hides on scroll-down and slides back in on scroll-up
@@ -226,7 +290,6 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
     const [scrolled, setScrolled] = useState(false)
     const [hidden, setHidden] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
-    const [hoveredLink, setHoveredLink] = useState<string | null>(null)
     const lastY = useRef(0)
     const overlayRef = useRef<HTMLDivElement>(null)
     const reducedMotion = useReducedMotion()
@@ -267,6 +330,7 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
 
     return (
         <>
+            <style dangerouslySetInnerHTML={{ __html: NAV_STYLES }} />
             <nav
                 style={{
                     position: "fixed",
@@ -299,50 +363,20 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
                 </a>
 
                 {!phone && (
-                    <div style={{ display: "flex", gap: tablet ? 24 : 32, alignItems: "center" }}>
-                        {allLinks.map(({ label, href, ext }) => {
-                            const hovered = hoveredLink === label
-                            return (
-                                <a
-                                    key={label}
-                                    href={href}
-                                    target={ext ? "_blank" : "_self"}
-                                    rel="noreferrer"
-                                    style={{
-                                        position: "relative",
-                                        fontFamily: I,
-                                        fontSize: 14,
-                                        fontWeight: 500,
-                                        color: hovered ? C.ink : C.ink3,
-                                        textDecoration: "none",
-                                        letterSpacing: "-0.01em",
-                                        transition: "color 0.25s",
-                                    }}
-                                    onMouseEnter={() => setHoveredLink(label)}
-                                    onMouseLeave={() => setHoveredLink(null)}
-                                >
-                                    <span style={{
-                                        opacity: hovered ? 0 : 1,
-                                        transition: "opacity 0.25s ease",
-                                    }}>{label}</span>
-                                    <span style={{
-                                        position: "absolute",
-                                        left: 0,
-                                        top: "50%",
-                                        transform: "translateY(-50%)",
-                                        fontFamily: NAV_YB,
-                                        fontSize: 15,
-                                        fontWeight: 700,
-                                        fontStyle: "italic",
-                                        color: C.ink,
-                                        whiteSpace: "nowrap",
-                                        opacity: hovered ? 1 : 0,
-                                        transition: "opacity 0.25s ease",
-                                        pointerEvents: "none",
-                                    }}>{label}</span>
-                                </a>
-                            )
-                        })}
+                    <div style={{ display: "flex", gap: tablet ? 26 : large ? 40 : 34, alignItems: "center" }}>
+                        {allLinks.map(({ label, href, ext }) => (
+                            <a
+                                key={label}
+                                href={href}
+                                target={ext ? "_blank" : "_self"}
+                                rel="noreferrer"
+                                className="home-nav-link"
+                                style={{ fontSize: tablet ? 15 : large ? 17 : 16 }}
+                            >
+                                {label}
+                                <NavUnderline />
+                            </a>
+                        ))}
                     </div>
                 )}
 
@@ -409,16 +443,11 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
                             target={ext ? "_blank" : "_self"}
                             rel="noreferrer"
                             onClick={() => setMenuOpen(false)}
+                            className="home-nav-item"
                             style={{
-                                fontFamily: NAV_Z,
-                                fontSize: 36,
-                                fontWeight: 400,
-                                color: C.ink3,
-                                textDecoration: "none",
-                                letterSpacing: "-0.02em",
                                 display: "flex",
                                 alignItems: "center",
-                                minHeight: 64,
+                                minHeight: 68,
                                 width: "100%",
                                 borderBottom: `1px solid ${C.border}`,
                                 opacity: menuOpen ? 1 : 0,
@@ -426,7 +455,10 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
                                 transition: `opacity 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 55}ms, transform 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 55}ms`,
                             }}
                         >
-                            {label}
+                            <span className="home-nav-link home-nav-link--menu" style={{ fontSize: 34, letterSpacing: "-0.01em" }}>
+                                {label}
+                                <NavUnderline />
+                            </span>
                         </a>
                     ))}
                 </div>
