@@ -2584,13 +2584,14 @@ function FooterGame({
                     style={{ position: "relative", height: playH, marginTop: phone ? 20 : 28 }}
                 >
                     {/* Decorative pile */}
-                    <img src="/footer-game/paper-pile.png" alt="" aria-hidden="true" draggable={false}
+                    <NextImage src="/footer-game/paper-pile.png" alt="" aria-hidden="true" draggable={false}
+                        width={1536} height={1024} sizes={`${pileW}px`}
                         style={{ position: "absolute", left: phone ? -10 : -16, bottom: -pileH * PILE_FOOT, width: pileW, height: pileH, zIndex: 1, userSelect: "none" }} />
 
                     {/* Can: back layer, then (after the ball) the front rim/body */}
                     <div ref={canRef} aria-hidden="true"
                         style={{ position: "absolute", right: phone ? 0 : "4%", bottom: -canW * CAN_FOOT, width: canW, height: canW, zIndex: 1 }}>
-                        <img src="/footer-game/trash-can.png" alt="" draggable={false} style={{ width: "100%", height: "100%", display: "block", userSelect: "none" }} />
+                        <NextImage src="/footer-game/trash-can.png" alt="" draggable={false} width={1254} height={1254} sizes={`${canW}px`} style={{ width: "100%", height: "100%", display: "block", userSelect: "none" }} />
                     </div>
 
                     {/* The one interactive ball */}
@@ -2615,13 +2616,14 @@ function FooterGame({
                     >
                         {/* larger, invisible grab area */}
                         <span style={{ position: "absolute", inset: -16, borderRadius: "50%" }} />
-                        <img src="/footer-game/paper-ball.png" alt="" draggable={false}
+                        <NextImage src="/footer-game/paper-ball.png" alt="" draggable={false}
+                            width={1308} height={1203} sizes={`${ballS}px`}
                             style={{ position: "relative", width: "100%", height: "100%", display: "block", userSelect: "none", pointerEvents: "none" }} />
                     </div>
 
                     <div aria-hidden="true"
                         style={{ position: "absolute", right: phone ? 0 : "4%", bottom: -canW * CAN_FOOT, width: canW, height: canW, zIndex: 3, clipPath: CAN_FRONT_CLIP, pointerEvents: "none" }}>
-                        <img src="/footer-game/trash-can.png" alt="" draggable={false} style={{ width: "100%", height: "100%", display: "block" }} />
+                        <NextImage src="/footer-game/trash-can.png" alt="" draggable={false} width={1254} height={1254} sizes={`${canW}px`} style={{ width: "100%", height: "100%", display: "block" }} />
                     </div>
 
                     {/* Aiming cue */}
