@@ -455,7 +455,7 @@ export default function IOSCaseStudy() {
                             <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 680, marginBottom: 40 }}>
                                 URBN operates Anthropologie, Free People, and Urban Outfitters across international markets, serving millions of shoppers who use the apps in their native language. The apps were built to be multilingual, but one critical surface wasn't: product reviews.
                             </p>
-                            <img src="/slides/ios-ecosystem.png" alt="URBN Global Ecosystem" style={{ width: "100%", height: "auto", display: "block", maxWidth: "100%", boxShadow: "0 4px 32px rgba(0,0,0,0.09)" }} />
+                            <img src="/slides/ios-ecosystem.png" alt="URBN Global Ecosystem" style={{ width: "100%", height: "auto", display: "block", maxWidth: "100%" }} />
                         </FadeIn>
                     </section>
 
