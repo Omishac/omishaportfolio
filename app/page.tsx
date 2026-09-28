@@ -440,15 +440,15 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
     )
 }
 
-// Tear-off flyer hero — Figma node 83:2 ("Desktop - 5"), group 96:148.
-// The flyer is a rotated paper collage, so it's laid out on a fixed
-// 540×590 stage using the Figma coordinates (relative to the group origin)
+// Tear-off flyer hero — Figma node 115:4 ("Desktop - 6"), group 115:7.
+// The flyer is a rotated paper collage, so it's laid out on a fixed stage
+// using the Figma coordinates (relative to the group origin, shifted down by
+// TAPE_OVERHANG so the tape poking above the paper stays inside the stage),
 // and the whole stage is scaled down to fit narrower viewports.
-const FLYER_W = 540
-const FLYER_H = 590
-const FLYER_BLUE = "#94BDD3"
-const FLYER_GREEN = "#365144"
-const FLYER_INK = "#303432"
+const TAPE_OVERHANG = 33.28
+const FLYER_W = 518
+const FLYER_H = 548 + TAPE_OVERHANG
+const FLYER_PINK = "#D33361"
 
 // Figma exports each rotated layer as a bounding box with a rotated child of
 // its own size centered inside it; `rotBox` reproduces that placement.
@@ -478,25 +478,26 @@ function rotText(cx: number, cy: number, deg: number): React.CSSProperties {
         fontFamily: I,
         lineHeight: "normal",
         textAlign: "center",
+        whiteSpace: "nowrap",
     }
 }
 
 // Perforations between tabs (vertical dashed lines).
 const PERFS = [
-    { src: "/hero-flyer/perf-a.svg", l: 79.79,  t: 358.42, h: 209.784, len: 209.994, deg: -87.44 },
-    { src: "/hero-flyer/perf-b.svg", l: 155.99, t: 361.24, h: 206.964, len: 207.176, deg: -87.41 },
-    { src: "/hero-flyer/perf-a.svg", l: 232.19, t: 364.07, h: 209.784, len: 209.994, deg: -87.44 },
-    { src: "/hero-flyer/perf-c.svg", l: 308.39, t: 364.07, h: 209.784, len: 209.995, deg: -87.43 },
-    { src: "/hero-flyer/perf-a.svg", l: 384.59, t: 366.89, h: 209.784, len: 209.994, deg: -87.44 },
-    { src: "/hero-flyer/perf-d.svg", l: 460.79, t: 369.71, h: 209.784, len: 209.994, deg: -87.43 },
+    { src: "/hero-flyer/perf-a.svg", l: 76.54,  t: 325.48, h: 201.256, len: 201.457, deg: -87.44 },
+    { src: "/hero-flyer/perf-b.svg", l: 149.65, t: 328.18, h: 198.55,  len: 198.753, deg: -87.41 },
+    { src: "/hero-flyer/perf-a.svg", l: 222.75, t: 330.89, h: 201.256, len: 201.457, deg: -87.44 },
+    { src: "/hero-flyer/perf-c.svg", l: 295.85, t: 330.89, h: 201.256, len: 201.458, deg: -87.43 },
+    { src: "/hero-flyer/perf-a.svg", l: 368.95, t: 333.6,  h: 201.256, len: 201.457, deg: -87.44 },
+    { src: "/hero-flyer/perf-d.svg", l: 442.05, t: 336.31, h: 201.255, len: 201.457, deg: -87.43 },
 ]
 
-const TABS: { label: string; cx: number; cy: number; href?: string }[] = [
-    { label: "Redesign",         cx: 42.83,  cy: 457.34 },
-    { label: "Mobile Design",    cx: 121.87, cy: 457.57 },
-    { label: "Digital Strategy", cx: 197.12, cy: 458.78 },
-    { label: "Freelancing",      cx: 351.35, cy: 469.67 },
-    { label: "Say hello",        cx: 496.27, cy: 472.33, href: "mailto:omishachabria3@gmail.com" },
+const TABS: { label: string; cx: number; cy: number; color: string; italic?: boolean; href?: string }[] = [
+    { label: "Redesign",         cx: 41.2,   cy: 419.83, color: "#FEEFF5" },
+    { label: "Mobile Design",    cx: 117,    cy: 420.77, color: "#FFF1F7" },
+    { label: "Digital Strategy", cx: 189.21, cy: 421.64, color: "#FFF1F6" },
+    { label: "Freelancing",      cx: 337.17, cy: 431.99, color: "#FFF6F9", italic: true },
+    { label: "Say hello",        cx: 476.19, cy: 434.67, color: "#FFF1F6", href: "mailto:omishachabria3@gmail.com" },
 ]
 
 function Hero({
@@ -519,8 +520,8 @@ function Hero({
     }, [])
 
     const scale = Math.min(1, (w - px * 2) / FLYER_W)
-    const padTop = phone ? 24 : tablet ? 32 : 40
-    const padBottom = phone ? 48 : tablet ? 64 : 90
+    const padTop = phone ? 12 : 16
+    const padBottom = phone ? 32 : tablet ? 24 : 16
 
     return (
         <section
@@ -529,7 +530,8 @@ function Hero({
                 boxSizing: "border-box",
                 backgroundColor: C.bg,
                 display: "flex",
-                justifyContent: "center",
+                flexDirection: "column",
+                alignItems: "center",
                 paddingTop: padTop,
                 paddingBottom: padBottom,
                 overflow: "hidden",
@@ -556,80 +558,99 @@ function Hero({
                         transformOrigin: "top left",
                     }}
                 >
-                    {/* Paper */}
-                    <div style={{ ...rotBox({ l: 0, t: 22.44, w: 536.739, h: 558.96 }, { w: 519.911, h: 542.866 }, 1.8), backgroundColor: FLYER_BLUE }} />
+                    <div style={{ position: "absolute", left: 0, top: TAPE_OVERHANG, width: FLYER_W, height: FLYER_H - TAPE_OVERHANG }}>
+                        {/* Paper */}
+                        <div style={{ ...rotBox({ l: 0, t: 3.16, w: 514.919, h: 536.236 }, { w: 498.775, h: 520.797 }, 1.8), backgroundColor: FLYER_PINK }} />
 
-                    {/* Tear line above the tabs */}
-                    <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
-                        style={{ ...rotBox({ l: 7.35, t: 355.6, w: 518.343, h: 16.964 }, { w: 518.621, h: 0.941 }, 1.87), display: "block" }} />
+                        {/* Tear line above the tabs */}
+                        <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
+                            style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block" }} />
 
-                    {PERFS.map((p, i) => (
-                        <img key={i} src={p.src} alt="" aria-hidden="true"
-                            style={{ ...rotBox({ l: p.l, t: p.t, w: 9.39, h: p.h }, { w: p.len, h: 0.941 }, p.deg), display: "block" }} />
-                    ))}
+                        {PERFS.map((p, i) => (
+                            <img key={i} src={p.src} alt="" aria-hidden="true"
+                                style={{ ...rotBox({ l: p.l, t: p.t, w: 9.01, h: p.h }, { w: p.len, h: 0.902 }, p.deg), display: "block" }} />
+                        ))}
 
-                    {/* Crumpled paper texture */}
-                    <div style={{ ...rotBox({ l: 0.67, t: 19.15, w: 539.273, h: 564.109 }, { w: 523.46, h: 549.055 }, 1.67), opacity: 0.38, overflow: "hidden", pointerEvents: "none" }}>
-                        <img src="/hero-flyer/paper-texture.png" alt="" aria-hidden="true"
-                            style={{ position: "absolute", left: "-1.62%", top: "-20.7%", width: "103.15%", height: "141.73%", maxWidth: "none" }} />
+                        {/* Crumpled paper texture */}
+                        <div style={{ ...rotBox({ l: 0.64, t: 0, w: 517.35, h: 541.176 }, { w: 502.18, h: 526.734 }, 1.67), opacity: 0.38, overflow: "hidden", pointerEvents: "none" }}>
+                            <img src="/hero-flyer/paper-texture.png" alt="" aria-hidden="true"
+                                style={{ position: "absolute", left: "-1.62%", top: "-20.7%", width: "103.15%", height: "141.73%", maxWidth: "none" }} />
+                        </div>
+
+                        <h1 style={{ ...rotText(268.15, 158.08, 2.74), fontSize: 16.819, fontWeight: 700, color: "#FFFFFF" }}>
+                            Hi, I&rsquo;m Omisha!
+                        </h1>
+
+                        {/* First torn-off tab (drawn under the labels, as in Figma) */}
+                        <div style={{ ...rotBox({ l: 223, t: 331.63, w: 79.972, h: 213.389 }, { w: 70.569, h: 210.425 }, 2.58), backgroundColor: C.bg }} />
+
+                        {TABS.map(({ label, cx, cy, color, italic, href }) => {
+                            const style: React.CSSProperties = {
+                                ...rotText(cx, cy, 92.31),
+                                fontSize: 15.458,
+                                fontWeight: 300,
+                                fontStyle: italic ? "italic" : "normal",
+                                color,
+                                textDecoration: "none",
+                            }
+                            return href
+                                ? <a key={label} href={href} style={style}>{label}</a>
+                                : <span key={label} style={style}>{label}</span>
+                        })}
+
+                        {/* Two tabs already torn off, with ragged edges left behind */}
+                        <div style={{ ...rotBox({ l: 223.24, t: 329.99, w: 79.972, h: 213.389 }, { w: 70.569, h: 210.425 }, 2.58), backgroundColor: C.bg }} />
+                        <div style={{ ...rotBox({ l: 371.33, t: 335.41, w: 78.306, h: 212.58 }, { w: 70.569, h: 210.109 }, 2.12), backgroundColor: C.bg }} />
+                        <img src="/hero-flyer/torn-edge-1.svg" alt="" aria-hidden="true"
+                            style={{ ...rotBox({ l: 232, t: 328.63, w: 71.475, h: 12.567 }, { w: 71.375, h: 12.384 }, 0.87), display: "block" }} />
+                        <img src="/hero-flyer/torn-edge-2.svg" alt="" aria-hidden="true"
+                            style={{ ...rotBox({ l: 378.93, t: 325.77, w: 70.679, h: 13.136 }, { w: 70.728, h: 12.934 }, 179.1), display: "block" }} />
+
+                        <p style={{ ...rotText(268.29, 184.92, 2.88), fontSize: 9.828, fontWeight: 500, color: "#FFFFFF" }}>
+                            product designer . digital analyst . brand storyteller.
+                        </p>
+
+                        <p style={{ ...rotText(255.47, 303, 1.89), fontSize: 9.828, fontWeight: 500, color: "#FFD1E3" }}>
+                            Take what you need:
+                        </p>
+
+                        {/* Ragged bottom of the "Mobile Design" tab */}
+                        <img src="/hero-flyer/torn-bottom.svg" alt="" aria-hidden="true"
+                            style={{ ...rotBox({ l: 76.14, t: 508.62, w: 72.999, h: 27.521 }, { w: 71.971, h: 24.281 }, 2.6), display: "block" }} />
+
+                        {/* Dog-eared corner on the "Say hello" tab */}
+                        <img src="/hero-flyer/fold-a.svg" alt="" aria-hidden="true"
+                            style={{ position: "absolute", left: 475, top: 523.63, width: 24, height: 15, display: "block" }} />
+                        <img src="/hero-flyer/fold-b.svg" alt="" aria-hidden="true"
+                            style={{ ...rotBox({ l: 475.48, t: 522.63, w: 24.448, h: 17.085 }, { w: 23.977, h: 16.388 }, 1.7), display: "block" }} />
                     </div>
 
-                    <p style={{ ...rotText(295.95, 82.12, 1.41), width: 260.905, whiteSpace: "nowrap", fontSize: 10.245, fontWeight: 700, color: FLYER_GREEN }}>
-                        product designer . digital analyst . brand storyteller.
-                    </p>
-
-                    <div style={{ ...rotText(274.07, 186.76, 2.02), width: 416.088, fontSize: 16.113, fontWeight: 300, color: FLYER_INK }}>
-                        <h1 style={{ margin: "0 0 1.2em", font: "inherit" }}>Hi, I&rsquo;m Omisha!</h1>
-                        <p style={{ margin: 0 }}>I turn what people do, say, and feel into digital experiences that make sense.</p>
-                    </div>
-
-                    <p style={{ ...rotText(266.3, 334.74, 1.89), width: 111.227, fontSize: 10.245, fontWeight: 700, color: FLYER_GREEN }}>
-                        Take what you need:
-                    </p>
-
-                    {TABS.map(({ label, cx, cy, href }) => {
-                        const style: React.CSSProperties = {
-                            ...rotText(cx, cy, 92.31),
-                            fontSize: 16.113,
-                            fontWeight: 600,
-                            color: FLYER_INK,
-                            whiteSpace: "nowrap",
-                            textDecoration: "none",
-                        }
-                        return href
-                            ? <a key={label} href={href} style={style}>{label}</a>
-                            : <span key={label} style={style}>{label}</span>
-                    })}
-
-                    {/* Two tabs already torn off, with ragged edges left behind */}
-                    <div style={{ ...rotBox({ l: 232.7, t: 363.13, w: 83.361, h: 222.432 }, { w: 73.559, h: 219.342 }, 2.58), backgroundColor: C.bg }} />
-                    <div style={{ ...rotBox({ l: 387.07, t: 368.77, w: 81.625, h: 221.589 }, { w: 73.559, h: 219.013 }, 2.12), backgroundColor: C.bg }} />
-                    <img src="/hero-flyer/torn-edge-1.svg" alt="" aria-hidden="true"
-                        style={{ ...rotBox({ l: 242.54, t: 363.13, w: 74.504, h: 13.1 }, { w: 74.33, h: 12.908 }, 0.87), display: "block" }} />
-                    <img src="/hero-flyer/torn-edge-2.svg" alt="" aria-hidden="true"
-                        style={{ ...rotBox({ l: 394.98, t: 358.73, w: 73.674, h: 13.692 }, { w: 73.725, h: 13.482 }, 179.1), display: "block" }} />
-
-                    {/* Ragged bottom of the "Mobile Design" tab */}
-                    <img src="/hero-flyer/torn-bottom.svg" alt="" aria-hidden="true"
-                        style={{ ...rotBox({ l: 79.37, t: 549.33, w: 76.092, h: 28.687 }, { w: 75.021, h: 25.31 }, 2.6), display: "block" }} />
-
-                    {/* Tape */}
-                    <div style={{ ...rotBox({ l: 165.4, t: 0, w: 249.37, h: 55.598 }, { w: 248.376, h: 50.448 }, 1.19), overflow: "hidden", pointerEvents: "none" }}>
-                        <img src="/hero-flyer/tape.png" alt="" aria-hidden="true"
-                            style={{
-                                position: "absolute",
-                                // Source PNG has the tape on a ~22° diagonal; Figma rotates the
-                                // fill so the tape runs flat across this clip box.
-                                left: -47.7,
-                                top: -65,
-                                width: 343.6,
-                                height: 193.3,
-                                maxWidth: "none",
-                                transformOrigin: "171.9px 90.2px",
-                                transform: "rotate(-21.8deg)",
-                            }} />
+                    {/* Clear tape */}
+                    <div style={{ position: "absolute", left: 177, top: 0, width: 201.344, height: 76.329, overflow: "hidden", pointerEvents: "none" }}>
+                        <img src="/hero-flyer/tape-clear.png" alt="" aria-hidden="true"
+                            style={{ position: "absolute", left: "-149.32%", top: "-101.63%", width: "292.24%", height: "439.02%", maxWidth: "none" }} />
                     </div>
                 </div>
+            </div>
+
+            {/* CTA */}
+            <div
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    marginTop: phone ? 32 : 56,
+                    opacity: revealed ? 1 : 0,
+                    transition: reducedMotion ? "none" : `opacity 0.5s ${EASE_OUT} 500ms`,
+                }}
+            >
+                <span style={{ fontFamily: NAV_Z, fontSize: phone ? 13 : 14, color: C.ink2, whiteSpace: "nowrap" }}>
+                    Here&apos;s a closer look at what that means
+                </span>
+                <svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true" style={{ display: "block", flexShrink: 0, marginTop: 22 }}>
+                    <path d="M 8 6 C 12 6, 40 14, 40 40" stroke="#E8B4C8" strokeWidth="3" strokeLinecap="round" fill="none" />
+                    <path d="M 33 32 L 40 42 L 47 32" stroke="#E8B4C8" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                </svg>
             </div>
         </section>
     )

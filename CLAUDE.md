@@ -27,13 +27,14 @@ const EASE_OUT    = "cubic-bezier(0.23,1,0.32,1)"
 - px: phone=20, tablet=40, large=120, desktop=80
 - maxW: large=1280, else=1040
 
-## Hero (current state — matches Figma node 83:2, "Desktop - 5")
-- Figma file: https://www.figma.com/design/HT6JZC5NjxGzIoWlNrVllH/Untitled?node-id=83-2
-- Tear-off paper flyer (blue `#94BDD3` + crumpled texture + tape) on a fixed 540×590 stage using Figma coordinates; stage scales down to fit `w - 2*px`
-- Assets in `public/hero-flyer/` (tape PNG is rotated −21.8° in CSS to match Figma's rotated image fill)
-- Text: role line + "Take what you need:" Inter Bold 10.2px `#365144`; intro Inter Light 16.1px `#303432` ("Hi, I'm Omisha!" is the h1)
-- Tabs (Inter SemiBold 16.1px, rotated 92.3°): Redesign, Mobile Design, Digital Strategy, Freelancing, Say hello (mailto); two tabs shown torn off
-- Entrance: fade + translateY/rotate settle (EASE_SPRING), off under reduced motion
+## Hero (current state — matches Figma node 115:4, "Desktop - 6")
+- Figma file: https://www.figma.com/design/HT6JZC5NjxGzIoWlNrVllH/Untitled?node-id=115-4
+- Tear-off paper flyer (pink `#D33361` + crumpled texture at 38% + clear tape) on a fixed 518×581 stage using Figma coordinates; stage scales down to fit `w - 2*px`
+- Assets in `public/hero-flyer/` (tape is cropped out of the `tape-clear.png` sticker sheet)
+- Text (all white-ish on pink): "Hi, I'm Omisha!" Inter Bold 16.8px (the h1); role line + "Take what you need:" Inter Medium 9.8px
+- Tabs (Inter Light 15.5px, rotated 92.3°): Redesign, Mobile Design, Digital Strategy, Freelancing (italic), Say hello (mailto, dog-eared corner); two tabs shown torn off
+- CTA below flyer: "Here's a closer look at what that means" in Zodiak (`NAV_Z`) + pink curved SVG arrow
+- Entrance: flyer fade + translateY/rotate settle (EASE_SPRING), CTA fades in after; off under reduced motion
 
 ## Keyframes (in CURSOR_STYLES string at top of page.tsx)
 - `illust-float` — 5px vertical float, 5.5s cycle
