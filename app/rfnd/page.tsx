@@ -32,7 +32,7 @@ function useResponsive() {
     const [tablet, setTablet] = useState(false)
     useEffect(() => {
         const check = () => {
-            const w = window.innerWidth
+            const w = document.documentElement.clientWidth
             setPhone(w < 768)
             setTablet(w >= 768 && w < 1024)
         }
@@ -130,7 +130,7 @@ function ImpactCard({ value, label, phone }: { value: string; label: string; pho
             }}
         >
             <p style={{
-                fontFamily: Z, fontSize: phone ? 40 : 52, fontWeight: 700,
+                fontFamily: INTER, fontSize: phone ? 40 : 52, fontWeight: 200,
                 color: hov ? "#fff" : C.ink,
                 letterSpacing: "-0.03em", lineHeight: 1, marginBottom: 12,
                 transition: "color 0.35s ease",
@@ -148,7 +148,7 @@ function ImpactCard({ value, label, phone }: { value: string; label: string; pho
 function BoldLine({ children }: { children: React.ReactNode }) {
     return (
         <p style={{
-            fontFamily: Z, fontWeight: 700, fontSize: "clamp(18px, 2.4vw, 24px)",
+            fontFamily: INTER, fontWeight: 300, fontSize: "clamp(18px, 2.4vw, 24px)",
             color: C.ink, lineHeight: 1.35, letterSpacing: "-0.02em",
             margin: "36px 0", maxWidth: "680px",
         }}>
@@ -180,8 +180,8 @@ function BulletList({ items }: { items: string[] }) {
         <div style={{ margin: "20px 0 24px" }}>
             {items.map((item, i) => (
                 <div key={i} style={{ display: "flex", gap: "14px", marginBottom: "10px", alignItems: "flex-start" }}>
-                    <span style={{ fontFamily: Z, fontSize: "14px", color: C.muted, flexShrink: 0, marginTop: "1px", lineHeight: 1.65 }}>&ndash;</span>
-                    <p style={{ fontFamily: INTER, fontSize: "14px", color: C.ink3, lineHeight: 1.65, margin: 0 }}>{item}</p>
+                    <span style={{ fontFamily: INTER, fontSize: "15px", color: C.muted, flexShrink: 0, marginTop: "1px", lineHeight: 1.65 , fontWeight: 400}}>&ndash;</span>
+                    <p style={{ fontFamily: INTER, fontSize: "15px", color: C.ink3, lineHeight: 1.65, margin: 0 }}>{item}</p>
                 </div>
             ))}
         </div>
@@ -199,9 +199,9 @@ function Callout({ type, title, body }: {
     const s = config[type]
     return (
         <div style={{ backgroundColor: s.bg, borderLeft: s.border, borderRadius: s.br, padding: "32px 36px", margin: "40px 0" }}>
-            <p style={{ fontFamily: INTER, fontSize: "9px", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: s.labelColor, marginBottom: "12px" }}>{s.label}</p>
-            <p style={{ fontFamily: Z, fontSize: "19px", fontWeight: 700, color: s.titleColor, marginBottom: "10px", lineHeight: 1.35 }}>{title}</p>
-            <p style={{ fontFamily: INTER, fontSize: "13.5px", lineHeight: 1.7, color: s.bodyColor, margin: 0 }}>{body}</p>
+            <p style={{ fontFamily: INTER, fontSize: "11px", fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: s.labelColor, marginBottom: "12px" }}>{s.label}</p>
+            <p style={{ fontFamily: INTER, fontSize: "19px", fontWeight: 400, color: s.titleColor, marginBottom: "10px", lineHeight: 1.35 }}>{title}</p>
+            <p style={{ fontFamily: INTER, fontSize: "15px", lineHeight: 1.7, color: s.bodyColor, margin: 0 }}>{body}</p>
         </div>
     )
 }
@@ -247,9 +247,9 @@ function ShoppingModeToggle() {
             <div style={{ backgroundColor: mode === "intent" ? "#F9F8F5" : "#F5F3F9", padding: "32px", borderRadius: "10px", transition: "background 0.5s cubic-bezier(0.22,1,0.36,1)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "14px" }}>
                     <span style={{ fontSize: "32px" }}>{modes[mode].icon}</span>
-                    <p style={{ fontFamily: Z, fontSize: "20px", fontWeight: 600, color: C.ink, margin: 0 }}>{modes[mode].title}</p>
+                    <p style={{ fontFamily: INTER, fontSize: "20px", fontWeight: 300, color: C.ink, margin: 0 }}>{modes[mode].title}</p>
                 </div>
-                <p style={{ fontFamily: INTER, fontSize: "14px", lineHeight: 1.65, color: C.ink3, marginBottom: "20px" }}>{modes[mode].desc}</p>
+                <p style={{ fontFamily: INTER, fontSize: "15px", lineHeight: 1.65, color: C.ink3, marginBottom: "20px" }}>{modes[mode].desc}</p>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
                     {modes[mode].features.map((f, i) => (
                         <div key={i} style={{ fontFamily: INTER, fontSize: "12px", color: C.ink2, padding: "10px 14px", backgroundColor: "rgba(255,255,255,0.6)", borderRadius: "6px" }}>&bull; {f}</div>
@@ -290,7 +290,7 @@ function MoodCarousel() {
                                 transition: "all 0.5s cubic-bezier(0.22,1,0.36,1)", zIndex: isActive ? 10 : 1,
                             }}>
                                 <span style={{ fontSize: isActive ? 56 : 40, transition: "font-size 0.5s" }}>{mood.emoji}</span>
-                                <p style={{ fontFamily: Z, fontSize: isActive ? 18 : 15, fontWeight: 600, color: C.ink, margin: 0, transition: "font-size 0.5s" }}>{mood.label}</p>
+                                <p style={{ fontFamily: INTER, fontSize: isActive ? 18 : 15, fontWeight: 400, color: C.ink, margin: 0, transition: "font-size 0.5s" }}>{mood.label}</p>
                             </div>
                         )
                     })}
@@ -319,8 +319,8 @@ function SideNav({ active }: { active: string }) {
                         }}
                     >
                         <span style={{
-                            fontFamily: INTER, fontSize: 10, fontWeight: isActive ? 700 : 400,
-                            color: C.ink, letterSpacing: "0.06em", textTransform: "uppercase",
+                            fontFamily: INTER, fontSize: 11, fontWeight: 500,
+                            color: C.ink, letterSpacing: "0.08em", textTransform: "uppercase",
                             transition: "font-weight 0.2s",
                             borderLeft: isActive ? `2px solid ${C.muted}` : "2px solid transparent",
                             paddingLeft: 12,
@@ -340,7 +340,7 @@ function CaseStudyNav() {
     const [menuOpen, setMenuOpen] = useState(false)
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 12)
-        const onResize = () => setPhone(window.innerWidth < 768)
+        const onResize = () => setPhone(document.documentElement.clientWidth < 768)
         onResize()
         window.addEventListener("scroll", onScroll, { passive: true })
         window.addEventListener("resize", onResize, { passive: true })
@@ -449,7 +449,7 @@ export default function RFNDCaseStudy() {
                             </div>
 
                             <h1 style={{
-                                fontFamily: Z, fontWeight: 700, fontSize: "clamp(32px, 5.5vw, 66px)",
+                                fontFamily: INTER, fontWeight: 300, fontSize: "clamp(32px, 5.5vw, 66px)",
                                 lineHeight: 1.02, letterSpacing: "-0.03em", marginBottom: 32, maxWidth: 880, color: C.ink,
                             }}>
                                 RFND: Reimagining Emotional E-Commerce
@@ -475,7 +475,7 @@ export default function RFNDCaseStudy() {
                                         ["Type", "Speculative Design · Conceptual Exploration"],
                                     ] as const).map(([k, v]) => (
                                         <div key={k}>
-                                            <p style={{ fontFamily: INTER, fontWeight: 700, fontSize: 9, color: C.muted, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.12em" }}>{k}</p>
+                                            <p style={{ fontFamily: INTER, fontWeight: 500, fontSize: 11, color: C.muted, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.08em" }}>{k}</p>
                                             <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 300, fontSize: 14, color: C.ink2, margin: 0 }}>{v}</p>
                                         </div>
                                     ))}
@@ -489,13 +489,13 @@ export default function RFNDCaseStudy() {
                     </section>
 
                     {/* ════════ CONTEXT ════════ */}
-                    <section id="context" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="context" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.muted, marginBottom: 20 }}>Context</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 20 }}>Context</p>
+                            <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 The industry was optimizing for speed and sacrificing connection
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
                                 Fashion e-commerce generates $700B+ annually. It returns $100–300B of that inventory every year. Not a logistics problem. An emotional one.
                             </p>
                         </FadeIn>
@@ -509,26 +509,26 @@ export default function RFNDCaseStudy() {
 
                             <BoldLine>I started this project with one question: what would it look like if a commerce product understood how someone felt when they showed up?</BoldLine>
 
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
                                 Most UX briefs frame shopping as an efficiency problem. I reframed it as a psychology problem.
                             </p>
 
                             <PullQuote text="How do emotional responses elicited by e-commerce design influence purchasing decisions, impulse behavior, and long-term brand loyalty?" />
 
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 0 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 0 }}>
                                 This wasn't about designing better filters. It was about investigating the psychology of desire, and whether a digital product could meet that psychology with the same nuance a great in-store experience does.
                             </p>
                         </FadeIn>
                     </section>
 
                     {/* ════════ RESEARCH ════════ */}
-                    <section id="research" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="research" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.muted, marginBottom: 20 }}>Research</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 20 }}>Research</p>
+                            <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 Understanding the person before designing the product
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
                                 I spent the first two months not designing. I needed to understand the emotional arc of a shopping session before proposing any solution.
                             </p>
                             <BulletList items={[
@@ -553,7 +553,7 @@ export default function RFNDCaseStudy() {
 
                         <FadeIn>
                             <BoldLine>She wasn't failing because the product was hard to use. She was failing because the product didn't know who she was that day.</BoldLine>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
                                 The person this concept was designed for showed up differently on a Sunday afternoon than she did on a Tuesday lunch break. Every existing app treated her exactly the same both times.
                             </p>
                             <Callout
@@ -565,13 +565,13 @@ export default function RFNDCaseStudy() {
                     </section>
 
                     {/* ════════ OPPORTUNITY ════════ */}
-                    <section id="opportunity" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="opportunity" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.muted, marginBottom: 20 }}>Opportunity</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 20 }}>Opportunity</p>
+                            <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 Before designing screens, I found an emotional language
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
                                 I deliberately resisted wireframes early. RFND's success as a concept would depend on its emotional register, not just its information architecture.
                             </p>
                             <BulletList items={[
@@ -596,10 +596,10 @@ export default function RFNDCaseStudy() {
 
                         <FadeIn>
                             <BoldLine>The most resonant retail experiences share one thing: they create space. They don't rush you toward a decision. They let you arrive at one.</BoldLine>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
                                 That became the organizing design principle: the proposed interface should feel less like a store directory and more like a room.
                             </p>
-                            <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: C.muted, margin: "52px 0 16px" }}>
+                            <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, margin: "52px 0 16px" }}>
                                 Concept Demo: Proposed Mood-Based Entry Point
                             </p>
                             <MoodCarousel />
@@ -607,13 +607,13 @@ export default function RFNDCaseStudy() {
                     </section>
 
                     {/* ════════ SOLUTION ════════ */}
-                    <section id="solution" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="solution" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.muted, marginBottom: 20 }}>Solution</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 20 }}>Solution</p>
+                            <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 The one decision that shaped everything else
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
                                 The core product decision in this concept was one I almost didn't make.
                             </p>
                             <BulletList items={[
@@ -627,7 +627,7 @@ export default function RFNDCaseStudy() {
                                 title="Voluntary signal over behavioral inference"
                                 body="The envisioned system asks users to set their emotional context (occasion, mood, aesthetic intent) before browsing, rather than inferring it. Personalization feels like a conversation. It also adapts to who they are today, not last Tuesday. People trust systems they feel in control of."
                             />
-                            <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: C.muted, margin: "52px 0 16px" }}>
+                            <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, margin: "52px 0 16px" }}>
                                 Concept Demo: Proposed Dual-Mode Experience
                             </p>
                             <ShoppingModeToggle />
@@ -639,13 +639,13 @@ export default function RFNDCaseStudy() {
                     </section>
 
                     {/* ════════ RESULTS ════════ */}
-                    <section id="results" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="results" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.muted, marginBottom: 20 }}>Results</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 20 }}>Results</p>
+                            <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 Validating every feature against real behavior
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 48 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 48 }}>
                                 Every proposed feature was evaluated against two questions: does this solve a real behavioral friction I documented in research? And does this create lasting value, or just novelty?
                             </p>
                         </FadeIn>
@@ -664,7 +664,7 @@ export default function RFNDCaseStudy() {
 
                         <FadeIn delay={60}>
                             <BoldLine>Novelty drives short-term engagement. Genuine value drives return behavior.</BoldLine>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 32 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 32 }}>
                                 For a concept competing on emotional loyalty, every feature needed to pass both filters.
                             </p>
 
@@ -722,13 +722,13 @@ export default function RFNDCaseStudy() {
                     </section>
 
                     {/* ════════ REFLECTION ════════ */}
-                    <section id="reflection" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="reflection" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.muted, marginBottom: 20 }}>Reflection</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 20 }}>Reflection</p>
+                            <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 What this project taught me
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
                                 RFND clarified how I think about design at a strategic level, as a discipline that sits at the intersection of business, psychology, and behavior. This project concluded with a full concept presentation: a speculative capstone exploring what emotionally-aware commerce could look like if built from first principles.
                             </p>
                             <BulletList items={[

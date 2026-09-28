@@ -38,7 +38,7 @@ function useResponsive() {
     const [large, setLarge] = useState(false)
     useEffect(() => {
         const check = () => {
-            const w = window.innerWidth
+            const w = document.documentElement.clientWidth
             setPhone(w < 768)
             setTablet(w >= 768 && w < 1024)
             setLarge(w > 1440)
@@ -137,7 +137,7 @@ function Divider() {
                 width: "100%",
                 height: "1px",
                 backgroundColor: C.border,
-                margin: "80px 0 48px",
+                margin: "clamp(56px, 8vw, 96px) 0 48px",
             }}
         />
     )
@@ -158,9 +158,9 @@ function SectionLabel({
             <p
                 style={{
                     fontFamily: INTER,
-                    fontSize: "10px",
-                    fontWeight: 700,
-                    letterSpacing: "0.12em",
+                    fontSize: "11px",
+                    fontWeight: 500,
+                    letterSpacing: "0.08em",
                     textTransform: "uppercase",
                     color: C.muted,
                     marginBottom: "12px",
@@ -170,13 +170,13 @@ function SectionLabel({
             </p>
             <h2
                 style={{
-                    fontFamily: Z,
-                    fontSize: "clamp(22px,3vw,32px)",
-                    fontWeight: 700,
-                    letterSpacing: "-0.025em",
+                    fontFamily: INTER,
+                    fontSize: "clamp(28px, 3.4vw, 42px)",
+                    fontWeight: 200,
+                    letterSpacing: "-0.02em",
                     color: C.ink,
-                    margin: "0 0 8px",
-                    lineHeight: 1.08,
+                    margin: "0 0 12px",
+                    lineHeight: 1.12,
                 }}
             >
                 {title}
@@ -206,10 +206,10 @@ function Body({ children }: { children: React.ReactNode }) {
         <p
             style={{
                 fontFamily: INTER,
-                fontSize: "14.5px",
-                lineHeight: "1.8",
+                fontSize: "16px",
+                lineHeight: "1.7",
                 color: C.ink2,
-                maxWidth: "720px",
+                maxWidth: "620px",
                 marginBottom: "16px",
                 letterSpacing: "-0.005em",
             }}
@@ -257,8 +257,8 @@ function AnimStat({
         >
             <p
                 style={{
-                    fontFamily: Z,
-                    fontWeight: 700,
+                    fontFamily: INTER,
+                    fontWeight: 200,
                     fontSize: "clamp(36px, 4vw, 52px)",
                     letterSpacing: "-0.04em",
                     color: hov ? "#fff" : C.ink,
@@ -341,9 +341,9 @@ function TrendCard({
             <div style={{ fontSize: "28px", marginBottom: "14px" }}>{icon}</div>
             <p
                 style={{
-                    fontFamily: Z,
+                    fontFamily: INTER,
                     fontSize: "16px",
-                    fontWeight: 700,
+                    fontWeight: 500,
                     color: open ? "#fff" : C.ink,
                     marginBottom: img ? "16px" : "12px",
                     lineHeight: 1.3,
@@ -502,11 +502,11 @@ function CompRow({
                 <p
                     style={{
                         fontFamily: INTER,
-                        fontSize: "10px",
-                        fontWeight: 700,
+                        fontSize: "11px",
+                        fontWeight: 500,
                         color: C.muted,
                         textTransform: "uppercase",
-                        letterSpacing: "0.06em",
+                        letterSpacing: "0.08em",
                         margin: 0,
                     }}
                 >
@@ -577,10 +577,10 @@ function ABCard({
             <p
                 style={{
                     fontFamily: INTER,
-                    fontSize: "10px",
-                    fontWeight: 700,
+                    fontSize: "11px",
+                    fontWeight: 500,
                     textTransform: "uppercase",
-                    letterSpacing: "0.1em",
+                    letterSpacing: "0.08em",
                     color: hov ? "rgba(255,255,255,0.4)" : C.muted,
                     marginBottom: "10px",
                 }}
@@ -589,11 +589,12 @@ function ABCard({
             </p>
             <p
                 style={{
-                    fontFamily: Z,
-                    fontSize: "14px",
+                    fontFamily: INTER,
+                    fontSize: "15px",
                     color: hov ? "#fff" : C.ink2,
-                    lineHeight: 1.6,
+                    lineHeight: 1.65,
                     margin: 0,
+                    fontWeight: 400,
                 }}
             >
                 {desc}
@@ -644,11 +645,12 @@ function FindingCard({ num, title, body, icon, active, onClick, onMouseEnter, on
             </p>
             <p
                 style={{
-                    fontFamily: Z,
+                    fontFamily: INTER,
                     fontSize: "15px",
                     color: active ? "#fff" : C.ink,
                     marginBottom: "8px",
                     lineHeight: 1.4,
+                    fontWeight: 400,
                 }}
             >
                 {title}
@@ -684,8 +686,8 @@ function RecRow({ num, title, body, detail, img, clip, open, onClick, phone }: a
             >
                 <span
                     style={{
-                        fontFamily: Z,
-                        fontWeight: 400,
+                        fontFamily: INTER,
+                        fontWeight: 200,
                         fontSize: phone ? "28px" : "44px",
                         lineHeight: "1",
                         color: open ? C.ink : "rgba(0,0,0,0.07)",
@@ -699,11 +701,12 @@ function RecRow({ num, title, body, detail, img, clip, open, onClick, phone }: a
                 <div style={{ flex: 1 }}>
                     <p
                         style={{
-                            fontFamily: Z,
+                            fontFamily: INTER,
                             fontSize: "17px",
                             marginBottom: "5px",
                             color: C.ink,
                             margin: "0 0 5px",
+                            fontWeight: 400,
                         }}
                     >
                         {title}
@@ -767,7 +770,7 @@ function RecRow({ num, title, body, detail, img, clip, open, onClick, phone }: a
                     <p
                         style={{
                             fontFamily: INTER,
-                            fontSize: "13.5px",
+                            fontSize: "15px",
                             lineHeight: "1.8",
                             color: C.ink3,
                             margin: 0,
@@ -831,12 +834,13 @@ function ReflRow({ text }: { text: string }) {
             >
                 <span
                     style={{
-                        fontFamily: Z,
+                        fontFamily: INTER,
                         fontSize: "15px",
                         marginTop: "1px",
                         color: hov ? C.ink : "rgba(0,0,0,0.2)",
                         transition: "color 0.18s",
                         flexShrink: 0,
+                        fontWeight: 400,
                     }}
                 >
                     –
@@ -844,7 +848,7 @@ function ReflRow({ text }: { text: string }) {
                 <span
                     style={{
                         fontFamily: INTER,
-                        fontSize: "14px",
+                        fontSize: "15px",
                         color: hov ? C.ink : C.ink2,
                         transition: "color 0.18s",
                         lineHeight: 1.65,
@@ -894,7 +898,7 @@ function CaseStudyNav() {
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 12)
         const onResize = () => {
-            const w = window.innerWidth
+            const w = document.documentElement.clientWidth
             setPhone(w < 768)
             setTablet(w >= 768 && w < 1024)
         }
@@ -1038,9 +1042,9 @@ function StatCell({ pct, lbl, i, total, phone }: { pct: string; lbl: string; i: 
         >
             <p
                 style={{
-                    fontFamily: Z,
+                    fontFamily: INTER,
                     fontSize: phone ? "32px" : "44px",
-                    fontWeight: 700,
+                    fontWeight: 200,
                     letterSpacing: "-0.04em",
                     color: hov ? "#fff" : C.ink,
                     lineHeight: 1,
@@ -1081,8 +1085,8 @@ function SideNav({ active }: { active: string }) {
                         }}
                     >
                         <span style={{
-                            fontFamily: INTER, fontSize: 10, fontWeight: isActive ? 700 : 400,
-                            color: C.ink, letterSpacing: "0.06em", textTransform: "uppercase",
+                            fontFamily: INTER, fontSize: 11, fontWeight: 500,
+                            color: C.ink, letterSpacing: "0.08em", textTransform: "uppercase",
                             transition: "font-weight 0.2s",
                             borderLeft: isActive ? `2px solid ${C.ink}` : "2px solid transparent",
                             paddingLeft: 12,
@@ -1105,7 +1109,7 @@ export default function AnthropologieCaseStudy() {
     const [activeRec, setActiveRec] = useState<number | null>(null)
     const [isDesktop, setIsDesktop] = useState(true)
     useEffect(() => {
-        const check = () => setIsDesktop(window.innerWidth >= 768)
+        const check = () => setIsDesktop(document.documentElement.clientWidth >= 768)
         check()
         window.addEventListener("resize", check, { passive: true })
         return () => window.removeEventListener("resize", check)
@@ -1166,7 +1170,7 @@ export default function AnthropologieCaseStudy() {
     ]
 
     return (
-        <div style={{ width: "100%", backgroundColor: C.bg, fontFamily: Z }}>
+        <div style={{ width: "100%", backgroundColor: C.bg, fontFamily: INTER , fontWeight: 400}}>
             <CaseStudyNav />
             <div
                 style={{
@@ -1192,9 +1196,9 @@ export default function AnthropologieCaseStudy() {
                         <p
                             style={{
                                 fontFamily: INTER,
-                                fontSize: "10px",
-                                fontWeight: 700,
-                                letterSpacing: "0.12em",
+                                fontSize: "11px",
+                                fontWeight: 500,
+                                letterSpacing: "0.08em",
                                 textTransform: "uppercase",
                                 color: C.muted,
                                 marginBottom: "20px",
@@ -1204,8 +1208,8 @@ export default function AnthropologieCaseStudy() {
                         </p>
                         <h1
                             style={{
-                                fontFamily: Z,
-                                fontWeight: 700,
+                                fontFamily: INTER,
+                                fontWeight: 300,
                                 fontSize: "clamp(28px, 5vw, 58px)",
                                 lineHeight: "1.04",
                                 letterSpacing: "-0.03em",
@@ -1255,12 +1259,12 @@ export default function AnthropologieCaseStudy() {
                                     <p
                                         style={{
                                             fontFamily: INTER,
-                                            fontWeight: 700,
-                                            fontSize: "9px",
+                                            fontWeight: 500,
+                                            fontSize: "11px",
                                             color: C.muted,
                                             marginBottom: "7px",
                                             textTransform: "uppercase",
-                                            letterSpacing: "0.12em",
+                                            letterSpacing: "0.08em",
                                         }}
                                     >
                                         {k}
@@ -1301,9 +1305,9 @@ export default function AnthropologieCaseStudy() {
                                 <p
                                     style={{
                                         fontFamily: INTER,
-                                        fontSize: "10px",
-                                        fontWeight: 700,
-                                        letterSpacing: "0.1em",
+                                        fontSize: "11px",
+                                        fontWeight: 500,
+                                        letterSpacing: "0.08em",
                                         textTransform: "uppercase",
                                         color: C.muted,
                                         marginBottom: "20px",
@@ -1573,10 +1577,10 @@ export default function AnthropologieCaseStudy() {
                     <div style={{ marginTop: "16px", marginBottom: "48px" }}>
                         <p style={{
                             fontFamily: INTER,
-                            fontSize: "10px",
-                            fontWeight: 700,
+                            fontSize: "11px",
+                            fontWeight: 500,
                             textTransform: "uppercase",
-                            letterSpacing: "0.1em",
+                            letterSpacing: "0.08em",
                             color: C.muted,
                             margin: "0 0 16px",
                         }}>
@@ -1610,10 +1614,10 @@ export default function AnthropologieCaseStudy() {
                     <div>
                         <p style={{
                             fontFamily: INTER,
-                            fontSize: "10px",
-                            fontWeight: 700,
+                            fontSize: "11px",
+                            fontWeight: 500,
                             textTransform: "uppercase",
-                            letterSpacing: "0.1em",
+                            letterSpacing: "0.08em",
                             color: C.muted,
                             margin: "0 0 16px",
                         }}>
@@ -1661,8 +1665,8 @@ export default function AnthropologieCaseStudy() {
                     </Body>
                     {/* Comparison 1: Control vs V1 */}
                     <p style={{
-                        fontFamily: INTER, fontSize: "10px", fontWeight: 700,
-                        textTransform: "uppercase", letterSpacing: "0.1em",
+                        fontFamily: INTER, fontSize: "11px", fontWeight: 500,
+                        textTransform: "uppercase", letterSpacing: "0.08em",
                         color: C.muted, margin: "0 0 20px",
                     }}>
                         Comparison 01 · Control vs. V1: New Layout
@@ -1684,8 +1688,8 @@ export default function AnthropologieCaseStudy() {
 
                     {/* Comparison 2: Stack vs Slider */}
                     <p style={{
-                        fontFamily: INTER, fontSize: "10px", fontWeight: 700,
-                        textTransform: "uppercase", letterSpacing: "0.1em",
+                        fontFamily: INTER, fontSize: "11px", fontWeight: 500,
+                        textTransform: "uppercase", letterSpacing: "0.08em",
                         color: C.muted, margin: "0 0 20px",
                     }}>
                         Comparison 02 · Stack vs. Slider

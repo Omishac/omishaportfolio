@@ -38,7 +38,7 @@ function useResponsive() {
     const [large, setLarge] = useState(false)
     useEffect(() => {
         const check = () => {
-            const w = window.innerWidth
+            const w = document.documentElement.clientWidth
             setPhone(w < 768)
             setTablet(w >= 768 && w < 1024)
             setLarge(w > 1440)
@@ -116,8 +116,8 @@ function SideNav({ active }: { active: string }) {
                         style={{ display: "block", padding: "6px 0", textDecoration: "none", transition: "opacity 0.3s ease", opacity: isActive ? 1 : 0.3 }}
                     >
                         <span style={{
-                            fontFamily: I, fontSize: 10, fontWeight: isActive ? 700 : 400,
-                            color: C.ink, letterSpacing: "0.06em", textTransform: "uppercase" as const,
+                            fontFamily: I, fontSize: 11, fontWeight: 500,
+                            color: C.ink, letterSpacing: "0.08em", textTransform: "uppercase" as const,
                             transition: "font-weight 0.2s",
                             borderLeft: isActive ? `2px solid ${C.accent}` : "2px solid transparent",
                             paddingLeft: 12,
@@ -139,7 +139,7 @@ function CaseStudyNav() {
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 12)
         const onResize = () => {
-            const w = window.innerWidth
+            const w = document.documentElement.clientWidth
             setPhone(w < 768)
             setTablet(w >= 768 && w < 1024)
         }
@@ -280,7 +280,7 @@ function FrictionCard({ num, label, tag, themeIndex = 0 }: { num: string; label:
         <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ backgroundColor: t.bg, borderRadius: 14, overflow: "hidden", position: "relative" as const, padding: "22px 22px 20px", display: "flex", flexDirection: "column" as const, gap: 12, cursor: "default", border: `1px solid ${t.border}`, transform: hov ? "translateY(-4px) scale(1.01)" : "none", boxShadow: hov ? `0 14px 36px rgba(0,0,0,${dark ? 0.32 : 0.09})` : "none", transition: "transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease" }}>
             <div style={{ position: "absolute" as const, top: 0, left: 0, width: 3, height: "100%", backgroundColor: t.accent, transformOrigin: "top", transform: hov ? "scaleY(1)" : "scaleY(0.2)", opacity: hov ? 0.9 : 0.25, transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1), opacity 0.3s" }} />
             <span style={{ fontFamily: Z, fontStyle: "italic", fontSize: 12, color: numColor }}>{num}</span>
-            <p style={{ fontFamily: Z, fontSize: 17, lineHeight: 1.38, color: textColor, margin: 0, fontWeight: 400, letterSpacing: "-0.01em" }}>{label}</p>
+            <p style={{ fontFamily: I, fontSize: 17, lineHeight: 1.38, color: textColor, margin: 0, fontWeight: 400, letterSpacing: "-0.01em" }}>{label}</p>
             <div style={{ marginTop: 2 }}>
                 <span style={{ fontFamily: I, fontSize: 11, color: t.tagText, backgroundColor: t.tag, borderRadius: 20, padding: "3px 10px" }}>{tag}</span>
             </div>
@@ -292,11 +292,11 @@ function ProcessSection({ phone }: { phone: boolean }) {
     const { ref, visible } = useInView()
     return (
         <div ref={ref} style={{ opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(32px)", transition: "opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1)" }}>
-            <p style={{ fontFamily: I, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Exploration Process</p>
-            <h2 style={{ fontFamily: Z, fontWeight: 700, fontSize: "clamp(28px,4vw,48px)", letterSpacing: "-0.03em", color: C.ink, marginBottom: 24, lineHeight: 1.08 }}>
+            <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Exploration Process</p>
+            <h2 style={{ fontFamily: I, fontWeight: 200, fontSize: "clamp(28px, 3.4vw, 42px)", letterSpacing: "-0.02em", color: C.ink, marginBottom: 20, lineHeight: 1.12 }}>
                 From ambiguity to architecture
             </h2>
-            <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 680, marginBottom: 56 }}>
+            <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 680, marginBottom: 56 }}>
                 Before any UI was designed, the problem was mapped: scoping the ticket, surfacing open questions, and charting every possible translation path to find the right one.
             </p>
             <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: 28, marginBottom: 28 }}>
@@ -315,7 +315,7 @@ function ProcessSection({ phone }: { phone: boolean }) {
                 <div style={{ backgroundColor: C.ink, borderRadius: 14, padding: "32px 28px", display: "flex", flexDirection: "column" as const, justifyContent: "space-between", minHeight: 180 }}>
                     <span style={{ fontFamily: Z, fontSize: 52, lineHeight: 0.85, color: "rgba(255,255,255,0.07)", userSelect: "none" as const }}>"</span>
                     <div>
-                        <p style={{ fontFamily: Z, fontWeight: 700, fontSize: "clamp(17px, 1.8vw, 22px)", lineHeight: 1.55, color: "rgba(255,255,255,0.96)", margin: 0, letterSpacing: "-0.015em" }}>
+                        <p style={{ fontFamily: I, fontWeight: 300, fontSize: "clamp(17px, 1.8vw, 22px)", lineHeight: 1.55, color: "rgba(255,255,255,0.96)", margin: 0, letterSpacing: "-0.015em" }}>
                             Three translation paths were translated into low-fidelity concepts and discussed in design critiques with Senior Designers and Product partners, allowing the team to validate assumptions and refine the direction.
                         </p>
                     </div>
@@ -330,7 +330,7 @@ function BenefitCard({ icon, title, body }: { icon: string; title: string; body:
     return (
         <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: hov ? C.ink : C.warm, borderRadius: 14, padding: "24px 22px", transition: "background 0.25s cubic-bezier(0.22,1,0.36,1), transform 0.22s cubic-bezier(0.22,1,0.36,1)", transform: hov ? "translateY(-4px)" : "none", cursor: "default" }}>
             <div style={{ fontSize: 26, marginBottom: 14, lineHeight: 1 }}>{icon}</div>
-            <p style={{ fontFamily: Z, fontWeight: 700, fontSize: 15, color: hov ? "#fff" : C.ink, marginBottom: 7, lineHeight: 1.3, transition: "color 0.25s" }}>{title}</p>
+            <p style={{ fontFamily: I, fontWeight: 500, fontSize: 15, color: hov ? "#fff" : C.ink, marginBottom: 7, lineHeight: 1.3, transition: "color 0.25s" }}>{title}</p>
             <p style={{ fontFamily: I, fontSize: 13, lineHeight: 1.65, color: hov ? "rgba(255,255,255,0.6)" : C.ink3, margin: 0, transition: "color 0.25s" }}>{body}</p>
         </div>
     )
@@ -340,7 +340,7 @@ function StatCard({ num, suffix, label, active }: { num: number; suffix: string;
     const [hov, setHov] = useState(false)
     return (
         <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: hov ? C.ink : C.surface, borderRadius: 12, padding: "26px 22px", transition: "background 0.25s, transform 0.22s cubic-bezier(0.22,1,0.36,1)", transform: hov ? "translateY(-4px)" : "none", cursor: "default" }}>
-            <p style={{ fontFamily: Z, fontWeight: 700, fontSize: 44, letterSpacing: "-0.04em", color: hov ? "#fff" : C.ink, lineHeight: 1, marginBottom: 8, transition: "color 0.25s" }}>
+            <p style={{ fontFamily: I, fontWeight: 200, fontSize: 44, letterSpacing: "-0.04em", color: hov ? "#fff" : C.ink, lineHeight: 1, marginBottom: 8, transition: "color 0.25s" }}>
                 <Counter target={num} suffix={suffix} active={active} />
             </p>
             <p style={{ fontFamily: I, fontSize: 12, lineHeight: 1.6, color: hov ? "rgba(255,255,255,0.55)" : C.ink3, margin: 0, transition: "color 0.25s" }}>{label}</p>
@@ -355,10 +355,10 @@ function PrincipleCard({ num, title, body, emoji }: { num: string; title: string
             <div style={{ height: 3, backgroundColor: "rgba(0,0,0,0.55)", transformOrigin: "left", transform: hov ? "scaleX(1)" : "scaleX(0.1)", opacity: hov ? 1 : 0.18, transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1), opacity 0.3s" }} />
             <div style={{ padding: "20px 22px 24px" }}>
                 <div style={{ fontSize: 24, marginBottom: 12 }}>{emoji}</div>
-                <p style={{ fontFamily: I, fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.26)", letterSpacing: "0.1em", marginBottom: 5, textTransform: "uppercase" as const }}>{num}</p>
-                <p style={{ fontFamily: Z, fontWeight: 700, fontSize: 16, color: C.ink, marginBottom: 8, lineHeight: 1.3 }}>{title}</p>
+                <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, color: "rgba(0,0,0,0.26)", letterSpacing: "0.08em", marginBottom: 5, textTransform: "uppercase" as const }}>{num}</p>
+                <p style={{ fontFamily: I, fontWeight: 500, fontSize: 16, color: C.ink, marginBottom: 8, lineHeight: 1.3 }}>{title}</p>
                 <p style={{ fontFamily: I, fontSize: 13, lineHeight: 1.6, color: C.ink3, marginBottom: 12 }}>{body}</p>
-                <span style={{ fontFamily: Z, fontSize: 17, color: C.ink, opacity: hov ? 0.7 : 0.2, display: "inline-block", transform: hov ? "translateX(6px)" : "none", transition: "transform 0.22s cubic-bezier(0.22,1,0.36,1), opacity 0.22s" }}>→</span>
+                <span style={{ fontFamily: I, fontSize: 17, color: C.ink, opacity: hov ? 0.7 : 0.2, display: "inline-block", transform: hov ? "translateX(6px)" : "none", transition: "transform 0.22s cubic-bezier(0.22,1,0.36,1), opacity 0.22s" , fontWeight: 400}}>→</span>
             </div>
         </div>
     )
@@ -369,16 +369,16 @@ function SolutionCard({ title, body, icon, i }: { title: string; body: string; i
     return (
         <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: hov ? C.ink : C.surface, borderRadius: 14, padding: "22px 20px", transform: hov ? "translateY(-4px)" : "none", boxShadow: hov ? "0 18px 44px rgba(0,0,0,0.16)" : "none", transition: "background 0.25s, transform 0.22s cubic-bezier(0.22,1,0.36,1), box-shadow 0.22s", cursor: "default" }}>
             <div style={{ fontSize: 20, marginBottom: 12 }}>{icon}</div>
-            <p style={{ fontFamily: Z, fontWeight: 700, fontSize: 14.5, color: hov ? "#fff" : C.ink, marginBottom: 8, transition: "color 0.25s" }}>{title}</p>
+            <p style={{ fontFamily: I, fontWeight: 500, fontSize: 14.5, color: hov ? "#fff" : C.ink, marginBottom: 8, transition: "color 0.25s" }}>{title}</p>
             <p style={{ fontFamily: I, fontSize: 13, lineHeight: 1.65, color: hov ? "rgba(255,255,255,0.6)" : C.ink3, marginBottom: 12, transition: "color 0.25s" }}>{body}</p>
-            <span style={{ fontFamily: I, fontSize: 10, fontWeight: 700, color: hov ? "rgba(255,255,255,0.35)" : C.muted, letterSpacing: "0.08em", textTransform: "uppercase" as const, transition: "color 0.25s" }}>0{i + 1}</span>
+            <span style={{ fontFamily: I, fontSize: 11, fontWeight: 500, color: hov ? "rgba(255,255,255,0.35)" : C.muted, letterSpacing: "0.08em", textTransform: "uppercase" as const, transition: "color 0.25s" }}>0{i + 1}</span>
         </div>
     )
 }
 
 function CascadeLabel({ text }: { text: string }) {
     return (
-        <p style={{ fontFamily: I, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: C.muted, marginBottom: 16 }}>{text}</p>
+        <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.muted, marginBottom: 16 }}>{text}</p>
     )
 }
 
@@ -426,7 +426,7 @@ function ResultCard({ num, label }: { num: string; label: string }) {
     return (
         <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: hov ? C.ink : C.surface, borderRadius: 12, padding: "20px", transition: "background 0.22s, transform 0.22s cubic-bezier(0.22,1,0.36,1)", transform: hov ? "translateY(-3px)" : "none", cursor: "default" }}>
             <p style={{ fontFamily: Z, fontStyle: "italic", fontSize: 26, color: hov ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.09)", marginBottom: 6, lineHeight: 1, transition: "color 0.22s" }}>{num}</p>
-            <p style={{ fontFamily: I, fontSize: 13.5, color: hov ? "rgba(255,255,255,0.88)" : C.ink, lineHeight: 1.5, margin: 0, transition: "color 0.22s" }}>{label}</p>
+            <p style={{ fontFamily: I, fontSize: 15, color: hov ? "rgba(255,255,255,0.88)" : C.ink, lineHeight: 1.5, margin: 0, transition: "color 0.22s" }}>{label}</p>
         </div>
     )
 }
@@ -493,12 +493,12 @@ export default function IOSCaseStudy() {
                                     <p style={{ fontFamily: I, fontSize: 11, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>
                                         iOS · Mobile Experience · URBN
                                     </p>
-                                    <h1 style={{ fontFamily: Z, fontWeight: 700, fontSize: "clamp(32px, 4.5vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.035em", color: C.ink, marginBottom: desktop ? 0 : 24 }}>
+                                    <h1 style={{ fontFamily: I, fontWeight: 300, fontSize: "clamp(32px, 4.5vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.03em", color: C.ink, marginBottom: desktop ? 0 : 24 }}>
                                         Making Reviews Accessible Across Languages
                                     </h1>
                                 </div>
                                 <div style={{ paddingTop: desktop ? 36 : 0 }}>
-                                    <p style={{ fontFamily: I, fontSize: 14, lineHeight: 1.7, color: C.ink3, marginBottom: 20 }}>
+                                    <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.65, color: C.ink3, marginBottom: 20 }}>
                                         Non-English speakers are 3× more likely to abandon a purchase when reviews aren't in their language. I designed an on-demand translation feature using Apple's API to close that gap across URBN's global apps.
                                     </p>
                                     <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 24 }}>
@@ -514,8 +514,8 @@ export default function IOSCaseStudy() {
                             <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr 1fr" : "repeat(4, 1fr)", gap: phone ? 16 : 32, marginTop: 40, paddingTop: 32, borderTop: `1px solid ${C.border}` }}>
                                 {([["Role", "UX Designer"], ["Timeline", "Jul – Aug 2025"], ["Tools", "Figma · Confluence · Jira"], ["Team", "Mobile Optimization @URBN"]] as const).map(([k, v]) => (
                                     <div key={k}>
-                                        <p style={{ fontFamily: I, fontWeight: 700, fontSize: 9, color: C.muted, marginBottom: 6, textTransform: "uppercase" as const, letterSpacing: "0.12em" }}>{k}</p>
-                                        <p style={{ fontFamily: Z, fontWeight: 400, fontSize: 14, color: C.ink2, margin: 0 }}>{v}</p>
+                                        <p style={{ fontFamily: I, fontWeight: 500, fontSize: 11, color: C.muted, marginBottom: 6, textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>{k}</p>
+                                        <p style={{ fontFamily: I, fontWeight: 400, fontSize: 14, color: C.ink2, margin: 0 }}>{v}</p>
                                     </div>
                                 ))}
                             </div>
@@ -523,13 +523,13 @@ export default function IOSCaseStudy() {
                     </section>
 
                     {/* ════════ ECOSYSTEM ════════ */}
-                    <section id="ecosystem" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="ecosystem" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: I, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Business Context</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px,4vw,48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
+                            <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Business Context</p>
+                            <h2 style={{ fontFamily: I, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 Why URBN's global scale created a localization gap
                             </h2>
-                            <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 680, marginBottom: 40 }}>
+                            <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 680, marginBottom: 40 }}>
                                 URBN operates Anthropologie, Free People, and Urban Outfitters across international markets, serving millions of shoppers who use the apps in their native language. The apps were built to be multilingual, but one critical surface wasn't: product reviews.
                             </p>
                             <img src="/slides/ios-ecosystem.png" alt="URBN Global Ecosystem" style={{ width: "100%", height: "auto", display: "block", maxWidth: "100%", boxShadow: "0 4px 32px rgba(0,0,0,0.09)" }} />
@@ -537,13 +537,13 @@ export default function IOSCaseStudy() {
                     </section>
 
                     {/* ════════ PROBLEM ════════ */}
-                    <section id="problem" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="problem" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: I, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>The Problem</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px,4vw,48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
+                            <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>The Problem</p>
+                            <h2 style={{ fontFamily: I, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 There was a consistency gap in the global shopping experience
                             </h2>
-                            <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 760, marginBottom: 24 }}>
+                            <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 760, marginBottom: 24 }}>
                                 Across URBN's mobile apps, users can set their preferred language, and navigation, product details, and system UI all adapt accordingly, <strong>EXCEPT</strong> for product reviews, which remained in English only.
                             </p>
                         </FadeIn>
@@ -567,9 +567,9 @@ export default function IOSCaseStudy() {
                     </section>
 
                     {/* ════════ FRICTION POINTS ════════ */}
-                    <section id="friction" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="friction" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: I, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Friction Points</p>
+                            <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Friction Points</p>
                             <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 400, fontSize: "clamp(24px,3.5vw,42px)", lineHeight: 1.3, color: C.ink, letterSpacing: "-0.025em", maxWidth: 720, margin: "0 0 40px" }}>
                                 Leading to friction points like…
                             </p>
@@ -585,19 +585,19 @@ export default function IOSCaseStudy() {
                     </section>
 
                     {/* ════════ EXPLORATION ════════ */}
-                    <section id="exploration" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="exploration" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <ProcessSection phone={phone} />
                     </section>
 
                     {/* ════════ WHY IT MATTERS ════════ */}
-                    <section id="why-it-matters" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="why-it-matters" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: I, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Why It Matters</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px,4vw,48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 720, marginBottom: 16 }}>
+                            <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Why It Matters</p>
+                            <h2 style={{ fontFamily: I, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 16 }}>
                                 Reviews are decision tools,<br />
                                 <span style={{ color: C.ink3, fontWeight: 300, fontStyle: "italic" }}>not just content.</span>
                             </h2>
-                            <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 680, marginBottom: 36 }}>
+                            <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 680, marginBottom: 36 }}>
                                 In e-commerce, product reviews directly shape whether a shopper buys or bounces. They answer the questions a product page can't, and they only work if users can actually read them.
                             </p>
                             <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(3, 1fr)", gap: 10, marginBottom: 36 }}>
@@ -619,7 +619,7 @@ export default function IOSCaseStudy() {
                                     <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 300, fontSize: phone ? 17 : 21, lineHeight: 1.55, color: "rgba(255,255,255,0.9)", margin: "0 0 14px" }}>
                                         Without access to reviews in their language, users lose one of the most valuable signals for purchase confidence, which increases hesitation and drop-off.
                                     </p>
-                                    <p style={{ fontFamily: I, fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.28)", letterSpacing: "0.12em", textTransform: "uppercase" as const, margin: 0 }}>
+                                    <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, color: "rgba(255,255,255,0.28)", letterSpacing: "0.08em", textTransform: "uppercase" as const, margin: 0 }}>
                                         Key insight: accessibility gap
                                     </p>
                                 </div>
@@ -628,13 +628,13 @@ export default function IOSCaseStudy() {
                     </section>
 
                     {/* ════════ SOLUTION ════════ */}
-                    <section id="solution" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="solution" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: I, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>From Constraints to Solution</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px,4vw,48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
+                            <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>From Constraints to Solution</p>
+                            <h2 style={{ fontFamily: I, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 Designing Within Constraints to Build the Right Solution
                             </h2>
-                            <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 760, marginBottom: 56 }}>
+                            <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 760, marginBottom: 56 }}>
                                 Every design decision in this project started with a real technical constraint. Rather than designing around them, I let them shape the strategy, from how translation is triggered to what the UI communicates.
                             </p>
 
@@ -647,7 +647,7 @@ export default function IOSCaseStudy() {
                                 ].map((c) => (
                                     <div key={c.title} style={{ flex: 1, backgroundColor: C.surface, borderRadius: 12, padding: "20px 18px" }}>
                                         <div style={{ fontSize: 20, marginBottom: 10 }}>{c.icon}</div>
-                                        <p style={{ fontFamily: Z, fontWeight: 700, fontSize: 14.5, color: C.ink, marginBottom: 6 }}>{c.title}</p>
+                                        <p style={{ fontFamily: I, fontWeight: 500, fontSize: 14.5, color: C.ink, marginBottom: 6 }}>{c.title}</p>
                                         <p style={{ fontFamily: I, fontSize: 12.5, lineHeight: 1.6, color: C.ink3, margin: 0 }}>{c.body}</p>
                                     </div>
                                 ))}
@@ -676,13 +676,13 @@ export default function IOSCaseStudy() {
                     </section>
 
                     {/* ════════ EXPERIENCE ════════ */}
-                    <section id="experience" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="experience" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: I, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>The Experience</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px,4vw,48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
+                            <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>The Experience</p>
+                            <h2 style={{ fontFamily: I, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 See how it works in practice
                             </h2>
-                            <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 680, marginBottom: 56 }}>
+                            <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 680, marginBottom: 56 }}>
                                 Three states of the feature: the untranslated review, a single-tap translation, and the full list view with translation available on every review.
                             </p>
                         </FadeIn>
@@ -698,13 +698,13 @@ export default function IOSCaseStudy() {
                     </section>
 
                     {/* ════════ OUTCOME ════════ */}
-                    <section id="outcome" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="outcome" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: I, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Outcome</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px,4vw,48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
+                            <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Outcome</p>
+                            <h2 style={{ fontFamily: I, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 Closing the accessibility gap for millions of global shoppers
                             </h2>
-                            <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 720, marginBottom: 28 }}>
+                            <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 720, marginBottom: 28 }}>
                                 By aligning platform capabilities with user needs, the feature strengthens trust at one of the most critical moments in the shopping journey.
                             </p>
                             <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: 10, marginBottom: 32 }}>
@@ -713,20 +713,20 @@ export default function IOSCaseStudy() {
                                 <ResultCard num="03" label="More consistent language experience across the app" />
                                 <ResultCard num="04" label="Greater purchase confidence for non-English speakers" />
                             </div>
-                            <p style={{ fontFamily: I, fontSize: 14, lineHeight: 1.8, color: C.ink2, maxWidth: 720, marginTop: 24, marginBottom: 0 }}>
+                            <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.65, color: C.ink2, maxWidth: 720, marginTop: 24, marginBottom: 0 }}>
                                 This feature is currently live across iPhone 15 and up for users whose app language is set to a different language than their device language.
                             </p>
                         </FadeIn>
                     </section>
 
                     {/* ════════ REFLECTION ════════ */}
-                    <section id="reflection" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="reflection" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: I, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Reflection</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px,4vw,48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
+                            <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Reflection</p>
+                            <h2 style={{ fontFamily: I, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 Constraint-driven design is still good design
                             </h2>
-                            <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.85, color: C.ink3, maxWidth: 580, marginBottom: 0 }}>
+                            <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 580, marginBottom: 0 }}>
                                 This project reinforced that the best design decisions often emerge from working within limits. iOS 18-only support and the no-bulk-translation constraint weren't obstacles. They defined the user experience. By leaning into on-demand, user-triggered translation, I delivered a solution that felt native and intentional, not bolted-on. The constraint became the strategy.
                             </p>
                         </FadeIn>
