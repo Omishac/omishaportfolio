@@ -297,18 +297,18 @@ function ProcessSection({ phone }: { phone: boolean }) {
                 From ambiguity to architecture
             </h2>
             <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 680, marginBottom: 56 }}>
-                Before any UI was designed, the problem was mapped — scoping the ticket, surfacing open questions, and charting every possible translation path to find the right one.
+                Before any UI was designed, the problem was mapped: scoping the ticket, surfacing open questions, and charting every possible translation path to find the right one.
             </p>
             <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: 28, marginBottom: 28 }}>
                 <ArtifactCard src={ARTIFACTS.ticketInfo} index="01" title="Ticket Brief" caption="Original Jira ticket defining scope, acceptance criteria, and the questions that needed answering before design could begin." />
-                <ArtifactCard src={ARTIFACTS.randomThoughts} index="02" title="Early Thinking" caption="Unfiltered sticky-note brainstorm — auto-translate logic, edge cases, CTA placement, and open questions about language detection." />
+                <ArtifactCard src={ARTIFACTS.randomThoughts} index="02" title="Early Thinking" caption="Unfiltered sticky-note brainstorm: auto-translate logic, edge cases, CTA placement, and open questions about language detection." />
             </div>
             <div style={{ marginBottom: 28 }}>
-                <ArtifactCard src={ARTIFACTS.translationPath} index="03" title="Path Possibilities" caption="Three translation paths explored — auto-translate, translate-all, and per-review — each with different performance and UX trade-offs." />
+                <ArtifactCard src={ARTIFACTS.translationPath} index="03" title="Path Possibilities" caption="Three translation paths explored: auto-translate, translate-all, and per-review. Each came with different performance and UX trade-offs." />
             </div>
             <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: 28, marginBottom: 28 }}>
-                <ArtifactCard src={ARTIFACTS.workflowV1} index="04" title="Workflow v1" caption="First decision tree — mapping where review text lives in the app and whether auto-translate or user-triggered made more sense." />
-                <ArtifactCard src={ARTIFACTS.workflowV2} index="05" title="Workflow v2" caption="Refined flow — landed on user-controlled translation with a global toggle and per-review 'show original' CTAs." />
+                <ArtifactCard src={ARTIFACTS.workflowV1} index="04" title="Workflow v1" caption="First decision tree, mapping where review text lives in the app and whether auto-translate or user-triggered made more sense." />
+                <ArtifactCard src={ARTIFACTS.workflowV2} index="05" title="Workflow v2" caption="Refined flow that landed on user-controlled translation with a global toggle and per-review 'show original' CTAs." />
             </div>
             <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: 28 }}>
                 <ArtifactCard src={ARTIFACTS.messaging} index="06" title="Copy Exploration" caption="Micro-copy decisions for auto-translate banners and individual review CTAs, mapped against BV restriction logic." />
@@ -530,7 +530,7 @@ export default function IOSCaseStudy() {
                                 Why URBN's global scale created a localization gap
                             </h2>
                             <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 680, marginBottom: 40 }}>
-                                URBN operates Anthropologie, Free People, and Urban Outfitters across international markets — serving millions of shoppers who use the apps in their native language. The apps were built to be multilingual, but one critical surface wasn't: product reviews.
+                                URBN operates Anthropologie, Free People, and Urban Outfitters across international markets, serving millions of shoppers who use the apps in their native language. The apps were built to be multilingual, but one critical surface wasn't: product reviews.
                             </p>
                             <img src="/slides/ios-ecosystem.png" alt="URBN Global Ecosystem" style={{ width: "100%", height: "auto", display: "block", maxWidth: "100%", boxShadow: "0 4px 32px rgba(0,0,0,0.09)" }} />
                         </FadeIn>
@@ -544,7 +544,7 @@ export default function IOSCaseStudy() {
                                 There was a consistency gap in the global shopping experience
                             </h2>
                             <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 760, marginBottom: 24 }}>
-                                Across URBN's mobile apps, users can set their preferred language — navigation, product details, and system UI all adapt accordingly — <strong>EXCEPT</strong> for product reviews, which remained in English only.
+                                Across URBN's mobile apps, users can set their preferred language, and navigation, product details, and system UI all adapt accordingly, <strong>EXCEPT</strong> for product reviews, which remained in English only.
                             </p>
                         </FadeIn>
 
@@ -560,7 +560,7 @@ export default function IOSCaseStudy() {
                             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20, padding: "8px 0" }}>
                                 <img src="/slides/ios-original.png" alt="iOS original review experience showing English reviews in a Spanish-language app" style={{ width: phone ? "100%" : "70%", height: "auto", display: "block", maxWidth: "100%" }} />
                                 <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 300, fontSize: 14, color: C.ink3, textAlign: "center", maxWidth: 520, lineHeight: 1.65, margin: 0 }}>
-                                    The Spain Urban Outfitters app showing reviews in English — a non-English speaking user sees reviews with no way to translate them
+                                    The Spain Urban Outfitters app showing reviews in English. A non-English speaking user sees reviews with no way to translate them
                                 </p>
                             </div>
                         </FadeIn>
@@ -594,16 +594,16 @@ export default function IOSCaseStudy() {
                         <FadeIn>
                             <p style={{ fontFamily: I, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Why It Matters</p>
                             <h2 style={{ fontFamily: Z, fontSize: "clamp(28px,4vw,48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 720, marginBottom: 16 }}>
-                                Reviews are decision tools —<br />
+                                Reviews are decision tools,<br />
                                 <span style={{ color: C.ink3, fontWeight: 300, fontStyle: "italic" }}>not just content.</span>
                             </h2>
                             <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 680, marginBottom: 36 }}>
-                                In e-commerce, product reviews directly shape whether a shopper buys or bounces. They answer the questions a product page can't — and they only work if users can actually read them.
+                                In e-commerce, product reviews directly shape whether a shopper buys or bounces. They answer the questions a product page can't, and they only work if users can actually read them.
                             </p>
                             <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(3, 1fr)", gap: 10, marginBottom: 36 }}>
-                                <BenefitCard icon="✅" title="Validate quality" body="Reviews confirm that a product lives up to its listing — or reveals when it doesn't." />
+                                <BenefitCard icon="✅" title="Validate quality" body="Reviews confirm that a product lives up to its listing, or reveal when it doesn't." />
                                 <BenefitCard icon="💬" title="Learn from others" body="Real customer experiences surface fit issues, hidden features, and honest caveats." />
-                                <BenefitCard icon="📐" title="Understand fit & sizing" body="The most-read part of any review — especially critical for international shoppers." />
+                                <BenefitCard icon="📐" title="Understand fit & sizing" body="The most-read part of any review, and especially critical for international shoppers." />
                             </div>
                         </FadeIn>
 
@@ -617,10 +617,10 @@ export default function IOSCaseStudy() {
                                 <span style={{ fontFamily: Z, fontSize: 48, lineHeight: 0.8, color: "rgba(255,255,255,0.1)", flexShrink: 0 }}>"</span>
                                 <div>
                                     <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 300, fontSize: phone ? 17 : 21, lineHeight: 1.55, color: "rgba(255,255,255,0.9)", margin: "0 0 14px" }}>
-                                        Without access to reviews in their language, users lose one of the most valuable signals for purchase confidence — increasing hesitation and drop-off.
+                                        Without access to reviews in their language, users lose one of the most valuable signals for purchase confidence, which increases hesitation and drop-off.
                                     </p>
                                     <p style={{ fontFamily: I, fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.28)", letterSpacing: "0.12em", textTransform: "uppercase" as const, margin: 0 }}>
-                                        Key insight — accessibility gap
+                                        Key insight: accessibility gap
                                     </p>
                                 </div>
                             </div>
@@ -635,14 +635,14 @@ export default function IOSCaseStudy() {
                                 Designing Within Constraints to Build the Right Solution
                             </h2>
                             <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 760, marginBottom: 56 }}>
-                                Every design decision in this project started with a real technical constraint. Rather than designing around them, I let them shape the strategy — from how translation is triggered, to what the UI communicates.
+                                Every design decision in this project started with a real technical constraint. Rather than designing around them, I let them shape the strategy, from how translation is triggered to what the UI communicates.
                             </p>
 
                             <CascadeLabel text="Constraints" />
                             <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(3, 1fr)", gap: 10 }}>
                                 {[
                                     { icon: "⚡", title: "Performance Limits", body: "Auto-translating large volumes at load would impact page speed significantly." },
-                                    { icon: "🚫", title: "No Bulk Translation", body: "Reviews could not be translated all at once — only individual items on demand." },
+                                    { icon: "🚫", title: "No Bulk Translation", body: "Reviews could not be translated all at once, only individual items on demand." },
                                     { icon: "📱", title: "iOS 18+ Only", body: "Apple's Translation API is exclusive to devices running iOS 18 or later." },
                                 ].map((c) => (
                                     <div key={c.title} style={{ flex: 1, backgroundColor: C.surface, borderRadius: 12, padding: "20px 18px" }}>
@@ -653,19 +653,19 @@ export default function IOSCaseStudy() {
                                 ))}
                             </div>
 
-                            <CascadeConnector text="These constraints shaped three core design principles —" />
+                            <CascadeConnector text="These constraints shaped three core design principles:" />
                             <CascadeLabel text="Principles" />
                             <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(3, 1fr)", gap: 12 }}>
                                 <PrincipleCard num="01" title="User Control" emoji="🎛️" body="Allow users to choose when to translate, rather than forcing automatic language changes." />
                                 <PrincipleCard num="02" title="System Efficiency" emoji="⚙️" body="Leverage Apple's native translation capabilities without introducing performance overhead." />
-                                <PrincipleCard num="03" title="Seamless Integration" emoji="🪡" body="Ensure the feature feels like a natural extension of the existing review UI — not a bolt-on." />
+                                <PrincipleCard num="03" title="Seamless Integration" emoji="🪡" body="Ensure the feature feels like a natural extension of the existing review UI, not a bolt-on." />
                             </div>
 
-                            <CascadeConnector text="Which led to a single, focused solution —" />
+                            <CascadeConnector text="Which led to a single, focused solution:" />
                             <CascadeLabel text="Solution" />
                             <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(3, 1fr)", gap: 10, marginBottom: 28 }}>
                                 {[
-                                    { title: "Translate on Demand", body: `Each review has a "Translate" CTA — users trigger translation when they need it, not before.`, icon: "🌐" },
+                                    { title: "Translate on Demand", body: `Each review has a "Translate" CTA, so users trigger translation when they need it, not before.`, icon: "🌐" },
                                     { title: "Toggle to Original", body: "Users can instantly switch back to the original language, preserving authenticity.", icon: "↩️" },
                                     { title: "Subtle System Feedback", body: "A lightweight badge communicates when a review is translated and offers a view-original option.", icon: "💬" },
                                 ].map((c, i) => (
@@ -683,13 +683,13 @@ export default function IOSCaseStudy() {
                                 See how it works in practice
                             </h2>
                             <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 680, marginBottom: 56 }}>
-                                Three states of the feature — from the untranslated review, through a single-tap translation, to the full list view with translation available on every review.
+                                Three states of the feature: the untranslated review, a single-tap translation, and the full list view with translation available on every review.
                             </p>
                         </FadeIn>
                         <div ref={phonesRef} style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: 28, alignItems: "flex-start" }}>
                             {[
-                                { src: "/slides/ios-og.png", label: "Original State", num: "01", desc: "The review appears in English only — no translation option visible to Spanish-speaking users" },
-                                { src: "/slides/ios-translated.png", label: "After Translation", num: "02", desc: "One tap translates the review inline — the user sees 'Ver original' to switch back" },
+                                { src: "/slides/ios-og.png", label: "Original State", num: "01", desc: "The review appears in English only, with no translation option visible to Spanish-speaking users" },
+                                { src: "/slides/ios-translated.png", label: "After Translation", num: "02", desc: "One tap translates the review inline, and the user sees 'Ver original' to switch back" },
                                 { src: "/slides/ios-discovery.png", label: "Review List View", num: "03", desc: "Translation CTAs appear across all reviews giving users full control over every review on the page" },
                             ].map((m, i) => (
                                 <PhoneCard key={m.label} {...m} index={i} visible={phonesVis} />
@@ -727,7 +727,7 @@ export default function IOSCaseStudy() {
                                 Constraint-driven design is still good design
                             </h2>
                             <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.85, color: C.ink3, maxWidth: 580, marginBottom: 0 }}>
-                                This project reinforced that the best design decisions often emerge from working within limits. iOS 18-only support and the no-bulk-translation constraint weren't obstacles — they defined the user experience. By leaning into on-demand, user-triggered translation, I delivered a solution that felt native and intentional, not bolted-on. The constraint became the strategy.
+                                This project reinforced that the best design decisions often emerge from working within limits. iOS 18-only support and the no-bulk-translation constraint weren't obstacles. They defined the user experience. By leaning into on-demand, user-triggered translation, I delivered a solution that felt native and intentional, not bolted-on. The constraint became the strategy.
                             </p>
                         </FadeIn>
 
@@ -735,7 +735,7 @@ export default function IOSCaseStudy() {
                             <div style={{ marginBottom: 48, marginTop: 56 }}>
                                 <span style={{ fontFamily: Z, fontSize: "clamp(56px,7vw,80px)", lineHeight: 0.8, color: C.accent, display: "block", marginBottom: 16, userSelect: "none" as const, opacity: 0.3 }}>&ldquo;</span>
                                 <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 400, fontSize: "clamp(28px,4vw,48px)", lineHeight: 1.25, color: C.ink, letterSpacing: "-0.03em", maxWidth: 720, marginBottom: 0 }}>
-                                    Accessibility isn't a feature you add at the end — it's a signal of how seriously a product takes its global users.
+                                    Accessibility isn't a feature you add at the end. It's a signal of how seriously a product takes its global users.
                                 </p>
                             </div>
                         </FadeIn>

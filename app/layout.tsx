@@ -16,7 +16,7 @@ const yujiBoku = Yuji_Boku({
 })
 
 export const metadata: Metadata = {
-  title: "Omisha Chabria — Product Designer",
+  title: "Omisha Chabria · Product Designer",
   description:
     "I design digital products by balancing Creativity & Insights; always grounded in how people experience them.",
   icons: {

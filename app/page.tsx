@@ -1785,20 +1785,20 @@ function EatsGallery() {
             <div style={{ display: "flex", flexDirection: "column", gap: 10, width: 270, flexShrink: 0 }}>
                 <img
                     src="/explore/beli-dining-map.png"
-                    alt="Beli — Your Dining Map"
+                    alt="Beli: Your Dining Map"
                     style={{ width: "100%", height: "auto", borderRadius: 10, objectFit: "cover", display: "block" }}
                 />
                 <img
                     src="/explore/beli-top-diner.png"
-                    alt="Beli — Top 62% Diner"
+                    alt="Beli: Top 62% Diner"
                     style={{ width: "100%", height: "auto", borderRadius: 10, objectFit: "cover", display: "block" }}
                 />
             </div>
             <div className="hscroll" style={{ display: "flex", gap: 10, overflowX: "auto", flex: "1 1 300px", minWidth: 0 }}>
                 {[
-                    { src: "/explore/beli-top10-mumbai.png", alt: "Beli — Top 10 Mumbai" },
-                    { src: "/explore/beli-top10-philly.png", alt: "Beli — Top 10 Philadelphia" },
-                    { src: "/explore/beli-top10-nyc.png",    alt: "Beli — Top 10 New York" },
+                    { src: "/explore/beli-top10-mumbai.png", alt: "Beli: Top 10 Mumbai" },
+                    { src: "/explore/beli-top10-philly.png", alt: "Beli: Top 10 Philadelphia" },
+                    { src: "/explore/beli-top10-nyc.png",    alt: "Beli: Top 10 New York" },
                 ].map((img) => (
                     <img
                         key={img.src}

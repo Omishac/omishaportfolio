@@ -49,7 +49,7 @@ const PROJECTS_EMBEDS = [
 
 const SECTIONS = [
     { num: "01", title: "Visual Design & Branding", desc: "Brand identities, posters, and creative direction." },
-    { num: "02", title: "Photography", desc: "Personal photography — light, texture, and moment." },
+    { num: "02", title: "Photography", desc: "Personal photography: light, texture, and moment." },
     { num: "03", title: "Motion", desc: "Video editing and motion design experiments." },
     { num: "04", title: "Projects", desc: "Miscellaneous work made for the love of making." },
 ]

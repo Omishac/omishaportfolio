@@ -821,10 +821,10 @@ export default function AnthropologieProductDiscovery() {
                                                 alignItems: "start",
                                             }}>
                                                 <div style={{ overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.surface }}>
-                                                    <img src={state.desktop} alt={`${state.title} — desktop`} style={{ width: "100%", height: "auto", display: "block" }} />
+                                                    <img src={state.desktop} alt={`${state.title}, desktop`} style={{ width: "100%", height: "auto", display: "block" }} />
                                                 </div>
                                                 <div style={{ overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.surface }}>
-                                                    <img src={state.mobile} alt={`${state.title} — mobile`} style={{ width: "100%", height: "auto", display: "block" }} />
+                                                    <img src={state.mobile} alt={`${state.title}, mobile`} style={{ width: "100%", height: "auto", display: "block" }} />
                                                 </div>
                                             </div>
                                         </div>

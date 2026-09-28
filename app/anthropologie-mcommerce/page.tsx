@@ -839,7 +839,7 @@ function ReflRow({ text }: { text: string }) {
                         flexShrink: 0,
                     }}
                 >
-                    —
+                    –
                 </span>
                 <span
                     style={{
@@ -1143,7 +1143,7 @@ export default function AnthropologieCaseStudy() {
             num: "01",
             title: "Reduce Friction in Micro-Interactions",
             body: "Introduce swipe-to-delete in cart to align with native mobile behavior.",
-            detail: "Drawing from our homepage redesign A/B test, which showed a positive lift in engagement when category content was less cluttered and products were surfaced faster, I recommended applying the same principle to micro-interactions in the cart. Past test data showed that reducing visual noise and simplifying user actions directly improved conversion — the same logic applies here. By introducing swipe-to-delete in the cart, we align with a native iOS gesture users already know, reducing friction at a critical drop-off point. Bringing analytical data from previous tests to back new design decisions is how we move fast with confidence.",
+            detail: "Drawing from our homepage redesign A/B test, which showed a positive lift in engagement when category content was less cluttered and products were surfaced faster, I recommended applying the same principle to micro-interactions in the cart. Past test data showed that reducing visual noise and simplifying user actions directly improved conversion, and the same logic applies here. By introducing swipe-to-delete in the cart, we align with a native iOS gesture users already know, reducing friction at a critical drop-off point. Bringing analytical data from previous tests to back new design decisions is how we move fast with confidence.",
             img: "/slides/rec1.gif",
             clip: true,
         },
@@ -1159,7 +1159,7 @@ export default function AnthropologieCaseStudy() {
             num: "03",
             title: "Recreate In-Store Guidance Digitally",
             body: "Develop a virtual stylist chatbot for real-time, personalized recommendations.",
-            detail: "Levi's StyleBot and ASOS FashionBot demonstrate how guided chatbots increase product discovery. Anthropologie's current chatbot is limited to order support — expanding to styling advice mirrors the in-store experience.",
+            detail: "Levi's StyleBot and ASOS FashionBot demonstrate how guided chatbots increase product discovery. Anthropologie's current chatbot is limited to order support. Expanding to styling advice mirrors the in-store experience.",
             img: "/slides/rec3.png",
             clip: true,
         },
@@ -1230,7 +1230,7 @@ export default function AnthropologieCaseStudy() {
                         >
                             Mobile commerce is projected to reach $856B by 2027.
                             I led a data-driven audit of Anthropologie's mobile
-                            experience — identifying conversion gaps and
+                            experience, identifying conversion gaps and
                             delivering three strategic recommendations to the
                             digital analytics team.
                         </p>
@@ -1309,7 +1309,7 @@ export default function AnthropologieCaseStudy() {
                                         marginBottom: "20px",
                                     }}
                                 >
-                                    Mobile Retail E-Commerce Sales — United
+                                    Mobile Retail E-Commerce Sales, United
                                     States (Billion USD)
                                 </p>
                                 <div
@@ -1428,13 +1428,13 @@ export default function AnthropologieCaseStudy() {
                 <Divider />
                 <FadeIn>
                     <SectionLabel
-                        step="01 — Context"
+                        step="01 · Context"
                         title="M-commerce is the fastest growing retail channel"
                         sub="Three stats that defined the research opportunity"
                     />
                     <Body>
                         Mobile retail e-commerce in the United States has grown
-                        from $220B in 2019 to a projected $856B by 2027 — a near
+                        from $220B in 2019 to a projected $856B by 2027, a near
                         4× increase. The expectations customers bring to these
                         experiences have grown just as fast.
                     </Body>
@@ -1473,7 +1473,7 @@ export default function AnthropologieCaseStudy() {
                 <Divider />
                 <FadeIn>
                     <SectionLabel
-                        step="02 — Trends"
+                        step="02 · Trends"
                         title="Three capabilities defining next-gen mobile retail"
                         sub="From competitive analysis of Sephora, Nike, and emerging brands"
                     />
@@ -1493,27 +1493,27 @@ export default function AnthropologieCaseStudy() {
                             title="Zero-Party Data Personalization"
                             icon="🎯"
                             what="Information a customer intentionally and proactively shares with a brand"
-                            why="Trustworthy, reliable basis for personalization — Sephora's Beauty Preferences feature is a leading example"
+                            why="Trustworthy, reliable basis for personalization. Sephora's Beauty Preferences feature is a leading example"
                         />
                         <TrendCard
                             title="Augmented Reality Try-Ons"
                             icon="📱"
                             what="AR overlays digital content in the real world through smartphones, tablets, and AR glasses"
-                            why="Allows customers to engage with products and reduces return rates — Nike's foot scanner is a benchmark"
+                            why="Allows customers to engage with products and reduces return rates. Nike's foot scanner is a benchmark"
                         />
                         <TrendCard
                             title="App-Exclusive Perks"
                             icon="⭐"
                             what="Special benefits and incentives available only to app customers"
-                            why="Entices app downloads and drives customer loyalty — Nike Member Rewards is a strong model"
+                            why="Entices app downloads and drives customer loyalty. Nike Member Rewards is a strong model"
                         />
                     </div>
                     {/* Trend image gallery */}
                     <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: "16px", marginTop: "40px" }}>
                         {([
-                            { src: "/slides/zeroparty.gif",   alt: "Zero-party data — Sephora",       caption: "Zero-Party Data — Sephora",  clip: true,  size: 1    },
-                            { src: "/slides/ARtryon.png",     alt: "Augmented Reality try-on — Nike", caption: "Augmented Reality — Nike",   clip: false, size: 1    },
-                            { src: "/slides/appxclusive.png", alt: "App-exclusive perks — Nike",      caption: "App-Exclusive Perks — Nike", clip: false, size: 1    },
+                            { src: "/slides/zeroparty.gif",   alt: "Zero-party data · Sephora",       caption: "Zero-Party Data · Sephora",  clip: true,  size: 1    },
+                            { src: "/slides/ARtryon.png",     alt: "Augmented Reality try-on · Nike", caption: "Augmented Reality · Nike",   clip: false, size: 1    },
+                            { src: "/slides/appxclusive.png", alt: "App-exclusive perks · Nike",      caption: "App-Exclusive Perks · Nike", clip: false, size: 1    },
                         ] as { src: string; alt: string; caption: string; clip: boolean; size: number }[]).map(({ src, alt, caption, clip, size }) => (
                             <div key={caption} style={{ flex: phone ? "unset" : size, display: "flex", flexDirection: "column", gap: "10px" }}>
                                 <div style={{
@@ -1559,13 +1559,13 @@ export default function AnthropologieCaseStudy() {
                 <Divider />
                 <FadeIn>
                     <SectionLabel
-                        step="03 — Benchmarking"
+                        step="03 · Benchmarking"
                         title="Where Anthropologie was falling behind on mobile"
                         sub="Homepage and checkout benchmarked against Everlane, Lululemon, and Madewell"
                     />
                     <Body>
                         I benchmarked Anthropologie's mobile web experience
-                        across two critical journeys — homepage and checkout —
+                        across two critical journeys, homepage and checkout,
                         against three direct competitors to identify specific
                         capability gaps.
                     </Body>
@@ -1584,7 +1584,7 @@ export default function AnthropologieCaseStudy() {
                         </p>
                         <img
                             src="/slides/homepage.png"
-                            alt="Homepage benchmarking — Anthropologie vs Everlane, Lululemon, and Madewell"
+                            alt="Homepage benchmarking: Anthropologie vs Everlane, Lululemon, and Madewell"
                             style={{
                                 width: "100%",
                                 height: "auto",
@@ -1603,7 +1603,7 @@ export default function AnthropologieCaseStudy() {
                             margin: "14px 0 0",
                             lineHeight: 1.6,
                         }}>
-                            Homepage benchmarking — Anthropologie vs Everlane, Lululemon, and Madewell
+                            Homepage benchmarking: Anthropologie vs Everlane, Lululemon, and Madewell
                         </p>
                     </div>
                     {/* Checkout benchmarking image */}
@@ -1640,7 +1640,7 @@ export default function AnthropologieCaseStudy() {
                             margin: "14px 0 0",
                             lineHeight: 1.6,
                         }}>
-                            Checkout benchmarking — key capability gaps identified
+                            Checkout benchmarking: key capability gaps identified
                         </p>
                     </div>
                 </FadeIn>
@@ -1650,7 +1650,7 @@ export default function AnthropologieCaseStudy() {
                 <Divider />
                 <FadeIn>
                     <SectionLabel
-                        step="04 — Testing"
+                        step="04 · Testing"
                         title="A/B tests on homepage layout and category navigation"
                         sub="Hypothesis-driven design experiments"
                     />
@@ -1665,7 +1665,7 @@ export default function AnthropologieCaseStudy() {
                         textTransform: "uppercase", letterSpacing: "0.1em",
                         color: C.muted, margin: "0 0 20px",
                     }}>
-                        Comparison 01 — Control vs. V1: New Layout
+                        Comparison 01 · Control vs. V1: New Layout
                     </p>
                     <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: "10px", marginBottom: "16px" }}>
                         <ABCard label="Control"       desc="Existing layout with category pills and stacked hero banner"                bg={C.surface}  />
@@ -1688,11 +1688,11 @@ export default function AnthropologieCaseStudy() {
                         textTransform: "uppercase", letterSpacing: "0.1em",
                         color: C.muted, margin: "0 0 20px",
                     }}>
-                        Comparison 02 — Stack vs. Slider
+                        Comparison 02 · Stack vs. Slider
                     </p>
                     <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: "10px", marginBottom: "16px" }}>
-                        <ABCard label="Stacked" desc="Tall editorial images stacked vertically — maximizes scroll engagement"      bg={C.surface3} />
-                        <ABCard label="Slider"  desc="Two-column grid of images with horizontal swipe — increases density"         bg="#D8D6CF"    />
+                        <ABCard label="Stacked" desc="Tall editorial images stacked vertically to maximize scroll engagement"      bg={C.surface3} />
+                        <ABCard label="Slider"  desc="Two-column grid of images with horizontal swipe that increases density"         bg="#D8D6CF"    />
                     </div>
                     <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: "10px", marginBottom: "16px" }}>
                         {[
@@ -1706,7 +1706,7 @@ export default function AnthropologieCaseStudy() {
                     </div>
                     <Body>
                         For category pages, I tested hiding the topper image to
-                        bring products above the fold faster — benchmarking
+                        bring products above the fold faster, benchmarking
                         against Mango and Everlane, which both lead directly
                         with product grids.
                     </Body>
@@ -1717,7 +1717,7 @@ export default function AnthropologieCaseStudy() {
                 <Divider />
                 <FadeIn>
                     <SectionLabel
-                        step="05 — Findings"
+                        step="05 · Findings"
                         title="What the data revealed about mobile drop-off"
                     />
                     <div
@@ -1741,7 +1741,7 @@ export default function AnthropologieCaseStudy() {
                 <Divider />
                 <FadeIn>
                     <SectionLabel
-                        step="06 — Strategic Insight"
+                        step="06 · Strategic Insight"
                         title="Mobile friction is a revenue problem"
                     />
                     <div
@@ -1763,7 +1763,7 @@ export default function AnthropologieCaseStudy() {
                                 margin: 0,
                             }}
                         >
-                            Mobile friction isn't just a usability issue — it's
+                            Mobile friction isn't just a usability issue. It's
                             a conversion problem. Every extra step, unclear
                             interaction, or missing payment option reduces
                             purchase confidence and pushes users toward
@@ -1777,9 +1777,9 @@ export default function AnthropologieCaseStudy() {
                 <Divider />
                 <FadeIn>
                     <SectionLabel
-                        step="07 — Recommendations"
+                        step="07 · Recommendations"
                         title="From insight to action"
-                        sub="Five changes to prioritize — click each to see the detail"
+                        sub="Five changes to prioritize. Click each to see the detail"
                     />
                     <div
                         style={{
@@ -1806,7 +1806,7 @@ export default function AnthropologieCaseStudy() {
                 <Divider />
                 <FadeIn>
                     <SectionLabel
-                        step="08 — Impact"
+                        step="08 · Impact"
                         title="Positioning mobile as a strategic growth lever"
                         sub="Delivered to Anthropologie's digital analytics team"
                     />
@@ -1819,7 +1819,7 @@ export default function AnthropologieCaseStudy() {
                     </Body>
                     <Body>
                         The framing I drove throughout was that mobile
-                        optimization isn't a UX nice-to-have — it's a
+                        optimization isn't a UX nice-to-have. It's a
                         revenue decision. In a channel growing toward $856B,
                         every point of friction is measurable loss.
                     </Body>
@@ -1833,12 +1833,12 @@ export default function AnthropologieCaseStudy() {
                 <Divider />
                 <FadeIn>
                     <SectionLabel
-                        step="09 — Reflection"
+                        step="09 · Reflection"
                         title="What I learned about connecting UX to business outcomes"
                     />
                     <Body>
                         This project sharpened my ability to translate data
-                        into decisions that actually move the business —
+                        into decisions that actually move the business,
                         not just improve the experience. I learned to frame
                         UX work in terms of conversion, retention, and revenue
                         so that recommendations land with product and analytics
@@ -1853,9 +1853,9 @@ export default function AnthropologieCaseStudy() {
                         }}
                     />
                     {[
-                        "I defined hypotheses before testing — not after — which made the A/B results defensible, not post-hoc",
+                        "I defined hypotheses before testing, not after, which made the A/B results defensible, not post-hoc",
                         "I tied every UX recommendation to a business metric: Apple Pay adoption, checkout drop-off, scroll depth",
-                        "I learned that the most persuasive design argument isn't 'it looks better' — it's 'here's what it costs us not to fix this'",
+                        "I learned that the most persuasive design argument isn't 'it looks better.' It's 'here's what it costs us not to fix this'",
                     ].map((t, i) => (
                         <ReflRow key={i} text={t} />
                     ))}
@@ -1895,7 +1895,7 @@ export default function AnthropologieCaseStudy() {
                             }}
                         >
                             The most effective mobile experiences don't just
-                            remove friction — they accelerate confidence.
+                            remove friction. They accelerate confidence.
                         </p>
                     </div>
                 </FadeIn>
