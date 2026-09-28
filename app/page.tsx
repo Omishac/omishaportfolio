@@ -450,6 +450,9 @@ const FLYER_W = 518
 const FLYER_H = 548 + TAPE_OVERHANG
 const FLYER_PINK = "#D33361"
 
+type Pt = [number, number]
+const rad = (deg: number) => (deg * Math.PI) / 180
+
 // Figma exports each rotated layer as a bounding box with a rotated child of
 // its own size centered inside it; `rotBox` reproduces that placement.
 function rotBox(
@@ -467,6 +470,25 @@ function rotBox(
     }
 }
 
+// Same placement as rotBox, but maps points from the layer's own coordinate
+// space onto the stage — used to turn Figma's white cover shapes into clip paths.
+function rotBoxPoints(
+    box: { l: number; t: number; w: number; h: number },
+    inner: { w: number; h: number },
+    deg: number,
+    pts: Pt[],
+): Pt[] {
+    const cx = box.l + box.w / 2
+    const cy = box.t + box.h / 2
+    const c = Math.cos(rad(deg))
+    const s = Math.sin(rad(deg))
+    return pts.map(([x, y]) => {
+        const dx = x - inner.w / 2
+        const dy = y - inner.h / 2
+        return [cx + dx * c - dy * s, cy + dx * s + dy * c]
+    })
+}
+
 // Centered text layer: (cx, cy) is the center of Figma's bounding box.
 function rotText(cx: number, cy: number, deg: number): React.CSSProperties {
     return {
@@ -482,6 +504,10 @@ function rotText(cx: number, cy: number, deg: number): React.CSSProperties {
     }
 }
 
+const clipPoly = (pts: Pt[]) => `polygon(${pts.map(([x, y]) => `${x.toFixed(2)}px ${y.toFixed(2)}px`).join(", ")})`
+
+const FILL: React.CSSProperties = { position: "absolute", inset: 0, display: "block" }
+
 // Perforations between tabs (vertical dashed lines).
 const PERFS = [
     { src: "/hero-flyer/perf-a.svg", l: 76.54,  t: 325.48, h: 201.256, len: 201.457, deg: -87.44 },
@@ -492,13 +518,227 @@ const PERFS = [
     { src: "/hero-flyer/perf-d.svg", l: 442.05, t: 336.31, h: 201.255, len: 201.457, deg: -87.43 },
 ]
 
-const TABS: { label: string; cx: number; cy: number; color: string; italic?: boolean; href?: string }[] = [
-    { label: "Redesign",         cx: 41.2,   cy: 419.83, color: "#FEEFF5" },
-    { label: "Mobile Design",    cx: 117,    cy: 420.77, color: "#FFF1F7" },
-    { label: "Digital Strategy", cx: 189.21, cy: 421.64, color: "#FFF1F6" },
-    { label: "Freelancing",      cx: 337.17, cy: 431.99, color: "#FFF6F9", italic: true },
-    { label: "Say hello",        cx: 476.19, cy: 434.67, color: "#FFF1F6", href: "mailto:omishachabria3@gmail.com" },
+// ── Tab geometry ─────────────────────────────────────────────────────────────
+// Each tab is its own copy of the paper, clipped to the column between two
+// perforations (or a perforation and the paper edge) below the tear line, so
+// it can lift, curl and rip away independently of the poster.
+const TEAR = { cx: 7.05 + 497.271 / 2, cy: 322.77 + 16.274 / 2, slope: Math.tan(rad(1.87)) }
+const tearY = (x: number) => TEAR.cy + TEAR.slope * (x - TEAR.cx)
+
+type Edge = (y: number) => number
+const perfEdge = (i: number): Edge => {
+    const p = PERFS[i]
+    const cx = p.l + 4.505
+    const cy = p.t + p.h / 2
+    const dx = (Math.cos(rad(p.deg)) * p.len) / 2
+    const dy = (Math.sin(rad(p.deg)) * p.len) / 2
+    const [x1, y1, x2, y2] = [cx + dx, cy + dy, cx - dx, cy - dy]
+    return (y) => x1 + ((y - y1) * (x2 - x1)) / (y2 - y1)
+}
+const PAPER_LEFT: Edge = () => -30
+const PAPER_RIGHT: Edge = () => FLYER_W + 30
+// Where an edge meets the tear line.
+const edgeTop = (edge: Edge): Pt => {
+    let y = TEAR.cy
+    for (let i = 0; i < 3; i++) y = tearY(edge(y))
+    return [edge(y), y]
+}
+
+// Figma's "Rectangle 6": white cover giving the Mobile Design tab its ragged bottom.
+const MOBILE_TORN_BOTTOM = rotBoxPoints(
+    { l: 76.14, t: 508.62, w: 72.999, h: 27.521 }, { w: 71.971, h: 24.281 }, 2.6,
+    [[0, 0.04], [10, -0.18], [21.18, -0.2], [30, 1.2], [36.92, 2.57], [46, 4.6], [58.18, 6.33], [71.8, 8.74]],
+)
+// Figma's "Rectangle 9": white cover that cuts the dog-ear corner off Say hello.
+const SAY_HELLO_CORNER = (() => {
+    const [a, b] = rotBoxPoints(
+        { l: 475.48, t: 522.63, w: 24.448, h: 17.085 }, { w: 23.977, h: 16.388 }, 1.7,
+        [[4.954, 13.021], [23.977, 0]],
+    )
+    const d: Pt = [b[0] - a[0], b[1] - a[1]]
+    return { a: [a[0] - d[0] * 0.6, a[1] - d[1] * 0.6] as Pt, b: [b[0] + d[0] * 2, b[1] + d[1] * 2] as Pt }
+})()
+
+type TabSpec = {
+    label: string
+    cx: number
+    cy: number
+    color: string
+    italic?: boolean
+    href?: string
+    left: number | null   // perforation index, null = paper edge
+    right: number | null
+    bottom?: "mobile" | "sayHello"
+    tilt: number          // hover lean, deg
+    spin: number          // rotation while floating away, deg
+    drift: number         // sideways drift while floating away, px
+    flutter: number       // flutter period, s
+}
+
+const TABS: TabSpec[] = [
+    { label: "Redesign",         cx: 41.2,   cy: 419.83, color: "#FEEFF5", left: null, right: 0, tilt: -1.1, spin: -9,  drift: -40, flutter: 1.5 },
+    { label: "Mobile Design",    cx: 117,    cy: 420.77, color: "#FFF1F7", left: 0, right: 1, bottom: "mobile", tilt: 0.8, spin: 7, drift: 30, flutter: 1.8 },
+    { label: "Digital Strategy", cx: 189.21, cy: 421.64, color: "#FFF1F6", left: 1, right: 2, tilt: -0.6, spin: -12, drift: -55, flutter: 1.35 },
+    { label: "Freelancing",      cx: 337.17, cy: 431.99, color: "#FFF6F9", italic: true, left: 3, right: 4, tilt: 1.2, spin: 10, drift: 45, flutter: 1.7 },
+    { label: "Say hello",        cx: 476.19, cy: 434.67, color: "#FFF1F6", href: "mailto:omishachabria3@gmail.com", left: 5, right: null, bottom: "sayHello", tilt: -0.9, spin: -6, drift: -30, flutter: 1.55 },
 ]
+
+// Clip polygons (stage coords) for one tab: the part above the curl hinge,
+// the part below it, and the untransformed hit area.
+function tabGeometry(tab: TabSpec) {
+    const L = tab.left === null ? PAPER_LEFT : perfEdge(tab.left)
+    const R = tab.right === null ? PAPER_RIGHT : perfEdge(tab.right)
+    const tl = edgeTop(L)
+    const tr = edgeTop(R)
+    const topY = (tl[1] + tr[1]) / 2
+    const hingeY = topY + 88
+    const pivot: Pt = [(L(topY) + R(topY)) / 2, topY]
+    const pad = 0.6 // overlap neighbours slightly so shared perforations show on both tabs
+    const far = 620
+
+    let bottom: Pt[]
+    if (tab.bottom === "mobile") {
+        const first = MOBILE_TORN_BOTTOM[0]
+        const last = MOBILE_TORN_BOTTOM[MOBILE_TORN_BOTTOM.length - 1]
+        bottom = [[R(last[1]) + pad, last[1]], ...[...MOBILE_TORN_BOTTOM].reverse(), [L(first[1]) - pad, first[1]]]
+    } else if (tab.bottom === "sayHello") {
+        const { a, b } = SAY_HELLO_CORNER
+        bottom = [[R(b[1]), b[1]], b, a, [a[0], far], [L(far) - pad, far]]
+    } else {
+        bottom = [[R(far) + pad, far], [L(far) - pad, far]]
+    }
+
+    const top: Pt[] = [[tl[0] - pad, tl[1]], [tr[0] + pad, tr[1]]]
+    const full: Pt[] = [...top, ...bottom]
+    const upper: Pt[] = [...top, [R(hingeY) + pad, hingeY + 0.5], [L(hingeY) - pad, hingeY + 0.5]]
+    const lower: Pt[] = [[L(hingeY) - pad, hingeY - 0.5], [R(hingeY) + pad, hingeY - 0.5], ...bottom]
+    const hit: Pt[] = [tl, tr, ...bottom]
+
+    return { pivot, hingeY, full: clipPoly(full), upper: clipPoly(upper), lower: clipPoly(lower), hit: clipPoly(hit) }
+}
+
+const TAB_GEOMETRY = TABS.map(tabGeometry)
+
+// Pink paper + crumpled texture, in stage coordinates.
+function PaperFace() {
+    return (
+        <>
+            <span style={{ ...rotBox({ l: 0, t: 3.16, w: 514.919, h: 536.236 }, { w: 498.775, h: 520.797 }, 1.8), display: "block", backgroundColor: FLYER_PINK }} />
+            <span style={{ ...rotBox({ l: 0.64, t: 0, w: 517.35, h: 541.176 }, { w: 502.18, h: 526.734 }, 1.67), display: "block", opacity: 0.38, overflow: "hidden" }}>
+                <img src="/hero-flyer/paper-texture.png" alt=""
+                    style={{ position: "absolute", left: "-1.62%", top: "-20.7%", width: "103.15%", height: "141.73%", maxWidth: "none" }} />
+            </span>
+        </>
+    )
+}
+
+function TabFace({ tab }: { tab: TabSpec }) {
+    return (
+        <>
+            <PaperFace />
+            {[tab.left, tab.right].map((i) => {
+                if (i === null) return null
+                const p = PERFS[i]
+                return <img key={i} src={p.src} alt=""
+                    style={{ ...rotBox({ l: p.l, t: p.t, w: 9.01, h: p.h }, { w: p.len, h: 0.902 }, p.deg), display: "block" }} />
+            })}
+            <span className="ft-label" style={{
+                ...rotText(tab.cx, tab.cy, 92.31),
+                fontSize: 15.458,
+                fontWeight: 300,
+                fontStyle: tab.italic ? "italic" : "normal",
+                color: tab.color,
+            }}>
+                {tab.label}
+            </span>
+            {tab.bottom === "sayHello" && (
+                // Dog-eared corner flap
+                <img src="/hero-flyer/fold-a.svg" alt=""
+                    style={{ position: "absolute", left: 475, top: 523.63, width: 24, height: 15, display: "block" }} />
+            )}
+        </>
+    )
+}
+
+// Hover/focus: the tab peels up from the perforation, curls at a hinge and
+// flutters. Click: a quick rip, then it floats up and away. --ft-amp is a
+// registered property so the flutter can fade in/out instead of snapping.
+const FLYER_TAB_STYLES = `
+@property --ft-amp { syntax: "<number>"; inherits: true; initial-value: 0; }
+.ft-tab {
+    position: absolute; inset: 0; display: block;
+    pointer-events: none; outline: none; text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    --ft-amp: 0;
+    filter: drop-shadow(0 0 0 rgba(110, 18, 48, 0));
+    transition: filter 360ms ${EASE_OUT}, --ft-amp 420ms ${EASE_OUT};
+}
+.ft-hit { position: absolute; inset: 0; display: block; pointer-events: auto; }
+a.ft-tab .ft-hit { cursor: pointer; }
+.ft-lift, .ft-hinge, .ft-flutter, .ft-piece { position: absolute; inset: 0; display: block; }
+/* At rest a tab is one whole piece; it only splits at the curl hinge while live,
+   so no seam shows on a resting tab. */
+.ft-piece-upper { clip-path: var(--ft-clip-full); }
+.ft-piece-lower { visibility: hidden; }
+.ft-tab:is([data-live], [data-state]) .ft-piece-upper { clip-path: var(--ft-clip-upper); }
+.ft-tab:is([data-live], [data-state]) .ft-piece-lower { visibility: visible; }
+.ft-lift { transition: transform 440ms ${EASE_OUT}; }
+.ft-hinge { transition: transform 560ms ${EASE_OUT}; }
+/* Resting tabs carry no transforms at all (even identity 3D transforms leave a
+   hairline where the two halves meet). data-live is set while a tab is being
+   touched and for a moment afterwards, so it can settle before they're dropped. */
+.ft-tab[data-live] .ft-lift { transform: perspective(650px) translate(0, 0) rotateX(0deg) rotateZ(0deg); }
+.ft-tab[data-live] .ft-hinge { transform: perspective(500px) rotateX(0deg); }
+.ft-tab[data-live] .ft-flutter {
+    animation: ft-flutter var(--ft-period, 1.6s) ease-in-out infinite alternate;
+    animation-play-state: paused;
+}
+@keyframes ft-flutter {
+    from { transform: perspective(500px) rotateX(calc(var(--ft-amp) * -4deg)) skewX(calc(var(--ft-amp) * 0.5deg)); }
+    to   { transform: perspective(500px) rotateX(calc(var(--ft-amp) * 5deg)) skewX(calc(var(--ft-amp) * -0.7deg)); }
+}
+.ft-tab:is(:hover, :focus-visible, :active) {
+    z-index: 2;
+    --ft-amp: 1;
+    filter: drop-shadow(0 7px 5px rgba(110, 18, 48, 0.22));
+}
+.ft-tab[data-live]:is(:hover, :focus-visible, :active) .ft-lift {
+    transform: perspective(650px) translate(0, -2px) rotateX(11deg) rotateZ(var(--ft-tilt));
+}
+.ft-tab[data-live]:is(:hover, :focus-visible, :active) .ft-hinge { transform: perspective(500px) rotateX(17deg); }
+.ft-tab[data-live]:is(:hover, :focus-visible, :active) .ft-flutter { animation-play-state: running; }
+.ft-tab:focus-visible .ft-label { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+
+.ft-tab[data-state="ripping"] {
+    z-index: 3;
+    --ft-amp: 1.8;
+    filter: drop-shadow(0 12px 9px rgba(110, 18, 48, 0.16));
+}
+.ft-tab[data-state="ripping"] .ft-lift { animation: ft-rip 860ms forwards; }
+.ft-tab[data-state="ripping"] .ft-hinge { transform: perspective(500px) rotateX(24deg); }
+.ft-tab[data-state="ripping"] .ft-flutter {
+    animation: ft-flutter var(--ft-period, 1.6s) ease-in-out infinite alternate;
+}
+@keyframes ft-rip {
+    0%   { transform: perspective(650px) translate(0, -2px) rotateX(11deg) rotateZ(var(--ft-tilt));
+           animation-timing-function: cubic-bezier(0.4, 0, 0.7, 1); }
+    13%  { transform: perspective(650px) translate(0, 5px) rotateX(18deg) rotateZ(calc(var(--ft-tilt) * -2.4));
+           animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1); }
+    27%  { transform: perspective(650px) translate(calc(var(--ft-drift) * 0.08), -22px) rotateX(8deg) rotateZ(var(--ft-tilt));
+           animation-timing-function: cubic-bezier(0.55, 0, 0.85, 0.5); }
+    100% { transform: perspective(650px) translate(var(--ft-drift), -1100px) rotateX(32deg) rotateZ(var(--ft-spin)); }
+}
+.ft-tab[data-state="returning"] .ft-lift { animation: ft-return 480ms ${EASE_OUT}; }
+@keyframes ft-return {
+    from { opacity: 0; transform: perspective(650px) translate(0, 6px) rotateX(-8deg) rotateZ(0deg); }
+    to   { opacity: 1; transform: perspective(650px) translate(0, 0) rotateX(0deg) rotateZ(0deg); }
+}
+.ft-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (prefers-reduced-motion: reduce) {
+    .ft-lift, .ft-hinge, .ft-flutter { transition: none !important; animation: none !important; transform: none !important; }
+}
+`
 
 function Hero({
     phone,
@@ -512,12 +752,77 @@ function Hero({
     w: number
 }) {
     const [revealed, setRevealed] = useState(false)
+    const [ripping, setRipping] = useState<string | null>(null)
+    const [returning, setReturning] = useState<string | null>(null)
+    const timers = useRef<ReturnType<typeof setTimeout>[]>([])
     const reducedMotion = useReducedMotion()
 
     useEffect(() => {
         const t = setTimeout(() => setRevealed(true), 80)
         return () => clearTimeout(t)
     }, [])
+
+    // Put ripped tabs back when the visitor comes back (bfcache restore).
+    useEffect(() => {
+        const pending = timers.current
+        const onPageShow = (e: PageTransitionEvent) => {
+            if (!e.persisted) return
+            pending.forEach(clearTimeout)
+            pending.length = 0
+            setRipping(null)
+            setReturning(null)
+        }
+        window.addEventListener("pageshow", onPageShow)
+        return () => {
+            window.removeEventListener("pageshow", onPageShow)
+            pending.forEach(clearTimeout)
+        }
+    }, [])
+
+    // Mark a tab live while it's engaged, and keep it live briefly afterwards so
+    // the lift and flutter can ease out before its transforms are removed.
+    const settleTimers = useRef(new Map<Element, ReturnType<typeof setTimeout>>())
+    const engage = (e: React.SyntheticEvent<HTMLElement>) => {
+        const el = e.currentTarget
+        clearTimeout(settleTimers.current.get(el))
+        el.dataset.live = ""
+    }
+    const release = (e: React.SyntheticEvent<HTMLElement>) => {
+        const el = e.currentTarget
+        clearTimeout(settleTimers.current.get(el))
+        settleTimers.current.set(el, setTimeout(() => {
+            if (!el.matches(":hover, :focus-visible") && el.dataset.state !== "ripping") delete el.dataset.live
+        }, 700))
+    }
+    const liveHandlers = {
+        onPointerEnter: engage,
+        onPointerLeave: release,
+        onFocus: engage,
+        onBlur: release,
+        onTouchStart: engage,
+        onTouchEnd: release,
+    }
+
+    const onTabClick = (e: React.MouseEvent<HTMLAnchorElement>, tab: TabSpec) => {
+        // Let modified clicks (new tab/window) and reduced motion go straight through.
+        if (!tab.href || reducedMotion || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+        e.preventDefault()
+        if (ripping) return
+        const href = tab.href
+        setReturning(null)
+        setRipping(tab.label)
+        timers.current.push(setTimeout(() => {
+            window.location.assign(href)
+            // mailto:/tel: leave us on the page — put the tab back once the app has opened.
+            if (!/^https?:|^\//.test(href)) {
+                timers.current.push(setTimeout(() => {
+                    setRipping(null)
+                    setReturning(tab.label)
+                    timers.current.push(setTimeout(() => setReturning(null), 500))
+                }, 1200))
+            }
+        }, 820))
+    }
 
     const scale = Math.min(1, (w - px * 2) / FLYER_W)
     const padTop = phone ? 12 : 16
@@ -537,6 +842,7 @@ function Hero({
                 overflow: "hidden",
             }}
         >
+            <style dangerouslySetInnerHTML={{ __html: FLYER_TAB_STYLES }} />
             {/* Outer box reserves the scaled footprint; inner stage keeps Figma coordinates */}
             <div
                 style={{
@@ -559,52 +865,18 @@ function Hero({
                     }}
                 >
                     <div style={{ position: "absolute", left: 0, top: TAPE_OVERHANG, width: FLYER_W, height: FLYER_H - TAPE_OVERHANG }}>
-                        {/* Paper */}
-                        <div style={{ ...rotBox({ l: 0, t: 3.16, w: 514.919, h: 536.236 }, { w: 498.775, h: 520.797 }, 1.8), backgroundColor: FLYER_PINK }} />
+                        {/* Poster body: the paper above the tear line (below it, only the tabs remain) */}
+                        <span aria-hidden="true" style={{ ...FILL, clipPath: clipPoly([[-30, -60], [FLYER_W + 30, -60], [FLYER_W + 30, tearY(FLYER_W + 30) + 0.5], [-30, tearY(-30) + 0.5]]) }}>
+                            <PaperFace />
+                        </span>
 
                         {/* Tear line above the tabs */}
                         <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
                             style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block" }} />
 
-                        {PERFS.map((p, i) => (
-                            <img key={i} src={p.src} alt="" aria-hidden="true"
-                                style={{ ...rotBox({ l: p.l, t: p.t, w: 9.01, h: p.h }, { w: p.len, h: 0.902 }, p.deg), display: "block" }} />
-                        ))}
-
-                        {/* Crumpled paper texture */}
-                        <div style={{ ...rotBox({ l: 0.64, t: 0, w: 517.35, h: 541.176 }, { w: 502.18, h: 526.734 }, 1.67), opacity: 0.38, overflow: "hidden", pointerEvents: "none" }}>
-                            <img src="/hero-flyer/paper-texture.png" alt="" aria-hidden="true"
-                                style={{ position: "absolute", left: "-1.62%", top: "-20.7%", width: "103.15%", height: "141.73%", maxWidth: "none" }} />
-                        </div>
-
                         <h1 style={{ ...rotText(268.15, 158.08, 2.74), fontSize: 16.819, fontWeight: 700, color: "#FFFFFF" }}>
                             Hi, I&rsquo;m Omisha!
                         </h1>
-
-                        {/* First torn-off tab (drawn under the labels, as in Figma) */}
-                        <div style={{ ...rotBox({ l: 223, t: 331.63, w: 79.972, h: 213.389 }, { w: 70.569, h: 210.425 }, 2.58), backgroundColor: C.bg }} />
-
-                        {TABS.map(({ label, cx, cy, color, italic, href }) => {
-                            const style: React.CSSProperties = {
-                                ...rotText(cx, cy, 92.31),
-                                fontSize: 15.458,
-                                fontWeight: 300,
-                                fontStyle: italic ? "italic" : "normal",
-                                color,
-                                textDecoration: "none",
-                            }
-                            return href
-                                ? <a key={label} href={href} style={style}>{label}</a>
-                                : <span key={label} style={style}>{label}</span>
-                        })}
-
-                        {/* Two tabs already torn off, with ragged edges left behind */}
-                        <div style={{ ...rotBox({ l: 223.24, t: 329.99, w: 79.972, h: 213.389 }, { w: 70.569, h: 210.425 }, 2.58), backgroundColor: C.bg }} />
-                        <div style={{ ...rotBox({ l: 371.33, t: 335.41, w: 78.306, h: 212.58 }, { w: 70.569, h: 210.109 }, 2.12), backgroundColor: C.bg }} />
-                        <img src="/hero-flyer/torn-edge-1.svg" alt="" aria-hidden="true"
-                            style={{ ...rotBox({ l: 232, t: 328.63, w: 71.475, h: 12.567 }, { w: 71.375, h: 12.384 }, 0.87), display: "block" }} />
-                        <img src="/hero-flyer/torn-edge-2.svg" alt="" aria-hidden="true"
-                            style={{ ...rotBox({ l: 378.93, t: 325.77, w: 70.679, h: 13.136 }, { w: 70.728, h: 12.934 }, 179.1), display: "block" }} />
 
                         <p style={{ ...rotText(268.29, 184.92, 2.88), fontSize: 9.828, fontWeight: 500, color: "#FFFFFF" }}>
                             product designer . digital analyst . brand storyteller.
@@ -614,15 +886,50 @@ function Hero({
                             Take what you need:
                         </p>
 
-                        {/* Ragged bottom of the "Mobile Design" tab */}
-                        <img src="/hero-flyer/torn-bottom.svg" alt="" aria-hidden="true"
-                            style={{ ...rotBox({ l: 76.14, t: 508.62, w: 72.999, h: 27.521 }, { w: 71.971, h: 24.281 }, 2.6), display: "block" }} />
+                        {/* Ragged edges left behind by the two tabs already torn off */}
+                        <img src="/hero-flyer/torn-edge-1.svg" alt="" aria-hidden="true"
+                            style={{ ...rotBox({ l: 232, t: 328.63, w: 71.475, h: 12.567 }, { w: 71.375, h: 12.384 }, 0.87), display: "block" }} />
+                        <img src="/hero-flyer/torn-edge-2.svg" alt="" aria-hidden="true"
+                            style={{ ...rotBox({ l: 378.93, t: 325.77, w: 70.679, h: 13.136 }, { w: 70.728, h: 12.934 }, 179.1), display: "block" }} />
 
-                        {/* Dog-eared corner on the "Say hello" tab */}
-                        <img src="/hero-flyer/fold-a.svg" alt="" aria-hidden="true"
-                            style={{ position: "absolute", left: 475, top: 523.63, width: 24, height: 15, display: "block" }} />
-                        <img src="/hero-flyer/fold-b.svg" alt="" aria-hidden="true"
-                            style={{ ...rotBox({ l: 475.48, t: 522.63, w: 24.448, h: 17.085 }, { w: 23.977, h: 16.388 }, 1.7), display: "block" }} />
+                        {TABS.map((tab, i) => {
+                            const g = TAB_GEOMETRY[i]
+                            const vars = {
+                                "--ft-tilt": `${tab.tilt}deg`,
+                                "--ft-spin": `${tab.spin}deg`,
+                                "--ft-drift": `${tab.drift}px`,
+                                "--ft-period": `${tab.flutter}s`,
+                                "--ft-clip-full": g.full,
+                                "--ft-clip-upper": g.upper,
+                                "--ft-clip-lower": g.lower,
+                            } as React.CSSProperties
+                            const state = ripping === tab.label ? "ripping" : returning === tab.label ? "returning" : undefined
+                            const body = (
+                                <>
+                                    <span className="ft-sr">{tab.label}</span>
+                                    <span className="ft-lift" aria-hidden="true" style={{ transformOrigin: `${g.pivot[0]}px ${g.pivot[1]}px` }}>
+                                        <span className="ft-piece ft-piece-upper"><TabFace tab={tab} /></span>
+                                        <span className="ft-hinge" style={{ transformOrigin: `${g.pivot[0]}px ${g.hingeY}px` }}>
+                                            <span className="ft-flutter" style={{ transformOrigin: `${g.pivot[0]}px ${g.hingeY}px` }}>
+                                                <span className="ft-piece ft-piece-lower" style={{ clipPath: "var(--ft-clip-lower)" }}><TabFace tab={tab} /></span>
+                                            </span>
+                                        </span>
+                                    </span>
+                                    {/* Untransformed hit area, so the tab stays easy to hover and click while it moves */}
+                                    <span className="ft-hit" style={{ clipPath: g.hit }} />
+                                </>
+                            )
+                            return tab.href ? (
+                                <a key={tab.label} className="ft-tab" href={tab.href} data-state={state} style={vars}
+                                    onClick={(e) => onTabClick(e, tab)} {...liveHandlers}>
+                                    {body}
+                                </a>
+                            ) : (
+                                <span key={tab.label} className="ft-tab" style={vars} {...liveHandlers}>
+                                    {body}
+                                </span>
+                            )
+                        })}
                     </div>
 
                     {/* Clear tape */}

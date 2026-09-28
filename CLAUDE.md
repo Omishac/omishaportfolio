@@ -35,6 +35,7 @@ const EASE_OUT    = "cubic-bezier(0.23,1,0.32,1)"
 - Tabs (Inter Light 15.5px, rotated 92.3°): Redesign, Mobile Design, Digital Strategy, Freelancing (italic), Say hello (mailto, dog-eared corner); two tabs shown torn off
 - CTA below flyer: "Here's a closer look at what that means" in Zodiak (`NAV_Z`) + pink curved SVG arrow
 - Entrance: flyer fade + translateY/rotate settle (EASE_SPRING), CTA fades in after; off under reduced motion
+- Tear-off tabs: each tab is its own clipped copy of the paper (`TABS` + `tabGeometry`), styles in `FLYER_TAB_STYLES`. Hover/focus/touch = peel + curl at a hinge + flutter + shadow; click on a tab with `href` = rip, float offscreen, then navigate (mailto tabs return in place; bfcache restore resets). Tabs carry no transforms at rest (`data-live` toggles them) to avoid a hairline seam. Reduced motion: no transforms, click navigates immediately
 
 ## Keyframes (in CURSOR_STYLES string at top of page.tsx)
 - `illust-float` — 5px vertical float, 5.5s cycle
