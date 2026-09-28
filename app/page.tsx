@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react"
 import NextImage from "next/image"
+import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion"
 
 const CURSOR_STYLES = `
   @keyframes hi-float {
@@ -2330,11 +2331,13 @@ function FooterGame({
     tablet,
     px,
     maxW,
+    footer,
 }: {
     phone: boolean
     tablet: boolean
     px: number
     maxW: number
+    footer: React.ReactNode
 }) {
     const [phase, setPhase] = useState<GamePhase>("writing")
     const [thought, setThought] = useState("")
@@ -2351,60 +2354,54 @@ function FooterGame({
     const drag = useRef<{ id: number; rest: Vec; world: TossWorld; power: number; maxPull: number; pull: Vec } | null>(null)
     const raf = useRef(0)
     const sectionRef = useRef<HTMLElement>(null)
-    const headRef = useRef<HTMLDivElement>(null)
-    const tiltRef = useRef<HTMLDivElement>(null)
-    const settled = useRef(false)
 
-    // Scroll-linked 3D reveal: the play area starts tipped back like a sheet of
-    // paper on a desk and stands up as it scrolls into view. p = how much of the
-    // play area is on screen (it's the last thing on the page, so it reaches 1
-    // at the bottom).
-    const applyReveal = (p: number) => {
-        const q = 1 - p
-        const tilt = tiltRef.current, head = headRef.current
-        if (tilt) {
-            tilt.style.transform = q < 0.002 ? "" : `perspective(1000px) translateY(${q * 48}px) rotateX(${q * 34}deg) scale(${1 - q * 0.05})`
-            tilt.style.opacity = String(0.3 + 0.7 * p)
-        }
-        if (head) {
-            head.style.transform = q < 0.002 ? "" : `translateY(${q * 28}px)`
-            head.style.opacity = String(0.15 + 0.85 * p)
+    // ── Hidden-level reveal ──
+    // The footer reads as the end of the page; scrolling on opens into this
+    // section. p runs from the section's top entering the viewport (0) to its
+    // bottom reaching the viewport bottom, i.e. the end of the page (1).
+    const { scrollYProgress: p } = useScroll({ target: sectionRef, offset: ["start end", "end end"] })
+    // Function-form transforms keep these on framer's JS scroll tracking; the
+    // array form lets framer hand opacity to a native scroll timeline, which
+    // left the stage stuck invisible in testing.
+    const range = (a: number, b: number, from: number, to: number) =>
+        (v: number) => from + (to - from) * Math.min(1, Math.max(0, (v - a) / (b - a)))
+    // Footer recedes: tips back a touch, shrinks and fades as it scrolls away.
+    const footerY = useTransform(p, range(0, 0.5, 0, -28))
+    const footerScale = useTransform(p, range(0, 0.5, 1, 0.96))
+    const footerTilt = useTransform(p, range(0, 0.5, 0, -7))
+    const footerOpacity = useTransform(p, range(0, 0.5, 1, 0.4))
+    // A soft shadow where the page "opens", strongest mid-reveal.
+    const seamOpacity = useTransform(p, (v) => (v < 0.3 ? range(0, 0.3, 0, 1)(v) : range(0.3, 0.85, 1, 0)(v)))
+    // Game comes forward from below and settles flat; identity from p = 0.88.
+    const stageZ = useTransform(p, range(0.1, 0.88, -220, 0))
+    const stageY = useTransform(p, range(0.1, 0.88, 90, 0))
+    const stageTilt = useTransform(p, range(0.1, 0.88, 16, 0))
+    const stageOpacity = useTransform(p, range(0.05, 0.6, 0, 1))
+    const fadeIn = useTransform(p, range(0.2, 0.8, 0, 1)) // reduced motion: fade only
+
+    // Playable only once the reveal has fully settled, so a throw is never
+    // measured against a moving stage and scrolling past can't grab the ball.
+    const [playable, setPlayable] = useState(false)
+    const playableRef = useRef(false)
+    const updatePlayable = (v: number) => {
+        const next = v >= 0.96
+        if (next === playableRef.current) return
+        playableRef.current = next
+        setPlayable(next)
+        if (!next && drag.current) {
+            drag.current = null
+            setAim(null)
+            setBall(0, 0)
+            setPhase("ready")
         }
     }
-    // Once someone starts playing, lock it upright so aiming is exact.
-    const settle = () => {
-        if (settled.current) return
-        settled.current = true
-        applyReveal(1)
-    }
+    useMotionValueEvent(p, "change", updatePlayable)
+    useEffect(() => { updatePlayable(p.get()) }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-    useEffect(() => {
-        if (reducedMotion) { applyReveal(1); return }
-        let frame = 0
-        const update = () => {
-            frame = 0
-            const el = sectionRef.current, tilt = tiltRef.current
-            if (!el || !tilt || settled.current) return
-            // offsetTop ignores the transform, so this is the play area's resting position
-            const top = el.getBoundingClientRect().top + tilt.offsetTop - el.offsetTop
-            const raw = Math.min(1, Math.max(0, (window.innerHeight - top) / (tilt.offsetHeight * 0.95)))
-            applyReveal(1 - Math.pow(1 - raw, 2))
-        }
-        const onScroll = () => { if (!frame) frame = requestAnimationFrame(update) }
-        update()
-        window.addEventListener("scroll", onScroll, { passive: true })
-        window.addEventListener("resize", onScroll)
-        return () => {
-            cancelAnimationFrame(frame)
-            window.removeEventListener("scroll", onScroll)
-            window.removeEventListener("resize", onScroll)
-        }
-    }, [reducedMotion])
-
-    const playH = phone ? 214 : tablet ? 250 : 270
-    const pileW = phone ? 118 : tablet ? 160 : 190
-    const ballS = phone ? 44 : tablet ? 54 : 60
-    const canW = phone ? 104 : tablet ? 132 : 150
+    const playH = phone ? 260 : tablet ? 320 : 360
+    const pileW = phone ? 120 : tablet ? 170 : 200
+    const ballS = phone ? 44 : tablet ? 56 : 62
+    const canW = phone ? 108 : tablet ? 140 : 160
     const noteW = phone ? 236 : 240
 
     // Measure the world from the live layout (relative to the play area).
@@ -2497,8 +2494,7 @@ function FooterGame({
     // ── Crumple ──
     const crumple = (e: React.FormEvent) => {
         e.preventDefault()
-        if (phase !== "writing") return
-        settle()
+        if (phase !== "writing" || !playableRef.current) return
         const note = noteRef.current, ball = ballRef.current
         if (reducedMotion || !note || !ball) { setPhase("ready"); return }
         setPhase("crumpling")
@@ -2530,8 +2526,7 @@ function FooterGame({
     }
 
     const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-        if (phase !== "ready" || !e.isPrimary) return
-        settle()
+        if (phase !== "ready" || !e.isPrimary || !playableRef.current) return
         const m = measure()
         if (!m) return
         e.preventDefault()
@@ -2568,15 +2563,16 @@ function FooterGame({
         drag.current = null
         delete e.currentTarget.dataset.dragging
         setAim(null)
-        if (cancelled || Math.hypot(d.pull.x, d.pull.y) < 12) { setBall(0, 0); setPhase("ready"); return }
+        // Only a real pull (back and down, launching up toward the can) throws;
+        // a stray swipe or scroll-like gesture on the ball just puts it back.
+        if (cancelled || Math.hypot(d.pull.x, d.pull.y) < 16 || d.pull.x < 8 || d.pull.y > -4) { setBall(0, 0); setPhase("ready"); return }
         const off = { x: -d.pull.x * 0.22, y: Math.min(0, -d.pull.y * 0.22) }
         throwBall(d.world, { x: d.rest.x + off.x, y: d.rest.y + off.y }, d.rest, { x: d.pull.x * d.power, y: d.pull.y * d.power })
     }
 
     // ── Keyboard / no-drag throw: a clean shot at the can ──
     const autoToss = () => {
-        if (phase !== "ready") return
-        settle()
+        if (phase !== "ready" || !playableRef.current) return
         const m = measure()
         if (!m) return
         const { world, rest } = m
@@ -2604,20 +2600,45 @@ function FooterGame({
     const ballH = ballS * BALL_ASPECT
 
     return (
+        <>
+        <motion.div
+            style={reducedMotion
+                ? { width: "100%" }
+                : { width: "100%", y: footerY, scale: footerScale, rotateX: footerTilt, opacity: footerOpacity, transformPerspective: 900, transformOrigin: "50% 0%" }}
+        >
+            {footer}
+        </motion.div>
         <section
             ref={sectionRef}
             aria-labelledby="toss-heading"
             style={{
+                position: "relative",
                 width: "100%",
+                minHeight: phone ? "92svh" : "100svh",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
                 backgroundColor: C.bg,
-                padding: `${phone ? 16 : 24}px ${px}px ${phone ? 40 : 64}px`,
+                padding: `${phone ? 32 : 48}px ${px}px ${phone ? 40 : 64}px`,
                 boxSizing: "border-box",
                 overflow: "hidden",
             }}
         >
             <style dangerouslySetInnerHTML={{ __html: GAME_STYLES }} />
-            <div style={{ maxWidth: Math.min(maxW, 780), width: "100%", margin: "0 auto" }}>
-                <div ref={headRef} style={{ willChange: "transform, opacity" }}>
+            {!reducedMotion && (
+                <motion.div aria-hidden="true" style={{
+                    position: "absolute", top: 0, left: 0, right: 0, height: 96, pointerEvents: "none",
+                    background: "linear-gradient(to bottom, rgba(17,17,17,0.07), rgba(17,17,17,0))",
+                    opacity: seamOpacity,
+                }} />
+            )}
+            <motion.div
+                style={reducedMotion
+                    ? { width: "100%", opacity: fadeIn }
+                    : { width: "100%", z: stageZ, y: stageY, rotateX: stageTilt, opacity: stageOpacity, transformPerspective: 1100, transformOrigin: "50% 100%" }}
+            >
+            <div style={{ maxWidth: Math.min(maxW, 880), width: "100%", margin: "0 auto" }}>
+                <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
                     <span style={{ fontFamily: I, fontSize: 12, color: C.muted }}>[</span>
                     <span style={{ fontFamily: I, fontWeight: 300, fontSize: 12, color: C.ink, letterSpacing: "-0.01em" }}>before you go</span>
@@ -2631,12 +2652,12 @@ function FooterGame({
                 </p>
                 </div>
 
-                <div ref={tiltRef} style={{ transformOrigin: "50% 100%", willChange: "transform, opacity" }}>
+                <div>
                 <div
                     ref={areaRef}
                     role="group"
                     aria-label="Paper toss"
-                    style={{ position: "relative", height: playH, marginTop: phone ? 20 : 28, borderBottom: "1px solid rgba(17,17,17,0.08)" }}
+                    style={{ position: "relative", height: playH, marginTop: phone ? 24 : 36, borderBottom: "1px solid rgba(17,17,17,0.08)", pointerEvents: playable ? "auto" : "none" }}
                 >
                     {/* Decorative pile */}
                     <NextImage src="/footer-game/paper-pile.png" alt="" aria-hidden="true" draggable={false}
@@ -2721,7 +2742,6 @@ function FooterGame({
                                 className="toss-input"
                                 value={thought}
                                 onChange={(e) => setThought(e.target.value)}
-                                onFocus={settle}
                                 maxLength={60}
                                 autoComplete="off"
                                 placeholder="a worry, a to-do, a bad idea…"
@@ -2786,7 +2806,9 @@ function FooterGame({
                 </div>
                 </div>
             </div>
+            </motion.div>
         </section>
+        </>
     )
 }
 
@@ -2812,8 +2834,8 @@ export default function ResponsiveHome() {
                 <LogoTicker phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
                 <SkillsSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
                 <ExploreSection phone={phone} px={px} maxW={maxW} />
-                <Footer phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
-                <FooterGame phone={phone} tablet={tablet} px={px} maxW={maxW} />
+                <FooterGame phone={phone} tablet={tablet} px={px} maxW={maxW}
+                    footer={<Footer phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />} />
             </div>
         </>
     )

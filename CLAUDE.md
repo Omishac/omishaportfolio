@@ -39,11 +39,12 @@ const EASE_OUT    = "cubic-bezier(0.23,1,0.32,1)"
 - Tear-off tabs: each tab is its own clipped copy of the paper (`TABS` + `tabGeometry`), styles in `FLYER_TAB_STYLES`. Hover/focus/touch = peel + curl at a hinge + flutter + shadow; click on a tab with `href` = rip, float offscreen, then navigate (mailto tabs return in place; bfcache restore resets). Tabs carry no transforms at rest (`data-live` toggles them) to avoid a hairline seam. Reduced motion: no transforms, click navigates immediately
 
 ## Footer game (`FooterGame`, Figma 129:226)
-- "clear your head" paper toss, last section on the page (below the Footer row), white bg, thin floor line under the play area
-- Scroll-linked 3D reveal (`applyReveal`): play area starts tipped back (rotateX 34°) and stands up as it scrolls into view; locks upright (`settle()`) on first interaction so aiming is exact; off under reduced motion
+- Hidden "secret level" under the footer: `FooterGame` renders the Footer (passed as `footer` prop) followed by a ~100svh game section (92svh on phone), last on the page, white bg
+- Reveal uses framer-motion `useScroll` (target = game section, offset ["start end", "end end"]) + function-form `useTransform` (array form let framer hand opacity to a native scroll timeline and the stage stayed invisible). Footer recedes (tilt/scale/fade), soft seam shadow at the section top, game stage comes forward from translateZ(-220) rotateX(16°) and is identity from p=0.88
+- Playable only at p >= 0.96 (`playable` → pointer-events + handler guards); an in-progress aim is cancelled if the visitor scrolls back. Only a back-and-down pull launches, so swipes on the ball can't throw it
 - Assets in `public/footer-game/` (pile = decorative, ball = interactive, can drawn twice: back layer + `CAN_FRONT_CLIP` front layer so a scored ball drops behind the rim)
-- Flow: note → "Crumple it" → pull back & release (pointer events, mouse/touch) → `tossStep` physics → scored / missed. "Toss it for me" = keyboard throw. Geometry measured from live rects at throw time; `CAN` fractions come from the can art
-- Reduced motion: no crumple/flight animation, throw resolves instantly with the same physics
+- Flow: note → "Crumple it" → pull back & release → `tossStep` physics → scored / missed. "Toss it for me" = keyboard throw. Geometry measured from live rects at throw time
+- Reduced motion: reveal is a plain fade (no 3D), no crumple/flight animation, throws resolve instantly
 
 ## Keyframes (in CURSOR_STYLES string at top of page.tsx)
 - `illust-float` — 5px vertical float, 5.5s cycle
