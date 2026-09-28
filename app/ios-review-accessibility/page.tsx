@@ -217,7 +217,7 @@ function Lightbox({ src, title, caption, onClose }: { src: string; title: string
     return (
         <div onClick={onClose} style={{ position: "fixed" as const, inset: 0, zIndex: 9999, backgroundColor: "rgba(0,0,0,0.82)", display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "center", padding: "40px", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}>
             <button onClick={onClose} style={{ position: "absolute" as const, top: 24, right: 28, background: "rgba(255,255,255,0.1)", border: "none", borderRadius: 20, cursor: "pointer", width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.7)", fontSize: 16 }}>✕</button>
-            <div onClick={(e) => e.stopPropagation()} style={{ maxWidth: "86vw", maxHeight: "78vh", borderRadius: 16, overflow: "hidden", boxShadow: "0 40px 100px rgba(0,0,0,0.5)" }}>
+            <div onClick={(e) => e.stopPropagation()} style={{ maxWidth: "86vw", maxHeight: "78vh", overflow: "hidden", boxShadow: "0 40px 100px rgba(0,0,0,0.5)" }}>
                 <img src={src} alt={title} style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", maxHeight: "78vh", maxWidth: "100%" }} />
             </div>
             <div onClick={(e) => e.stopPropagation()} style={{ marginTop: 18, textAlign: "center" as const, maxWidth: 580 }}>
@@ -236,7 +236,7 @@ function ArtifactCard({ src, index, title, caption }: { src: string; index: stri
         <>
             {open && <Lightbox src={src} title={title} caption={caption} onClose={() => setOpen(false)} />}
             <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ display: "flex", flexDirection: "column" as const, gap: 14, transform: hov ? "translateY(-5px)" : "none", transition: "transform 0.35s cubic-bezier(0.22,1,0.36,1)" }}>
-                <div onClick={() => setOpen(true)} style={{ width: "100%", borderRadius: 14, overflow: "hidden", border: `1px solid ${hov ? "rgba(0,0,0,0.12)" : "rgba(0,0,0,0.06)"}`, backgroundColor: "#FAFAF9", transition: "border-color 0.25s, box-shadow 0.35s", boxShadow: hov ? "0 16px 44px rgba(0,0,0,0.1)" : "0 1px 6px rgba(0,0,0,0.04)", cursor: "zoom-in", position: "relative" as const }}>
+                <div onClick={() => setOpen(true)} style={{ width: "100%", overflow: "hidden", border: `1px solid ${hov ? "rgba(0,0,0,0.12)" : "rgba(0,0,0,0.06)"}`, backgroundColor: "#FAFAF9", transition: "border-color 0.25s, box-shadow 0.35s", boxShadow: hov ? "0 16px 44px rgba(0,0,0,0.1)" : "0 1px 6px rgba(0,0,0,0.04)", cursor: "zoom-in", position: "relative" as const }}>
                     <img src={src} alt={title} style={{ width: "100%", height: "auto", display: "block", maxWidth: "100%", transform: hov ? "scale(1.02)" : "scale(1)", transition: "transform 0.5s cubic-bezier(0.22,1,0.36,1)", transformOrigin: "top center" }} />
                     <div style={{ position: "absolute" as const, top: 10, right: 10, backgroundColor: "rgba(0,0,0,0.5)", borderRadius: 6, padding: "4px 9px", opacity: hov ? 1 : 0, transition: "opacity 0.2s", display: "flex", alignItems: "center", gap: 4, pointerEvents: "none" }}>
                         <span style={{ fontFamily: I, fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.9)", letterSpacing: "0.04em" }}>Expand</span>
@@ -483,7 +483,7 @@ export default function IOSCaseStudy() {
                             <img
                                 src="/slides/ios-hero.png"
                                 alt="iOS Review Translation"
-                                style={{ width: "100%", height: "auto", display: "block", borderRadius: 14, boxShadow: "0 8px 40px rgba(0,0,0,0.10)", maxWidth: "100%" }}
+                                style={{ width: "100%", height: "auto", display: "block", boxShadow: "0 8px 40px rgba(0,0,0,0.10)", maxWidth: "100%" }}
                             />
                         </FadeIn>
 
@@ -532,7 +532,7 @@ export default function IOSCaseStudy() {
                             <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 680, marginBottom: 40 }}>
                                 URBN operates Anthropologie, Free People, and Urban Outfitters across international markets — serving millions of shoppers who use the apps in their native language. The apps were built to be multilingual, but one critical surface wasn't: product reviews.
                             </p>
-                            <img src="/slides/ios-ecosystem.png" alt="URBN Global Ecosystem" style={{ width: "100%", height: "auto", display: "block", maxWidth: "100%", borderRadius: 14, boxShadow: "0 4px 32px rgba(0,0,0,0.09)" }} />
+                            <img src="/slides/ios-ecosystem.png" alt="URBN Global Ecosystem" style={{ width: "100%", height: "auto", display: "block", maxWidth: "100%", boxShadow: "0 4px 32px rgba(0,0,0,0.09)" }} />
                         </FadeIn>
                     </section>
 

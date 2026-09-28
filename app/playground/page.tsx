@@ -179,7 +179,6 @@ function PhotoCard({ src, aspectRatio = "3/2" }: { src: string; aspectRatio?: st
             onMouseEnter={() => setHov(true)}
             onMouseLeave={() => setHov(false)}
             style={{
-                borderRadius: 10,
                 overflow: "hidden",
                 width: "100%",
                 aspectRatio,
@@ -209,7 +208,6 @@ function EmbedFrame({ src, aspect = "16/9" }: { src: string; aspect?: string }) 
             style={{
                 width: "100%",
                 aspectRatio: aspect,
-                borderRadius: 10,
                 overflow: "hidden",
                 backgroundColor: T.surface,
                 position: "relative" as const,
@@ -294,7 +292,7 @@ export default function PlaygroundPage() {
                     <SectionHeader {...SECTIONS[0]} />
                     <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: 14 }}>
                         <div style={{ display: "flex", flexDirection: "column" as const, gap: 14 }}>
-                            <div style={{ borderRadius: 10, overflow: "hidden", height: phone ? 240 : 380 }}>
+                            <div style={{ overflow: "hidden", height: phone ? 240 : 380 }}>
                                 <iframe
                                     src="https://drive.google.com/file/d/17mAqwjd1149huegPzatDpfd9-PGleLLT/preview"
                                     width="100%"
@@ -302,7 +300,7 @@ export default function PlaygroundPage() {
                                     style={{ border: "none", display: "block" }}
                                 />
                             </div>
-                            <div style={{ borderRadius: 10, overflow: "hidden", height: phone ? 200 : 340, position: "relative" as const }}>
+                            <div style={{ overflow: "hidden", height: phone ? 200 : 340, position: "relative" as const }}>
                                 <iframe
                                     loading="lazy"
                                     src="https://www.canva.com/design/DAHJZiSLxGs/h1POtcf2Rq5YpGXLhXy1eA/view?embed"
@@ -320,7 +318,7 @@ export default function PlaygroundPage() {
                         </div>
                         <div style={{ display: "flex", flexDirection: "column" as const, gap: 14 }}>
                             {VISUAL_IMAGES.map((src, i) => (
-                                <div key={i} style={{ borderRadius: 10, overflow: "hidden", flex: phone ? "none" : 1, minHeight: phone ? 200 : 0, backgroundColor: i === 1 ? "#fff" : undefined, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                <div key={i} style={{ overflow: "hidden", flex: phone ? "none" : 1, minHeight: phone ? 200 : 0, backgroundColor: i === 1 ? "#fff" : undefined, display: "flex", alignItems: "center", justifyContent: "center" }}>
                                     <img
                                         src={src}
                                         alt=""

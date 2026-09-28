@@ -195,7 +195,7 @@ function StrategyBlock({ s, phone }: { s: typeof STRATEGIES[number]; phone: bool
     if (phone) {
         return (
             <div>
-                <div style={{ borderRadius: 14, overflow: "hidden", boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)", marginBottom: 28 }}>
+                <div style={{ overflow: "hidden", boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)", marginBottom: 28 }}>
                     <video src={s.video} autoPlay loop muted playsInline style={{ width: "100%", height: "auto", display: "block" }} />
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
@@ -238,7 +238,7 @@ function StrategyBlock({ s, phone }: { s: typeof STRATEGIES[number]; phone: bool
                 </div>
             </div>
 
-            <div style={{ borderRadius: 14, overflow: "hidden", boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)" }}>
+            <div style={{ overflow: "hidden", boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)" }}>
                 <video src={s.video} autoPlay loop muted playsInline style={{ width: "100%", height: "auto", display: "block" }} />
             </div>
         </div>
@@ -442,7 +442,7 @@ export default function AnthropologieProductDiscovery() {
                     {/* ════════ OVERVIEW ════════ */}
                     <section id="overview" style={{ scrollMarginTop: 80, paddingTop: phone ? 48 : 40 }}>
                         <FadeIn>
-                            <img src="/images/filter-comparison.webp" alt="Filter experience across Free People, Urban Outfitters, and Anthropologie" style={{ width: "100%", display: "block", borderRadius: 14 }} />
+                            <img src="/images/filter-comparison.webp" alt="Filter experience across Free People, Urban Outfitters, and Anthropologie" style={{ width: "100%", display: "block" }} />
                         </FadeIn>
 
                         <FadeIn delay={80}>
@@ -537,7 +537,7 @@ export default function AnthropologieProductDiscovery() {
                                     <React.Fragment key={i}>
                                         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                                             <div style={{
-                                                borderRadius: 10, overflow: "hidden",
+                                                overflow: "hidden",
                                                 border: `1px solid ${C.border}`,
                                             }}>
                                                 <img
@@ -661,7 +661,7 @@ export default function AnthropologieProductDiscovery() {
                                 </div>
                                 <div style={{ maxWidth: 300 }}>
                                     <div style={{
-                                        borderRadius: 12, overflow: "hidden",
+                                        overflow: "hidden",
                                         border: `1px solid ${C.border}`,
                                         backgroundColor: C.surface,
                                     }}>
@@ -749,7 +749,7 @@ export default function AnthropologieProductDiscovery() {
                                 <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, maxWidth: 520, marginBottom: 32 }}>
                                     The component was first designed as a white-label pattern before being adapted across individual brand experiences.
                                 </p>
-                                <div style={{ maxWidth: 400, borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
+                                <div style={{ maxWidth: 400, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
                                     <img src="/images/toggle-whitelabel.png" alt="White-label toggle component" style={{ width: "100%", height: "auto", display: "block" }} />
                                 </div>
                             </div>
@@ -775,7 +775,7 @@ export default function AnthropologieProductDiscovery() {
                                         { src: "/images/toggle-urbanoutfitters.png", label: "Urban Outfitters" },
                                         { src: "/images/toggle-freepeople.png", label: "Free People" },
                                     ].map((brand, i) => (
-                                        <div key={i} style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
+                                        <div key={i} style={{ overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
                                             <img src={brand.src} alt={`${brand.label} toggle states`} style={{ width: "100%", height: "auto", display: "block" }} />
                                             <div style={{ padding: "10px 14px", borderTop: `1px solid ${C.border}` }}>
                                                 <p style={{ fontFamily: INTER, fontSize: 12.5, fontWeight: 500, color: C.ink2, margin: 0, textAlign: "center" }}>{brand.label}</p>
@@ -820,10 +820,10 @@ export default function AnthropologieProductDiscovery() {
                                                 gap: 20,
                                                 alignItems: "start",
                                             }}>
-                                                <div style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.surface }}>
+                                                <div style={{ overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.surface }}>
                                                     <img src={state.desktop} alt={`${state.title} — desktop`} style={{ width: "100%", height: "auto", display: "block" }} />
                                                 </div>
-                                                <div style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.surface }}>
+                                                <div style={{ overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.surface }}>
                                                     <img src={state.mobile} alt={`${state.title} — mobile`} style={{ width: "100%", height: "auto", display: "block" }} />
                                                 </div>
                                             </div>

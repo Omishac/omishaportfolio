@@ -206,11 +206,11 @@ function Callout({ type, title, body }: {
     )
 }
 
-function FullImage({ src, alt, caption, radius = 14 }: { src: string; alt: string; caption?: string; radius?: number }) {
+function FullImage({ src, alt, caption }: { src: string; alt: string; caption?: string }) {
     return (
         <div style={{ margin: "56px 0" }}>
             <img src={src} alt={alt} style={{
-                width: "100%", height: "auto", display: "block", borderRadius: radius,
+                width: "100%", height: "auto", display: "block",
                 boxShadow: "0 4px 52px rgba(0,0,0,0.10)", maxWidth: "100%",
             }} />
             {caption && (
@@ -484,7 +484,7 @@ export default function RFNDCaseStudy() {
                         </FadeIn>
 
                         <FadeIn delay={120}>
-                            <FullImage src="/images/rfnd-hero.webp" alt="RFND — Reimagining Emotional E-Commerce" radius={16} />
+                            <FullImage src="/images/rfnd-hero.webp" alt="RFND — Reimagining Emotional E-Commerce" />
                         </FadeIn>
                     </section>
 
@@ -542,7 +542,7 @@ export default function RFNDCaseStudy() {
                         <FadeIn delay={80}>
                             <div style={{ maxWidth: 560, margin: "56px 0" }}>
                                 <img src="/images/rfnd-persona.webp" alt="RFND user persona" style={{
-                                    width: "100%", height: "auto", display: "block", borderRadius: 14,
+                                    width: "100%", height: "auto", display: "block",
                                     boxShadow: "0 4px 52px rgba(0,0,0,0.10)",
                                 }} />
                                 <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 400, fontSize: 13, color: C.ink3, textAlign: "center", margin: "16px 0 0", lineHeight: 1.6 }}>
@@ -585,7 +585,7 @@ export default function RFNDCaseStudy() {
                         <FadeIn delay={80}>
                             <div style={{ maxWidth: 560, margin: "56px 0" }}>
                                 <img src="/images/rfnd-moodboard.webp" alt="RFND moodboard" style={{
-                                    width: "100%", height: "auto", display: "block", borderRadius: 14,
+                                    width: "100%", height: "auto", display: "block",
                                     boxShadow: "0 4px 52px rgba(0,0,0,0.10)",
                                 }} />
                                 <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 400, fontSize: 13, color: C.ink3, textAlign: "center", margin: "16px 0 0", lineHeight: 1.6 }}>
@@ -710,7 +710,7 @@ export default function RFNDCaseStudy() {
                                     { src: "/images/rfnd-profile.webp", label: "Profile Screen", desc: "Proposed style hub — digital closet, style history, and preference memory across sessions" },
                                 ].map(({ src, label, desc }) => (
                                     <div key={label} style={{ flex: 1, display: "flex", flexDirection: "column", gap: 16 }}>
-                                        <img src={src} alt={label} style={{ width: "100%", height: "auto", display: "block", borderRadius: 14, boxShadow: "0 4px 52px rgba(0,0,0,0.10)", maxWidth: "100%" }} />
+                                        <img src={src} alt={label} style={{ width: "100%", height: "auto", display: "block", boxShadow: "0 4px 52px rgba(0,0,0,0.10)", maxWidth: "100%" }} />
                                         <div>
                                             <p style={{ fontFamily: INTER, fontWeight: 700, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: C.ink, margin: "0 0 5px" }}>{label}</p>
                                             <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 400, fontSize: 13, color: C.ink3, margin: 0, lineHeight: 1.55 }}>{desc}</p>

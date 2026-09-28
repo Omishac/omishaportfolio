@@ -359,7 +359,6 @@ function TrendCard({
                         width: "100%",
                         height: "auto",
                         display: "block",
-                        borderRadius: 8,
                         marginBottom: 14,
                         maxWidth: "100%",
                     }}
@@ -778,7 +777,6 @@ function RecRow({ num, title, body, detail, img, clip, open, onClick, phone }: a
                     </p>
                     {img && (
                         <div style={{
-                            borderRadius: 10,
                             overflow: "hidden",
                             lineHeight: 0,
                             height: phone ? "220px" : "460px",
@@ -1519,7 +1517,6 @@ export default function AnthropologieCaseStudy() {
                         ] as { src: string; alt: string; caption: string; clip: boolean; size: number }[]).map(({ src, alt, caption, clip, size }) => (
                             <div key={caption} style={{ flex: phone ? "unset" : size, display: "flex", flexDirection: "column", gap: "10px" }}>
                                 <div style={{
-                                    borderRadius: 10,
                                     overflow: "hidden",
                                     lineHeight: 0,
                                     height: phone ? "200px" : "280px",
@@ -1592,7 +1589,6 @@ export default function AnthropologieCaseStudy() {
                                 width: "100%",
                                 height: "auto",
                                 display: "block",
-                                borderRadius: 14,
                                 boxShadow: "0 4px 32px rgba(0,0,0,0.09)",
                                 maxWidth: "100%",
                             }}
@@ -1630,7 +1626,6 @@ export default function AnthropologieCaseStudy() {
                                 width: "100%",
                                 height: "auto",
                                 display: "block",
-                                borderRadius: 14,
                                 boxShadow: "0 4px 32px rgba(0,0,0,0.09)",
                                 maxWidth: "100%",
                             }}
@@ -1682,7 +1677,7 @@ export default function AnthropologieCaseStudy() {
                             { src: "/slides/v1.png",      alt: "V1: New Layout",   lbl: "V1: New Layout" },
                         ].map(({ src, alt, lbl }) => (
                             <div key={lbl} style={{ flex: 1 }}>
-                                <img src={src} alt={alt} style={{ width: "100%", height: phone ? "auto" : "250px", objectFit: "contain", objectPosition: "top", display: "block", borderRadius: 10, maxWidth: "100%" }} />
+                                <img src={src} alt={alt} style={{ width: "100%", height: phone ? "auto" : "250px", objectFit: "contain", objectPosition: "top", display: "block", maxWidth: "100%" }} />
                             </div>
                         ))}
                     </div>
@@ -1705,7 +1700,7 @@ export default function AnthropologieCaseStudy() {
                             { src: "/slides/slider.png", alt: "Slider variant",  lbl: "Slider"  },
                         ].map(({ src, alt, lbl }) => (
                             <div key={lbl} style={{ flex: 1 }}>
-                                <img src={src} alt={alt} style={{ width: "100%", height: phone ? "auto" : "250px", objectFit: "contain", objectPosition: "top", display: "block", borderRadius: 10, maxWidth: "100%" }} />
+                                <img src={src} alt={alt} style={{ width: "100%", height: phone ? "auto" : "250px", objectFit: "contain", objectPosition: "top", display: "block", maxWidth: "100%" }} />
                             </div>
                         ))}
                     </div>
