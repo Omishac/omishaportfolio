@@ -38,6 +38,12 @@ const EASE_OUT    = "cubic-bezier(0.23,1,0.32,1)"
 - Entrance: flyer fade + translateY/rotate settle (EASE_SPRING), CTA fades in after; off under reduced motion
 - Tear-off tabs: each tab is its own clipped copy of the paper (`TABS` + `tabGeometry`), styles in `FLYER_TAB_STYLES`. Hover/focus/touch = peel + curl at a hinge + flutter + shadow; click on a tab with `href` = rip, float offscreen, then navigate (mailto tabs return in place; bfcache restore resets). Tabs carry no transforms at rest (`data-live` toggles them) to avoid a hairline seam. Reduced motion: no transforms, click navigates immediately
 
+## Footer game (`FooterGame`, Figma 129:226)
+- "clear your head" paper toss between ExploreSection and Footer, warm paper bg `#F5F0E8`; Footer row shares the bg with a top border as the floor
+- Assets in `public/footer-game/` (pile = decorative, ball = interactive, can drawn twice: back layer + `CAN_FRONT_CLIP` front layer so a scored ball drops behind the rim)
+- Flow: note → "Crumple it" → pull back & release (pointer events, mouse/touch) → `tossStep` physics → scored / missed. "Toss it for me" = keyboard throw. Geometry measured from live rects at throw time; `CAN` fractions come from the can art
+- Reduced motion: no crumple/flight animation, throw resolves instantly with the same physics
+
 ## Keyframes (in CURSOR_STYLES string at top of page.tsx)
 - `illust-float` — 5px vertical float, 5.5s cycle
 - `clip-in` — horizontal wipe reveal

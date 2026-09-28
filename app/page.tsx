@@ -1728,7 +1728,8 @@ function Footer({
                 width: "100%",
                 padding: `${phone ? 24 : 32}px ${px}px`,
                 boxSizing: "border-box",
-                backgroundColor: C.bg,
+                backgroundColor: GAME_BG,
+                borderTop: "1px solid rgba(60,40,20,0.14)",
             }}
         >
             <div
@@ -2210,6 +2211,526 @@ function ExploreSection({
     )
 }
 
+// ── Footer paper-toss game ──────────────────────────────────────────────────
+// Write a thought, crumple it into the paper ball, then pull back and release
+// to toss it into the can. Aiming and hit detection use the measured on-screen
+// positions of the ball and can at throw time, so they follow any layout.
+const GAME_BG = "#F5F0E8"
+const GAME_PINK = "#D33361"
+
+// Transparent space under each asset, as a fraction of its height, so the
+// visible paper/can sits on the floor line.
+const PILE_FOOT = 79 / 1024
+const BALL_FOOT = 71 / 1203
+const CAN_FOOT = 91 / 1254
+const BALL_ASPECT = 1203 / 1308
+const BALL_R = 0.41 // visible radius, as a fraction of the ball box width
+
+// Trash can geometry, as fractions of the (square) can image, measured from the art.
+const CAN = {
+    openL: 0.2, openR: 0.8,       // inside of the opening
+    rimL: 0.167, rimR: 0.833,     // outer edge of the rim
+    rimY: 0.205,                  // mid-line of the opening
+    frontY: 0.25,                 // lowest point of the front rim's inner edge
+    bodyL: 0.19, bodyR: 0.81,
+}
+// The can drawn again on top of the ball, minus the opening, so a ball that
+// goes in drops behind the front rim.
+const CAN_FRONT_CLIP = "polygon(0% 19.1%, 19.1% 19.4%, 20.7% 20.3%, 27.9% 22.6%, 35.9% 24.1%, 50% 25%, 63.8% 24.6%, 71.8% 23.1%, 78.9% 20.7%, 80.9% 19.5%, 100% 19.1%, 100% 100%, 0% 100%)"
+
+type GamePhase = "writing" | "crumpling" | "ready" | "aiming" | "flying" | "scored" | "missed"
+type Vec = { x: number; y: number }
+type TossWorld = {
+    W: number; floorY: number; r: number; g: number
+    openL: number; openR: number; rimL: number; rimR: number; rimY: number; sinkY: number
+    bodyL: number; bodyR: number; canCx: number
+}
+type TossState = { x: number; y: number; vx: number; vy: number; angle: number; inside: boolean; t: number; done: null | "scored" | "missed" }
+
+const TOSS_DT = 1 / 120
+
+// One fixed physics step. Shared by the animated throw and the reduced-motion
+// instant throw so both land the same way.
+function tossStep(s: TossState, w: TossWorld) {
+    const prevY = s.y
+    s.t += TOSS_DT
+    s.vy += w.g * TOSS_DT
+    s.x += s.vx * TOSS_DT
+    s.y += s.vy * TOSS_DT
+    s.angle += (s.vx * TOSS_DT * 180) / (Math.PI * w.r)
+
+    if (s.inside) {
+        s.x = Math.min(Math.max(s.x, w.openL + w.r * 0.2), w.openR - w.r * 0.2)
+        if (s.y >= w.sinkY) { s.y = w.sinkY; s.done = "scored" }
+        return
+    }
+
+    // Crossing the opening on the way down
+    if (prevY < w.rimY && s.y >= w.rimY && s.vy > 0) {
+        if (s.x > w.openL + w.r * 0.35 && s.x < w.openR - w.r * 0.35) {
+            s.inside = true
+            s.vx *= 0.25
+            return
+        }
+        if (s.x > w.rimL - w.r * 0.6 && s.x < w.rimR + w.r * 0.6) {
+            // Clipped the rim: pop up and away from the can
+            s.y = w.rimY - 0.5
+            s.vy = -Math.abs(s.vy) * 0.35
+            s.vx = (s.x < w.canCx ? -1 : 1) * Math.max(Math.abs(s.vx) * 0.5, 70)
+        }
+    }
+    // Side of the can
+    if (s.y > w.rimY && s.x + w.r > w.bodyL && s.x - w.r < w.bodyR) {
+        if (s.x < w.canCx) { s.x = w.bodyL - w.r; s.vx = -Math.abs(s.vx) * 0.3 }
+        else { s.x = w.bodyR + w.r; s.vx = Math.abs(s.vx) * 0.3 }
+    }
+    // Edges of the play area
+    if (s.x < w.r) { s.x = w.r; s.vx = Math.abs(s.vx) * 0.4 }
+    if (s.x > w.W - w.r) { s.x = w.W - w.r; s.vx = -Math.abs(s.vx) * 0.4 }
+    // Floor: a low bounce, then roll to a stop
+    if (s.y >= w.floorY) {
+        s.y = w.floorY
+        if (s.vy > 140) { s.vy = -s.vy * 0.32; s.vx *= 0.7 }
+        else { s.vy = 0; s.vx *= 1 - 3.2 * TOSS_DT }
+        if (s.vy === 0 && Math.abs(s.vx) < 8) s.done = "missed"
+    }
+    if (s.t > 6) s.done = "missed"
+}
+
+const shortThought = (t: string) => (t.length > 34 ? `${t.slice(0, 32).trimEnd()}…` : t)
+
+const GAME_STYLES = `
+.toss-btn {
+    font-family: ${I};
+    font-size: 12.5px;
+    line-height: 1;
+    padding: 9px 15px;
+    border-radius: 999px;
+    border: 1px solid rgba(17,17,17,0.18);
+    background: transparent;
+    color: ${C.ink};
+    cursor: pointer;
+    transition: background-color 0.2s ${EASE_OUT}, border-color 0.2s ${EASE_OUT}, transform 0.15s ${EASE_OUT};
+    -webkit-tap-highlight-color: transparent;
+}
+.toss-btn:hover { background: rgba(17,17,17,0.04); border-color: rgba(17,17,17,0.3); }
+.toss-btn:active { transform: translateY(1px); }
+.toss-btn--primary { background: ${GAME_PINK}; border-color: ${GAME_PINK}; color: #FFFFFF; }
+.toss-btn--primary:hover { background: #BE2B55; border-color: #BE2B55; }
+.toss-btn:focus-visible, .toss-input:focus-visible { outline: 1.5px dashed ${GAME_PINK}; outline-offset: 3px; }
+.toss-input::placeholder { color: ${C.muted}; }
+.toss-ball { cursor: grab; touch-action: none; }
+.toss-ball[data-dragging] { cursor: grabbing; }
+@media (prefers-reduced-motion: reduce) {
+    .toss-btn { transition: none; }
+    .toss-btn:active { transform: none; }
+}
+`
+
+function FooterGame({
+    phone,
+    tablet,
+    px,
+    maxW,
+}: {
+    phone: boolean
+    tablet: boolean
+    px: number
+    maxW: number
+}) {
+    const [phase, setPhase] = useState<GamePhase>("writing")
+    const [thought, setThought] = useState("")
+    const [aim, setAim] = useState<{ from: Vec; pull: Vec; dots: Vec[] } | null>(null)
+    const reducedMotion = useReducedMotion()
+
+    const areaRef = useRef<HTMLDivElement>(null)
+    const ballRef = useRef<HTMLDivElement>(null)
+    const canRef = useRef<HTMLDivElement>(null)
+    const noteRef = useRef<HTMLFormElement>(null)
+    const actionRef = useRef<HTMLButtonElement>(null)
+    const inputRef = useRef<HTMLInputElement>(null)
+    const focusInputNext = useRef(false)
+    const drag = useRef<{ id: number; rest: Vec; world: TossWorld; power: number; maxPull: number; pull: Vec } | null>(null)
+    const raf = useRef(0)
+
+    const playH = phone ? 214 : tablet ? 250 : 270
+    const pileW = phone ? 118 : tablet ? 160 : 190
+    const ballS = phone ? 44 : tablet ? 54 : 60
+    const canW = phone ? 104 : tablet ? 132 : 150
+    const noteW = phone ? 236 : 240
+
+    // Measure the world from the live layout (relative to the play area).
+    const measure = (): { world: TossWorld; rest: Vec } | null => {
+        const area = areaRef.current, ball = ballRef.current, can = canRef.current
+        if (!area || !ball || !can) return null
+        const a = area.getBoundingClientRect()
+        const b = ball.getBoundingClientRect()
+        const c = can.getBoundingClientRect()
+        const rest = { x: b.left - a.left + b.width / 2, y: b.top - a.top + b.height * 0.511 }
+        const cx = (f: number) => c.left - a.left + c.width * f
+        const cy = (f: number) => c.top - a.top + c.height * f
+        const r = b.width * BALL_R
+        return {
+            rest,
+            world: {
+                W: a.width, floorY: rest.y, r, g: playH * 5.5,
+                openL: cx(CAN.openL), openR: cx(CAN.openR), rimL: cx(CAN.rimL), rimR: cx(CAN.rimR),
+                rimY: cy(CAN.rimY), sinkY: cy(CAN.frontY) + r * 1.15,
+                bodyL: cx(CAN.bodyL), bodyR: cx(CAN.bodyR), canCx: cx(0.5),
+            },
+        }
+    }
+
+    const setBall = (dx: number, dy: number, angle = 0, inside = false) => {
+        const el = ballRef.current
+        if (!el) return
+        el.style.transform = dx || dy || angle ? `translate(${dx}px, ${dy}px) rotate(${angle}deg)` : ""
+        el.style.zIndex = inside ? "2" : "4"
+    }
+
+    const resetBall = () => {
+        cancelAnimationFrame(raf.current)
+        setBall(0, 0)
+        if (ballRef.current) ballRef.current.style.visibility = ""
+    }
+
+    useEffect(() => () => cancelAnimationFrame(raf.current), [])
+
+    // If the layout changes while the ball is resting somewhere, put it back in
+    // its spot (positions are re-measured at the next throw anyway).
+    useEffect(() => {
+        const area = areaRef.current
+        if (!area) return
+        let lastW = area.getBoundingClientRect().width
+        const ro = new ResizeObserver(([e]) => {
+            if (Math.abs(e.contentRect.width - lastW) < 1) return
+            lastW = e.contentRect.width
+            if (phase === "missed" || phase === "ready") setBall(0, 0)
+        })
+        ro.observe(area)
+        return () => ro.disconnect()
+    }, [phase])
+
+    // Keep keyboard focus somewhere sensible as the controls change.
+    useEffect(() => {
+        if (phase === "ready" || phase === "scored" || phase === "missed") actionRef.current?.focus({ preventScroll: true })
+        if (phase === "writing" && focusInputNext.current) {
+            focusInputNext.current = false
+            inputRef.current?.focus({ preventScroll: true })
+        }
+    }, [phase])
+
+    const throwBall = (world: TossWorld, start: Vec, rest: Vec, v: Vec) => {
+        const s: TossState = { x: start.x, y: start.y, vx: v.x, vy: v.y, angle: 0, inside: false, t: 0, done: null }
+        const finish = (outcome: "scored" | "missed") => {
+            setBall(s.x - rest.x, s.y - rest.y, s.angle, s.inside)
+            if (outcome === "scored" && ballRef.current) ballRef.current.style.visibility = "hidden"
+            setPhase(outcome)
+        }
+        if (reducedMotion) {
+            while (!s.done) tossStep(s, world)
+            finish(s.done)
+            return
+        }
+        setPhase("flying")
+        let last = performance.now()
+        let acc = 0
+        const frame = (now: number) => {
+            acc += Math.min(0.05, (now - last) / 1000)
+            last = now
+            while (acc >= TOSS_DT && !s.done) { tossStep(s, world); acc -= TOSS_DT }
+            setBall(s.x - rest.x, s.y - rest.y, s.angle, s.inside)
+            if (s.done) { finish(s.done); return }
+            raf.current = requestAnimationFrame(frame)
+        }
+        raf.current = requestAnimationFrame(frame)
+    }
+
+    // ── Crumple ──
+    const crumple = (e: React.FormEvent) => {
+        e.preventDefault()
+        if (phase !== "writing") return
+        const note = noteRef.current, ball = ballRef.current
+        if (reducedMotion || !note || !ball) { setPhase("ready"); return }
+        setPhase("crumpling")
+        const n = note.getBoundingClientRect()
+        const b = ball.getBoundingClientRect()
+        const dx = b.left + b.width / 2 - (n.left + n.width / 2)
+        const dy = b.top + b.height / 2 - (n.top + n.height / 2)
+        note.animate([
+            { transform: "rotate(-1.2deg)", borderRadius: "2px", opacity: 1 },
+            { transform: "rotate(3deg) scale(0.8, 0.66)", borderRadius: "22%", opacity: 1, offset: 0.35 },
+            { transform: `translate(${dx}px, ${dy}px) rotate(-32deg) scale(0.14)`, borderRadius: "50%", opacity: 0 },
+        ], { duration: 560, easing: "cubic-bezier(0.5, 0, 0.75, 0.4)", fill: "forwards" })
+        ball.animate([
+            { opacity: 0, transform: "scale(0.45) rotate(-50deg)" },
+            { opacity: 1, transform: "scale(1) rotate(0deg)" },
+        ], { duration: 300, delay: 400, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "backwards" })
+            .finished.then(() => setPhase("ready")).catch(() => setPhase("ready"))
+    }
+
+    // ── Pull back and release ──
+    const predict = (world: TossWorld, start: Vec, v: Vec) => {
+        const s: TossState = { x: start.x, y: start.y, vx: v.x, vy: v.y, angle: 0, inside: false, t: 0, done: null }
+        const dots: Vec[] = []
+        for (let i = 1; i <= 42 && !s.done; i++) {
+            tossStep(s, world)
+            if (i % 6 === 0) dots.push({ x: s.x, y: s.y })
+        }
+        return dots
+    }
+
+    const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+        if (phase !== "ready" || !e.isPrimary) return
+        const m = measure()
+        if (!m) return
+        e.preventDefault()
+        e.currentTarget.setPointerCapture(e.pointerId)
+        e.currentTarget.dataset.dragging = ""
+        const maxPull = Math.min(120, playH * 0.44)
+        // Scale launch power to the real distance, so a full pull can clear the can.
+        const reach = Math.max(120, (m.world.canCx - m.rest.x) * 1.9)
+        const power = Math.sqrt(reach * m.world.g) / maxPull
+        drag.current = { id: e.pointerId, rest: m.rest, world: m.world, power, maxPull, pull: { x: 0, y: 0 } }
+        setPhase("aiming")
+    }
+
+    const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+        const d = drag.current
+        if (!d || e.pointerId !== d.id) return
+        const a = areaRef.current!.getBoundingClientRect()
+        const p = { x: e.clientX - a.left, y: e.clientY - a.top }
+        let px_ = d.rest.x - p.x
+        let py = d.rest.y - p.y
+        const len = Math.hypot(px_, py)
+        if (len > d.maxPull) { px_ *= d.maxPull / len; py *= d.maxPull / len }
+        d.pull = { x: px_, y: py }
+        // The ball gives a little toward your finger (never below the floor).
+        const off = { x: -px_ * 0.22, y: Math.min(0, -py * 0.22) }
+        setBall(off.x, off.y)
+        const start = { x: d.rest.x + off.x, y: d.rest.y + off.y }
+        setAim({ from: start, pull: { x: start.x - px_ * 0.6, y: start.y - py * 0.6 }, dots: len > 12 ? predict(d.world, start, { x: px_ * d.power, y: py * d.power }) : [] })
+    }
+
+    const endDrag = (e: React.PointerEvent<HTMLDivElement>, cancelled: boolean) => {
+        const d = drag.current
+        if (!d || e.pointerId !== d.id) return
+        drag.current = null
+        delete e.currentTarget.dataset.dragging
+        setAim(null)
+        if (cancelled || Math.hypot(d.pull.x, d.pull.y) < 12) { setBall(0, 0); setPhase("ready"); return }
+        const off = { x: -d.pull.x * 0.22, y: Math.min(0, -d.pull.y * 0.22) }
+        throwBall(d.world, { x: d.rest.x + off.x, y: d.rest.y + off.y }, d.rest, { x: d.pull.x * d.power, y: d.pull.y * d.power })
+    }
+
+    // ── Keyboard / no-drag throw: a clean shot at the can ──
+    const autoToss = () => {
+        if (phase !== "ready") return
+        const m = measure()
+        if (!m) return
+        const { world, rest } = m
+        const target = { x: world.canCx, y: world.rimY - 1 }
+        const T = Math.min(1, Math.max(0.6, 0.55 + (target.x - rest.x) / 1400))
+        throwBall(world, rest, rest, {
+            x: (target.x - rest.x) / T,
+            y: (target.y - rest.y - 0.5 * world.g * T * T) / T,
+        })
+    }
+
+    const tryAgain = () => { resetBall(); setPhase("ready") }
+    const writeAnother = () => { resetBall(); setThought(""); focusInputNext.current = true; setPhase("writing") }
+
+    const t = shortThought(thought.trim())
+    const status: { text: string; sub?: string; action?: { label: string; onClick: () => void } } | null =
+        phase === "ready" ? { text: "Pull the ball back, aim, and let go.", action: { label: "Toss it for me", onClick: autoToss } }
+        : phase === "aiming" ? { text: "Aim for the can, then let go." }
+        : phase === "flying" ? { text: " " }
+        : phase === "scored" ? { text: t ? `“${t}”, binned.` : "Nothing but bin.", sub: "Feel lighter?", action: { label: "Write another", onClick: writeAnother } }
+        : phase === "missed" ? { text: "So close.", action: { label: "Try again", onClick: tryAgain } }
+        : null
+
+    const pileH = pileW * (1024 / 1536)
+    const ballH = ballS * BALL_ASPECT
+
+    return (
+        <section
+            aria-labelledby="toss-heading"
+            style={{
+                width: "100%",
+                backgroundColor: GAME_BG,
+                padding: `${phone ? 40 : 56}px ${px}px 0`,
+                boxSizing: "border-box",
+                overflow: "hidden",
+            }}
+        >
+            <style dangerouslySetInnerHTML={{ __html: GAME_STYLES }} />
+            <div style={{ maxWidth: Math.min(maxW, 780), width: "100%", margin: "0 auto" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
+                    <span style={{ fontFamily: I, fontSize: 12, color: C.muted }}>[</span>
+                    <span style={{ fontFamily: I, fontWeight: 300, fontSize: 12, color: C.ink, letterSpacing: "-0.01em" }}>before you go</span>
+                    <span style={{ fontFamily: I, fontSize: 12, color: C.muted }}>]</span>
+                </div>
+                <h2 id="toss-heading" style={{ fontFamily: I, fontWeight: 200, fontSize: phone ? 24 : 30, lineHeight: 1.1, letterSpacing: "-0.02em", color: C.ink, margin: 0 }}>
+                    clear your head
+                </h2>
+                <p style={{ fontFamily: I, fontSize: 13, lineHeight: 1.55, color: C.ink3, margin: "8px 0 0", maxWidth: 420 }}>
+                    Write down what&rsquo;s on your mind, crumple it, then pull the ball back and let go to toss it in the can.
+                </p>
+
+                <div
+                    ref={areaRef}
+                    role="group"
+                    aria-label="Paper toss"
+                    style={{ position: "relative", height: playH, marginTop: phone ? 20 : 28 }}
+                >
+                    {/* Decorative pile */}
+                    <img src="/footer-game/paper-pile.png" alt="" aria-hidden="true" draggable={false}
+                        style={{ position: "absolute", left: phone ? -10 : -16, bottom: -pileH * PILE_FOOT, width: pileW, height: pileH, zIndex: 1, userSelect: "none" }} />
+
+                    {/* Can: back layer, then (after the ball) the front rim/body */}
+                    <div ref={canRef} aria-hidden="true"
+                        style={{ position: "absolute", right: phone ? 0 : "4%", bottom: -canW * CAN_FOOT, width: canW, height: canW, zIndex: 1 }}>
+                        <img src="/footer-game/trash-can.png" alt="" draggable={false} style={{ width: "100%", height: "100%", display: "block", userSelect: "none" }} />
+                    </div>
+
+                    {/* The one interactive ball */}
+                    <div
+                        ref={ballRef}
+                        className="toss-ball"
+                        aria-hidden="true"
+                        onPointerDown={onPointerDown}
+                        onPointerMove={onPointerMove}
+                        onPointerUp={(e) => endDrag(e, false)}
+                        onPointerCancel={(e) => endDrag(e, true)}
+                        style={{
+                            position: "absolute",
+                            left: pileW * (phone ? 0.84 : 0.86),
+                            bottom: -ballH * BALL_FOOT,
+                            width: ballS,
+                            height: ballH,
+                            zIndex: 4,
+                            visibility: phase === "writing" ? "hidden" : "visible",
+                            willChange: "transform",
+                        }}
+                    >
+                        {/* larger, invisible grab area */}
+                        <span style={{ position: "absolute", inset: -16, borderRadius: "50%" }} />
+                        <img src="/footer-game/paper-ball.png" alt="" draggable={false}
+                            style={{ position: "relative", width: "100%", height: "100%", display: "block", userSelect: "none", pointerEvents: "none" }} />
+                    </div>
+
+                    <div aria-hidden="true"
+                        style={{ position: "absolute", right: phone ? 0 : "4%", bottom: -canW * CAN_FOOT, width: canW, height: canW, zIndex: 3, clipPath: CAN_FRONT_CLIP, pointerEvents: "none" }}>
+                        <img src="/footer-game/trash-can.png" alt="" draggable={false} style={{ width: "100%", height: "100%", display: "block" }} />
+                    </div>
+
+                    {/* Aiming cue */}
+                    {aim && (
+                        <svg aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", overflow: "visible", pointerEvents: "none", zIndex: 5 }}>
+                            <line x1={aim.from.x} y1={aim.from.y} x2={aim.pull.x} y2={aim.pull.y}
+                                stroke="rgba(17,17,17,0.28)" strokeWidth={1.2} strokeDasharray="3 4" strokeLinecap="round" />
+                            {aim.dots.map((d, i) => (
+                                <circle key={i} cx={d.x} cy={d.y} r={Math.max(1.4, 3 - i * 0.25)} fill={GAME_PINK} opacity={0.55 - i * 0.06} />
+                            ))}
+                        </svg>
+                    )}
+
+                    {/* Note */}
+                    {(phase === "writing" || phase === "crumpling") && (
+                        <form
+                            ref={noteRef}
+                            onSubmit={crumple}
+                            style={{
+                                position: "absolute",
+                                top: 0,
+                                left: phone ? 0 : 8,
+                                width: noteW,
+                                maxWidth: "100%",
+                                boxSizing: "border-box",
+                                padding: "14px 14px 12px",
+                                backgroundColor: "#FFFDF8",
+                                borderRadius: 2,
+                                boxShadow: "0 10px 22px -14px rgba(60,40,20,0.35), 0 1px 2px rgba(60,40,20,0.08)",
+                                transform: "rotate(-1.2deg)",
+                                zIndex: 6,
+                            }}
+                        >
+                            <label htmlFor="toss-thought" style={{ display: "block", fontFamily: NAV_Z, fontSize: phone ? 15 : 16, color: C.ink }}>
+                                Something on your mind?
+                            </label>
+                            <input
+                                id="toss-thought"
+                                ref={inputRef}
+                                className="toss-input"
+                                value={thought}
+                                onChange={(e) => setThought(e.target.value)}
+                                maxLength={60}
+                                autoComplete="off"
+                                placeholder="a worry, a to-do, a bad idea…"
+                                disabled={phase !== "writing"}
+                                style={{
+                                    display: "block",
+                                    width: "100%",
+                                    boxSizing: "border-box",
+                                    margin: "8px 0 12px",
+                                    padding: "6px 0",
+                                    border: "none",
+                                    borderBottom: "1px dashed rgba(17,17,17,0.25)",
+                                    background: "transparent",
+                                    fontFamily: I,
+                                    fontWeight: 300,
+                                    fontSize: 14,
+                                    color: C.ink,
+                                    outline: "none",
+                                }}
+                            />
+                            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                                <button type="submit" className="toss-btn toss-btn--primary" disabled={phase !== "writing"}>Crumple it</button>
+                            </div>
+                        </form>
+                    )}
+
+                    {/* Status + actions */}
+                    <div
+                        aria-live="polite"
+                        style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: 10,
+                            textAlign: "center",
+                            zIndex: 6,
+                            pointerEvents: "none",
+                            visibility: status ? "visible" : "hidden",
+                            // globals.css gives everything a 0.01ms transition under reduced
+                            // motion, which would keep this hidden for a frame and swallow focus
+                            transition: "none",
+                        }}
+                    >
+                        {status && (
+                            <>
+                                <p style={{ margin: 0, fontFamily: NAV_Z, fontSize: phone ? 16 : 18, color: C.ink, minHeight: "1.2em" }}>
+                                    {status.text}
+                                    {status.sub && <span style={{ display: "block", fontFamily: I, fontSize: 12.5, color: C.ink3, marginTop: 4 }}>{status.sub}</span>}
+                                </p>
+                                {status.action && (
+                                    <button ref={actionRef} type="button" className="toss-btn" onClick={status.action.onClick} style={{ pointerEvents: "auto" }}>
+                                        {status.action.label}
+                                    </button>
+                                )}
+                            </>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </section>
+    )
+}
+
 export default function ResponsiveHome() {
     const { ref, w, phone, tablet, desktop, large, px, maxW, sp } = useBP()
 
@@ -2232,6 +2753,7 @@ export default function ResponsiveHome() {
                 <LogoTicker phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
                 <SkillsSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
                 <ExploreSection phone={phone} px={px} maxW={maxW} />
+                <FooterGame phone={phone} tablet={tablet} px={px} maxW={maxW} />
                 <Footer phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} />
             </div>
         </>
