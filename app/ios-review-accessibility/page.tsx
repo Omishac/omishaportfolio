@@ -654,18 +654,6 @@ export default function IOSCaseStudy() {
                             </p>
                         </FadeIn>
 
-                        <FadeIn delay={60}>
-                            <div style={{ marginBottom: 48, marginTop: 56 }}>
-                                <span style={{ fontFamily: Z, fontSize: "clamp(56px,7vw,80px)", lineHeight: 0.8, color: C.accent, display: "block", marginBottom: 16, userSelect: "none" as const, opacity: 0.3 }}>&ldquo;</span>
-                                <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 400, fontSize: "clamp(28px,4vw,48px)", lineHeight: 1.25, color: C.ink, letterSpacing: "-0.03em", maxWidth: 720, marginBottom: 0 }}>
-                                    Accessibility isn't a feature you add at the end. It's a signal of how seriously a product takes its global users.
-                                </p>
-                            </div>
-                        </FadeIn>
-
-                        <FadeIn delay={100}>
-                            <div style={{ width: 40, height: 1, backgroundColor: C.accent, marginBottom: 32, opacity: 0.5 }} />
-                        </FadeIn>
                     </section>
 
                     {/* Back to work */}
