@@ -20,9 +20,9 @@ export default function SharedNav() {
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 12)
         const onResize = () => {
-            setPhone(window.innerWidth < 768)
-            setTablet(window.innerWidth >= 768 && window.innerWidth < 1024)
-            setLarge(window.innerWidth > 1440)
+            setPhone(document.documentElement.clientWidth < 768)
+            setTablet(document.documentElement.clientWidth >= 768 && document.documentElement.clientWidth < 1024)
+            setLarge(document.documentElement.clientWidth > 1440)
         }
         onResize()
         window.addEventListener("scroll", onScroll, { passive: true })

@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useRef, useEffect } from "react"
-import { NavStyles, NavLink, MenuLink, NAV_LINK_GAP } from "../../components/NavLinks"
+import SharedNav from "../../components/SharedNav"
 
 const Z = "Zodiak, 'Times New Roman', serif"
 const INTER = "Inter, system-ui, sans-serif"
@@ -334,80 +334,6 @@ function SideNav({ active }: { active: string }) {
     )
 }
 
-function CaseStudyNav() {
-    const [scrolled, setScrolled] = useState(false)
-    const [phone, setPhone] = useState(false)
-    const [menuOpen, setMenuOpen] = useState(false)
-    useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 12)
-        const onResize = () => setPhone(document.documentElement.clientWidth < 768)
-        onResize()
-        window.addEventListener("scroll", onScroll, { passive: true })
-        window.addEventListener("resize", onResize, { passive: true })
-        return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onResize) }
-    }, [])
-
-    const allLinks = [
-        { label: "Work", href: "/#work" },
-        { label: "Playground", href: "/playground" },
-        { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true },
-        { label: "Resume", href: "/slides/resume.pdf", ext: true },
-    ]
-
-    return (
-        <>
-            <NavStyles />
-            <nav style={{
-                position: "sticky", top: 0, zIndex: 100, width: "100%",
-                height: phone ? 54 : 64, display: "flex", alignItems: "center",
-                justifyContent: "space-between", padding: `0 ${phone ? 20 : 80}px`,
-                boxSizing: "border-box",
-                backgroundColor: scrolled ? "rgba(255,255,255,0.96)" : C.bg,
-                backdropFilter: scrolled ? "blur(20px)" : "none",
-                WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-                borderBottom: `1px solid ${scrolled ? "rgba(0,0,0,0.09)" : C.border}`,
-                transition: "background 0.25s, border-color 0.25s",
-            }}>
-                <a href="/" style={{ display: "block", lineHeight: 0 }}>
-                    <img src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png" alt="OC"
-                        style={{ width: phone ? 48 : 58, height: phone ? 48 : 58, objectFit: "contain", display: "block" }} />
-                </a>
-                {phone ? (
-                    <button onClick={() => setMenuOpen(true)}
-                        style={{ background: "none", border: "none", cursor: "pointer", padding: 8, display: "flex", flexDirection: "column", gap: 5, minHeight: 44, minWidth: 44, alignItems: "center", justifyContent: "center" }}
-                        aria-label="Open menu">
-                        <span style={{ width: 22, height: 2, backgroundColor: C.ink, borderRadius: 1, display: "block" }} />
-                        <span style={{ width: 22, height: 2, backgroundColor: C.ink, borderRadius: 1, display: "block" }} />
-                        <span style={{ width: 14, height: 2, backgroundColor: C.ink, borderRadius: 1, display: "block", alignSelf: "flex-end" }} />
-                    </button>
-                ) : (
-                    <div style={{ display: "flex", gap: NAV_LINK_GAP, alignItems: "center" }}>
-                        {allLinks.map(({ label, href, ext }) => (
-                            <NavLink key={label} label={label} href={href} ext={ext} />
-                        ))}
-                    </div>
-                )}
-            </nav>
-
-            {menuOpen && (
-                <div onClick={() => setMenuOpen(false)}
-                    style={{ position: "fixed", inset: 0, zIndex: 999, backgroundColor: "rgba(255,255,255,0.98)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", display: "flex", flexDirection: "column", padding: "24px 20px" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 48 }}>
-                        <img src="https://framerusercontent.com/images/vjGQl4Z6ipiOIUKzmXgJLezcKtI.png" alt="OC" style={{ width: 48, height: 48, objectFit: "contain" }} />
-                        <button onClick={() => setMenuOpen(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 24, color: C.ink, minHeight: 44, minWidth: 44, display: "flex", alignItems: "center", justifyContent: "center" }}>&times;</button>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                        {allLinks.map(({ label, href, ext }) => (
-                            <MenuLink key={label} label={label} href={href} ext={ext} onClick={() => setMenuOpen(false)}
-                                style={{ minHeight: 52, display: "flex", alignItems: "center", borderBottom: `1px solid ${C.border}`, padding: "12px 0" }} />
-                        ))}
-                    </div>
-                </div>
-            )}
-        </>
-    )
-}
-
 export default function RFNDCaseStudy() {
     const { phone, tablet, desktop } = useResponsive()
     const activeSection = useActiveSection(SECTIONS.map(s => s.id))
@@ -416,7 +342,7 @@ export default function RFNDCaseStudy() {
 
     return (
         <div style={{ width: "100%", backgroundColor: C.bg }}>
-            <CaseStudyNav />
+            <SharedNav />
 
             <div style={{
                 display: desktop ? "grid" : "block",

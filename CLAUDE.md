@@ -9,8 +9,8 @@ Next.js 14 App Router, TypeScript, inline styles (no Tailwind), "use client" com
 ## Key files
 - `app/page.tsx` — homepage only. All hero/section changes live here.
 - `components/site.tsx` — shared design language: tokens (FONT_SANS/FONT_SERIF, COLORS incl. `paper` #F4F2EF and `pink` #D33361, HOVER_COLORS, EASE_*), hooks (useReducedMotion, useFinePointer) and small pieces (HoverLetters, BracketTag, Squiggle). Homepage, NavLinks and the URBN filter case study import from here; don't redefine these values locally.
-- `components/NavLinks.tsx` — nav link styling shared by EVERY page's nav (homepage `HomeNav`, `SharedNav` on /playground, each case study's local `CaseStudyNav`). Change nav typography/states here so all pages stay in sync.
-- `components/SharedNav.tsx` — playground nav bar; don't change its bar/layout (links come from NavLinks).
+- `components/NavLinks.tsx` — nav link styling shared by EVERY page's nav (homepage `HomeNav` and `SharedNav`). Change nav typography/states here so all pages stay in sync.
+- `components/SharedNav.tsx` — the nav bar for the playground and all four case studies (same geometry as the homepage `HomeNav`: 64/54px tall, logo at page padding 20/40/80/120px, 14px links above 1440px). Change it here, not per page.
 - `app/globals.css` — global resets, easing tokens, keyframes.
 - `public/images/` — character SVGs: `image 8.svg`, `image 8-1.svg`, `image 9.svg`, `image 10.svg`
 
