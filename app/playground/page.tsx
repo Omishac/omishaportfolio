@@ -32,11 +32,13 @@ const VISUAL_IMAGES = [
     "/images/image-1783027241246.png",
 ]
 
-const MOTION_EMBEDS = [
-    "https://www.canva.com/design/DAHFL_7oX_Y/RMm3KsCaL30KVsZ6jOuKhw/watch?embed",
-    "https://www.canva.com/design/DAHEvJgim7M/DtchAXWYjHURuX8Vm3Xl1A/watch?embed",
-    "https://www.canva.com/design/DAHJZrqnmsE/6S17BE9bGV_u6BT_OdhVhA/watch?embed",
-]
+// Motion: lead with the finished, titled piece; the vertical clip gets a
+// portrait frame instead of being pillarboxed inside 16:9.
+const MOTION = {
+    feature: { src: "https://www.canva.com/design/DAHJZrqnmsE/6S17BE9bGV_u6BT_OdhVhA/watch?embed", title: "Kolkata Food Crawl" },
+    skyline: { src: "https://www.canva.com/design/DAHFL_7oX_Y/RMm3KsCaL30KVsZ6jOuKhw/watch?embed", title: "City skyline from the road" },
+    vertical: { src: "https://www.canva.com/design/DAHEvJgim7M/DtchAXWYjHURuX8Vm3Xl1A/watch?embed", title: "Vertical video edit" },
+}
 
 const PROJECTS_EMBEDS = [
     "https://www.canva.com/design/DAG74qzfc1A/ndx1i9o6UMKSdNRT-e1r2g/view?embed",
@@ -202,12 +204,13 @@ function PhotoCard({ src, aspectRatio = "3/2" }: { src: string; aspectRatio?: st
     )
 }
 
-function EmbedFrame({ src, aspect = "16/9" }: { src: string; aspect?: string }) {
+function EmbedFrame({ src, aspect = "16/9", fill = false, title }: { src: string; aspect?: string; fill?: boolean; title?: string }) {
     return (
         <div
             style={{
                 width: "100%",
-                aspectRatio: aspect,
+                // fill: take the height of the grid area instead of a fixed ratio
+                ...(fill ? { height: "100%" } : { aspectRatio: aspect }),
                 overflow: "hidden",
                 backgroundColor: T.surface,
                 position: "relative" as const,
@@ -216,6 +219,7 @@ function EmbedFrame({ src, aspect = "16/9" }: { src: string; aspect?: string }) 
             <iframe
                 loading="lazy"
                 src={src}
+                title={title}
                 style={{
                     position: "absolute" as const,
                     width: "100%",
@@ -354,10 +358,27 @@ export default function PlaygroundPage() {
                 {/* [03] Motion */}
                 <div id="motion" style={{ scrollMarginTop: 80, paddingTop: 72, marginBottom: 80 }}>
                     <SectionHeader {...SECTIONS[2]} />
-                    <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "1fr 1fr 1fr", gap: 14 }}>
-                        {MOTION_EMBEDS.map((src, i) => (
-                            <EmbedFrame key={i} src={src} />
-                        ))}
+                    {/* Two 16:9 videos stacked on the left; the vertical clip spans both rows
+                        on the right. 1.55:1 columns keep it at about 9:16 at that height. */}
+                    <div style={{
+                        display: "grid",
+                        gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1.55fr) minmax(0, 1fr)",
+                        gap: 14,
+                    }}>
+                        <div style={{ gridColumn: phone ? undefined : 1, gridRow: phone ? undefined : 1 }}>
+                            <EmbedFrame src={MOTION.feature.src} title={MOTION.feature.title} />
+                        </div>
+                        <div style={{ gridColumn: phone ? undefined : 1, gridRow: phone ? undefined : 2 }}>
+                            <EmbedFrame src={MOTION.skyline.src} title={MOTION.skyline.title} />
+                        </div>
+                        <div style={{
+                            gridColumn: phone ? undefined : 2,
+                            gridRow: phone ? undefined : "1 / span 2",
+                            width: phone ? "min(100%, 280px)" : undefined,
+                            justifySelf: phone ? "center" : undefined,
+                        }}>
+                            <EmbedFrame src={MOTION.vertical.src} title={MOTION.vertical.title} aspect="9/16" fill={!phone} />
+                        </div>
                     </div>
                 </div>
 
