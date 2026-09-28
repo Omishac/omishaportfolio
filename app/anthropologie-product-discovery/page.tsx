@@ -2,12 +2,14 @@
 
 import React, { useState, useRef, useEffect } from "react"
 import { NavStyles, NavLink, MenuLink, NAV_LINK_GAP } from "../../components/NavLinks"
-import { FONT_SANS, FONT_SERIF, COLORS, EASE_SPRING, HOVER_COLORS, useReducedMotion, HoverLetters, BracketTag, Squiggle } from "../../components/site"
+import { FONT_SANS, FONT_SERIF, COLORS, EASE_SPRING, useReducedMotion, BracketTag } from "../../components/site"
 
-// Same tokens as the homepage (components/site.tsx)
+// Same tokens as the homepage (components/site.tsx). The case study keeps its
+// original olive as the single accent: quieter and more business-like.
 const Z = FONT_SERIF
 const INTER = FONT_SANS
 const C = COLORS
+const ACCENT = COLORS.olive
 
 const SECTIONS = [
     { id: "overview", label: "Overview" },
@@ -76,63 +78,33 @@ function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
     )
 }
 
-// ── Shared type ─────────────────────────────────────────────────────────────
+// ── Type ────────────────────────────────────────────────────────────────────
+// One scale for the whole page:
+//   H1 light 40–60 · H2 light 28–40 · H3 regular 22–26
+//   body 16/1.7 · small 13 · label 12 · caption 12.5
 
-// Section label: the homepage's "[ tag ]", lowercase.
-function Eyebrow({ children }: { children: React.ReactNode }) {
-    return <BracketTag style={{ marginBottom: 12 }}>{children}</BracketTag>
-}
-
-// Section title: light Inter like "inside my work", with the same hover letters.
-function H2({ children }: { children: string }) {
+function SectionHead({ tag, title, children }: { tag: string; title: string; children?: React.ReactNode }) {
     return (
-        <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 44px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.08, maxWidth: 760, margin: 0, marginBottom: 20 }}>
-            <HoverLetters text={children} />
-        </h2>
+        <div style={{ maxWidth: 640 }}>
+            <BracketTag style={{ marginBottom: 14 }}>{tag}</BracketTag>
+            <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.2vw, 40px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, margin: 0 }}>
+                {title}
+            </h2>
+            {children && <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, margin: 0, marginTop: 18 }}>{children}</p>}
+        </div>
     )
 }
 
-// Long-form body: a notch larger and darker than homepage captions so it's comfortable to read.
-function Lede({ children, max = 620 }: { children: React.ReactNode; max?: number }) {
-    return <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink2, maxWidth: max, margin: 0 }}>{children}</p>
+function Body({ children, max = 560, style }: { children: React.ReactNode; max?: number; style?: React.CSSProperties }) {
+    return <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink2, maxWidth: max, margin: 0, ...style }}>{children}</p>
 }
 
 function Label({ children }: { children: React.ReactNode }) {
-    return <p style={{ fontFamily: INTER, fontSize: 12, fontWeight: 300, color: C.muted, margin: 0, marginBottom: 8 }}>{children}</p>
+    return <p style={{ fontFamily: INTER, fontSize: 12, fontWeight: 300, color: C.muted, margin: 0, marginBottom: 10 }}>{children}</p>
 }
 
 function Caption({ children }: { children: React.ReactNode }) {
-    return <p style={{ fontFamily: INTER, fontSize: 12.5, lineHeight: 1.55, color: C.ink3, margin: 0, marginTop: 12 }}>{children}</p>
-}
-
-function Bullets({ items, size = 14.5 }: { items: string[]; size?: number }) {
-    return (
-        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-            {items.map((t, i) => (
-                <li key={i} style={{ display: "flex", gap: 12, fontFamily: INTER, fontSize: size, lineHeight: 1.6, color: C.ink2, marginBottom: i < items.length - 1 ? 8 : 0 }}>
-                    <span aria-hidden="true" style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: C.pink, flexShrink: 0, marginTop: "0.62em" }} />
-                    <span>{t}</span>
-                </li>
-            ))}
-        </ul>
-    )
-}
-
-// A numbered row with the homepage skills-list hover: a colored rule sweeps in.
-function Row({ num, children }: { num: string; children: React.ReactNode }) {
-    const [hov, setHov] = useState(false)
-    const [color, setColor] = useState(C.ink)
-    return (
-        <div
-            onMouseEnter={() => { setHov(true); setColor(HOVER_COLORS[Math.floor(Math.random() * HOVER_COLORS.length)]) }}
-            onMouseLeave={() => setHov(false)}
-            style={{ position: "relative", display: "flex", gap: 16, alignItems: "baseline", padding: "14px 0", borderBottom: `1px solid ${C.border}` }}
-        >
-            <span style={{ fontFamily: INTER, fontSize: 10, color: C.muted, letterSpacing: "0.06em", width: 20, flexShrink: 0 }}>{num}</span>
-            <span style={{ fontFamily: INTER, fontSize: 14.5, lineHeight: 1.55, color: hov ? C.ink : C.ink2, transition: "color 0.2s" }}>{children}</span>
-            <span aria-hidden="true" style={{ position: "absolute", left: 0, bottom: 0, height: 2, width: hov ? "100%" : "0%", backgroundColor: color, transition: `width 0.4s ${EASE_SPRING}, background-color 0.2s ease` }} />
-        </div>
-    )
+    return <p style={{ fontFamily: INTER, fontSize: 12.5, lineHeight: 1.55, color: C.muted, margin: 0, marginTop: 14 }}>{children}</p>
 }
 
 // Homepage image treatment: square corners, no border, paper mat behind.
@@ -141,58 +113,57 @@ const FRAME: React.CSSProperties = { overflow: "hidden", backgroundColor: C.pape
 // ── Content ─────────────────────────────────────────────────────────────────
 
 const OLD_FLOW = [
-    { num: "01", title: "Open the drawer", caption: "Start from the full list of filter categories.", src: "/images/Sort%20Modal.png" },
-    { num: "02", title: "Pick values", caption: "Open a category, then choose its options.", src: "/images/Sort%20Modal-1.png" },
-    { num: "03", title: "Confirm and go back", caption: "Return to the list to see what changed.", src: "/images/Sort%20Modal%202.png" },
-    { num: "04", title: "Repeat", caption: "Do the whole loop again for the next filter.", src: "/images/Sort%20Modal-2.png" },
+    { num: "01", title: "Open the drawer", src: "/images/Sort%20Modal.png" },
+    { num: "02", title: "Pick values", src: "/images/Sort%20Modal-1.png" },
+    { num: "03", title: "Confirm and go back", src: "/images/Sort%20Modal%202.png" },
+    { num: "04", title: "Repeat for the next filter", src: "/images/Sort%20Modal-2.png" },
 ]
 
-// Each finding from testing sits next to the change it led to.
+// Each testing finding sits next to the change it led to.
 const DECISIONS = [
     {
         num: "01",
         title: "Show what’s selected",
         saw: "After making a selection, shoppers couldn’t tell which filters were active.",
         quote: "I can’t tell if that filter actually applied?",
-        changes: ["Checkboxes on every option", "A stronger selected state", "Active refinements repositioned"],
+        change: "I added checkboxes to every option, strengthened the selected state and repositioned active refinements.",
         video: "/videos/strategy-01-selections.mp4",
-        caption: "Checkboxes and a stronger selected state make applied filters easy to spot.",
+        caption: "Checkboxes and a stronger selected state.",
     },
     {
         num: "02",
         title: "Keep earlier choices in view",
         saw: "Moving between filter groups made people doubt that their earlier picks were still applied.",
         quote: "Are my previous filters still selected?",
-        changes: ["An accordion layout for filter groups", "Easier movement between groups", "Less backtracking"],
+        change: "I moved filter groups into an accordion, so shoppers can move between groups without backtracking.",
         video: "/videos/strategy-02-navigation.mp4",
-        caption: "Moving between filter groups in the accordion drawer.",
+        caption: "Moving between groups in the accordion drawer.",
     },
     {
         num: "03",
         title: "Make the way out obvious",
         saw: "Shoppers weren’t sure how to leave the drawer without applying filters.",
         quote: "How do I close this?",
-        changes: ["“Done” becomes “View Results” once a filter is selected", "Clearer exit actions", "Simpler drawer navigation"],
+        change: "I changed the main button from “Done” to “View Results” once a filter is selected, and simplified the exit actions and drawer navigation.",
         video: "/videos/strategy-03-exit.mp4",
-        caption: "The main button says what happens next: “View Results.”",
+        caption: "The main button says what happens next.",
     },
     {
         num: "04",
         title: "Say what pickup actually means",
         saw: "“Available Within 24 Hours” read like a shipping promise, not local store stock.",
         quote: "Does available within 24 hours mean shipping?",
-        changes: ["A new pickup toggle", "A clearer copy hierarchy", "Support for every pickup state"],
+        change: "I introduced a pickup toggle with a clearer copy hierarchy, designed to support every pickup state.",
         video: "/videos/strategy-04-inventory.mp4",
-        caption: "The pickup toggle separates store availability from shipping.",
+        caption: "The pickup toggle separates store stock from shipping.",
     },
 ]
 
-const OBSERVED = [
-    "Shoppers selected several filters before applying them",
-    "Checkboxes made selections easy to see and control",
-    "“View Results” cleared up how to leave the drawer",
-    "The pickup toggle was clearly understood",
-    "Reordered selections felt easy to follow",
+const OWNED = [
+    "Found where shoppers hesitated, working through usability sessions with UX Research",
+    "Designed the four drawer changes as main designer, within URBN’s design system",
+    "Vibe coded the test prototype in Builder.io, which got it to UX Research faster",
+    "Designed the pickup toggle as a white-label component, adapted it for each brand and documented it for engineering",
 ]
 
 const BRAND_TOGGLES = [
@@ -204,8 +175,8 @@ const BRAND_TOGGLES = [
 ]
 
 const PICKUP_STATES = [
-    { title: "No pickup store selected", desc: "Default state. Prompts the shopper to choose a store.", desktop: "/images/state-no-store-desktop.png", mobile: "/images/state-no-store-mobile.png" },
-    { title: "Pickup store unavailable", desc: "Disabled state. Explains that nothing is available at that store.", desktop: "/images/state-unavailable-desktop.png", mobile: "/images/state-unavailable-mobile.png" },
+    { title: "No pickup store selected", desc: "Prompts the shopper to choose a store.", desktop: "/images/state-no-store-desktop.png", mobile: "/images/state-no-store-mobile.png" },
+    { title: "Pickup store unavailable", desc: "Explains that nothing is available at that store.", desktop: "/images/state-unavailable-desktop.png", mobile: "/images/state-unavailable-mobile.png" },
 ]
 
 const BRANDS = [
@@ -218,17 +189,15 @@ const BRANDS = [
 
 function DecisionBlock({ d, phone, flip }: { d: typeof DECISIONS[number]; phone: boolean; flip: boolean }) {
     const text = (
-        <div>
-            <p style={{ fontFamily: INTER, fontSize: 10, color: C.muted, letterSpacing: "0.06em", margin: 0, marginBottom: 10 }}>{d.num}</p>
-            <h3 style={{ fontFamily: INTER, fontSize: phone ? 24 : 30, fontWeight: 300, color: C.ink, letterSpacing: "-0.02em", lineHeight: 1.12, margin: 0, marginBottom: 20 }}>{d.title}</h3>
-            <Label>what testing showed</Label>
-            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink2, margin: 0, marginBottom: 14 }}>{d.saw}</p>
+        <div style={{ maxWidth: 440 }}>
+            <p style={{ fontFamily: INTER, fontSize: 12, fontWeight: 300, color: C.muted, margin: 0, marginBottom: 10 }}>{d.num}</p>
+            <h3 style={{ fontFamily: INTER, fontSize: phone ? 22 : 26, fontWeight: 400, color: C.ink, letterSpacing: "-0.02em", lineHeight: 1.2, margin: 0, marginBottom: 20 }}>{d.title}</h3>
+            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0 }}>{d.saw}</p>
             {/* Participant voice in Zodiak, the site's warm serif */}
-            <p style={{ fontFamily: Z, fontStyle: "italic", fontSize: phone ? 17 : 19, lineHeight: 1.4, color: C.ink, margin: 0, marginBottom: 28, paddingLeft: 14, borderLeft: `2px solid ${C.pink}` }}>
+            <p style={{ fontFamily: Z, fontStyle: "italic", fontSize: phone ? 17 : 19, lineHeight: 1.45, color: C.ink, margin: "18px 0 26px", paddingLeft: 16, borderLeft: `1.5px solid ${ACCENT}` }}>
                 &ldquo;{d.quote}&rdquo;
             </p>
-            <Label>what I changed</Label>
-            <Bullets items={d.changes} />
+            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink2, margin: 0 }}>{d.change}</p>
         </div>
     )
     const media = (
@@ -242,12 +211,12 @@ function DecisionBlock({ d, phone, flip }: { d: typeof DECISIONS[number]; phone:
             <Caption>{d.caption}</Caption>
         </figure>
     )
-    // Alternate sides so the four decisions read as a sequence, not a stack of identical cards.
+    // Alternate sides so the four decisions read as a sequence.
     return (
         <div style={{
             display: "grid",
-            gridTemplateColumns: phone ? "minmax(0, 1fr)" : flip ? "minmax(0, 1.1fr) minmax(0, 1fr)" : "minmax(0, 1fr) minmax(0, 1.1fr)",
-            gap: phone ? 28 : 72,
+            gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) minmax(0, 1fr)",
+            gap: phone ? 32 : 88,
             alignItems: "center",
         }}>
             {phone || !flip ? <>{text}{media}</> : <>{media}{text}</>}
@@ -255,18 +224,17 @@ function DecisionBlock({ d, phone, flip }: { d: typeof DECISIONS[number]; phone:
     )
 }
 
-// Metric callout: light Inter numerals with the pink hand-drawn stroke.
+// Metric callout: light Inter numerals, nothing else competing.
 function Stat({ value, label, phone }: { value: string; label: string; phone: boolean }) {
     return (
         <div>
-            <p style={{ fontFamily: INTER, fontSize: phone ? 48 : 64, fontWeight: 200, color: C.ink, letterSpacing: "-0.04em", lineHeight: 1, margin: 0 }}>{value}</p>
-            <Squiggle width={phone ? 44 : 56} style={{ margin: "10px 0 12px" }} />
-            <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.55, color: C.ink3, margin: 0, maxWidth: 260 }}>{label}</p>
+            <p style={{ fontFamily: INTER, fontSize: phone ? 52 : 72, fontWeight: 200, color: C.ink, letterSpacing: "-0.04em", lineHeight: 1, margin: 0, marginBottom: 14 }}>{value}</p>
+            <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.55, color: C.ink3, margin: 0, maxWidth: 240 }}>{label}</p>
         </div>
     )
 }
 
-// Section index: lowercase, light, with a small pink mark on the current one.
+// Section index: lowercase and light, with a short olive mark on the current one.
 function SideNav({ active }: { active: string }) {
     return (
         <nav aria-label="Case study sections">
@@ -278,7 +246,7 @@ function SideNav({ active }: { active: string }) {
                         aria-current={isActive ? "location" : undefined}
                         style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 0", textDecoration: "none" }}
                     >
-                        <span aria-hidden="true" style={{ width: isActive ? 12 : 0, height: 1.5, backgroundColor: C.pink, transition: `width 0.3s ${EASE_SPRING}` }} />
+                        <span aria-hidden="true" style={{ width: isActive ? 12 : 0, height: 1, backgroundColor: ACCENT, transition: `width 0.3s ${EASE_SPRING}` }} />
                         <span style={{
                             fontFamily: INTER, fontSize: 12, fontWeight: isActive ? 400 : 300,
                             color: isActive ? C.ink : C.muted, textTransform: "lowercase",
@@ -367,7 +335,8 @@ export default function AnthropologieProductDiscovery() {
     const { phone, tablet, desktop } = useResponsive()
     const activeSection = useActiveSection(SECTIONS.map(s => s.id))
     const px = phone ? 20 : tablet ? 40 : 80
-    const gap = phone ? 88 : 128
+    const gap = phone ? 112 : 176        // between sections
+    const inner = phone ? 48 : 72        // between a section head and its content
 
     return (
         <div style={{ width: "100%", backgroundColor: C.bg }}>
@@ -376,86 +345,63 @@ export default function AnthropologieProductDiscovery() {
             <div style={{
                 display: desktop ? "grid" : "block",
                 gridTemplateColumns: desktop ? "140px 1fr" : undefined,
-                gap: desktop ? 48 : undefined,
+                gap: desktop ? 56 : undefined,
                 maxWidth: 1400,
                 margin: "0 auto",
                 padding: `0 ${px}px 160px`,
             }}>
                 {desktop && (
                     <aside>
-                        <div style={{ position: "sticky", top: 80, paddingTop: 40 }}>
+                        <div style={{ position: "sticky", top: 96, paddingTop: 56 }}>
                             <SideNav active={activeSection} />
                         </div>
                     </aside>
                 )}
 
-                <main style={{ minWidth: 0 }}>
+                <main style={{ minWidth: 0, maxWidth: 1080 }}>
 
                     {/* ════════ OVERVIEW ════════ */}
-                    <section id="overview" style={{ scrollMarginTop: 80, paddingTop: phone ? 40 : 48 }}>
+                    <section id="overview" style={{ scrollMarginTop: 96, paddingTop: phone ? 48 : 72 }}>
                         <FadeIn>
-                            <Eyebrow>URBN · Anthropologie, Urban Outfitters, Free People</Eyebrow>
-                            {/* Same "Live" marker as this project's card on the homepage */}
-                            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14 }}>
-                                <span style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: "#6EBF8B", display: "inline-block" }} />
-                                <span style={{ fontFamily: INTER, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: "#6EBF8B" }}>Live</span>
-                            </div>
+                            <BracketTag style={{ marginBottom: 18 }}>URBN · Anthropologie, Urban Outfitters, Free People</BracketTag>
                             <h1 style={{
-                                fontFamily: INTER, fontWeight: 200, fontSize: "clamp(36px, 5vw, 64px)",
-                                lineHeight: 1.04, letterSpacing: "-0.03em", color: C.ink,
-                                maxWidth: 860, margin: 0, marginBottom: 22,
+                                fontFamily: INTER, fontWeight: 200, fontSize: "clamp(38px, 4.8vw, 60px)",
+                                lineHeight: 1.06, letterSpacing: "-0.03em", color: C.ink,
+                                maxWidth: 780, margin: 0, marginBottom: 24,
                             }}>
-                                <HoverLetters text="Redesigning product filters across three URBN brands" />
+                                Redesigning product filters across three URBN brands
                             </h1>
-                            <p style={{ fontFamily: INTER, fontSize: phone ? 16 : 18, lineHeight: 1.6, color: C.ink2, maxWidth: 640, margin: 0 }}>
+                            <Body max={600} style={{ fontSize: phone ? 16 : 18, color: C.ink3 }}>
                                 Shoppers kept second-guessing the filter drawer. I redesigned it around four moments of doubt found in usability testing, then turned the new pickup toggle into one component that works for every brand.
+                            </Body>
+                            <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.6, color: C.muted, margin: 0, marginTop: 20 }}>
+                                UX Designer, main designer on the project · 5 months · Mobile Web and Desktop · with PM, Engineering, UX Research and Brand
                             </p>
-                            {/* Tag pills, as on the homepage card */}
-                            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 18 }}>
-                                {["Product Design", "Design Systems", "E-Commerce"].map((t) => (
-                                    <span key={t} style={{ fontFamily: INTER, fontSize: 11, color: C.muted, backgroundColor: "rgba(0,0,0,0.04)", borderRadius: 40, padding: "4px 10px" }}>{t}</span>
-                                ))}
-                            </div>
                         </FadeIn>
 
-                        {/* At a glance: the one-minute read */}
+                        <FadeIn delay={80}>
+                            <figure style={{ margin: 0, marginTop: phone ? 48 : 72 }}>
+                                <img src="/images/filter-comparison.webp" alt="The redesigned filter drawer on Free People, Urban Outfitters and Anthropologie mobile web" style={{ width: "100%", display: "block" }} />
+                                <Caption>The redesigned filter drawer, live on Free People, Urban Outfitters and Anthropologie.</Caption>
+                            </figure>
+                        </FadeIn>
+
+                        {/* The one-minute read */}
                         <FadeIn delay={80}>
                             <div style={{
                                 display: "grid",
-                                gridTemplateColumns: phone ? "1fr" : "repeat(3, minmax(0, 1fr))",
-                                gap: phone ? 0 : 40,
-                                marginTop: phone ? 36 : 52,
+                                gridTemplateColumns: phone ? "minmax(0, 1fr)" : "repeat(3, minmax(0, 1fr))",
+                                gap: phone ? 32 : 56,
+                                marginTop: phone ? 56 : 80,
                             }}>
                                 {[
-                                    { k: "problem", v: "Applying filters meant hopping between screens. Shoppers couldn’t tell what was selected, how to leave, or what “Available Within 24 Hours” meant." },
-                                    { k: "my role", v: "Main designer. I worked through testing with UX Research, designed the fixes in URBN’s design system, vibe coded the test prototype, and designed and documented the pickup component." },
-                                    { k: "outcome", v: "100% task completion when the combined prototype was tested. Now live on Urban Outfitters, Free People and Anthropologie." },
+                                    { k: "problem", v: "Filtering meant hopping between screens, and shoppers couldn’t tell what was selected, how to leave, or what “Available Within 24 Hours” meant." },
+                                    { k: "my role", v: "Main designer. Synthesis with UX Research, the four drawer changes, a vibe coded prototype and a reusable pickup component." },
+                                    { k: "outcome", v: "100% task completion in prototype testing. Live on Urban Outfitters, Free People and Anthropologie." },
                                 ].map(({ k, v }) => (
-                                    <div key={k} style={{ borderTop: `1px solid ${C.ink}`, padding: phone ? "14px 0 22px" : "16px 0 0" }}>
-                                        <Label>{k}</Label>
-                                        <p style={{ fontFamily: INTER, fontSize: 14.5, lineHeight: 1.6, color: C.ink2, margin: 0 }}>{v}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </FadeIn>
-
-                        <FadeIn delay={120}>
-                            <div style={{ marginTop: phone ? 32 : 48 }}>
-                                <img src="/images/filter-comparison.webp" alt="The redesigned filter drawer on Free People, Urban Outfitters and Anthropologie mobile web" style={{ width: "100%", display: "block" }} />
-                                <Caption>The redesigned filter drawer, live on Free People, Urban Outfitters and Anthropologie.</Caption>
-                            </div>
-                        </FadeIn>
-
-                        <FadeIn delay={140}>
-                            <div style={{
-                                display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr) minmax(0, 1fr)" : "repeat(4, minmax(0, 1fr))",
-                                gap: phone ? 16 : 32, marginTop: 36,
-                                paddingTop: 28, borderTop: `1px solid ${C.border}`,
-                            }}>
-                                {([["role", "UX Designer, main designer on the project"], ["timeline", "5 months"], ["team", "PM, Engineering, UX Research, Brand"], ["platforms", "Mobile Web and Desktop"]] as const).map(([k, v]) => (
                                     <div key={k}>
                                         <Label>{k}</Label>
-                                        <p style={{ fontFamily: INTER, fontWeight: 400, fontSize: 14, lineHeight: 1.45, color: C.ink2, margin: 0 }}>{v}</p>
+                                        <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink2, margin: 0 }}>{v}</p>
                                     </div>
                                 ))}
                             </div>
@@ -463,13 +409,11 @@ export default function AnthropologieProductDiscovery() {
                     </section>
 
                     {/* ════════ PROBLEM ════════ */}
-                    <section id="problem" style={{ scrollMarginTop: 80, marginTop: gap }}>
+                    <section id="problem" style={{ scrollMarginTop: 96, marginTop: gap }}>
                         <FadeIn>
-                            <Eyebrow>01 · The problem</Eyebrow>
-                            <H2>One filter took four steps, and every extra filter repeated them</H2>
-                            <Lede>
-                                As catalogs grew across URBN brands, the filter drawer became the main way to narrow large catalogs. But applying a single filter meant opening the drawer, picking a category, confirming, and going back. Shoppers did that loop once per filter.
-                            </Lede>
+                            <SectionHead tag="01 · The problem" title="One filter took four steps, and every extra filter repeated them">
+                                Applying a single filter meant opening the drawer, picking a category, confirming and going back. Shoppers did that loop once per filter.
+                            </SectionHead>
                         </FadeIn>
 
                         <FadeIn delay={60}>
@@ -477,18 +421,15 @@ export default function AnthropologieProductDiscovery() {
                                 display: "grid",
                                 gridTemplateColumns: phone ? "minmax(0, 1fr) minmax(0, 1fr)" : "repeat(4, minmax(0, 1fr))",
                                 gap: phone ? 16 : 24,
-                                marginTop: phone ? 32 : 44,
-                                alignItems: "start",
+                                marginTop: inner,
                             }}>
                                 {OLD_FLOW.map((step) => (
                                     <figure key={step.num} style={{ margin: 0 }}>
-                                        <div style={{ ...FRAME, padding: phone ? 10 : 14 }}>
+                                        <div style={{ ...FRAME, padding: phone ? 10 : 16 }}>
                                             <img src={step.src} alt={`Old flow, step ${step.num}: ${step.title}`} style={{ width: "100%", height: "auto", display: "block", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }} />
                                         </div>
-                                        <figcaption style={{ marginTop: 12 }}>
-                                            <p style={{ fontFamily: INTER, fontSize: 10, color: C.muted, letterSpacing: "0.06em", margin: 0, marginBottom: 4 }}>{step.num}</p>
-                                            <p style={{ fontFamily: INTER, fontSize: 14, fontWeight: 500, color: C.ink2, lineHeight: 1.3, margin: 0, marginBottom: 3 }}>{step.title}</p>
-                                            <p style={{ fontFamily: INTER, fontSize: 12.5, lineHeight: 1.5, color: C.ink3, margin: 0 }}>{step.caption}</p>
+                                        <figcaption style={{ fontFamily: INTER, fontSize: 13, color: C.ink3, marginTop: 12 }}>
+                                            <span style={{ color: C.muted, marginRight: 8 }}>{step.num}</span>{step.title}
                                         </figcaption>
                                     </figure>
                                 ))}
@@ -497,52 +438,35 @@ export default function AnthropologieProductDiscovery() {
                         </FadeIn>
                     </section>
 
-                    {/* ════════ ROLE & CONSTRAINTS ════════ */}
-                    <section id="role" style={{ scrollMarginTop: 80, marginTop: gap }}>
+                    {/* ════════ ROLE ════════ */}
+                    <section id="role" style={{ scrollMarginTop: 96, marginTop: gap }}>
                         <FadeIn>
-                            <Eyebrow>02 · My role and constraints</Eyebrow>
-                            <H2>What I owned, and what I had to work within</H2>
+                            <SectionHead tag="02 · My role" title="What I owned" />
                         </FadeIn>
                         <FadeIn delay={60}>
-                            <div style={{
-                                display: "grid",
-                                gridTemplateColumns: phone ? "1fr" : "minmax(0, 1fr) minmax(0, 1fr)",
-                                gap: phone ? 36 : 56,
-                                marginTop: phone ? 24 : 32,
-                            }}>
-                                <div>
-                                    <Label>what I owned</Label>
-                                    {[
-                                        "Worked through the usability sessions with the UX Research team to find where shoppers hesitated",
-                                        "Designed the four changes to the filter drawer as the main designer, working in URBN’s design system",
-                                        "Vibe coded the test prototype in Builder.io from existing design system components, which got it to UX Research faster",
-                                        "Designed the pickup toggle as a white-label component, adapted it for each brand, and documented it for engineering",
-                                    ].map((t, i) => <Row key={i} num={`0${i + 1}`}>{t}</Row>)}
-                                </div>
-                                <div>
-                                    <Label>constraints</Label>
-                                    {[
-                                        "One pattern had to work for three brands with different visual languages",
-                                        "Mobile Web and Desktop",
-                                        "Built from URBN’s existing design system, which had no pattern for the new pickup toggle",
-                                        "Five months, alongside PM, Engineering, UX Research and Brand",
-                                    ].map((t, i) => <Row key={i} num={`0${i + 1}`}>{t}</Row>)}
-                                </div>
+                            <div style={{ marginTop: phone ? 36 : 48, maxWidth: 720 }}>
+                                {OWNED.map((t, i) => (
+                                    <div key={i} style={{ display: "flex", gap: 20, alignItems: "baseline", padding: "18px 0", borderTop: `1px solid ${C.border}` }}>
+                                        <span style={{ fontFamily: INTER, fontSize: 12, fontWeight: 300, color: C.muted, width: 20, flexShrink: 0 }}>0{i + 1}</span>
+                                        <span style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.6, color: C.ink2 }}>{t}</span>
+                                    </div>
+                                ))}
                             </div>
+                            <Body max={600} style={{ marginTop: phone ? 36 : 48, color: C.ink3, fontSize: 15 }}>
+                                The constraints: three brands with different visual languages had to share one pattern, across Mobile Web and Desktop, in five months. URBN’s design system had no pattern for the pickup toggle.
+                            </Body>
                         </FadeIn>
                     </section>
 
-                    {/* ════════ WHAT TESTING REVEALED → DECISIONS ════════ */}
-                    <section id="decisions" style={{ scrollMarginTop: 80, marginTop: gap }}>
+                    {/* ════════ DECISIONS ════════ */}
+                    <section id="decisions" style={{ scrollMarginTop: 96, marginTop: gap }}>
                         <FadeIn>
-                            <Eyebrow>03 · What testing revealed</Eyebrow>
-                            <H2>Four moments of doubt, four design decisions</H2>
-                            <Lede>
-                                The same four hesitations kept showing up across usability sessions. None of them were missing features. Each one was a moment where shoppers stopped trusting what the drawer was doing, and each became a specific change.
-                            </Lede>
+                            <SectionHead tag="03 · What testing revealed" title="Four moments of doubt, four decisions">
+                                The same four hesitations kept showing up in usability sessions. None were missing features. Each became a specific change.
+                            </SectionHead>
                         </FadeIn>
 
-                        <div style={{ display: "flex", flexDirection: "column", gap: phone ? 72 : 104, marginTop: phone ? 48 : 64 }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: phone ? 96 : 144, marginTop: phone ? 64 : 96 }}>
                             {DECISIONS.map((d, i) => (
                                 <FadeIn key={d.num}>
                                     <DecisionBlock d={d} phone={phone} flip={i % 2 === 1} />
@@ -551,87 +475,80 @@ export default function AnthropologieProductDiscovery() {
                         </div>
                     </section>
 
-                    {/* ════════ TESTING THE WHOLE FLOW ════════ */}
-                    <section id="testing" style={{ scrollMarginTop: 80, marginTop: gap }}>
+                    {/* ════════ TESTING ════════ */}
+                    <section id="testing" style={{ scrollMarginTop: 96, marginTop: gap }}>
                         <FadeIn>
-                            <Eyebrow>04 · Testing the whole flow</Eyebrow>
-                            <H2>All four changes, tested as one flow before development</H2>
-                            <Lede>
-                                I combined the four changes into a single interactive prototype so we could test the complete filtering experience, not isolated fixes.
-                            </Lede>
+                            <SectionHead tag="04 · Testing the whole flow" title="All four changes, tested as one flow">
+                                I combined the changes into a single prototype so UX Research could test the complete experience before development, not isolated fixes.
+                            </SectionHead>
                         </FadeIn>
 
                         <FadeIn delay={60}>
                             <div style={{
                                 display: "grid",
-                                gridTemplateColumns: phone ? "1fr" : "minmax(220px, 280px) minmax(0, 1fr)",
-                                gap: phone ? 36 : 64,
-                                alignItems: "start",
-                                marginTop: phone ? 32 : 44,
+                                gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 260px) minmax(0, 1fr)",
+                                gap: phone ? 56 : 96,
+                                alignItems: "center",
+                                marginTop: inner,
                             }}>
-                                <figure style={{ margin: 0, maxWidth: phone ? 260 : undefined }}>
+                                <figure style={{ margin: 0, maxWidth: phone ? 240 : undefined, order: phone ? 2 : 0 }}>
                                     <div style={{ ...FRAME, padding: 16 }}>
                                         <video src="/videos/prototype-walkthrough.mp4" autoPlay muted loop playsInline aria-label="Walkthrough of the interactive prototype" style={{ width: "100%", height: "auto", display: "block" }} />
                                     </div>
-                                    <Caption>The vibe coded Builder.io prototype used in usability testing.</Caption>
+                                    <Caption>The prototype, vibe coded in Builder.io from URBN design system components.</Caption>
                                 </figure>
 
                                 <div>
-                                    <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: phone ? 20 : 32, marginBottom: phone ? 32 : 44 }}>
+                                    <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: phone ? 24 : 48 }}>
                                         <Stat phone={phone} value="100%" label="task completion in usability testing of the combined prototype" />
-                                        <Stat phone={phone} value="45%" label="shorter prototype timeline. Vibe coding it in Builder.io got a testable build to UX Research sooner" />
+                                        <Stat phone={phone} value="45%" label="shorter prototype timeline, by vibe coding it in Builder.io" />
                                     </div>
-                                    <Label>what we observed</Label>
-                                    <div>
-                                        {OBSERVED.map((item, i) => (
-                                            <div key={i} style={{ padding: "12px 0", borderTop: `1px solid ${C.border}`, display: "flex", alignItems: "baseline", gap: 12 }}>
-                                                <span aria-hidden="true" style={{ fontFamily: INTER, fontSize: 11, color: C.pink, flexShrink: 0 }}>&#10003;</span>
-                                                <p style={{ fontFamily: INTER, fontSize: 14, color: C.ink2, margin: 0, lineHeight: 1.5 }}>{item}</p>
-                                            </div>
-                                        ))}
-                                    </div>
+                                    <Body max={520} style={{ marginTop: phone ? 40 : 56, color: C.ink3, fontSize: 15 }}>
+                                        In testing, shoppers selected several filters before applying them. Checkboxes made selections easy to see, “View Results” made the way out clear, the pickup toggle was understood, and reordered selections felt easy to follow.
+                                    </Body>
                                 </div>
                             </div>
                         </FadeIn>
                     </section>
 
-                    {/* ════════ SCALING ACROSS BRANDS ════════ */}
-                    <section id="system" style={{ scrollMarginTop: 80, marginTop: gap }}>
+                    {/* ════════ SYSTEM ════════ */}
+                    <section id="system" style={{ scrollMarginTop: 96, marginTop: gap }}>
                         <FadeIn>
-                            <Eyebrow>05 · Scaling across brands</Eyebrow>
-                            <H2>One component, three brands</H2>
-                            <Lede>
-                                The pickup toggle had no equivalent in URBN’s design system. Instead of a one-off, I designed it as a white-label component first, then adapted it to each brand. The interaction stays the same everywhere. Color follows the brand.
-                            </Lede>
+                            <SectionHead tag="05 · Scaling across brands" title="One component, three brands">
+                                The pickup toggle had no equivalent in URBN’s design system, so I designed it once as a white-label component and adapted it to each brand. The interaction stays the same; color follows the brand.
+                            </SectionHead>
                         </FadeIn>
 
                         <FadeIn delay={60}>
-                            <div style={{
-                                display: "grid",
-                                gridTemplateColumns: phone ? "minmax(0, 1fr) minmax(0, 1fr)" : "repeat(5, minmax(0, 1fr))",
-                                gap: phone ? 12 : 20,
-                                marginTop: phone ? 32 : 44,
-                            }}>
-                                {BRAND_TOGGLES.map((b) => (
-                                    <figure key={b.label} style={{ margin: 0 }}>
-                                        <div style={FRAME}>
-                                            <img src={b.src} alt={`${b.label} pickup toggle: default, selected and hover states`} style={{ width: "100%", height: "auto", display: "block" }} />
+                            <figure style={{ margin: 0, marginTop: inner }}>
+                                <div style={{
+                                    display: "grid",
+                                    gridTemplateColumns: phone ? "minmax(0, 1fr) minmax(0, 1fr)" : "repeat(5, minmax(0, 1fr))",
+                                    gap: phone ? 16 : 20,
+                                }}>
+                                    {BRAND_TOGGLES.map((b) => (
+                                        <div key={b.label}>
+                                            <div style={FRAME}>
+                                                <img src={b.src} alt={`${b.label} pickup toggle: default, selected and hover states`} style={{ width: "100%", height: "auto", display: "block" }} />
+                                            </div>
+                                            <p style={{ fontFamily: INTER, fontSize: 13, color: C.ink3, margin: 0, marginTop: 10 }}>{b.label}</p>
                                         </div>
-                                        <figcaption style={{ fontFamily: INTER, fontSize: 12.5, fontWeight: 500, color: C.ink2, marginTop: 10 }}>{b.label}</figcaption>
-                                    </figure>
-                                ))}
-                            </div>
-                            <Caption>Default, selected and hover states, white-label first, then each brand, including Terrain within Anthropologie.</Caption>
+                                    ))}
+                                </div>
+                                <Caption>Default, selected and hover states: white-label first, then each brand.</Caption>
+                            </figure>
                         </FadeIn>
 
                         <FadeIn delay={60}>
-                            <h3 style={{ fontFamily: INTER, fontSize: phone ? 22 : 26, fontWeight: 300, color: C.ink, letterSpacing: "-0.02em", margin: 0, marginTop: phone ? 64 : 96, marginBottom: 10 }}>
-                                Designed for every pickup state
-                            </h3>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink2, margin: 0, maxWidth: 560, marginBottom: 28 }}>
-                                The same interaction had to hold up when no store was chosen and when the chosen store had nothing available.
-                            </p>
-                            <div style={{ display: "flex", flexDirection: "column", gap: phone ? 40 : 48 }}>
+                            <div style={{ marginTop: phone ? 80 : 120 }}>
+                                <h3 style={{ fontFamily: INTER, fontSize: phone ? 22 : 26, fontWeight: 400, color: C.ink, letterSpacing: "-0.02em", margin: 0, marginBottom: 12 }}>
+                                    Designed for every pickup state
+                                </h3>
+                                <Body max={520} style={{ color: C.ink3, fontSize: 15 }}>
+                                    The interaction had to hold up when no store was chosen, and when the chosen store had nothing available.
+                                </Body>
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column", gap: phone ? 48 : 64, marginTop: phone ? 32 : 44 }}>
                                 {PICKUP_STATES.map((st) => (
                                     <figure key={st.title} style={{ margin: 0 }}>
                                         <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 2.2fr) minmax(0, 1fr)" : "minmax(0, 3fr) minmax(0, 1fr)", gap: phone ? 8 : 20, alignItems: "start" }}>
@@ -642,106 +559,76 @@ export default function AnthropologieProductDiscovery() {
                                                 <img src={st.mobile} alt={`${st.title}, mobile`} style={{ width: "100%", height: "auto", display: "block" }} />
                                             </div>
                                         </div>
-                                        <figcaption style={{ marginTop: 12 }}>
-                                            <p style={{ fontFamily: INTER, fontSize: 14, fontWeight: 500, color: C.ink2, margin: 0, marginBottom: 3 }}>{st.title}</p>
-                                            <p style={{ fontFamily: INTER, fontSize: 12.5, lineHeight: 1.5, color: C.ink3, margin: 0 }}>{st.desc} Desktop and mobile.</p>
-                                        </figcaption>
+                                        <Caption><span style={{ color: C.ink2 }}>{st.title}.</span> {st.desc}</Caption>
                                     </figure>
                                 ))}
                             </div>
                         </FadeIn>
 
                         <FadeIn delay={60}>
+                            <div style={{ marginTop: phone ? 80 : 120 }}>
+                                <h3 style={{ fontFamily: INTER, fontSize: phone ? 22 : 26, fontWeight: 400, color: C.ink, letterSpacing: "-0.02em", margin: 0, marginBottom: 12 }}>
+                                    From exploration to handoff
+                                </h3>
+                                <Body max={560} style={{ color: C.ink3, fontSize: 15 }}>
+                                    I explored several toggle treatments before settling on one pattern, then documented every state, the interaction logic and copy variations, and handed it to engineering.
+                                </Body>
+                            </div>
                             <div style={{
                                 display: "grid",
-                                gridTemplateColumns: phone ? "1fr" : "minmax(0, 1fr) minmax(0, 1fr)",
-                                gap: phone ? 28 : 56,
+                                gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) minmax(0, 1fr)",
+                                gap: phone ? 40 : 40,
                                 alignItems: "start",
-                                marginTop: phone ? 56 : 80,
+                                marginTop: phone ? 32 : 44,
                             }}>
-                                <div>
-                                    <h3 style={{ fontFamily: INTER, fontSize: phone ? 22 : 26, fontWeight: 300, color: C.ink, letterSpacing: "-0.02em", margin: 0, marginBottom: 10 }}>
-                                        From exploration to handoff
-                                    </h3>
-                                    <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink2, margin: 0, marginBottom: 20, maxWidth: 440 }}>
-                                        I explored several toggle treatments before settling on the final pattern, then specified it for engineering.
-                                    </p>
-                                    <Bullets items={["Every state documented", "Interaction logic defined", "Copy variations documented", "Handed off to engineering for production"]} />
-                                    <figure style={{ margin: 0, marginTop: 28, maxWidth: 420 }}>
-                                        <div style={{ ...FRAME, padding: 12 }}>
-                                            {/* transparent PNG: give it a white card on the paper mat */}
-                                            <img src="/images/toggle-explorations.png" alt="Early toggle explorations: filled, outline and colored treatments" style={{ width: "100%", height: "auto", display: "block", backgroundColor: C.bg }} />
-                                        </div>
-                                        <Caption>Early toggle explorations.</Caption>
-                                    </figure>
-                                </div>
                                 <figure style={{ margin: 0 }}>
-                                    <div style={FRAME}>
-                                        <img src="/images/toggle-specs.png" alt="Spec for the proposed web toggle: sizes, knob fill, checkmark and knob placement" style={{ width: "100%", height: "auto", display: "block" }} />
+                                    <div style={{ ...FRAME, padding: phone ? 16 : 32 }}>
+                                        {/* transparent PNG: white card on the paper mat */}
+                                        <img src="/images/toggle-explorations.png" alt="Early toggle explorations: filled, outline and colored treatments" style={{ width: "100%", height: "auto", display: "block", backgroundColor: C.bg }} />
                                     </div>
-                                    <Caption>Part of the spec handed to engineering: size, knob fill, checkmark and placement.</Caption>
+                                    <Caption>Early toggle explorations.</Caption>
+                                </figure>
+                                <figure style={{ margin: 0 }}>
+                                    <div style={{ ...FRAME, padding: phone ? 16 : 32 }}>
+                                        <img src="/images/toggle-specs.png" alt="Spec for the proposed web toggle: sizes, knob fill, checkmark and knob placement" style={{ width: "100%", height: "auto", display: "block", backgroundColor: C.bg }} />
+                                    </div>
+                                    <Caption>Part of the engineering spec: size, knob fill, checkmark and placement.</Caption>
                                 </figure>
                             </div>
                         </FadeIn>
                     </section>
 
                     {/* ════════ OUTCOME ════════ */}
-                    <section id="outcome" style={{ scrollMarginTop: 80, marginTop: gap }}>
+                    <section id="outcome" style={{ scrollMarginTop: 96, marginTop: gap }}>
                         <FadeIn>
-                            <Eyebrow>06 · Outcome</Eyebrow>
-                            <H2>Live on all three brands</H2>
-                            <Lede>
+                            <SectionHead tag="06 · Outcome" title="Live on all three brands">
                                 The redesigned drawer and the pickup toggle are live on Urban Outfitters, Free People and Anthropologie, on Mobile Web and Desktop.
-                            </Lede>
-                        </FadeIn>
-
-                        <FadeIn delay={40}>
-                            <div style={{ display: "flex", gap: phone ? 18 : 28, flexWrap: "wrap", marginTop: 24 }}>
+                            </SectionHead>
+                            <div style={{ display: "flex", gap: phone ? 20 : 32, flexWrap: "wrap", marginTop: 28 }}>
                                 {BRANDS.map((brand) => (
-                                    <NavLink key={brand.name} label={`${brand.name} ↗`} href={brand.href} ext size={16} />
+                                    <NavLink key={brand.name} label={`${brand.name} ↗`} href={brand.href} ext size={15} />
                                 ))}
                             </div>
                         </FadeIn>
 
                         <FadeIn delay={60}>
-                            <div style={{
-                                display: "grid",
-                                gridTemplateColumns: phone ? "1fr" : "repeat(3, minmax(0, 1fr))",
-                                gap: phone ? 24 : 32,
-                                marginTop: phone ? 48 : 64,
-                                paddingTop: 28, borderTop: `1px solid ${C.border}`,
-                            }}>
-                                <Stat phone={phone} value="100%" label="task completion in prototype testing" />
-                                <Stat phone={phone} value="3" label="brands live with the redesigned drawer" />
-                                <Stat phone={phone} value="1" label="pickup component shared by every brand" />
-                            </div>
-                        </FadeIn>
-
-                        <FadeIn delay={80}>
-                            <div style={{ marginTop: phone ? 64 : 96, maxWidth: 720 }}>
+                            <div style={{ marginTop: phone ? 96 : 144, maxWidth: 680 }}>
                                 <p style={{
                                     fontFamily: Z, fontStyle: "italic", fontWeight: 400,
-                                    fontSize: "clamp(24px, 3.2vw, 38px)", lineHeight: 1.25,
-                                    color: C.ink, letterSpacing: "-0.025em", margin: 0, marginBottom: 20,
+                                    fontSize: "clamp(24px, 3vw, 34px)", lineHeight: 1.3,
+                                    color: C.ink, letterSpacing: "-0.02em", margin: 0, marginBottom: 20,
                                 }}>
                                     Designing better filters wasn&rsquo;t the goal. Building confidence was.
                                 </p>
-                                <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink2, margin: 0, maxWidth: 560 }}>
-                                    Almost every problem in testing was a moment of uncertainty, not a missing feature. Clear selected states, honest copy and an obvious way out did more than anything new would have.
-                                </p>
+                                <Body max={520} style={{ color: C.ink3, fontSize: 15 }}>
+                                    Most problems in testing were moments of uncertainty, not missing features.
+                                </Body>
                             </div>
                         </FadeIn>
                     </section>
 
                     {/* Back to work */}
-                    <div style={{
-                        paddingTop: 48,
-                        marginTop: 96,
-                        borderTop: "1px solid rgba(0,0,0,0.08)",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                    }}>
+                    <div style={{ paddingTop: 40, marginTop: phone ? 96 : 144, borderTop: `1px solid ${C.border}` }}>
                         <NavLink label="← back to work" href="/#work" size={14} />
                     </div>
 

@@ -19,7 +19,8 @@ export const COLORS = {
     border: "rgba(0,0,0,0.08)",
     bg: "#FFFFFF",
     paper: "#F4F2EF",   // mat behind images / media
-    pink: "#D33361",    // the poster pink: the site's one accent
+    pink: "#D33361",    // the poster pink: the homepage accent
+    olive: "#899064",   // case-study accent: quieter, more business-like
 }
 
 // Playful per-letter / per-row hover colors
