@@ -199,17 +199,17 @@ function StrategyBlock({ s, phone }: { s: typeof STRATEGIES[number]; phone: bool
                     <video src={s.video} autoPlay loop muted playsInline style={{ width: "100%", height: "auto", display: "block" }} />
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-                    <span style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: C.olive }}>{s.num}</span>
+                    <span style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", color: C.olive }}>{s.num}</span>
                     <span style={{ width: 24, height: 1, backgroundColor: C.border }} />
                 </div>
-                <h3 style={{ fontFamily: Z, fontSize: 22, fontWeight: 700, color: C.ink, letterSpacing: "-0.02em", lineHeight: 1.15, marginBottom: 16 }}>{s.title}</h3>
-                <p style={{ fontFamily: INTER, fontSize: 13.5, color: C.ink3, lineHeight: 1.65, marginBottom: 20 }}>{s.problem}</p>
-                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>What We Changed</p>
+                <h3 style={{ fontFamily: INTER, fontSize: 22, fontWeight: 300, color: C.ink, letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 16 }}>{s.title}</h3>
+                <p style={{ fontFamily: INTER, fontSize: 15, color: C.ink3, lineHeight: 1.65, marginBottom: 20 }}>{s.problem}</p>
+                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>What We Changed</p>
                 {s.changes.map((c, ci) => (
-                    <p key={ci} style={{ fontFamily: INTER, fontSize: 13.5, color: C.ink2, lineHeight: 1.65, margin: 0, marginBottom: ci < s.changes.length - 1 ? 4 : 0 }}>{c}</p>
+                    <p key={ci} style={{ fontFamily: INTER, fontSize: 15, color: C.ink2, lineHeight: 1.6, margin: 0, marginBottom: ci < s.changes.length - 1 ? 6 : 0 }}>{c}</p>
                 ))}
                 <div style={{ borderTop: `1px solid ${C.border}`, marginTop: 24, paddingTop: 16 }}>
-                    <p style={{ fontFamily: Z, fontSize: 16, fontWeight: 500, fontStyle: "italic", color: C.ink, lineHeight: 1.45, margin: 0 }}>{s.why}</p>
+                    <p style={{ fontFamily: Z, fontSize: 17, fontWeight: 400, fontStyle: "italic", color: C.ink, lineHeight: 1.5, margin: 0 }}>{s.why}</p>
                 </div>
             </div>
         )
@@ -219,22 +219,22 @@ function StrategyBlock({ s, phone }: { s: typeof STRATEGIES[number]; phone: bool
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: 48, alignItems: "center" }}>
             <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
-                    <span style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: C.olive }}>{s.num}</span>
+                    <span style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", color: C.olive }}>{s.num}</span>
                     <span style={{ width: 24, height: 1, backgroundColor: C.border }} />
                 </div>
-                <h3 style={{ fontFamily: Z, fontSize: 28, fontWeight: 700, color: C.ink, letterSpacing: "-0.02em", lineHeight: 1.15, marginBottom: 18 }}>{s.title}</h3>
+                <h3 style={{ fontFamily: INTER, fontSize: 28, fontWeight: 300, color: C.ink, letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 20 }}>{s.title}</h3>
 
-                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>Problem</p>
-                <p style={{ fontFamily: INTER, fontSize: 13.5, color: C.ink3, lineHeight: 1.65, marginBottom: 24 }}>{s.problem}</p>
+                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>Problem</p>
+                <p style={{ fontFamily: INTER, fontSize: 15, color: C.ink3, lineHeight: 1.65, marginBottom: 24 }}>{s.problem}</p>
 
-                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>What We Changed</p>
+                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>What We Changed</p>
                 {s.changes.map((c, ci) => (
-                    <p key={ci} style={{ fontFamily: INTER, fontSize: 13.5, color: C.ink2, lineHeight: 1.65, margin: 0, marginBottom: ci < s.changes.length - 1 ? 4 : 0 }}>{c}</p>
+                    <p key={ci} style={{ fontFamily: INTER, fontSize: 15, color: C.ink2, lineHeight: 1.6, margin: 0, marginBottom: ci < s.changes.length - 1 ? 6 : 0 }}>{c}</p>
                 ))}
 
                 <div style={{ borderTop: `1px solid ${C.border}`, marginTop: 24, paddingTop: 18 }}>
-                    <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>Why It Matters</p>
-                    <p style={{ fontFamily: Z, fontSize: 18, fontWeight: 500, fontStyle: "italic", color: C.ink, lineHeight: 1.45, margin: 0 }}>{s.why}</p>
+                    <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>Why It Matters</p>
+                    <p style={{ fontFamily: Z, fontSize: 18, fontWeight: 400, fontStyle: "italic", color: C.ink, lineHeight: 1.5, margin: 0 }}>{s.why}</p>
                 </div>
             </div>
 
@@ -286,9 +286,9 @@ function ResearchCard({ num, title, desc, quote, phone }: { num: string; title: 
                 transition: "background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease",
                 cursor: "default",
             }}>
-                <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: hovered && !phone ? "rgba(255,255,255,0.4)" : C.olive, marginBottom: 12, transition: "color 0.3s ease" }}>{num}</p>
-                <p style={{ fontFamily: Z, fontSize: phone ? 18 : 21, fontWeight: 600, color: hovered && !phone ? "#fff" : C.ink, lineHeight: 1.25, marginBottom: 12, transition: "color 0.3s ease" }}>{title}</p>
-                <p style={{ fontFamily: INTER, fontSize: 13.5, lineHeight: 1.65, color: hovered && !phone ? "rgba(255,255,255,0.6)" : C.ink3, margin: 0, transition: "color 0.3s ease" }}>{desc}</p>
+                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: hovered && !phone ? "rgba(255,255,255,0.4)" : C.olive, marginBottom: 12, transition: "color 0.3s ease" }}>{num}</p>
+                <p style={{ fontFamily: INTER, fontSize: phone ? 17 : 19, fontWeight: 400, color: hovered && !phone ? "#fff" : C.ink, lineHeight: 1.25, marginBottom: 12, transition: "color 0.3s ease" }}>{title}</p>
+                <p style={{ fontFamily: INTER, fontSize: 14.5, lineHeight: 1.65, color: hovered && !phone ? "rgba(255,255,255,0.6)" : C.ink3, margin: 0, transition: "color 0.3s ease" }}>{desc}</p>
             </div>
         </div>
     )
@@ -327,7 +327,7 @@ function SideNav({ active }: { active: string }) {
                         }}
                     >
                         <span style={{
-                            fontFamily: INTER, fontSize: 10, fontWeight: isActive ? 700 : 400,
+                            fontFamily: INTER, fontSize: 11, fontWeight: isActive ? 600 : 400,
                             color: C.ink, letterSpacing: "0.06em", textTransform: "uppercase",
                             transition: "font-weight 0.2s",
                             borderLeft: isActive ? `2px solid ${C.olive}` : "2px solid transparent",
@@ -460,8 +460,8 @@ export default function AnthropologieProductDiscovery() {
                                         URBN: Anthropologie · Urban Outfitters · Free People
                                     </p>
                                     <h1 style={{
-                                        fontFamily: Z, fontWeight: 700, fontSize: "clamp(32px, 4.5vw, 56px)",
-                                        lineHeight: 1.05, letterSpacing: "-0.035em", color: C.ink,
+                                        fontFamily: INTER, fontWeight: 300, fontSize: "clamp(32px, 4.5vw, 56px)",
+                                        lineHeight: 1.08, letterSpacing: "-0.03em", color: C.ink,
                                         marginBottom: desktop ? 0 : 24,
                                     }}>
                                         Redesigning Product Filters Across the URBN Ecosystem
@@ -469,7 +469,7 @@ export default function AnthropologieProductDiscovery() {
                                 </div>
                                 <div style={{ paddingTop: desktop ? 36 : 0 }}>
                                     <p style={{
-                                        fontFamily: INTER, fontSize: 14, lineHeight: 1.7,
+                                        fontFamily: INTER, fontSize: 15, lineHeight: 1.65,
                                         color: C.ink3, marginBottom: 20,
                                     }}>
                                         Improving product discovery across Mobile Web and Desktop for Anthropologie, Urban Outfitters, and Free People.
@@ -494,8 +494,8 @@ export default function AnthropologieProductDiscovery() {
                             }}>
                                 {([["Role", "UX Designer"], ["Timeline", "5 Months"], ["Company", "URBN"], ["Team", "PM · Eng · Research · Brand"]] as const).map(([k, v]) => (
                                     <div key={k}>
-                                        <p style={{ fontFamily: INTER, fontWeight: 700, fontSize: 9, color: C.muted, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.12em" }}>{k}</p>
-                                        <p style={{ fontFamily: Z, fontWeight: 400, fontSize: 14, color: C.ink2, margin: 0 }}>{v}</p>
+                                        <p style={{ fontFamily: INTER, fontWeight: 500, fontSize: 11, color: C.muted, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.08em" }}>{k}</p>
+                                        <p style={{ fontFamily: INTER, fontWeight: 400, fontSize: 14, lineHeight: 1.45, color: C.ink2, margin: 0 }}>{v}</p>
                                     </div>
                                 ))}
                             </div>
@@ -504,17 +504,17 @@ export default function AnthropologieProductDiscovery() {
                     </section>
 
                     {/* ════════ CHALLENGE ════════ */}
-                    <section id="challenge" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="challenge" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Challenge</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Challenge</p>
+                            <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 The existing filtering experience
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
                                 Product filters play a critical role in helping shoppers navigate large product catalogs. As assortments expanded across URBN brands, we wanted to better understand how the filtering experience supported product discovery across Mobile Web and Desktop.
                             </p>
                             <p style={{
-                                fontFamily: Z, fontSize: phone ? 20 : 24, fontWeight: 600, color: C.ink,
+                                fontFamily: INTER, fontSize: phone ? 19 : 22, fontWeight: 300, color: C.ink,
                                 lineHeight: 1.4, maxWidth: 520, letterSpacing: "-0.01em", marginBottom: 56,
                             }}>
                                 Users moved between multiple screens to apply and review filters.
@@ -547,8 +547,8 @@ export default function AnthropologieProductDiscovery() {
                                                 />
                                             </div>
                                             <div style={{ padding: "0 2px" }}>
-                                                <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: C.olive, marginBottom: 5 }}>{screen.num}</p>
-                                                <p style={{ fontFamily: Z, fontSize: phone ? 15 : 16, fontWeight: 600, color: C.ink, lineHeight: 1.3, marginBottom: 4 }}>{screen.title}</p>
+                                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.olive, marginBottom: 6 }}>{screen.num}</p>
+                                                <p style={{ fontFamily: INTER, fontSize: 15, fontWeight: 500, color: C.ink2, lineHeight: 1.35, marginBottom: 4 }}>{screen.title}</p>
                                                 <p style={{ fontFamily: INTER, fontSize: 12.5, lineHeight: 1.55, color: C.ink3 }}>{screen.caption}</p>
                                             </div>
                                         </div>
@@ -567,13 +567,13 @@ export default function AnthropologieProductDiscovery() {
                     </section>
 
                     {/* ════════ RESEARCH FINDINGS ════════ */}
-                    <section id="research" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="research" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Research Findings</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Research Findings</p>
+                            <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 Four patterns that shaped our direction
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 560, marginBottom: 56 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 56 }}>
                                 Partnering with the UX Research team, we analyzed usability testing sessions to understand where users experienced friction throughout the filtering journey. Across participants, four recurring patterns emerged.
                             </p>
                         </FadeIn>
@@ -596,13 +596,13 @@ export default function AnthropologieProductDiscovery() {
                     </section>
 
                     {/* ════════ DESIGN GOAL ════════ */}
-                    <section id="goal" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="goal" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <div style={{ padding: phone ? "64px 0" : "100px 0" }}>
-                                <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 28 }}>Design Goal</p>
+                            <div style={{ padding: phone ? "16px 0" : "24px 0" }}>
+                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Design Goal</p>
                                 <p style={{
                                     fontFamily: Z, fontStyle: "italic", fontWeight: 400,
-                                    fontSize: "clamp(24px, 3.5vw, 42px)", lineHeight: 1.3,
+                                    fontSize: "clamp(24px, 3.2vw, 38px)", lineHeight: 1.35,
                                     color: C.ink, letterSpacing: "-0.025em", maxWidth: 720, margin: 0,
                                 }}>
                                     How might we create a filtering experience that feels clear, predictable, and easy to navigate?
@@ -612,13 +612,13 @@ export default function AnthropologieProductDiscovery() {
                     </section>
 
                     {/* ════════ STRATEGY ════════ */}
-                    <section id="strategy" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="strategy" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Strategy</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Strategy</p>
+                            <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 Four concepts tested and refined
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 560, marginBottom: 72 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 64 }}>
                                 Based on the research findings, the redesign focused on reducing uncertainty throughout the filtering experience by making interactions clearer, more predictable, and easier to navigate.
                             </p>
                         </FadeIn>
@@ -633,12 +633,12 @@ export default function AnthropologieProductDiscovery() {
                     </section>
 
                     {/* ════════ BRINGING SOLUTIONS TOGETHER ════════ */}
-                    <section id="prototyping" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="prototyping" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 20 }}>
+                            <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 Bringing the solutions together
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 560, marginBottom: 56 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 56 }}>
                                 The four design improvements were combined into one interactive prototype and tested as a complete filtering experience before development.
                             </p>
                         </FadeIn>
@@ -651,11 +651,11 @@ export default function AnthropologieProductDiscovery() {
                                 alignItems: "center",
                             }}>
                                 <div>
-                                    <p style={{ fontFamily: Z, fontSize: phone ? 48 : 56, fontWeight: 700, color: C.ink, letterSpacing: "-0.03em", lineHeight: 1, margin: 0, marginBottom: 10 }}><CountUp to={45} suffix="%" /></p>
-                                    <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.ink2, letterSpacing: "0.04em", textTransform: "uppercase", margin: 0, marginBottom: 20 }}>
+                                    <p style={{ fontFamily: INTER, fontSize: phone ? 48 : 56, fontWeight: 200, color: C.ink, letterSpacing: "-0.03em", lineHeight: 1, margin: 0, marginBottom: 10 }}><CountUp to={45} suffix="%" /></p>
+                                    <p style={{ fontFamily: INTER, fontSize: 12, fontWeight: 500, color: C.ink2, letterSpacing: "0.06em", textTransform: "uppercase", margin: 0, marginBottom: 20 }}>
                                         Faster Prototype Creation &amp; Testing Preparation
                                     </p>
-                                    <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.7, color: C.ink3, margin: 0, maxWidth: 380 }}>
+                                    <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, maxWidth: 400 }}>
                                         Using Builder.io and URBN's existing design system components, I rapidly transformed concepts into a testable experience, allowing faster validation before development.
                                     </p>
                                 </div>
@@ -671,7 +671,7 @@ export default function AnthropologieProductDiscovery() {
                                             style={{ width: "100%", height: "auto", display: "block" }}
                                         />
                                     </div>
-                                    <p style={{ fontFamily: INTER, fontSize: 11, lineHeight: 1.5, color: C.muted, margin: 0, marginTop: 10 }}>
+                                    <p style={{ fontFamily: INTER, fontSize: 12.5, lineHeight: 1.55, color: C.ink3, margin: 0, marginTop: 12 }}>
                                         Interactive prototype used for usability testing.
                                     </p>
                                 </div>
@@ -687,17 +687,17 @@ export default function AnthropologieProductDiscovery() {
                                 Leading to&hellip;
                             </p>
                             <div style={{ display: "flex", alignItems: "baseline", gap: 16, marginBottom: 8 }}>
-                                <p style={{ fontFamily: Z, fontSize: phone ? 56 : 72, fontWeight: 700, color: C.ink, letterSpacing: "-0.04em", lineHeight: 1, margin: 0 }}>
+                                <p style={{ fontFamily: INTER, fontSize: phone ? 56 : 72, fontWeight: 200, color: C.ink, letterSpacing: "-0.04em", lineHeight: 1, margin: 0 }}>
                                     <CountUp to={100} suffix="%" duration={1400} />
                                 </p>
-                                <p style={{ fontFamily: INTER, fontSize: 13, fontWeight: 600, color: C.ink2, letterSpacing: "0.04em", textTransform: "uppercase", margin: 0 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 12, fontWeight: 500, color: C.ink2, letterSpacing: "0.06em", textTransform: "uppercase", margin: 0 }}>
                                     Task Completion Rate
                                 </p>
                             </div>
                         </FadeIn>
 
                         <FadeIn delay={40}>
-                            <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, margin: 0, marginTop: 32, marginBottom: 20 }}>Seen Through</p>
+                            <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.olive, margin: 0, marginTop: 36, marginBottom: 16 }}>Seen Through</p>
                         </FadeIn>
 
                         <FadeIn delay={60}>
@@ -720,7 +720,7 @@ export default function AnthropologieProductDiscovery() {
                                         }}>
                                             <span style={{ fontFamily: INTER, fontSize: 10, color: C.olive }}>&#10003;</span>
                                         </span>
-                                        <p style={{ fontFamily: INTER, fontSize: 14, color: C.ink2, margin: 0, lineHeight: 1.5 }}>{item}</p>
+                                        <p style={{ fontFamily: INTER, fontSize: 15, color: C.ink2, margin: 0, lineHeight: 1.55 }}>{item}</p>
                                     </div>
                                 ))}
                             </div>
@@ -728,25 +728,25 @@ export default function AnthropologieProductDiscovery() {
                     </section>
 
                     {/* ════════ COMPONENT DESIGN ════════ */}
-                    <section id="component" style={{ scrollMarginTop: 80, marginTop: 120 }}>
+                    <section id="component" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>From Solution to System</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 740, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>From Solution to System</p>
+                            <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 Building a reusable component
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 640, marginBottom: 0 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 0 }}>
                                 The redesigned pickup experience introduced a new interaction pattern that wasn't supported by the existing design system. Rather than creating a one-off solution, I designed a reusable component that could support future filtering experiences across URBN brands.
                             </p>
                         </FadeIn>
 
                         {/* 01 Designing the Core Pattern */}
                         <FadeIn>
-                            <div style={{ marginTop: 96 }}>
-                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.muted, letterSpacing: "0.06em", margin: 0, marginBottom: 10 }}>01</p>
-                                <h3 style={{ fontFamily: Z, fontSize: phone ? 24 : 32, fontWeight: 700, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.15, margin: 0, marginBottom: 12 }}>
+                            <div style={{ marginTop: phone ? 64 : 88 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, color: C.muted, letterSpacing: "0.06em", margin: 0, marginBottom: 10 }}>01</p>
+                                <h3 style={{ fontFamily: INTER, fontSize: phone ? 22 : 28, fontWeight: 300, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.2, margin: 0, marginBottom: 12 }}>
                                     Designing the Core Pattern
                                 </h3>
-                                <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.7, color: C.ink3, margin: 0, maxWidth: 480, marginBottom: 32 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, maxWidth: 520, marginBottom: 32 }}>
                                     The component was first designed as a white-label pattern before being adapted across individual brand experiences.
                                 </p>
                                 <div style={{ maxWidth: 400, borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
@@ -757,12 +757,12 @@ export default function AnthropologieProductDiscovery() {
 
                         {/* 02 Adapting Across Brands */}
                         <FadeIn>
-                            <div style={{ marginTop: 96 }}>
-                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.muted, letterSpacing: "0.06em", margin: 0, marginBottom: 10 }}>02</p>
-                                <h3 style={{ fontFamily: Z, fontSize: phone ? 24 : 32, fontWeight: 700, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.15, margin: 0, marginBottom: 12 }}>
+                            <div style={{ marginTop: phone ? 64 : 88 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, color: C.muted, letterSpacing: "0.06em", margin: 0, marginBottom: 10 }}>02</p>
+                                <h3 style={{ fontFamily: INTER, fontSize: phone ? 22 : 28, fontWeight: 300, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.2, margin: 0, marginBottom: 12 }}>
                                     Adapting Across Brands
                                 </h3>
-                                <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.7, color: C.ink3, margin: 0, maxWidth: 480, marginBottom: 32 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, maxWidth: 520, marginBottom: 32 }}>
                                     While the interaction remained consistent, visual treatments were adapted to align with each brand's established design language.
                                 </p>
                                 <div style={{
@@ -778,7 +778,7 @@ export default function AnthropologieProductDiscovery() {
                                         <div key={i} style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }}>
                                             <img src={brand.src} alt={`${brand.label} toggle states`} style={{ width: "100%", height: "auto", display: "block" }} />
                                             <div style={{ padding: "10px 14px", borderTop: `1px solid ${C.border}` }}>
-                                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.ink, margin: 0, textAlign: "center" }}>{brand.label}</p>
+                                                <p style={{ fontFamily: INTER, fontSize: 12.5, fontWeight: 500, color: C.ink2, margin: 0, textAlign: "center" }}>{brand.label}</p>
                                             </div>
                                         </div>
                                     ))}
@@ -788,12 +788,12 @@ export default function AnthropologieProductDiscovery() {
 
                         {/* 03 Supporting Different States */}
                         <FadeIn>
-                            <div style={{ marginTop: 96 }}>
-                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.muted, letterSpacing: "0.06em", margin: 0, marginBottom: 10 }}>03</p>
-                                <h3 style={{ fontFamily: Z, fontSize: phone ? 24 : 32, fontWeight: 700, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.15, margin: 0, marginBottom: 12 }}>
+                            <div style={{ marginTop: phone ? 64 : 88 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, color: C.muted, letterSpacing: "0.06em", margin: 0, marginBottom: 10 }}>03</p>
+                                <h3 style={{ fontFamily: INTER, fontSize: phone ? 22 : 28, fontWeight: 300, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.2, margin: 0, marginBottom: 12 }}>
                                     Supporting Different States
                                 </h3>
-                                <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.7, color: C.ink3, margin: 0, maxWidth: 480, marginBottom: 40 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, maxWidth: 520, marginBottom: 40 }}>
                                     The component was designed to adapt to multiple pickup and availability scenarios while maintaining a consistent interaction model.
                                 </p>
                                 <div style={{ display: "flex", flexDirection: "column", gap: 56 }}>
@@ -812,8 +812,8 @@ export default function AnthropologieProductDiscovery() {
                                         },
                                     ].map((state, i) => (
                                         <div key={i}>
-                                            <h4 style={{ fontFamily: Z, fontSize: phone ? 20 : 24, fontWeight: 600, color: C.ink, margin: 0, marginBottom: 6, letterSpacing: "-0.01em" }}>{state.title}</h4>
-                                            <p style={{ fontFamily: INTER, fontSize: 13, color: C.ink3, margin: 0, marginBottom: 20, lineHeight: 1.5 }}>{state.desc}</p>
+                                            <h4 style={{ fontFamily: INTER, fontSize: phone ? 18 : 20, fontWeight: 400, color: C.ink, margin: 0, marginBottom: 6, letterSpacing: "-0.01em" }}>{state.title}</h4>
+                                            <p style={{ fontFamily: INTER, fontSize: 14, color: C.ink3, margin: 0, marginBottom: 20, lineHeight: 1.55 }}>{state.desc}</p>
                                             <div style={{
                                                 display: "grid",
                                                 gridTemplateColumns: phone ? "1fr" : "3fr 1fr",
@@ -835,12 +835,12 @@ export default function AnthropologieProductDiscovery() {
 
                         {/* 04 Implementation Ready */}
                         <FadeIn>
-                            <div style={{ marginTop: 96 }}>
-                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.muted, letterSpacing: "0.06em", margin: 0, marginBottom: 10 }}>04</p>
-                                <h3 style={{ fontFamily: Z, fontSize: phone ? 24 : 32, fontWeight: 700, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.15, margin: 0, marginBottom: 12 }}>
+                            <div style={{ marginTop: phone ? 64 : 88 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, color: C.muted, letterSpacing: "0.06em", margin: 0, marginBottom: 10 }}>04</p>
+                                <h3 style={{ fontFamily: INTER, fontSize: phone ? 22 : 28, fontWeight: 300, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.2, margin: 0, marginBottom: 12 }}>
                                     Implementation Ready
                                 </h3>
-                                <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.7, color: C.ink3, margin: 0, maxWidth: 480, marginBottom: 28 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, maxWidth: 520, marginBottom: 28 }}>
                                     Full specifications were documented and handed off to engineering for production implementation.
                                 </p>
                                 <div style={{ display: "flex", flexWrap: "wrap", gap: phone ? 12 : 24 }}>
@@ -853,7 +853,7 @@ export default function AnthropologieProductDiscovery() {
                                             }}>
                                                 <span style={{ fontFamily: INTER, fontSize: 9, color: C.olive }}>&#10003;</span>
                                             </span>
-                                            <p style={{ fontFamily: INTER, fontSize: 13, color: C.ink2, margin: 0 }}>{item}</p>
+                                            <p style={{ fontFamily: INTER, fontSize: 14, color: C.ink2, margin: 0 }}>{item}</p>
                                         </div>
                                     ))}
                                 </div>
@@ -862,13 +862,13 @@ export default function AnthropologieProductDiscovery() {
                     </section>
 
                     {/* ════════ LAUNCH & REFLECTION ════════ */}
-                    <section id="launch" style={{ scrollMarginTop: 80, marginTop: 160 }}>
+                    <section id="launch" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
-                            <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, marginBottom: 20 }}>Launch &amp; Reflection</p>
-                            <h2 style={{ fontFamily: Z, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.08, maxWidth: 700, marginBottom: 24 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.olive, marginBottom: 16 }}>Launch &amp; Reflection</p>
+                            <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 Shipping across three brands
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.75, color: C.ink3, maxWidth: 600, marginBottom: 40 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 40 }}>
                                 This redesign is now live across Urban Outfitters, Free People, and Anthropologie, helping shoppers navigate large product catalogs with greater clarity and confidence.
                             </p>
                         </FadeIn>
@@ -900,7 +900,7 @@ export default function AnthropologieProductDiscovery() {
                                 <span style={{ fontFamily: Z, fontSize: "clamp(56px, 7vw, 80px)", lineHeight: 0.8, color: C.olive, display: "block", marginBottom: 16, userSelect: "none", opacity: 0.3 }}>&ldquo;</span>
                                 <p style={{
                                     fontFamily: Z, fontStyle: "italic", fontWeight: 400,
-                                    fontSize: "clamp(28px, 4vw, 48px)", lineHeight: 1.25,
+                                    fontSize: "clamp(26px, 3.4vw, 40px)", lineHeight: 1.3,
                                     color: C.ink, letterSpacing: "-0.03em", maxWidth: 720, marginBottom: 0,
                                 }}>
                                     Designing better filters wasn't the goal. Building confidence was.
@@ -910,10 +910,10 @@ export default function AnthropologieProductDiscovery() {
 
                         <FadeIn delay={100}>
                             <div style={{ width: 40, height: 1, backgroundColor: C.olive, marginBottom: 32, opacity: 0.5 }} />
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.85, color: C.ink3, maxWidth: 580, margin: 0 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 580, margin: 0 }}>
                                 Usability testing revealed that the biggest friction wasn't functionality. It was uncertainty. Small moments of hesitation compounded throughout the experience, causing users to question whether the system was working as expected.
                             </p>
-                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.85, color: C.ink3, maxWidth: 580, marginTop: 20, marginBottom: 0 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 580, marginTop: 20, marginBottom: 0 }}>
                                 This project reinforced that effective product design is often less about adding new features and more about creating experiences that feel clear, predictable, and trustworthy.
                             </p>
                         </FadeIn>
