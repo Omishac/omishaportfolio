@@ -1036,14 +1036,14 @@ const CARDS: CaseStudy[] = [
         desc: "Improving how shoppers read and trust customer reviews inside the iOS app.",
         live: true,
     },
-    // ── New case study: fill in the placeholders below ──
+    // ── Aurevion: add the case study URL to `href` and drop `comingSoon` when it goes live ──
     {
         href: "",                                     // TODO: case study URL, e.g. "/aurevion"
         image: "/case-studies/aurevion-cover.png",   // cover from Figma node 120:203
-        title: "Aurevion",                            // TODO: project title
-        tags: [],                                     // TODO: e.g. ["Web Design", "Branding"]
+        title: "Aurevion Diagnostics",
+        tags: ["Brand Identity", "Web Design"],
         company: "Aurevion",
-        desc: "Case study coming soon.",              // TODO: one-sentence description
+        desc: "Built a visual identity and responsive website that helped an early-stage diagnostics company present its vision to investors.",
         comingSoon: true,                             // remove once the case study is live
     },
     {
