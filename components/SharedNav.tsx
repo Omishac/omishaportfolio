@@ -2,12 +2,9 @@
 
 import { useState, useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
+import { NavStyles, NavLink, MenuLink, NAV_LINK_GAP } from "./NavLinks"
 
-const I = "Inter, system-ui, sans-serif"
-const Z = "Zodiak, 'Times New Roman', serif"
-const YB = "var(--font-yuji-boku), serif"
 const INK  = "#111111"
-const INK3 = "#6B6B6B"
 const BG   = "#FFFFFF"
 const BORDER = "rgba(0,0,0,0.08)"
 
@@ -18,7 +15,6 @@ export default function SharedNav() {
     const [tablet, setTablet] = useState(false)
     const [large, setLarge] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
-    const [hoveredLink, setHoveredLink] = useState<string | null>(null)
     const overlayRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
@@ -61,6 +57,7 @@ export default function SharedNav() {
 
     return (
         <>
+            <NavStyles />
             <nav
                 style={{
                     position: "sticky",
@@ -91,51 +88,11 @@ export default function SharedNav() {
 
                 {/* Desktop links */}
                 {!phone && (
-                    <div style={{ display: "flex", gap: tablet ? 24 : 32, alignItems: "center" }}>
-                        {allLinks.map(({ label, href, ext }) => {
-                            const active = label === "Playground" && isPlayground
-                            const hovered = hoveredLink === label
-                            return (
-                                <a
-                                    key={label}
-                                    href={href}
-                                    target={ext ? "_blank" : "_self"}
-                                    rel="noreferrer"
-                                    style={{
-                                        position: "relative",
-                                        fontFamily: I,
-                                        fontSize: 14,
-                                        fontWeight: active ? 600 : 500,
-                                        color: active ? INK : (hovered ? INK : INK3),
-                                        textDecoration: "none",
-                                        letterSpacing: "-0.01em",
-                                        transition: "color 0.25s",
-                                    }}
-                                    onMouseEnter={() => setHoveredLink(label)}
-                                    onMouseLeave={() => setHoveredLink(null)}
-                                >
-                                    <span style={{
-                                        opacity: hovered ? 0 : 1,
-                                        transition: "opacity 0.25s ease",
-                                    }}>{label}</span>
-                                    <span style={{
-                                        position: "absolute",
-                                        left: 0,
-                                        top: "50%",
-                                        transform: "translateY(-50%)",
-                                        fontFamily: YB,
-                                        fontSize: 15,
-                                        fontWeight: 700,
-                                        fontStyle: "italic",
-                                        color: INK,
-                                        whiteSpace: "nowrap",
-                                        opacity: hovered ? 1 : 0,
-                                        transition: "opacity 0.25s ease",
-                                        pointerEvents: "none",
-                                    }}>{label}</span>
-                                </a>
-                            )
-                        })}
+                    <div style={{ display: "flex", gap: large ? 24 : NAV_LINK_GAP, alignItems: "center" }}>
+                        {allLinks.map(({ label, href, ext }) => (
+                            <NavLink key={label} label={label} href={href} ext={ext}
+                                active={label === "Playground" && isPlayground} size={large ? 14 : undefined} />
+                        ))}
                     </div>
                 )}
 
@@ -197,36 +154,26 @@ export default function SharedNav() {
                         transition: "opacity 0.25s cubic-bezier(0.22,1,0.36,1)",
                     }}
                 >
-                    {allLinks.map(({ label, href, ext }, i) => {
-                        const active = label === "Playground" && isPlayground
-                        return (
-                            <a
-                                key={label}
-                                href={href}
-                                target={ext ? "_blank" : "_self"}
-                                rel="noreferrer"
-                                onClick={() => setMenuOpen(false)}
-                                style={{
-                                    fontFamily: Z,
-                                    fontSize: 36,
-                                    fontWeight: active ? 600 : 400,
-                                    color: active ? INK : INK3,
-                                    textDecoration: "none",
-                                    letterSpacing: "-0.02em",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    minHeight: 64,
-                                    width: "100%",
-                                    borderBottom: `1px solid ${BORDER}`,
-                                    opacity: menuOpen ? 1 : 0,
-                                    transform: menuOpen ? "translateY(0)" : "translateY(16px)",
-                                    transition: `opacity 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 55}ms, transform 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 55}ms`,
-                                }}
-                            >
-                                {label}
-                            </a>
-                        )
-                    })}
+                    {allLinks.map(({ label, href, ext }, i) => (
+                        <MenuLink
+                            key={label}
+                            label={label}
+                            href={href}
+                            ext={ext}
+                            active={label === "Playground" && isPlayground}
+                            onClick={() => setMenuOpen(false)}
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                minHeight: 68,
+                                width: "100%",
+                                borderBottom: `1px solid ${BORDER}`,
+                                opacity: menuOpen ? 1 : 0,
+                                transform: menuOpen ? "translateY(0)" : "translateY(16px)",
+                                transition: `opacity 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 55}ms, transform 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 55}ms`,
+                            }}
+                        />
+                    ))}
                 </div>
             )}
         </>

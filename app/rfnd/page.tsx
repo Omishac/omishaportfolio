@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useRef, useEffect } from "react"
+import { NavStyles, NavLink, MenuLink, NAV_LINK_GAP } from "../../components/NavLinks"
 
 const Z = "Zodiak, 'Times New Roman', serif"
 const INTER = "Inter, system-ui, sans-serif"
@@ -337,7 +338,6 @@ function CaseStudyNav() {
     const [scrolled, setScrolled] = useState(false)
     const [phone, setPhone] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
-    const [hovNav, setHovNav] = useState<string | null>(null)
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 12)
         const onResize = () => setPhone(window.innerWidth < 768)
@@ -356,6 +356,7 @@ function CaseStudyNav() {
 
     return (
         <>
+            <NavStyles />
             <nav style={{
                 position: "sticky", top: 0, zIndex: 100, width: "100%",
                 height: phone ? 54 : 64, display: "flex", alignItems: "center",
@@ -380,15 +381,9 @@ function CaseStudyNav() {
                         <span style={{ width: 14, height: 2, backgroundColor: C.ink, borderRadius: 1, display: "block", alignSelf: "flex-end" }} />
                     </button>
                 ) : (
-                    <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
+                    <div style={{ display: "flex", gap: NAV_LINK_GAP, alignItems: "center" }}>
                         {allLinks.map(({ label, href, ext }) => (
-                            <a key={label} href={href} target={ext ? "_blank" : "_self"} rel="noreferrer"
-                                style={{ position: "relative", fontFamily: INTER, fontSize: 14, fontWeight: 500, color: hovNav === label ? C.ink : C.ink3, textDecoration: "none", letterSpacing: "-0.01em", transition: "color 0.25s", minHeight: 44, display: "flex", alignItems: "center" }}
-                                onMouseEnter={() => setHovNav(label)}
-                                onMouseLeave={() => setHovNav(null)}>
-                                <span style={{ opacity: hovNav === label ? 0 : 1, transition: "opacity 0.25s ease" }}>{label}</span>
-                                <span style={{ position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)", fontFamily: "var(--font-yuji-boku), serif", fontSize: 15, fontWeight: 700, fontStyle: "italic", color: C.ink, whiteSpace: "nowrap", opacity: hovNav === label ? 1 : 0, transition: "opacity 0.25s ease", pointerEvents: "none" }}>{label}</span>
-                            </a>
+                            <NavLink key={label} label={label} href={href} ext={ext} />
                         ))}
                     </div>
                 )}
@@ -403,10 +398,8 @@ function CaseStudyNav() {
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                         {allLinks.map(({ label, href, ext }) => (
-                            <a key={label} href={href} target={ext ? "_blank" : "_self"} rel="noreferrer" onClick={() => setMenuOpen(false)}
-                                style={{ fontFamily: INTER, fontSize: 28, fontWeight: 600, color: C.ink, textDecoration: "none", letterSpacing: "-0.02em", minHeight: 52, display: "flex", alignItems: "center", borderBottom: `1px solid ${C.border}`, paddingBottom: 12, paddingTop: 12 }}>
-                                {label}
-                            </a>
+                            <MenuLink key={label} label={label} href={href} ext={ext} onClick={() => setMenuOpen(false)}
+                                style={{ minHeight: 52, display: "flex", alignItems: "center", borderBottom: `1px solid ${C.border}`, padding: "12px 0" }} />
                         ))}
                     </div>
                 </div>

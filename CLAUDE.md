@@ -8,7 +8,8 @@ Next.js 14 App Router, TypeScript, inline styles (no Tailwind), "use client" com
 
 ## Key files
 - `app/page.tsx` — homepage only. All hero/section changes live here.
-- `components/SharedNav.tsx` — shared nav, do NOT modify (affects case studies).
+- `components/NavLinks.tsx` — nav link styling shared by EVERY page's nav (homepage `HomeNav`, `SharedNav` on /playground, each case study's local `CaseStudyNav`). Change nav typography/states here so all pages stay in sync.
+- `components/SharedNav.tsx` — playground nav bar; don't change its bar/layout (links come from NavLinks).
 - `app/globals.css` — global resets, easing tokens, keyframes.
 - `public/images/` — character SVGs: `image 8.svg`, `image 8-1.svg`, `image 9.svg`, `image 10.svg`
 
@@ -32,7 +33,7 @@ const EASE_OUT    = "cubic-bezier(0.23,1,0.32,1)"
 - Tear-off paper flyer (pink `#D33361` + crumpled texture at 38% + clear tape) on a fixed 518×581 stage using Figma coordinates; stage scales down to fit `w - 2*px`
 - Assets in `public/hero-flyer/` (tape is cropped out of the `tape-clear.png` sticker sheet)
 - Text (all white-ish on pink): "Hi, I'm Omisha!" Inter Bold 20.6px (the h1); role line Inter Medium 12px; "Take what you need:" Inter Bold 10.4px `#FFE2ED`
-- Homepage nav (`HomeNav`, Figma 115:42): Inter ExtraLight 12.9px, black, lowercase, 19.5px gaps; pink hand-drawn underline on hover/focus, dashed pink focus ring
+- Nav links on all pages (`components/NavLinks.tsx`, Figma 115:42): Inter ExtraLight 12.9px, black, lowercase, 19.5px gaps; pink hand-drawn underline on hover/focus/current page, dashed pink focus ring; phone menu 34px
 - Tabs (Inter Light 15.5px, rotated 92.3°): Redesign, Mobile Design, Digital Strategy, Freelancing (italic), Say hello (mailto, dog-eared corner); two tabs shown torn off
 - CTA below flyer: "Here's a closer look at what that means" in Zodiak (`NAV_Z`) + pink curved SVG arrow
 - Entrance: flyer fade + translateY/rotate settle (EASE_SPRING), CTA fades in after; off under reduced motion
@@ -52,6 +53,7 @@ const EASE_OUT    = "cubic-bezier(0.23,1,0.32,1)"
 - `marquee` — logo strip scroll
 
 ## CRITICAL SCOPE RULE
+(Exception: the nav links are intentionally shared site-wide via `components/NavLinks.tsx`.)
 Do NOT modify case study pages or shared components in ways that affect them:
 - `/anthropologie-product-discovery`
 - `/anthropologie-mcommerce`

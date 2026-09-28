@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react"
 import NextImage from "next/image"
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion"
+import { NavStyles, NavLink, MenuLink, NAV_LINK_GAP } from "../components/NavLinks"
 
 const CURSOR_STYLES = `
   @keyframes hi-float {
@@ -218,74 +219,10 @@ function useBP() {
 
 const NAV_Z = "Zodiak, 'Times New Roman', serif"
 
-// Nav type per Figma node 115:42: Inter ExtraLight, lowercase, black. Hover
-// draws a hand-drawn pink underline in the poster's colour; focus adds a
-// dashed, perforation-like ring.
-const NAV_PINK = "#D33361"
-const NAV_STYLES = `
-.home-nav-link {
-    position: relative;
-    display: inline-block;
-    padding: 6px 1px 8px;
-    font-family: ${I};
-    font-weight: 200;
-    text-transform: lowercase;
-    line-height: 1;
-    color: #000000;
-    text-decoration: none;
-    border-radius: 3px;
-    transition: color 0.25s ${EASE_OUT}, transform 0.2s ${EASE_OUT};
-    -webkit-tap-highlight-color: transparent;
-}
-.home-nav-link svg {
-    position: absolute;
-    left: -2px;
-    right: -2px;
-    bottom: 1px;
-    width: calc(100% + 4px);
-    height: 6px;
-    overflow: visible;
-    pointer-events: none;
-}
-.home-nav-link path {
-    stroke: ${NAV_PINK};
-    stroke-width: 1.5;
-    stroke-linecap: round;
-    fill: none;
-    /* offset past the gap so not even a round cap shows at rest */
-    stroke-dasharray: 1 1.1;
-    stroke-dashoffset: 1.05;
-    transition: stroke-dashoffset 0.38s ${EASE_OUT};
-}
-.home-nav-link:hover, .home-nav-link:focus-visible { color: ${C.ink}; }
-.home-nav-link:hover path, .home-nav-link:focus-visible path, .home-nav-link:active path { stroke-dashoffset: 0; }
-.home-nav-link:focus-visible { outline: 1.5px dashed ${NAV_PINK}; outline-offset: 5px; }
-.home-nav-link:active { color: ${C.ink}; transform: translateY(1px); }
-.home-nav-link--menu { padding: 0 0 10px; }
-.home-nav-item { outline: none; -webkit-tap-highlight-color: transparent; }
-.home-nav-item:is(:hover, :focus-visible, :active) .home-nav-link { color: ${C.ink}; }
-.home-nav-item:is(:hover, :focus-visible, :active) .home-nav-link path { stroke-dashoffset: 0; }
-.home-nav-item:focus-visible .home-nav-link { outline: 1.5px dashed ${NAV_PINK}; outline-offset: 6px; }
-.home-nav-link--menu svg { height: 8px; bottom: 4px; }
-@media (prefers-reduced-motion: reduce) {
-    .home-nav-link, .home-nav-link path { transition: none; }
-    .home-nav-link:active { transform: none; }
-}
-`
-
-// Slightly uneven stroke so the underline reads as drawn by hand.
-function NavUnderline() {
-    return (
-        <svg viewBox="0 0 100 6" preserveAspectRatio="none" aria-hidden="true">
-            <path pathLength={1} d="M1 3.8 C 14 2.6, 27 4.6, 42 3.4 S 70 2.4, 84 3.6 S 96 3.1, 99 2.5" />
-        </svg>
-    )
-}
-
-// Homepage-only nav: same look as SharedNav, but instead of sticking to the
-// top permanently, it hides on scroll-down and slides back in on scroll-up
-// (SharedNav itself stays untouched — it's shared with the case study pages,
-// which keep the always-sticky behavior).
+// Homepage-only nav: same links as every other page (components/NavLinks), but
+// instead of sticking to the top permanently, it hides on scroll-down and
+// slides back in on scroll-up (SharedNav and the case study navs stay
+// always-sticky).
 function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean; large: boolean; px: number }) {
     const [scrolled, setScrolled] = useState(false)
     const [hidden, setHidden] = useState(false)
@@ -330,7 +267,7 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
 
     return (
         <>
-            <style dangerouslySetInnerHTML={{ __html: NAV_STYLES }} />
+            <NavStyles />
             <nav
                 style={{
                     position: "fixed",
@@ -363,19 +300,9 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
                 </a>
 
                 {!phone && (
-                    <div style={{ display: "flex", gap: large ? 24 : 19.5, alignItems: "center" }}>
+                    <div style={{ display: "flex", gap: large ? 24 : NAV_LINK_GAP, alignItems: "center" }}>
                         {allLinks.map(({ label, href, ext }) => (
-                            <a
-                                key={label}
-                                href={href}
-                                target={ext ? "_blank" : "_self"}
-                                rel="noreferrer"
-                                className="home-nav-link"
-                                style={{ fontSize: large ? 14 : 12.872 }}
-                            >
-                                {label}
-                                <NavUnderline />
-                            </a>
+                            <NavLink key={label} label={label} href={href} ext={ext} size={large ? 14 : undefined} />
                         ))}
                     </div>
                 )}
@@ -437,13 +364,12 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
                     }}
                 >
                     {allLinks.map(({ label, href, ext }, i) => (
-                        <a
+                        <MenuLink
                             key={label}
+                            label={label}
                             href={href}
-                            target={ext ? "_blank" : "_self"}
-                            rel="noreferrer"
+                            ext={ext}
                             onClick={() => setMenuOpen(false)}
-                            className="home-nav-item"
                             style={{
                                 display: "flex",
                                 alignItems: "center",
@@ -454,12 +380,7 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
                                 transform: menuOpen ? "translateY(0)" : "translateY(16px)",
                                 transition: `opacity 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 55}ms, transform 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 55}ms`,
                             }}
-                        >
-                            <span className="home-nav-link home-nav-link--menu" style={{ fontSize: 34, letterSpacing: "-0.02em" }}>
-                                {label}
-                                <NavUnderline />
-                            </span>
-                        </a>
+                        />
                     ))}
                 </div>
             )}
