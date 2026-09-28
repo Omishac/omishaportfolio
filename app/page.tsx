@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react"
 import NextImage from "next/image"
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion"
 import { NavStyles, NavLink, MenuLink, NAV_LINK_GAP } from "../components/NavLinks"
+import { FONT_SANS, COLORS, EASE_SPRING, EASE_OUT, HOVER_COLORS, useReducedMotion, useFinePointer, HoverLetters, BracketTag } from "../components/site"
 
 const CURSOR_STYLES = `
   @keyframes hi-float {
@@ -62,89 +63,8 @@ const CURSOR_STYLES = `
   }
 `
 
-const I = "Inter, system-ui, sans-serif"
-
-const C = {
-    ink: "#111111",
-    ink2: "#3A3A3A",
-    ink3: "#6B6B6B",
-    muted: "#9A9A9A",
-    border: "rgba(0,0,0,0.08)",
-    bg: "#FFFFFF",
-}
-
-const EASE_SPRING = "cubic-bezier(0.22,1,0.36,1)"
-const EASE_OUT    = "cubic-bezier(0.23,1,0.32,1)"
-
-function useReducedMotion() {
-    const [reduced, setReduced] = useState(false)
-    useEffect(() => {
-        const mq = window.matchMedia("(prefers-reduced-motion: reduce)")
-        setReduced(mq.matches)
-        const h = (e: MediaQueryListEvent) => setReduced(e.matches)
-        mq.addEventListener("change", h)
-        return () => mq.removeEventListener("change", h)
-    }, [])
-    return reduced
-}
-
-function useFinePointer() {
-    const [fine, setFine] = useState(true)
-    useEffect(() => {
-        const mq = window.matchMedia("(hover: hover) and (pointer: fine)")
-        setFine(mq.matches)
-        const h = (e: MediaQueryListEvent) => setFine(e.matches)
-        mq.addEventListener("change", h)
-        return () => mq.removeEventListener("change", h)
-    }, [])
-    return fine
-}
-
-const HOVER_COLORS = ["#94AAD9", "#E7BEF8", "#EDE986", "#F2619C"]
-
-// Splits text into individually hoverable letters — hovering one picks a
-// random color from HOVER_COLORS just for that letter, reverting on
-// mouse-leave. Spaces stay as plain text (not hoverable) so word wrapping
-// behaves normally. The wrapper carries `aria-label` with the real text and
-// each letter span is aria-hidden, so screen readers get the coherent
-// string instead of one character at a time.
-function HoverLetters({ text }: { text: string }) {
-    const [colors, setColors] = useState<Record<number, string>>({})
-    const finePointer = useFinePointer()
-
-    return (
-        <span aria-label={text}>
-            {Array.from(text).map((ch, i) =>
-                ch === " " ? (
-                    <span key={i} aria-hidden="true"> </span>
-                ) : (
-                    <span
-                        key={i}
-                        aria-hidden="true"
-                        onMouseEnter={() => {
-                            if (!finePointer) return
-                            const color = HOVER_COLORS[Math.floor(Math.random() * HOVER_COLORS.length)]
-                            setColors((c) => ({ ...c, [i]: color }))
-                        }}
-                        onMouseLeave={() => {
-                            setColors((c) => {
-                                const next = { ...c }
-                                delete next[i]
-                                return next
-                            })
-                        }}
-                        style={{
-                            color: colors[i] ?? "inherit",
-                            transition: "color 0.15s ease",
-                        }}
-                    >
-                        {ch}
-                    </span>
-                )
-            )}
-        </span>
-    )
-}
+const I = FONT_SANS
+const C = COLORS
 
 // Smooths a raw scroll-derived value (0-1 progress, degrees, px — whatever)
 // by chasing it each frame instead of snapping to it, so scroll-linked
@@ -401,7 +321,7 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
 const TAPE_OVERHANG = 33.28
 const FLYER_W = 518
 const FLYER_H = 548 + TAPE_OVERHANG
-const FLYER_PINK = "#D33361"
+const FLYER_PINK = COLORS.pink
 
 type Pt = [number, number]
 const rad = (deg: number) => (deg * Math.PI) / 180
@@ -994,13 +914,7 @@ function SectionLabel({
     const titleSize = phone ? 26 : tablet ? 30 : large ? 44 : 36
     return (
         <div style={{ marginBottom: phone ? 28 : tablet ? 40 : 52 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 10 }}>
-                <span style={{ fontFamily: I, fontSize: 12, color: C.muted }}>[</span>
-                <span style={{ fontFamily: I, fontWeight: 300, fontSize: 12, color: C.ink, letterSpacing: "-0.01em" }}>
-                    {tag}
-                </span>
-                <span style={{ fontFamily: I, fontSize: 12, color: C.muted }}>]</span>
-            </div>
+            <BracketTag style={{ marginBottom: 10 }}>{tag}</BracketTag>
             <h2
                 style={{
                     fontFamily: I,
@@ -1114,7 +1028,7 @@ function CoverCard({
             width: "100%",
             aspectRatio: "4 / 3",
             overflow: "hidden",
-            backgroundColor: "#F4F2EF",
+            backgroundColor: C.paper,
             transform: lifted && !reducedMotion ? `translateY(-5px) rotate(${tilt}deg)` : "none",
             boxShadow: lifted
                 ? "0 18px 28px -18px rgba(17,17,17,0.28), 0 2px 6px rgba(17,17,17,0.06)"
@@ -2198,7 +2112,7 @@ function ExploreSection({
 // Write a thought, crumple it into the paper ball, then pull back and release
 // to toss it into the can. Aiming and hit detection use the measured on-screen
 // positions of the ball and can at throw time, so they follow any layout.
-const GAME_PINK = "#D33361"
+const GAME_PINK = COLORS.pink
 
 // Transparent space under each asset, as a fraction of its height, so the
 // visible paper/can sits on the floor line.
@@ -2623,11 +2537,7 @@ function FooterGame({
             >
             <div style={{ maxWidth: Math.min(maxW, 880), width: "100%", margin: "0 auto" }}>
                 <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
-                    <span style={{ fontFamily: I, fontSize: 12, color: C.muted }}>[</span>
-                    <span style={{ fontFamily: I, fontWeight: 300, fontSize: 12, color: C.ink, letterSpacing: "-0.01em" }}>before you go</span>
-                    <span style={{ fontFamily: I, fontSize: 12, color: C.muted }}>]</span>
-                </div>
+                <BracketTag style={{ marginBottom: 8 }}>before you go</BracketTag>
                 <h2 id="toss-heading" style={{ fontFamily: I, fontWeight: 200, fontSize: phone ? 24 : 30, lineHeight: 1.1, letterSpacing: "-0.02em", color: C.ink, margin: 0 }}>
                     clear your head
                 </h2>

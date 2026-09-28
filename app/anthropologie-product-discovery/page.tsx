@@ -2,20 +2,12 @@
 
 import React, { useState, useRef, useEffect } from "react"
 import { NavStyles, NavLink, MenuLink, NAV_LINK_GAP } from "../../components/NavLinks"
+import { FONT_SANS, FONT_SERIF, COLORS, EASE_SPRING, HOVER_COLORS, useReducedMotion, HoverLetters, BracketTag, Squiggle } from "../../components/site"
 
-const Z = "Zodiak, 'Times New Roman', serif"
-const INTER = "Inter, system-ui, sans-serif"
-
-const C = {
-    bg: "#FFFFFF",
-    surface: "#F4F3EF",
-    ink: "#11120C",
-    ink2: "#364025",
-    ink3: "#5A5A54",
-    muted: "#899064",
-    olive: "#899064",
-    border: "rgba(17,18,12,0.08)",
-}
+// Same tokens as the homepage (components/site.tsx)
+const Z = FONT_SERIF
+const INTER = FONT_SANS
+const C = COLORS
 
 const SECTIONS = [
     { id: "overview", label: "Overview" },
@@ -71,44 +63,54 @@ function useActiveSection(ids: string[]) {
     return active
 }
 
+// Same fade-and-rise the homepage uses for its cards (0.6s, 16px, EASE_SPRING).
 function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
     const { ref, visible } = useInView()
+    const reduced = useReducedMotion()
+    const shown = visible || reduced
     return (
         <div ref={ref} style={{
-            opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(20px)",
-            transition: `opacity 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
+            opacity: shown ? 1 : 0, transform: shown ? "none" : "translateY(16px)",
+            transition: reduced ? "none" : `opacity 0.6s ${EASE_SPRING} ${delay}ms, transform 0.6s ${EASE_SPRING} ${delay}ms`,
         }}>{children}</div>
     )
 }
 
 // ── Shared type ─────────────────────────────────────────────────────────────
 
+// Section label: the homepage's "[ tag ]", lowercase.
 function Eyebrow({ children }: { children: React.ReactNode }) {
-    return <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.olive, margin: 0, marginBottom: 16 }}>{children}</p>
+    return <BracketTag style={{ marginBottom: 12 }}>{children}</BracketTag>
 }
 
-function H2({ children }: { children: React.ReactNode }) {
-    return <h2 style={{ fontFamily: Z, fontSize: "clamp(26px, 3.4vw, 40px)", fontWeight: 700, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1.1, maxWidth: 720, margin: 0, marginBottom: 18 }}>{children}</h2>
+// Section title: light Inter like "inside my work", with the same hover letters.
+function H2({ children }: { children: string }) {
+    return (
+        <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 44px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.08, maxWidth: 760, margin: 0, marginBottom: 20 }}>
+            <HoverLetters text={children} />
+        </h2>
+    )
 }
 
-function Lede({ children, max = 600 }: { children: React.ReactNode; max?: number }) {
-    return <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.7, color: C.ink3, maxWidth: max, margin: 0 }}>{children}</p>
+// Long-form body: a notch larger and darker than homepage captions so it's comfortable to read.
+function Lede({ children, max = 620 }: { children: React.ReactNode; max?: number }) {
+    return <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink2, maxWidth: max, margin: 0 }}>{children}</p>
 }
 
 function Label({ children }: { children: React.ReactNode }) {
-    return <p style={{ fontFamily: INTER, fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", color: C.muted, margin: 0, marginBottom: 8, textTransform: "uppercase" }}>{children}</p>
+    return <p style={{ fontFamily: INTER, fontSize: 12, fontWeight: 300, color: C.muted, margin: 0, marginBottom: 8 }}>{children}</p>
 }
 
 function Caption({ children }: { children: React.ReactNode }) {
-    return <p style={{ fontFamily: INTER, fontSize: 12, lineHeight: 1.5, color: C.ink3, margin: 0, marginTop: 10 }}>{children}</p>
+    return <p style={{ fontFamily: INTER, fontSize: 12.5, lineHeight: 1.55, color: C.ink3, margin: 0, marginTop: 12 }}>{children}</p>
 }
 
-function Bullets({ items, size = 14 }: { items: string[]; size?: number }) {
+function Bullets({ items, size = 14.5 }: { items: string[]; size?: number }) {
     return (
         <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {items.map((t, i) => (
-                <li key={i} style={{ display: "flex", gap: 10, fontFamily: INTER, fontSize: size, lineHeight: 1.6, color: C.ink2, marginBottom: i < items.length - 1 ? 6 : 0 }}>
-                    <span aria-hidden="true" style={{ color: C.olive, flexShrink: 0 }}>·</span>
+                <li key={i} style={{ display: "flex", gap: 12, fontFamily: INTER, fontSize: size, lineHeight: 1.6, color: C.ink2, marginBottom: i < items.length - 1 ? 8 : 0 }}>
+                    <span aria-hidden="true" style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: C.pink, flexShrink: 0, marginTop: "0.62em" }} />
                     <span>{t}</span>
                 </li>
             ))}
@@ -116,7 +118,25 @@ function Bullets({ items, size = 14 }: { items: string[]; size?: number }) {
     )
 }
 
-const FRAME: React.CSSProperties = { borderRadius: 12, overflow: "hidden", border: `1px solid ${C.border}`, backgroundColor: C.bg }
+// A numbered row with the homepage skills-list hover: a colored rule sweeps in.
+function Row({ num, children }: { num: string; children: React.ReactNode }) {
+    const [hov, setHov] = useState(false)
+    const [color, setColor] = useState(C.ink)
+    return (
+        <div
+            onMouseEnter={() => { setHov(true); setColor(HOVER_COLORS[Math.floor(Math.random() * HOVER_COLORS.length)]) }}
+            onMouseLeave={() => setHov(false)}
+            style={{ position: "relative", display: "flex", gap: 16, alignItems: "baseline", padding: "14px 0", borderBottom: `1px solid ${C.border}` }}
+        >
+            <span style={{ fontFamily: INTER, fontSize: 10, color: C.muted, letterSpacing: "0.06em", width: 20, flexShrink: 0 }}>{num}</span>
+            <span style={{ fontFamily: INTER, fontSize: 14.5, lineHeight: 1.55, color: hov ? C.ink : C.ink2, transition: "color 0.2s" }}>{children}</span>
+            <span aria-hidden="true" style={{ position: "absolute", left: 0, bottom: 0, height: 2, width: hov ? "100%" : "0%", backgroundColor: color, transition: `width 0.4s ${EASE_SPRING}, background-color 0.2s ease` }} />
+        </div>
+    )
+}
+
+// Homepage image treatment: square corners, no border, paper mat behind.
+const FRAME: React.CSSProperties = { overflow: "hidden", backgroundColor: C.paper }
 
 // ── Content ─────────────────────────────────────────────────────────────────
 
@@ -189,54 +209,64 @@ const PICKUP_STATES = [
 ]
 
 const BRANDS = [
-    { name: "Urban Outfitters", href: "https://www.urbanoutfitters.com/womens-clothing", brandColor: "#11120C" },
-    { name: "Free People", href: "https://www.freepeople.com/clothes", brandColor: "#D52975" },
-    { name: "Anthropologie", href: "https://www.anthropologie.com/womens-clothing", brandColor: "#167A92" },
+    { name: "Urban Outfitters", href: "https://www.urbanoutfitters.com/womens-clothing" },
+    { name: "Free People", href: "https://www.freepeople.com/clothes" },
+    { name: "Anthropologie", href: "https://www.anthropologie.com/womens-clothing" },
 ]
 
 // ── Blocks ──────────────────────────────────────────────────────────────────
 
-function DecisionBlock({ d, phone }: { d: typeof DECISIONS[number]; phone: boolean }) {
+function DecisionBlock({ d, phone, flip }: { d: typeof DECISIONS[number]; phone: boolean; flip: boolean }) {
+    const text = (
+        <div>
+            <p style={{ fontFamily: INTER, fontSize: 10, color: C.muted, letterSpacing: "0.06em", margin: 0, marginBottom: 10 }}>{d.num}</p>
+            <h3 style={{ fontFamily: INTER, fontSize: phone ? 24 : 30, fontWeight: 300, color: C.ink, letterSpacing: "-0.02em", lineHeight: 1.12, margin: 0, marginBottom: 20 }}>{d.title}</h3>
+            <Label>what testing showed</Label>
+            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink2, margin: 0, marginBottom: 14 }}>{d.saw}</p>
+            {/* Participant voice in Zodiak, the site's warm serif */}
+            <p style={{ fontFamily: Z, fontStyle: "italic", fontSize: phone ? 17 : 19, lineHeight: 1.4, color: C.ink, margin: 0, marginBottom: 28, paddingLeft: 14, borderLeft: `2px solid ${C.pink}` }}>
+                &ldquo;{d.quote}&rdquo;
+            </p>
+            <Label>what I changed</Label>
+            <Bullets items={d.changes} />
+        </div>
+    )
+    const media = (
+        <figure style={{ margin: 0 }}>
+            {/* The recordings are full desktop screens; the filter drawer sits on the
+                right, so the frame is cropped to it to keep the UI legible. */}
+            <div style={{ ...FRAME, position: "relative", aspectRatio: "0.72" }}>
+                <video src={d.video} autoPlay loop muted playsInline aria-label={d.caption}
+                    style={{ position: "absolute", top: 0, right: 0, height: "100%", width: "auto", maxWidth: "none", display: "block" }} />
+            </div>
+            <Caption>{d.caption}</Caption>
+        </figure>
+    )
+    // Alternate sides so the four decisions read as a sequence, not a stack of identical cards.
     return (
         <div style={{
             display: "grid",
-            gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) minmax(0, 1.1fr)",
-            gap: phone ? 24 : 56,
+            gridTemplateColumns: phone ? "minmax(0, 1fr)" : flip ? "minmax(0, 1.1fr) minmax(0, 1fr)" : "minmax(0, 1fr) minmax(0, 1.1fr)",
+            gap: phone ? 28 : 72,
             alignItems: "center",
         }}>
-            <div>
-                <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, color: C.olive, letterSpacing: "0.06em", margin: 0, marginBottom: 8 }}>{d.num}</p>
-                <h3 style={{ fontFamily: Z, fontSize: phone ? 22 : 28, fontWeight: 700, color: C.ink, letterSpacing: "-0.02em", lineHeight: 1.15, margin: 0, marginBottom: 18 }}>{d.title}</h3>
-                <Label>What testing showed</Label>
-                <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.65, color: C.ink3, margin: 0, marginBottom: 12 }}>{d.saw}</p>
-                <p style={{ fontFamily: Z, fontStyle: "italic", fontSize: phone ? 16 : 18, lineHeight: 1.4, color: C.ink, margin: 0, marginBottom: 24, paddingLeft: 14, borderLeft: `2px solid ${C.olive}` }}>
-                    &ldquo;{d.quote}&rdquo;
-                </p>
-                <Label>What I changed</Label>
-                <Bullets items={d.changes} />
-            </div>
-            <figure style={{ margin: 0 }}>
-                {/* The recordings are full desktop screens; the filter drawer sits on the
-                    right, so the frame is cropped to it to keep the UI legible. */}
-                <div style={{ ...FRAME, position: "relative", aspectRatio: "0.72", boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.05)" }}>
-                    <video src={d.video} autoPlay loop muted playsInline aria-label={d.caption}
-                        style={{ position: "absolute", top: 0, right: 0, height: "100%", width: "auto", maxWidth: "none", display: "block" }} />
-                </div>
-                <Caption>{d.caption}</Caption>
-            </figure>
+            {phone || !flip ? <>{text}{media}</> : <>{media}{text}</>}
         </div>
     )
 }
 
+// Metric callout: light Inter numerals with the pink hand-drawn stroke.
 function Stat({ value, label, phone }: { value: string; label: string; phone: boolean }) {
     return (
         <div>
-            <p style={{ fontFamily: Z, fontSize: phone ? 44 : 56, fontWeight: 700, color: C.ink, letterSpacing: "-0.04em", lineHeight: 1, margin: 0, marginBottom: 8 }}>{value}</p>
-            <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.5, color: C.ink3, margin: 0, maxWidth: 260 }}>{label}</p>
+            <p style={{ fontFamily: INTER, fontSize: phone ? 48 : 64, fontWeight: 200, color: C.ink, letterSpacing: "-0.04em", lineHeight: 1, margin: 0 }}>{value}</p>
+            <Squiggle width={phone ? 44 : 56} style={{ margin: "10px 0 12px" }} />
+            <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.55, color: C.ink3, margin: 0, maxWidth: 260 }}>{label}</p>
         </div>
     )
 }
 
+// Section index: lowercase, light, with a small pink mark on the current one.
 function SideNav({ active }: { active: string }) {
     return (
         <nav aria-label="Case study sections">
@@ -246,17 +276,13 @@ function SideNav({ active }: { active: string }) {
                     <a key={id} href={`#${id}`}
                         onClick={(e) => { e.preventDefault(); document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" }) }}
                         aria-current={isActive ? "location" : undefined}
-                        style={{
-                            display: "block", padding: "6px 0",
-                            textDecoration: "none", transition: "opacity 0.3s ease",
-                            opacity: isActive ? 1 : 0.35,
-                        }}
+                        style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 0", textDecoration: "none" }}
                     >
+                        <span aria-hidden="true" style={{ width: isActive ? 12 : 0, height: 1.5, backgroundColor: C.pink, transition: `width 0.3s ${EASE_SPRING}` }} />
                         <span style={{
-                            fontFamily: INTER, fontSize: 10, fontWeight: isActive ? 700 : 400,
-                            color: C.ink, letterSpacing: "0.06em", textTransform: "uppercase",
-                            borderLeft: isActive ? `2px solid ${C.olive}` : "2px solid transparent",
-                            paddingLeft: 12,
+                            fontFamily: INTER, fontSize: 12, fontWeight: isActive ? 400 : 300,
+                            color: isActive ? C.ink : C.muted, textTransform: "lowercase",
+                            transition: "color 0.3s ease",
                         }}>
                             {label}
                         </span>
@@ -369,16 +395,27 @@ export default function AnthropologieProductDiscovery() {
                     <section id="overview" style={{ scrollMarginTop: 80, paddingTop: phone ? 40 : 48 }}>
                         <FadeIn>
                             <Eyebrow>URBN · Anthropologie, Urban Outfitters, Free People</Eyebrow>
+                            {/* Same "Live" marker as this project's card on the homepage */}
+                            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14 }}>
+                                <span style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: "#6EBF8B", display: "inline-block" }} />
+                                <span style={{ fontFamily: INTER, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: "#6EBF8B" }}>Live</span>
+                            </div>
                             <h1 style={{
-                                fontFamily: Z, fontWeight: 700, fontSize: "clamp(34px, 4.6vw, 58px)",
-                                lineHeight: 1.04, letterSpacing: "-0.035em", color: C.ink,
-                                maxWidth: 820, margin: 0, marginBottom: 20,
+                                fontFamily: INTER, fontWeight: 200, fontSize: "clamp(36px, 5vw, 64px)",
+                                lineHeight: 1.04, letterSpacing: "-0.03em", color: C.ink,
+                                maxWidth: 860, margin: 0, marginBottom: 22,
                             }}>
-                                Redesigning product filters across three URBN brands
+                                <HoverLetters text="Redesigning product filters across three URBN brands" />
                             </h1>
-                            <p style={{ fontFamily: INTER, fontSize: phone ? 15 : 17, lineHeight: 1.6, color: C.ink3, maxWidth: 640, margin: 0 }}>
+                            <p style={{ fontFamily: INTER, fontSize: phone ? 16 : 18, lineHeight: 1.6, color: C.ink2, maxWidth: 640, margin: 0 }}>
                                 Shoppers kept second-guessing the filter drawer. I redesigned it around four moments of doubt found in usability testing, then turned the new pickup toggle into one component that works for every brand.
                             </p>
+                            {/* Tag pills, as on the homepage card */}
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 18 }}>
+                                {["Product Design", "Design Systems", "E-Commerce"].map((t) => (
+                                    <span key={t} style={{ fontFamily: INTER, fontSize: 11, color: C.muted, backgroundColor: "rgba(0,0,0,0.04)", borderRadius: 40, padding: "4px 10px" }}>{t}</span>
+                                ))}
+                            </div>
                         </FadeIn>
 
                         {/* At a glance: the one-minute read */}
@@ -386,17 +423,17 @@ export default function AnthropologieProductDiscovery() {
                             <div style={{
                                 display: "grid",
                                 gridTemplateColumns: phone ? "1fr" : "repeat(3, minmax(0, 1fr))",
-                                gap: phone ? 12 : 16,
-                                marginTop: phone ? 32 : 44,
+                                gap: phone ? 0 : 40,
+                                marginTop: phone ? 36 : 52,
                             }}>
                                 {[
-                                    { k: "Problem", v: "Applying filters meant hopping between screens. Shoppers couldn’t tell what was selected, how to leave, or what “Available Within 24 Hours” meant." },
-                                    { k: "My role", v: "Main designer. I worked through testing with UX Research, designed the fixes in URBN’s design system, vibe coded the test prototype, and designed and documented the pickup component." },
-                                    { k: "Outcome", v: "100% task completion when the combined prototype was tested. Now live on Urban Outfitters, Free People and Anthropologie." },
+                                    { k: "problem", v: "Applying filters meant hopping between screens. Shoppers couldn’t tell what was selected, how to leave, or what “Available Within 24 Hours” meant." },
+                                    { k: "my role", v: "Main designer. I worked through testing with UX Research, designed the fixes in URBN’s design system, vibe coded the test prototype, and designed and documented the pickup component." },
+                                    { k: "outcome", v: "100% task completion when the combined prototype was tested. Now live on Urban Outfitters, Free People and Anthropologie." },
                                 ].map(({ k, v }) => (
-                                    <div key={k} style={{ backgroundColor: C.surface, borderRadius: 14, padding: phone ? "20px 20px" : "24px 24px" }}>
+                                    <div key={k} style={{ borderTop: `1px solid ${C.ink}`, padding: phone ? "14px 0 22px" : "16px 0 0" }}>
                                         <Label>{k}</Label>
-                                        <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.6, color: C.ink2, margin: 0 }}>{v}</p>
+                                        <p style={{ fontFamily: INTER, fontSize: 14.5, lineHeight: 1.6, color: C.ink2, margin: 0 }}>{v}</p>
                                     </div>
                                 ))}
                             </div>
@@ -404,7 +441,7 @@ export default function AnthropologieProductDiscovery() {
 
                         <FadeIn delay={120}>
                             <div style={{ marginTop: phone ? 32 : 48 }}>
-                                <img src="/images/filter-comparison.webp" alt="The redesigned filter drawer on Free People, Urban Outfitters and Anthropologie mobile web" style={{ width: "100%", display: "block", borderRadius: 14 }} />
+                                <img src="/images/filter-comparison.webp" alt="The redesigned filter drawer on Free People, Urban Outfitters and Anthropologie mobile web" style={{ width: "100%", display: "block" }} />
                                 <Caption>The redesigned filter drawer, live on Free People, Urban Outfitters and Anthropologie.</Caption>
                             </div>
                         </FadeIn>
@@ -415,10 +452,10 @@ export default function AnthropologieProductDiscovery() {
                                 gap: phone ? 16 : 32, marginTop: 36,
                                 paddingTop: 28, borderTop: `1px solid ${C.border}`,
                             }}>
-                                {([["Role", "UX Designer, main designer on the project"], ["Timeline", "5 months"], ["Team", "PM, Engineering, UX Research, Brand"], ["Platforms", "Mobile Web and Desktop"]] as const).map(([k, v]) => (
+                                {([["role", "UX Designer, main designer on the project"], ["timeline", "5 months"], ["team", "PM, Engineering, UX Research, Brand"], ["platforms", "Mobile Web and Desktop"]] as const).map(([k, v]) => (
                                     <div key={k}>
                                         <Label>{k}</Label>
-                                        <p style={{ fontFamily: Z, fontWeight: 400, fontSize: 14, lineHeight: 1.4, color: C.ink2, margin: 0 }}>{v}</p>
+                                        <p style={{ fontFamily: INTER, fontWeight: 400, fontSize: 14, lineHeight: 1.45, color: C.ink2, margin: 0 }}>{v}</p>
                                     </div>
                                 ))}
                             </div>
@@ -445,12 +482,12 @@ export default function AnthropologieProductDiscovery() {
                             }}>
                                 {OLD_FLOW.map((step) => (
                                     <figure key={step.num} style={{ margin: 0 }}>
-                                        <div style={FRAME}>
-                                            <img src={step.src} alt={`Old flow, step ${step.num}: ${step.title}`} style={{ width: "100%", height: "auto", display: "block" }} />
+                                        <div style={{ ...FRAME, padding: phone ? 10 : 14 }}>
+                                            <img src={step.src} alt={`Old flow, step ${step.num}: ${step.title}`} style={{ width: "100%", height: "auto", display: "block", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }} />
                                         </div>
                                         <figcaption style={{ marginTop: 12 }}>
-                                            <p style={{ fontFamily: INTER, fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", color: C.olive, margin: 0, marginBottom: 4 }}>{step.num}</p>
-                                            <p style={{ fontFamily: Z, fontSize: 15, fontWeight: 600, color: C.ink, lineHeight: 1.3, margin: 0, marginBottom: 3 }}>{step.title}</p>
+                                            <p style={{ fontFamily: INTER, fontSize: 10, color: C.muted, letterSpacing: "0.06em", margin: 0, marginBottom: 4 }}>{step.num}</p>
+                                            <p style={{ fontFamily: INTER, fontSize: 14, fontWeight: 500, color: C.ink2, lineHeight: 1.3, margin: 0, marginBottom: 3 }}>{step.title}</p>
                                             <p style={{ fontFamily: INTER, fontSize: 12.5, lineHeight: 1.5, color: C.ink3, margin: 0 }}>{step.caption}</p>
                                         </figcaption>
                                     </figure>
@@ -470,27 +507,26 @@ export default function AnthropologieProductDiscovery() {
                             <div style={{
                                 display: "grid",
                                 gridTemplateColumns: phone ? "1fr" : "minmax(0, 1fr) minmax(0, 1fr)",
-                                gap: phone ? 28 : 56,
+                                gap: phone ? 36 : 56,
                                 marginTop: phone ? 24 : 32,
-                                paddingTop: 28, borderTop: `1px solid ${C.border}`,
                             }}>
                                 <div>
-                                    <Label>What I owned</Label>
-                                    <Bullets items={[
+                                    <Label>what I owned</Label>
+                                    {[
                                         "Worked through the usability sessions with the UX Research team to find where shoppers hesitated",
                                         "Designed the four changes to the filter drawer as the main designer, working in URBN’s design system",
                                         "Vibe coded the test prototype in Builder.io from existing design system components, which got it to UX Research faster",
                                         "Designed the pickup toggle as a white-label component, adapted it for each brand, and documented it for engineering",
-                                    ]} />
+                                    ].map((t, i) => <Row key={i} num={`0${i + 1}`}>{t}</Row>)}
                                 </div>
                                 <div>
-                                    <Label>Constraints</Label>
-                                    <Bullets items={[
+                                    <Label>constraints</Label>
+                                    {[
                                         "One pattern had to work for three brands with different visual languages",
                                         "Mobile Web and Desktop",
                                         "Built from URBN’s existing design system, which had no pattern for the new pickup toggle",
                                         "Five months, alongside PM, Engineering, UX Research and Brand",
-                                    ]} />
+                                    ].map((t, i) => <Row key={i} num={`0${i + 1}`}>{t}</Row>)}
                                 </div>
                             </div>
                         </FadeIn>
@@ -507,9 +543,9 @@ export default function AnthropologieProductDiscovery() {
                         </FadeIn>
 
                         <div style={{ display: "flex", flexDirection: "column", gap: phone ? 72 : 104, marginTop: phone ? 48 : 64 }}>
-                            {DECISIONS.map((d) => (
+                            {DECISIONS.map((d, i) => (
                                 <FadeIn key={d.num}>
-                                    <DecisionBlock d={d} phone={phone} />
+                                    <DecisionBlock d={d} phone={phone} flip={i % 2 === 1} />
                                 </FadeIn>
                             ))}
                         </div>
@@ -534,7 +570,7 @@ export default function AnthropologieProductDiscovery() {
                                 marginTop: phone ? 32 : 44,
                             }}>
                                 <figure style={{ margin: 0, maxWidth: phone ? 260 : undefined }}>
-                                    <div style={{ ...FRAME, backgroundColor: C.surface }}>
+                                    <div style={{ ...FRAME, padding: 16 }}>
                                         <video src="/videos/prototype-walkthrough.mp4" autoPlay muted loop playsInline aria-label="Walkthrough of the interactive prototype" style={{ width: "100%", height: "auto", display: "block" }} />
                                     </div>
                                     <Caption>The vibe coded Builder.io prototype used in usability testing.</Caption>
@@ -545,11 +581,11 @@ export default function AnthropologieProductDiscovery() {
                                         <Stat phone={phone} value="100%" label="task completion in usability testing of the combined prototype" />
                                         <Stat phone={phone} value="45%" label="shorter prototype timeline. Vibe coding it in Builder.io got a testable build to UX Research sooner" />
                                     </div>
-                                    <Label>What we observed</Label>
+                                    <Label>what we observed</Label>
                                     <div>
                                         {OBSERVED.map((item, i) => (
                                             <div key={i} style={{ padding: "12px 0", borderTop: `1px solid ${C.border}`, display: "flex", alignItems: "baseline", gap: 12 }}>
-                                                <span aria-hidden="true" style={{ fontFamily: INTER, fontSize: 11, color: C.olive, flexShrink: 0 }}>&#10003;</span>
+                                                <span aria-hidden="true" style={{ fontFamily: INTER, fontSize: 11, color: C.pink, flexShrink: 0 }}>&#10003;</span>
                                                 <p style={{ fontFamily: INTER, fontSize: 14, color: C.ink2, margin: 0, lineHeight: 1.5 }}>{item}</p>
                                             </div>
                                         ))}
@@ -581,7 +617,7 @@ export default function AnthropologieProductDiscovery() {
                                         <div style={FRAME}>
                                             <img src={b.src} alt={`${b.label} pickup toggle: default, selected and hover states`} style={{ width: "100%", height: "auto", display: "block" }} />
                                         </div>
-                                        <figcaption style={{ fontFamily: INTER, fontSize: 12, fontWeight: 600, color: C.ink, marginTop: 10 }}>{b.label}</figcaption>
+                                        <figcaption style={{ fontFamily: INTER, fontSize: 12.5, fontWeight: 500, color: C.ink2, marginTop: 10 }}>{b.label}</figcaption>
                                     </figure>
                                 ))}
                             </div>
@@ -589,25 +625,25 @@ export default function AnthropologieProductDiscovery() {
                         </FadeIn>
 
                         <FadeIn delay={60}>
-                            <h3 style={{ fontFamily: Z, fontSize: phone ? 20 : 24, fontWeight: 700, color: C.ink, letterSpacing: "-0.02em", margin: 0, marginTop: phone ? 56 : 80, marginBottom: 8 }}>
+                            <h3 style={{ fontFamily: INTER, fontSize: phone ? 22 : 26, fontWeight: 300, color: C.ink, letterSpacing: "-0.02em", margin: 0, marginTop: phone ? 64 : 96, marginBottom: 10 }}>
                                 Designed for every pickup state
                             </h3>
-                            <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.65, color: C.ink3, margin: 0, maxWidth: 540, marginBottom: 28 }}>
+                            <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink2, margin: 0, maxWidth: 560, marginBottom: 28 }}>
                                 The same interaction had to hold up when no store was chosen and when the chosen store had nothing available.
                             </p>
                             <div style={{ display: "flex", flexDirection: "column", gap: phone ? 40 : 48 }}>
                                 {PICKUP_STATES.map((st) => (
                                     <figure key={st.title} style={{ margin: 0 }}>
-                                        <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "minmax(0, 3fr) minmax(0, 1fr)", gap: phone ? 12 : 20, alignItems: "start" }}>
-                                            <div style={{ ...FRAME, backgroundColor: C.surface }}>
+                                        <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 2.2fr) minmax(0, 1fr)" : "minmax(0, 3fr) minmax(0, 1fr)", gap: phone ? 8 : 20, alignItems: "start" }}>
+                                            <div style={FRAME}>
                                                 <img src={st.desktop} alt={`${st.title}, desktop`} style={{ width: "100%", height: "auto", display: "block" }} />
                                             </div>
-                                            <div style={{ ...FRAME, backgroundColor: C.surface, maxWidth: phone ? 220 : undefined }}>
+                                            <div style={FRAME}>
                                                 <img src={st.mobile} alt={`${st.title}, mobile`} style={{ width: "100%", height: "auto", display: "block" }} />
                                             </div>
                                         </div>
                                         <figcaption style={{ marginTop: 12 }}>
-                                            <p style={{ fontFamily: Z, fontSize: 16, fontWeight: 600, color: C.ink, margin: 0, marginBottom: 2 }}>{st.title}</p>
+                                            <p style={{ fontFamily: INTER, fontSize: 14, fontWeight: 500, color: C.ink2, margin: 0, marginBottom: 3 }}>{st.title}</p>
                                             <p style={{ fontFamily: INTER, fontSize: 12.5, lineHeight: 1.5, color: C.ink3, margin: 0 }}>{st.desc} Desktop and mobile.</p>
                                         </figcaption>
                                     </figure>
@@ -624,16 +660,17 @@ export default function AnthropologieProductDiscovery() {
                                 marginTop: phone ? 56 : 80,
                             }}>
                                 <div>
-                                    <h3 style={{ fontFamily: Z, fontSize: phone ? 20 : 24, fontWeight: 700, color: C.ink, letterSpacing: "-0.02em", margin: 0, marginBottom: 8 }}>
+                                    <h3 style={{ fontFamily: INTER, fontSize: phone ? 22 : 26, fontWeight: 300, color: C.ink, letterSpacing: "-0.02em", margin: 0, marginBottom: 10 }}>
                                         From exploration to handoff
                                     </h3>
-                                    <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.65, color: C.ink3, margin: 0, marginBottom: 20, maxWidth: 440 }}>
+                                    <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink2, margin: 0, marginBottom: 20, maxWidth: 440 }}>
                                         I explored several toggle treatments before settling on the final pattern, then specified it for engineering.
                                     </p>
                                     <Bullets items={["Every state documented", "Interaction logic defined", "Copy variations documented", "Handed off to engineering for production"]} />
                                     <figure style={{ margin: 0, marginTop: 28, maxWidth: 420 }}>
-                                        <div style={FRAME}>
-                                            <img src="/images/toggle-explorations.png" alt="Early toggle explorations: filled, outline and colored treatments" style={{ width: "100%", height: "auto", display: "block" }} />
+                                        <div style={{ ...FRAME, padding: 12 }}>
+                                            {/* transparent PNG: give it a white card on the paper mat */}
+                                            <img src="/images/toggle-explorations.png" alt="Early toggle explorations: filled, outline and colored treatments" style={{ width: "100%", height: "auto", display: "block", backgroundColor: C.bg }} />
                                         </div>
                                         <Caption>Early toggle explorations.</Caption>
                                     </figure>
@@ -659,19 +696,9 @@ export default function AnthropologieProductDiscovery() {
                         </FadeIn>
 
                         <FadeIn delay={40}>
-                            <div style={{ display: "flex", gap: phone ? 10 : 16, flexWrap: "wrap", marginTop: 28 }}>
+                            <div style={{ display: "flex", gap: phone ? 18 : 28, flexWrap: "wrap", marginTop: 24 }}>
                                 {BRANDS.map((brand) => (
-                                    <a key={brand.name} href={brand.href} target="_blank" rel="noopener noreferrer" style={{
-                                        fontFamily: INTER, fontSize: 14, fontWeight: 600, color: C.ink,
-                                        textDecoration: "none", padding: "12px 24px",
-                                        borderRadius: 100, border: `1px solid ${C.border}`,
-                                        transition: "all 0.25s ease",
-                                    }}
-                                    onMouseEnter={e => { e.currentTarget.style.backgroundColor = brand.brandColor; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = brand.brandColor }}
-                                    onMouseLeave={e => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = C.ink; e.currentTarget.style.borderColor = C.border }}
-                                    >
-                                        {brand.name} &nbsp;&#8599;
-                                    </a>
+                                    <NavLink key={brand.name} label={`${brand.name} ↗`} href={brand.href} ext size={16} />
                                 ))}
                             </div>
                         </FadeIn>
@@ -699,7 +726,7 @@ export default function AnthropologieProductDiscovery() {
                                 }}>
                                     Designing better filters wasn&rsquo;t the goal. Building confidence was.
                                 </p>
-                                <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.7, color: C.ink3, margin: 0, maxWidth: 560 }}>
+                                <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink2, margin: 0, maxWidth: 560 }}>
                                     Almost every problem in testing was a moment of uncertainty, not a missing feature. Clear selected states, honest copy and an obvious way out did more than anything new would have.
                                 </p>
                             </div>
@@ -715,25 +742,7 @@ export default function AnthropologieProductDiscovery() {
                         justifyContent: "space-between",
                         alignItems: "center",
                     }}>
-                        <a
-                            href="/#work"
-                            style={{
-                                fontFamily: INTER,
-                                fontSize: 14,
-                                fontWeight: 500,
-                                color: "#8A8A82",
-                                textDecoration: "none",
-                                letterSpacing: "-0.01em",
-                                transition: "color 0.18s",
-                                minHeight: 44,
-                                display: "flex",
-                                alignItems: "center",
-                            }}
-                            onMouseEnter={(e) => (e.currentTarget.style.color = "#111111")}
-                            onMouseLeave={(e) => (e.currentTarget.style.color = "#8A8A82")}
-                        >
-                            ← Back to work
-                        </a>
+                        <NavLink label="← back to work" href="/#work" size={14} />
                     </div>
 
                 </main>

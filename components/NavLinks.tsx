@@ -6,10 +6,10 @@
 // dashed, perforation-like ring. Each nav keeps its own bar/container — only
 // the links come from here.
 
-const I = "Inter, system-ui, sans-serif"
-const INK = "#111111"
-const NAV_PINK = "#D33361"
-const EASE_OUT = "cubic-bezier(0.23,1,0.32,1)"
+import { FONT_SANS as I, COLORS, EASE_OUT } from "./site"
+
+const INK = COLORS.ink
+const NAV_PINK = COLORS.pink
 
 export const NAV_LINK_GAP = 19.5
 export const NAV_LINK_SIZE = 12.872
