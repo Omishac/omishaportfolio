@@ -180,6 +180,7 @@ const BRAND_TOGGLES = [
     { src: "/images/toggle-anthropologie.png", label: "Anthropologie" },
     { src: "/images/toggle-urbanoutfitters.png", label: "Urban Outfitters" },
     { src: "/images/toggle-freepeople.png", label: "Free People" },
+    { src: "/images/toggle-terrain.png", label: "Terrain (Anthropologie)" },
 ]
 
 const PICKUP_STATES = [
@@ -390,7 +391,7 @@ export default function AnthropologieProductDiscovery() {
                             }}>
                                 {[
                                     { k: "Problem", v: "Applying filters meant hopping between screens. Shoppers couldn’t tell what was selected, how to leave, or what “Available Within 24 Hours” meant." },
-                                    { k: "My role", v: "UX Designer. I worked through testing with UX Research, designed the fixes, prototyped them in Builder.io, and designed and documented the pickup component." },
+                                    { k: "My role", v: "Main designer. I worked through testing with UX Research, designed the fixes in URBN’s design system, vibe coded the test prototype, and designed and documented the pickup component." },
                                     { k: "Outcome", v: "100% task completion when the combined prototype was tested. Now live on Urban Outfitters, Free People and Anthropologie." },
                                 ].map(({ k, v }) => (
                                     <div key={k} style={{ backgroundColor: C.surface, borderRadius: 14, padding: phone ? "20px 20px" : "24px 24px" }}>
@@ -414,7 +415,7 @@ export default function AnthropologieProductDiscovery() {
                                 gap: phone ? 16 : 32, marginTop: 36,
                                 paddingTop: 28, borderTop: `1px solid ${C.border}`,
                             }}>
-                                {([["Role", "UX Designer"], ["Timeline", "5 months"], ["Team", "PM, Engineering, UX Research, Brand"], ["Platforms", "Mobile Web and Desktop"]] as const).map(([k, v]) => (
+                                {([["Role", "UX Designer, main designer on the project"], ["Timeline", "5 months"], ["Team", "PM, Engineering, UX Research, Brand"], ["Platforms", "Mobile Web and Desktop"]] as const).map(([k, v]) => (
                                     <div key={k}>
                                         <Label>{k}</Label>
                                         <p style={{ fontFamily: Z, fontWeight: 400, fontSize: 14, lineHeight: 1.4, color: C.ink2, margin: 0 }}>{v}</p>
@@ -477,8 +478,8 @@ export default function AnthropologieProductDiscovery() {
                                     <Label>What I owned</Label>
                                     <Bullets items={[
                                         "Worked through the usability sessions with the UX Research team to find where shoppers hesitated",
-                                        "Designed the four changes to the filter drawer",
-                                        "Built the test prototype in Builder.io from existing design system components",
+                                        "Designed the four changes to the filter drawer as the main designer, working in URBN’s design system",
+                                        "Vibe coded the test prototype in Builder.io from existing design system components, which got it to UX Research faster",
                                         "Designed the pickup toggle as a white-label component, adapted it for each brand, and documented it for engineering",
                                     ]} />
                                 </div>
@@ -536,13 +537,13 @@ export default function AnthropologieProductDiscovery() {
                                     <div style={{ ...FRAME, backgroundColor: C.surface }}>
                                         <video src="/videos/prototype-walkthrough.mp4" autoPlay muted loop playsInline aria-label="Walkthrough of the interactive prototype" style={{ width: "100%", height: "auto", display: "block" }} />
                                     </div>
-                                    <Caption>The Builder.io prototype used in usability testing.</Caption>
+                                    <Caption>The vibe coded Builder.io prototype used in usability testing.</Caption>
                                 </figure>
 
                                 <div>
                                     <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: phone ? 20 : 32, marginBottom: phone ? 32 : 44 }}>
                                         <Stat phone={phone} value="100%" label="task completion in usability testing of the combined prototype" />
-                                        <Stat phone={phone} value="45%" label="faster to build a testable prototype, using Builder.io and existing design system components" />
+                                        <Stat phone={phone} value="45%" label="shorter prototype timeline. Vibe coding it in Builder.io got a testable build to UX Research sooner" />
                                     </div>
                                     <Label>What we observed</Label>
                                     <div>
@@ -571,7 +572,7 @@ export default function AnthropologieProductDiscovery() {
                         <FadeIn delay={60}>
                             <div style={{
                                 display: "grid",
-                                gridTemplateColumns: phone ? "minmax(0, 1fr) minmax(0, 1fr)" : "repeat(4, minmax(0, 1fr))",
+                                gridTemplateColumns: phone ? "minmax(0, 1fr) minmax(0, 1fr)" : "repeat(5, minmax(0, 1fr))",
                                 gap: phone ? 12 : 20,
                                 marginTop: phone ? 32 : 44,
                             }}>
@@ -584,7 +585,7 @@ export default function AnthropologieProductDiscovery() {
                                     </figure>
                                 ))}
                             </div>
-                            <Caption>Default, selected and hover states, white-label first, then each brand.</Caption>
+                            <Caption>Default, selected and hover states, white-label first, then each brand, including Terrain within Anthropologie.</Caption>
                         </FadeIn>
 
                         <FadeIn delay={60}>
