@@ -519,6 +519,7 @@ type TabSpec = {
     color: string
     italic?: boolean
     href?: string
+    ext?: boolean         // opens in a new tab
     left: number | null   // perforation index, null = paper edge
     right: number | null
     bottom?: "mobile" | "sayHello"
@@ -529,11 +530,11 @@ type TabSpec = {
 }
 
 const TABS: TabSpec[] = [
-    { label: "Redesign",         cx: 41.2,   cy: 419.83, color: "#FEEFF5", left: null, right: 0, tilt: -1.1, spin: -9,  drift: -40, flutter: 1.5 },
-    { label: "Mobile Design",    cx: 117,    cy: 420.77, color: "#FFF1F7", left: 0, right: 1, bottom: "mobile", tilt: 0.8, spin: 7, drift: 30, flutter: 1.8 },
-    { label: "Digital Strategy", cx: 189.21, cy: 421.64, color: "#FFF1F6", left: 1, right: 2, tilt: -0.6, spin: -12, drift: -55, flutter: 1.35 },
-    { label: "Freelancing",      cx: 337.17, cy: 431.99, color: "#FFF6F9", italic: true, left: 3, right: 4, tilt: 1.2, spin: 10, drift: 45, flutter: 1.7 },
-    { label: "Say hello",        cx: 476.19, cy: 434.67, color: "#FFF1F6", href: "mailto:omishachabria3@gmail.com", left: 5, right: null, bottom: "sayHello", tilt: -0.9, spin: -6, drift: -30, flutter: 1.55 },
+    { label: "Redesign",         cx: 41.2,   cy: 419.83, color: "#FEEFF5", href: "/anthropologie-product-discovery", left: null, right: 0, tilt: -1.1, spin: -9,  drift: -40, flutter: 1.5 },
+    { label: "Mobile Design",    cx: 117,    cy: 420.77, color: "#FFF1F7", href: "/ios-review-accessibility", left: 0, right: 1, bottom: "mobile", tilt: 0.8, spin: 7, drift: 30, flutter: 1.8 },
+    { label: "Digital Strategy", cx: 189.21, cy: 421.64, color: "#FFF1F6", href: "/anthropologie-mcommerce", left: 1, right: 2, tilt: -0.6, spin: -12, drift: -55, flutter: 1.35 },
+    { label: "Freelancing",      cx: 337.17, cy: 431.99, color: "#FFF6F9", italic: true, href: "/playground", left: 3, right: 4, tilt: 1.2, spin: 10, drift: 45, flutter: 1.7 },
+    { label: "Say hello",        cx: 476.19, cy: 434.67, color: "#FFF1F6", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true, left: 5, right: null, bottom: "sayHello", tilt: -0.9, spin: -6, drift: -30, flutter: 1.55 },
 ]
 
 // Clip polygons (stage coords) for one tab: the part above the curl hinge,
@@ -567,10 +568,41 @@ function tabGeometry(tab: TabSpec) {
     const lower: Pt[] = [[L(hingeY) - pad, hingeY - 0.5], [R(hingeY) + pad, hingeY - 0.5], ...bottom]
     const hit: Pt[] = [tl, tr, ...bottom]
 
-    return { pivot, hingeY, full: clipPoly(full), upper: clipPoly(upper), lower: clipPoly(lower), hit: clipPoly(hit) }
+    return { pivot, hingeY, fullPts: full, full: clipPoly(full), upper: clipPoly(upper), lower: clipPoly(lower), hit: clipPoly(hit) }
+}
+
+// Crumple: the tab's outline (sampled to a fixed number of points) morphs into
+// a jagged paper wad around the middle of the tab. Same point count and the
+// same angular order on both shapes, so the clip-path interpolates cleanly.
+const WAD_POINTS = 18
+const WAD_R = 27
+const WAD_JITTER = [1, 0.84, 1.08, 0.9, 1.12, 0.86, 1.02, 0.8, 1.06, 0.92, 1.1, 0.85, 1.04, 0.88, 1.09, 0.83, 1.01, 0.9]
+function samplePerimeter(pts: Pt[], n: number): Pt[] {
+    const segs = pts.map((p, i) => { const q = pts[(i + 1) % pts.length]; return { p, q, len: Math.hypot(q[0] - p[0], q[1] - p[1]) } })
+    const total = segs.reduce((t, sg) => t + sg.len, 0)
+    const out: Pt[] = []
+    for (let k = 0; k < n; k++) {
+        let d = (k / n) * total
+        for (const sg of segs) {
+            if (d <= sg.len) { const t = d / sg.len; out.push([sg.p[0] + (sg.q[0] - sg.p[0]) * t, sg.p[1] + (sg.q[1] - sg.p[1]) * t]); break }
+            d -= sg.len
+        }
+    }
+    return out
+}
+function wadGeometry(tab: TabSpec, g: ReturnType<typeof tabGeometry>) {
+    const center: Pt = [g.pivot[0], g.pivot[1] + 96]
+    const from = samplePerimeter(g.fullPts, WAD_POINTS)
+    const to = from.map(([x, y], i): Pt => {
+        const a = Math.atan2(y - center[1], x - center[0])
+        const r = WAD_R * WAD_JITTER[i % WAD_JITTER.length]
+        return [center[0] + Math.cos(a) * r, center[1] + Math.sin(a) * r]
+    })
+    return { center, from, to }
 }
 
 const TAB_GEOMETRY = TABS.map(tabGeometry)
+const WAD_GEOMETRY = TABS.map((t, i) => wadGeometry(t, TAB_GEOMETRY[i]))
 
 // Pink paper + crumpled texture, in stage coordinates.
 function PaperFace() {
@@ -667,20 +699,11 @@ a.ft-tab .ft-hit { cursor: pointer; }
     --ft-amp: 1.8;
     filter: drop-shadow(0 12px 9px rgba(110, 18, 48, 0.16));
 }
-.ft-tab[data-state="ripping"] .ft-lift { animation: ft-rip 860ms forwards; }
-.ft-tab[data-state="ripping"] .ft-hinge { transform: perspective(500px) rotateX(24deg); }
-.ft-tab[data-state="ripping"] .ft-flutter {
-    animation: ft-flutter var(--ft-period, 1.6s) ease-in-out infinite alternate;
-}
-@keyframes ft-rip {
-    0%   { transform: perspective(650px) translate(0, -2px) rotateX(11deg) rotateZ(var(--ft-tilt));
-           animation-timing-function: cubic-bezier(0.4, 0, 0.7, 1); }
-    13%  { transform: perspective(650px) translate(0, 5px) rotateX(18deg) rotateZ(calc(var(--ft-tilt) * -2.4));
-           animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1); }
-    27%  { transform: perspective(650px) translate(calc(var(--ft-drift) * 0.08), -22px) rotateX(8deg) rotateZ(var(--ft-tilt));
-           animation-timing-function: cubic-bezier(0.55, 0, 0.85, 0.5); }
-    100% { transform: perspective(650px) translate(var(--ft-drift), -1100px) rotateX(32deg) rotateZ(var(--ft-spin)); }
-}
+/* On click the tab is swapped for its crumple wad (animated from JS). */
+.ft-wad { position: absolute; inset: 0; display: none; pointer-events: none; }
+.ft-crease { position: absolute; inset: 0; display: block; opacity: 0; }
+.ft-tab[data-state="ripping"] .ft-lift { opacity: 0; } /* not visibility: the curl's lower half sets its own */
+.ft-tab[data-state="ripping"] .ft-wad { display: block; }
 .ft-tab[data-state="returning"] .ft-lift { animation: ft-return 480ms ${EASE_OUT}; }
 @keyframes ft-return {
     from { opacity: 0; transform: perspective(650px) translate(0, 6px) rotateX(-8deg) rotateZ(0deg); }
@@ -756,25 +779,54 @@ function Hero({
         onTouchEnd: release,
     }
 
+    const wadRefs = useRef<Record<string, HTMLSpanElement | null>>({})
+
+    // Crumple the clicked tab into a paper wad, toss it up and away, then go.
+    useEffect(() => {
+        if (!ripping) return
+        const i = TABS.findIndex((t) => t.label === ripping)
+        const wad = wadRefs.current[ripping]
+        if (i < 0 || !wad) return
+        const tab = TABS[i]
+        const { from, to } = WAD_GEOMETRY[i]
+        const mix = (t: number) => clipPoly(from.map(([x, y], k): Pt => [x + (to[k][0] - x) * t, y + (to[k][1] - y) * t]))
+        const wadAnim = wad.animate([
+            { clipPath: mix(0), transform: "translate(0px, 0px) rotate(0deg)", easing: "cubic-bezier(0.4, 0, 0.7, 1)" },
+            { clipPath: mix(0.16), transform: `translate(0px, 4px) rotate(${tab.tilt * -2.5}deg)`, offset: 0.12, easing: "cubic-bezier(0.3, 0.7, 0.4, 1)" },
+            { clipPath: mix(1), transform: `translate(0px, -8px) rotate(${tab.spin * 2.5}deg)`, offset: 0.52, easing: "cubic-bezier(0.2, 0.8, 0.3, 1)" },
+            { clipPath: mix(1), transform: `translate(${tab.drift * 0.12}px, -34px) rotate(${tab.spin * 3.5}deg)`, offset: 0.64, easing: "cubic-bezier(0.55, 0, 0.85, 0.45)" },
+            { clipPath: mix(1), transform: `translate(${tab.drift * 1.4}px, -1050px) rotate(${tab.spin * 9}deg)` },
+        ], { duration: 920, fill: "forwards" })
+        const crease = wad.querySelector<HTMLElement>(".ft-crease")
+        const creaseAnim = crease?.animate([{ opacity: 0 }, { opacity: 0, offset: 0.12 }, { opacity: 1, offset: 0.5 }, { opacity: 1 }], { duration: 920, fill: "forwards" })
+        return () => { wadAnim.cancel(); creaseAnim?.cancel() }
+    }, [ripping])
+
     const onTabClick = (e: React.MouseEvent<HTMLAnchorElement>, tab: TabSpec) => {
         // Let modified clicks (new tab/window) and reduced motion go straight through.
         if (!tab.href || reducedMotion || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
         e.preventDefault()
         if (ripping) return
         const href = tab.href
+        const putBack = () => timers.current.push(setTimeout(() => {
+            setRipping(null)
+            setReturning(tab.label)
+            timers.current.push(setTimeout(() => setReturning(null), 500))
+        }, 1200))
         setReturning(null)
         setRipping(tab.label)
         timers.current.push(setTimeout(() => {
-            window.location.assign(href)
-            // mailto:/tel: leave us on the page — put the tab back once the app has opened.
-            if (!/^https?:|^\//.test(href)) {
-                timers.current.push(setTimeout(() => {
-                    setRipping(null)
-                    setReturning(tab.label)
-                    timers.current.push(setTimeout(() => setReturning(null), 500))
-                }, 1200))
+            if (tab.ext) {
+                // New tab (still inside the click's activation window); this page
+                // stays, so put the tab back afterwards.
+                const win = window.open(href, "_blank")
+                if (win) { win.opener = null; putBack() } else window.location.assign(href)
+                return
             }
-        }, 820))
+            window.location.assign(href)
+            // mailto:/tel: leave us on the page too
+            if (!/^https?:|^\//.test(href)) putBack()
+        }, 780))
     }
 
     const scale = Math.min(1, (w - px * 2) / FLYER_W)
@@ -868,12 +920,22 @@ function Hero({
                                             </span>
                                         </span>
                                     </span>
+                                    {/* Crumple wad: the same paper, clip-path morphed from the tab's outline to a ball */}
+                                    <span className="ft-wad" aria-hidden="true" ref={(el) => { wadRefs.current[tab.label] = el }}
+                                        style={{ clipPath: g.full, transformOrigin: `${WAD_GEOMETRY[i].center[0]}px ${WAD_GEOMETRY[i].center[1]}px` }}>
+                                        <TabFace tab={tab} />
+                                        {/* faceted shading so the wad reads as crumpled */}
+                                        <span className="ft-crease" style={{
+                                            background: `conic-gradient(from 20deg at ${WAD_GEOMETRY[i].center[0]}px ${WAD_GEOMETRY[i].center[1]}px, rgba(80,10,30,0.22), rgba(80,10,30,0) 10%, rgba(255,255,255,0.22) 18%, rgba(80,10,30,0) 27%, rgba(80,10,30,0.18) 40%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.2) 61%, rgba(80,10,30,0) 70%, rgba(80,10,30,0.24) 83%, rgba(255,255,255,0.1) 92%, rgba(80,10,30,0.22))`,
+                                        }} />
+                                    </span>
                                     {/* Untransformed hit area, so the tab stays easy to hover and click while it moves */}
                                     <span className="ft-hit" style={{ clipPath: g.hit }} />
                                 </>
                             )
                             return tab.href ? (
                                 <a key={tab.label} className="ft-tab" href={tab.href} data-state={state} style={vars}
+                                    target={tab.ext ? "_blank" : undefined} rel={tab.ext ? "noreferrer" : undefined}
                                     onClick={(e) => onTabClick(e, tab)} {...liveHandlers}>
                                     {body}
                                 </a>
@@ -2287,10 +2349,11 @@ function FooterGame({
     const range = (a: number, b: number, from: number, to: number) =>
         (v: number) => from + (to - from) * Math.min(1, Math.max(0, (v - a) / (b - a)))
     // Footer recedes: tips back a touch, shrinks and fades as it scrolls away.
-    const footerY = useTransform(p, range(0, 0.5, 0, -28))
-    const footerScale = useTransform(p, range(0, 0.5, 1, 0.96))
-    const footerTilt = useTransform(p, range(0, 0.5, 0, -7))
-    const footerOpacity = useTransform(p, range(0, 0.5, 1, 0.4))
+    // (kept gentle: the footer row stays in view above the game)
+    const footerY = useTransform(p, range(0, 0.6, 0, -10))
+    const footerScale = useTransform(p, range(0, 0.6, 1, 0.985))
+    const footerTilt = useTransform(p, range(0, 0.6, 0, -3))
+    const footerOpacity = useTransform(p, range(0, 0.6, 1, 0.85))
     // A soft shadow where the page "opens", strongest mid-reveal.
     const seamOpacity = useTransform(p, (v) => (v < 0.3 ? range(0, 0.3, 0, 1)(v) : range(0.3, 0.85, 1, 0)(v)))
     // Game comes forward from below and settles flat; identity from p = 0.88.
@@ -2535,7 +2598,7 @@ function FooterGame({
             style={{
                 position: "relative",
                 width: "100%",
-                minHeight: phone ? "92svh" : "100svh",
+                minHeight: phone ? "80svh" : "85svh",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
