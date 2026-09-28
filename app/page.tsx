@@ -217,21 +217,20 @@ function useBP() {
 
 const NAV_Z = "Zodiak, 'Times New Roman', serif"
 
-// Nav type: Zodiak (the serif already used for the hero CTA), lowercase to
-// match "inside my work", with a hand-drawn pink underline in the poster's
-// colour and a dashed, perforation-like focus ring.
+// Nav type per Figma node 115:42: Inter ExtraLight, lowercase, black. Hover
+// draws a hand-drawn pink underline in the poster's colour; focus adds a
+// dashed, perforation-like ring.
 const NAV_PINK = "#D33361"
 const NAV_STYLES = `
 .home-nav-link {
     position: relative;
     display: inline-block;
     padding: 6px 1px 8px;
-    font-family: ${NAV_Z};
-    font-weight: 400;
+    font-family: ${I};
+    font-weight: 200;
     text-transform: lowercase;
-    letter-spacing: 0.005em;
     line-height: 1;
-    color: ${C.ink2};
+    color: #000000;
     text-decoration: none;
     border-radius: 3px;
     transition: color 0.25s ${EASE_OUT}, transform 0.2s ${EASE_OUT};
@@ -363,7 +362,7 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
                 </a>
 
                 {!phone && (
-                    <div style={{ display: "flex", gap: tablet ? 26 : large ? 40 : 34, alignItems: "center" }}>
+                    <div style={{ display: "flex", gap: large ? 24 : 19.5, alignItems: "center" }}>
                         {allLinks.map(({ label, href, ext }) => (
                             <a
                                 key={label}
@@ -371,7 +370,7 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
                                 target={ext ? "_blank" : "_self"}
                                 rel="noreferrer"
                                 className="home-nav-link"
-                                style={{ fontSize: tablet ? 15 : large ? 17 : 16 }}
+                                style={{ fontSize: large ? 14 : 12.872 }}
                             >
                                 {label}
                                 <NavUnderline />
@@ -455,7 +454,7 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
                                 transition: `opacity 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 55}ms, transform 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 55}ms`,
                             }}
                         >
-                            <span className="home-nav-link home-nav-link--menu" style={{ fontSize: 34, letterSpacing: "-0.01em" }}>
+                            <span className="home-nav-link home-nav-link--menu" style={{ fontSize: 34, letterSpacing: "-0.02em" }}>
                                 {label}
                                 <NavUnderline />
                             </span>
@@ -906,15 +905,15 @@ function Hero({
                         <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
                             style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block" }} />
 
-                        <h1 style={{ ...rotText(268.15, 158.08, 2.74), fontSize: 16.819, fontWeight: 700, color: "#FFFFFF" }}>
+                        <h1 style={{ ...rotText(263.2, 155.31, 2.74), fontSize: 20.585, fontWeight: 700, color: "#FFFFFF" }}>
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
-                        <p style={{ ...rotText(268.29, 184.92, 2.88), fontSize: 9.828, fontWeight: 500, color: "#FFFFFF" }}>
+                        <p style={{ ...rotText(263.36, 188.33, 2.88), fontSize: 12.03, fontWeight: 500, color: "#FFFFFF" }}>
                             product designer . digital analyst . brand storyteller.
                         </p>
 
-                        <p style={{ ...rotText(255.47, 303, 1.89), fontSize: 9.828, fontWeight: 500, color: "#FFD1E3" }}>
+                        <p style={{ ...rotText(256.03, 306.98, 1.89), fontSize: 10.393, fontWeight: 700, color: "#FFE2ED" }}>
                             Take what you need:
                         </p>
 
