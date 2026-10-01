@@ -799,7 +799,7 @@ function Hero({
                         <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
                             style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block" }} />
 
-                        <h1 style={{ ...rotText(263.2, 156, 2.74), fontFamily: NAV_Z, fontSize: 34, fontWeight: 700, letterSpacing: "-0.01em", color: "#FFFFFF" }}>
+                        <h1 style={{ ...rotText(263.2, 156, 2.74), fontFamily: NAV_Z, fontStyle: "italic", fontSize: 34, fontWeight: 700, letterSpacing: "-0.01em", color: "#FFFFFF" }}>
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
