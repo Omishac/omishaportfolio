@@ -160,6 +160,8 @@ function Rows({ items, numbered = false }: { items: string[]; numbered?: boolean
 // ── Artifacts (click to view larger) ────────────────────────────────────────
 
 function Lightbox({ src, title, caption, onClose }: { src: string; title: string; caption: string; onClose: () => void }) {
+    const closeRef = useRef<HTMLButtonElement>(null)
+    useEffect(() => { closeRef.current?.focus() }, []) // move keyboard focus into the dialog
     useEffect(() => {
         const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose() }
         window.addEventListener("keydown", handler)
@@ -167,7 +169,7 @@ function Lightbox({ src, title, caption, onClose }: { src: string; title: string
     }, [onClose])
     return (
         <div role="dialog" aria-modal="true" aria-label={title} onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 9999, backgroundColor: "rgba(17,17,17,0.85)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 40 }}>
-            <button onClick={onClose} aria-label="Close" style={{ position: "absolute", top: 20, right: 24, background: "none", border: "none", cursor: "pointer", width: 44, height: 44, color: "rgba(255,255,255,0.8)", fontFamily: I, fontSize: 18 }}>✕</button>
+            <button ref={closeRef} onClick={onClose} aria-label="Close" style={{ position: "absolute", top: 20, right: 24, background: "none", border: "none", cursor: "pointer", width: 44, height: 44, color: "rgba(255,255,255,0.8)", fontFamily: I, fontSize: 18 }}>✕</button>
             <img src={src} alt={title} onClick={(e) => e.stopPropagation()} style={{ maxWidth: "86vw", maxHeight: "78vh", objectFit: "contain", display: "block" }} />
             <div onClick={(e) => e.stopPropagation()} style={{ marginTop: 18, textAlign: "center", maxWidth: 580 }}>
                 <p style={{ fontFamily: I, fontSize: 13, fontWeight: 500, color: "#fff", margin: 0, marginBottom: 4 }}>{title}</p>
@@ -181,10 +183,17 @@ function Lightbox({ src, title, caption, onClose }: { src: string; title: string
 // captions line up. The image is contained (never cropped) inside the frame.
 function Artifact({ src, index, title, caption, frame }: { src: string; index: string; title: string; caption: string; frame?: string }) {
     const [open, setOpen] = useState(false)
+    const triggerRef = useRef<HTMLButtonElement>(null)
+    // Return focus to the image that opened the dialog
+    const close = () => { setOpen(false); requestAnimationFrame(() => triggerRef.current?.focus()) }
     return (
         <figure style={{ margin: 0 }}>
-            {open && <Lightbox src={src} title={title} caption={caption} onClose={() => setOpen(false)} />}
-            <button onClick={() => setOpen(true)} aria-label={`View ${title} larger`} style={{ display: "block", width: "100%", padding: 16, border: "none", cursor: "zoom-in", ...MAT }}>
+            {open && <Lightbox src={src} title={title} caption={caption} onClose={close} />}
+            <button ref={triggerRef} className="ios-expand" onClick={() => setOpen(true)} aria-label={`View ${title} larger`} style={{ position: "relative", display: "block", width: "100%", padding: 16, border: "none", cursor: "zoom-in", ...MAT }}>
+                {/* Visible expand affordance; the whole image is the button */}
+                <span aria-hidden="true" className="ios-expand-icon" style={{ position: "absolute", top: 12, right: 12, width: 30, height: 30, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.92)", border: `1px solid ${C.border}`, borderRadius: 6, color: C.ink2 }}>
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M8.5 1.5h4v4M12.5 1.5L8 6M5.5 12.5h-4v-4M1.5 12.5L6 8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                </span>
                 {frame
                     ? <img src={src} alt={title} style={{ width: "100%", aspectRatio: frame, objectFit: "contain", display: "block" }} />
                     : <img src={src} alt={title} style={IMG} />}
@@ -240,8 +249,8 @@ function DecisionBlock({ d, phone }: { d: typeof DECISIONS[number]; phone: boole
         <div style={{
             display: "grid",
             // Phone screen column capped at 320px: readable, unstretched, uncropped
-            gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) minmax(0, 320px)",
-            columnGap: 80, rowGap: 32,
+            gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 460px) minmax(0, 300px)",
+            columnGap: 48, rowGap: 32,
             alignItems: "center",
         }}>
             <div style={{ maxWidth: 460 }}>
@@ -265,9 +274,8 @@ function DecisionBlock({ d, phone }: { d: typeof DECISIONS[number]; phone: boole
                 </div>
             </div>
             <figure style={{ margin: 0, width: "100%", maxWidth: phone ? 300 : undefined }}>
-                <div style={{ ...MAT, padding: phone ? 20 : 28 }}>
-                    <img src={d.src} alt={d.alt} style={IMG} />
-                </div>
+                {/* Transparent device PNG, no backing container */}
+                <img src={d.src} alt={d.alt} style={IMG} />
                 <Caption>{d.caption}</Caption>
             </figure>
         </div>
@@ -298,6 +306,12 @@ function SideNav({ active }: { active: string }) {
     )
 }
 
+const PAGE_STYLES = `
+.ios-expand:focus-visible { outline: 2px solid ${C.ink}; outline-offset: 3px; }
+.ios-expand-icon { transition: background-color 0.2s ease, border-color 0.2s ease; }
+.ios-expand:hover .ios-expand-icon, .ios-expand:focus-visible .ios-expand-icon { background-color: #fff; border-color: rgba(0,0,0,0.2); }
+`
+
 export default function IOSCaseStudy() {
     const { phone, tablet, desktop, large } = useResponsive()
     const activeSection = useActiveSection(SECTIONS.map(s => s.id))
@@ -309,6 +323,7 @@ export default function IOSCaseStudy() {
     return (
         <div style={{ width: "100%", backgroundColor: C.bg }}>
             <SharedNav />
+            <style dangerouslySetInnerHTML={{ __html: PAGE_STYLES }} />
             <div style={{
                 display: desktop ? "grid" : "block",
                 gridTemplateColumns: desktop ? `140px minmax(0, ${contentMax}px)` : undefined,
@@ -389,46 +404,57 @@ export default function IOSCaseStudy() {
                     {/* ════════ CHALLENGE ════════ */}
                     <section id="challenge" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
-                            <SectionHead phone={phone} tag="Challenge" title="Why URBN's global scale created a localization gap"
-                                intro="URBN operates Anthropologie, Free People, and Urban Outfitters across international markets, serving millions of shoppers who use the apps in their native language. The apps were built to be multilingual, but one critical surface wasn't: product reviews." />
-                            <img src="/slides/ios-ecosystem.png" alt="URBN brands and their international markets" style={IMG} />
+                            <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) minmax(0, 1fr)", columnGap: 56, rowGap: 8, alignItems: "center" }}>
+                                <div style={{ marginBottom: phone ? -8 : -56 /* SectionHead's own bottom gap isn't needed here */ }}>
+                                    <SectionHead phone={phone} tag="Challenge" title="Why URBN's global scale created a localization gap"
+                                        intro="URBN operates Anthropologie, Free People, and Urban Outfitters across international markets, serving millions of shoppers who use the apps in their native language. The apps were built to be multilingual, but one critical surface wasn't: product reviews." />
+                                </div>
+                                <img src="/slides/ios-ecosystem.png" alt="URBN brands and their international markets" style={{ ...IMG, maxWidth: phone ? "100%" : 440, justifySelf: "end" }} />
+                            </div>
                         </FadeIn>
 
                         <FadeIn>
-                            <div style={{
-                                display: "grid",
-                                gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) minmax(0, 1fr)",
-                                columnGap: 64, rowGap: 32, alignItems: "center",
-                                marginTop: sub,
-                            }}>
-                                <div>
-                                    <SubHead title="There was a consistency gap in the global shopping experience" phone={phone} />
-                                    <p style={{ ...BODY, color: C.ink3, maxWidth: 460 }}>
-                                        Across URBN's mobile apps, users can set their preferred language, and navigation, product details, and system UI all adapt accordingly, except for product reviews, which remained in English only.
-                                    </p>
-                                    <p style={{ fontFamily: I, fontSize: 15, fontWeight: 500, color: C.ink, lineHeight: 1.5, margin: 0, marginTop: 20, maxWidth: 460 }}>
-                                        English-only reviews + global audience = accessibility gap
+                            <div style={{ marginTop: sub }}>
+                                <SubHead title="There was a consistency gap in the global shopping experience" phone={phone} />
+                                <p style={{ ...BODY, color: C.ink3, maxWidth: MEASURE }}>
+                                    Across URBN's mobile apps, users can set their preferred language, and navigation, product details, and system UI all adapt accordingly, except for product reviews, which remained in English only.
+                                </p>
+
+                                {/* The equation is the focal point of this part */}
+                                <div style={{ margin: phone ? "48px 0" : "72px 0", padding: phone ? "28px 0" : "40px 0", borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, textAlign: "center" }}>
+                                    <p style={{ fontFamily: I, fontSize: "clamp(22px, 3vw, 34px)", fontWeight: 300, letterSpacing: "-0.02em", lineHeight: 1.35, color: C.ink, margin: 0, textWrap: "balance" }}>
+                                        English-only reviews <span style={{ color: C.muted }}>+</span> global audience <span style={{ color: C.muted }}>=</span> <span style={{ fontWeight: 600 }}>accessibility gap</span>
                                     </p>
                                 </div>
+
                                 <figure style={{ margin: 0 }}>
-                                    <div style={MAT}>
-                                        <img src="/slides/ios-original.png" alt="Spain Urban Outfitters app showing product reviews in English" style={IMG} />
-                                    </div>
-                                    <Caption>The Spain Urban Outfitters app showing reviews in English, with no way to translate them.</Caption>
+                                    {/* Transparent PNG, shown without a backing container */}
+                                    <img src="/slides/ios-original.png" alt="Spain Urban Outfitters app showing product reviews in English" style={{ ...IMG, maxWidth: phone ? "100%" : 680, margin: "0 auto" }} />
+                                    <figcaption style={{ fontFamily: I, fontSize: 12.5, lineHeight: 1.55, color: C.ink3, marginTop: 12, textAlign: "center" }}>
+                                        The Spain Urban Outfitters app showing reviews in English, with no way to translate them.
+                                    </figcaption>
                                 </figure>
                             </div>
                         </FadeIn>
 
                         <FadeIn>
-                            <div style={{ marginTop: sub, maxWidth: 720 }}>
+                            <div style={{ marginTop: sub, maxWidth: 820 }}>
                                 <SubHead title="Leading to friction points like" phone={phone} />
-                                <div style={{ marginTop: 16 }}>
-                                    <Rows numbered items={[
-                                        "The experience felt inconsistent with the rest of the app",
-                                        "Users struggled to understand fit & quality from English reviews",
-                                        "Confidence during purchase decisions was reduced",
-                                        "Reviews were inaccessible to non-English speakers",
-                                    ]} />
+                                <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "repeat(2, minmax(0, 1fr))", columnGap: 48, marginTop: 20 }}>
+                                    {[
+                                        { h: "UX consistency", t: "The experience felt inconsistent with the rest of the app." },
+                                        { h: "Fit & quality", t: "Users struggled to understand fit & quality from English reviews." },
+                                        { h: "Purchase confidence", t: "Confidence during purchase decisions was reduced." },
+                                        { h: "Language access", t: "Reviews were inaccessible to non-English speakers." },
+                                    ].map((f, i) => (
+                                        <div key={f.h} style={{ display: "flex", gap: 14, borderTop: `1px solid ${C.border}`, padding: "18px 0 22px" }}>
+                                            <span style={{ fontFamily: I, fontSize: 11, color: C.muted, letterSpacing: "0.06em", width: 18, flexShrink: 0, paddingTop: 3 }}>0{i + 1}</span>
+                                            <div>
+                                                <p style={{ fontFamily: I, fontSize: 15, fontWeight: 600, color: C.ink, lineHeight: 1.4, margin: 0, marginBottom: 4 }}>{f.h}</p>
+                                                <p style={{ ...BODY, color: C.ink3 }}>{f.t}</p>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </FadeIn>
@@ -446,8 +472,8 @@ export default function IOSCaseStudy() {
                             <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "repeat(3, minmax(0, 1fr))", columnGap: 40 }}>
                                 {[
                                     { title: "Validate quality", body: "Reviews confirm that a product lives up to its listing, or reveal when it doesn't." },
-                                    { title: "Learn from others", body: "Real customer experiences surface fit issues, hidden features, and honest caveats." },
-                                    { title: "Understand fit & sizing", body: "The most-read part of any review, and especially critical for international shoppers." },
+                                    { title: "Learn from other shoppers", body: "Reviews help shoppers understand how a product performs in everyday use, including details and drawbacks that product descriptions may miss." },
+                                    { title: "Understand fit & sizing", body: "Feedback on fit, sizing, and measurements helps shoppers decide which size to choose, especially when shopping across different sizing systems." },
                                 ].map((b) => (
                                     <div key={b.title} style={{ borderTop: `1px solid ${C.border}`, padding: "20px 0 28px" }}>
                                         <p style={{ fontFamily: I, fontSize: 16, fontWeight: 500, color: C.ink, margin: 0, marginBottom: 6 }}>{b.title}</p>
@@ -508,8 +534,8 @@ export default function IOSCaseStudy() {
 
                         <FadeIn>
                             {/* Constraints and the principles they produced, side by side */}
-                            <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "repeat(2, minmax(0, 1fr))", columnGap: 56, rowGap: 40 }}>
-                                <div>
+                            <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) auto minmax(0, 1fr)", columnGap: 28, rowGap: 20, alignItems: "center" }}>
+                                <div style={{ alignSelf: "start" }}>
                                     <BoldLabel>Constraints</BoldLabel>
                                     {[
                                         { t: "Performance Limits", b: "Auto-translating large volumes at load would impact page speed significantly." },
@@ -522,7 +548,13 @@ export default function IOSCaseStudy() {
                                         </div>
                                     ))}
                                 </div>
-                                <div>
+                                {/* Constraints informed the principles: right on desktop, down on phone */}
+                                <div aria-hidden="true" style={{ display: "flex", justifyContent: "center", color: C.muted }}>
+                                    <svg width="28" height="14" viewBox="0 0 28 14" fill="none" style={{ transform: phone ? "rotate(90deg)" : "none" }}>
+                                        <path d="M1 7h25M20 1.5L26 7l-6 5.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </div>
+                                <div style={{ alignSelf: "start" }}>
                                     <BoldLabel>Principles</BoldLabel>
                                     {[
                                         { t: "User Control", b: "Allow users to choose when to translate, rather than forcing automatic language changes." },
@@ -568,9 +600,7 @@ export default function IOSCaseStudy() {
                                             <h4 style={{ fontFamily: I, fontSize: 18, fontWeight: 400, color: C.ink, letterSpacing: "-0.01em", lineHeight: 1.35, margin: 0, marginTop: 6, marginBottom: 6 }}>{st.label}</h4>
                                             <p style={{ fontFamily: I, fontSize: 14, color: C.ink3, lineHeight: 1.55, margin: 0 }}>{st.desc}</p>
                                         </figcaption>
-                                        <div style={{ ...MAT, padding: phone ? 20 : 24, maxWidth: phone ? 300 : undefined }}>
-                                            <img src={st.src} alt={`${st.label}: ${st.desc}`} style={IMG} />
-                                        </div>
+                                        <img src={st.src} alt={`${st.label}: ${st.desc}`} style={{ ...IMG, maxWidth: phone ? 300 : undefined }} />
                                     </figure>
                                 ))}
                             </div>
