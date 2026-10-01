@@ -2,41 +2,31 @@
 
 import React, { useState, useEffect, useRef } from "react"
 import SharedNav from "../../components/SharedNav"
+import { FONT_SANS, COLORS, EASE_SPRING, useReducedMotion, BracketTag } from "../../components/site"
 
-const Z = "Zodiak, 'Times New Roman', serif"
-const I = "Inter, system-ui, sans-serif"
-
-const C = {
-    bg: "#FFFFFF",
-    surface: "#F4F3EF",
-    warm: "#FAF9F7",
-    ink: "#111111",
-    ink2: "#383834",
-    ink3: "#5A5A54",
-    muted: "#8A8A82",
-    accent: "#6B7A8A",
-    border: "rgba(0,0,0,0.07)",
-    cream: "#FFF2D6",
-}
+// Same tokens and patterns as the URBN filter case study: Inter only, neutral palette.
+const I = FONT_SANS
+const C = COLORS
 
 const SECTIONS = [
     { id: "overview", label: "Overview" },
-    { id: "ecosystem", label: "Ecosystem" },
-    { id: "problem", label: "Problem" },
-    { id: "friction", label: "Friction Points" },
-    { id: "exploration", label: "Exploration" },
-    { id: "why-it-matters", label: "Why It Matters" },
-    { id: "solution", label: "Solution" },
-    { id: "experience", label: "Experience" },
-    { id: "outcome", label: "Outcome" },
-    { id: "reflection", label: "Reflection" },
+    { id: "challenge", label: "Challenge" },
+    { id: "research", label: "Research" },
+    { id: "decisions", label: "Design Decisions" },
+    { id: "solution", label: "Final Solution" },
+    { id: "results", label: "Results" },
+    { id: "learnings", label: "Learnings" },
 ]
+
+const MEASURE = 620 // comfortable line length for paragraphs
 
 function useResponsive() {
     const [phone, setPhone] = useState(false)
     const [tablet, setTablet] = useState(false)
     const [large, setLarge] = useState(false)
     useEffect(() => {
+        // clientWidth, not innerWidth: overflowing content widens the layout
+        // viewport on phones, which would lock in the desktop layout.
         const check = () => {
             const w = document.documentElement.clientWidth
             setPhone(w < 768)
@@ -79,57 +69,95 @@ function useInView(threshold = 0.08) {
     return { ref, visible }
 }
 
-function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
-    const { ref, visible } = useInView()
+// Same reveal as the filter case study: fade and rise, plays once, off under reduced motion.
+function FadeIn({ children, delay = 0, distance = 16, duration = 600, threshold = 0.08 }: { children: React.ReactNode; delay?: number; distance?: number; duration?: number; threshold?: number }) {
+    const { ref, visible } = useInView(threshold)
+    const reduced = useReducedMotion()
+    const shown = visible || reduced
     return (
         <div ref={ref} style={{
-            opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(32px)",
-            transition: `opacity 0.8s cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 0.8s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
+            opacity: shown ? 1 : 0, transform: shown ? "none" : `translateY(${distance}px)`,
+            transition: reduced ? "none" : `opacity ${duration}ms ${EASE_SPRING} ${delay}ms, transform ${duration}ms ${EASE_SPRING} ${delay}ms`,
         }}>{children}</div>
     )
 }
 
-function Counter({ target, suffix = "", active }: { target: number; suffix?: string; active: boolean }) {
-    const [val, setVal] = useState(0)
+function CountUp({ to, suffix = "", duration = 1200 }: { to: number; suffix?: string; duration?: number }) {
+    const { ref, visible } = useInView(0.3)
+    const reduced = useReducedMotion()
+    const [value, setValue] = useState(0)
     useEffect(() => {
-        if (!active) return
-        let cur = 0
-        const steps = 60
-        const inc = target / steps
-        const t = setInterval(() => {
-            cur += inc
-            if (cur >= target) { setVal(target); clearInterval(t) } else setVal(Math.round(cur))
-        }, 20)
-        return () => clearInterval(t)
-    }, [active, target])
-    return <>{val}{suffix}</>
+        if (!visible) return
+        if (reduced) { setValue(to); return }
+        const start = performance.now()
+        const tick = (now: number) => {
+            const t = Math.min((now - start) / duration, 1)
+            setValue(Math.round((1 - Math.pow(1 - t, 3)) * to))
+            if (t < 1) requestAnimationFrame(tick)
+        }
+        requestAnimationFrame(tick)
+    }, [visible, to, duration, reduced])
+    return <span ref={ref}>{value}{suffix}</span>
 }
 
-function SideNav({ active }: { active: string }) {
+// ── Type ────────────────────────────────────────────────────────────────────
+
+function SectionHead({ tag, title, intro, phone }: { tag?: string; title: string; intro?: React.ReactNode; phone: boolean }) {
     return (
-        <nav>
-            {SECTIONS.map(({ id, label }) => {
-                const isActive = active === id
-                return (
-                    <a key={id} href={`#${id}`}
-                        onClick={(e) => { e.preventDefault(); document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" }) }}
-                        style={{ display: "block", padding: "6px 0", textDecoration: "none", transition: "opacity 0.3s ease", opacity: isActive ? 1 : 0.3 }}
-                    >
-                        <span style={{
-                            fontFamily: I, fontSize: 11, fontWeight: 500,
-                            color: C.ink, letterSpacing: "0.08em", textTransform: "uppercase" as const,
-                            transition: "font-weight 0.2s",
-                            borderLeft: isActive ? `2px solid ${C.accent}` : "2px solid transparent",
-                            paddingLeft: 12,
-                        }}>
-                            {label}
-                        </span>
-                    </a>
-                )
-            })}
-        </nav>
+        <div style={{ marginBottom: phone ? 40 : 56 }}>
+            {tag && <BracketTag style={{ marginBottom: 14 }}>{tag}</BracketTag>}
+            <h2 style={{ fontFamily: I, fontSize: "clamp(26px, 3vw, 36px)", fontWeight: 300, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.15, maxWidth: MEASURE, margin: 0, textWrap: "balance" }}>
+                {title}
+            </h2>
+            {intro && <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: MEASURE, margin: 0, marginTop: 16 }}>{intro}</p>}
+        </div>
     )
 }
+
+function SubHead({ num, title, phone }: { num?: string; title: string; phone: boolean }) {
+    return (
+        <>
+            {num && <Num>{num}</Num>}
+            <h3 style={{ fontFamily: I, fontSize: phone ? 20 : 22, fontWeight: 400, letterSpacing: "-0.015em", color: C.ink, lineHeight: 1.3, margin: 0, marginTop: num ? 8 : 0, marginBottom: 10 }}>{title}</h3>
+        </>
+    )
+}
+
+function Label({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
+    return <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, margin: 0, marginBottom: 8, ...style }}>{children}</p>
+}
+
+function BoldLabel({ children }: { children: React.ReactNode }) {
+    return <p style={{ fontFamily: I, fontSize: 14, fontWeight: 600, color: C.ink, lineHeight: 1.4, margin: 0, marginBottom: 8 }}>{children}</p>
+}
+
+function Num({ children }: { children: React.ReactNode }) {
+    return <span style={{ fontFamily: I, fontSize: 11, fontWeight: 400, letterSpacing: "0.06em", color: C.muted }}>{children}</span>
+}
+
+function Caption({ children }: { children: React.ReactNode }) {
+    return <p style={{ fontFamily: I, fontSize: 12.5, lineHeight: 1.55, color: C.ink3, margin: 0, marginTop: 12 }}>{children}</p>
+}
+
+const BODY: React.CSSProperties = { fontFamily: I, fontSize: 15, fontWeight: 400, color: C.ink2, lineHeight: 1.65, margin: 0 }
+const MAT: React.CSSProperties = { backgroundColor: C.paper, overflow: "hidden" }
+const IMG: React.CSSProperties = { width: "100%", height: "auto", display: "block" }
+
+// Hairline-separated list rows (no cards)
+function Rows({ items, numbered = false }: { items: string[]; numbered?: boolean }) {
+    return (
+        <div>
+            {items.map((t, i) => (
+                <div key={i} style={{ display: "flex", gap: 14, alignItems: "baseline", padding: "12px 0", borderTop: `1px solid ${C.border}` }}>
+                    {numbered && <span style={{ fontFamily: I, fontSize: 11, color: C.muted, letterSpacing: "0.06em", width: 18, flexShrink: 0 }}>0{i + 1}</span>}
+                    <span style={{ ...BODY, color: C.ink2 }}>{t}</span>
+                </div>
+            ))}
+        </div>
+    )
+}
+
+// ── Artifacts (click to view larger) ────────────────────────────────────────
 
 function Lightbox({ src, title, caption, onClose }: { src: string; title: string; caption: string; onClose: () => void }) {
     useEffect(() => {
@@ -138,42 +166,35 @@ function Lightbox({ src, title, caption, onClose }: { src: string; title: string
         return () => window.removeEventListener("keydown", handler)
     }, [onClose])
     return (
-        <div onClick={onClose} style={{ position: "fixed" as const, inset: 0, zIndex: 9999, backgroundColor: "rgba(0,0,0,0.82)", display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "center", padding: "40px", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}>
-            <button onClick={onClose} style={{ position: "absolute" as const, top: 24, right: 28, background: "rgba(255,255,255,0.1)", border: "none", borderRadius: 20, cursor: "pointer", width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.7)", fontSize: 16 }}>✕</button>
-            <div onClick={(e) => e.stopPropagation()} style={{ maxWidth: "86vw", maxHeight: "78vh", overflow: "hidden", boxShadow: "0 40px 100px rgba(0,0,0,0.5)" }}>
-                <img src={src} alt={title} style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", maxHeight: "78vh", maxWidth: "100%" }} />
-            </div>
-            <div onClick={(e) => e.stopPropagation()} style={{ marginTop: 18, textAlign: "center" as const, maxWidth: 580 }}>
-                <p style={{ fontFamily: I, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.3)", marginBottom: 5 }}>{title}</p>
-                <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 300, fontSize: 14, color: "rgba(255,255,255,0.65)", lineHeight: 1.6, margin: 0 }}>{caption}</p>
-                <p style={{ fontFamily: I, fontSize: 10, color: "rgba(255,255,255,0.22)", marginTop: 12 }}>Click anywhere or press Esc to close</p>
+        <div role="dialog" aria-modal="true" aria-label={title} onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 9999, backgroundColor: "rgba(17,17,17,0.85)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 40 }}>
+            <button onClick={onClose} aria-label="Close" style={{ position: "absolute", top: 20, right: 24, background: "none", border: "none", cursor: "pointer", width: 44, height: 44, color: "rgba(255,255,255,0.8)", fontFamily: I, fontSize: 18 }}>✕</button>
+            <img src={src} alt={title} onClick={(e) => e.stopPropagation()} style={{ maxWidth: "86vw", maxHeight: "78vh", objectFit: "contain", display: "block" }} />
+            <div onClick={(e) => e.stopPropagation()} style={{ marginTop: 18, textAlign: "center", maxWidth: 580 }}>
+                <p style={{ fontFamily: I, fontSize: 13, fontWeight: 500, color: "#fff", margin: 0, marginBottom: 4 }}>{title}</p>
+                <p style={{ fontFamily: I, fontSize: 13, color: "rgba(255,255,255,0.65)", lineHeight: 1.6, margin: 0 }}>{caption}</p>
             </div>
         </div>
     )
 }
 
-function ArtifactCard({ src, index, title, caption }: { src: string; index: string; title: string; caption: string }) {
-    const [hov, setHov] = useState(false)
+// `frame`: a shared aspect ratio for artifacts that sit side by side, so their
+// captions line up. The image is contained (never cropped) inside the frame.
+function Artifact({ src, index, title, caption, frame }: { src: string; index: string; title: string; caption: string; frame?: string }) {
     const [open, setOpen] = useState(false)
     return (
-        <>
+        <figure style={{ margin: 0 }}>
             {open && <Lightbox src={src} title={title} caption={caption} onClose={() => setOpen(false)} />}
-            <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ display: "flex", flexDirection: "column" as const, gap: 14, transform: hov ? "translateY(-5px)" : "none", transition: "transform 0.35s cubic-bezier(0.22,1,0.36,1)" }}>
-                <div onClick={() => setOpen(true)} style={{ width: "100%", overflow: "hidden", border: `1px solid ${hov ? "rgba(0,0,0,0.12)" : "rgba(0,0,0,0.06)"}`, backgroundColor: "#FAFAF9", transition: "border-color 0.25s, box-shadow 0.35s", boxShadow: hov ? "0 16px 44px rgba(0,0,0,0.1)" : "0 1px 6px rgba(0,0,0,0.04)", cursor: "zoom-in", position: "relative" as const }}>
-                    <img src={src} alt={title} style={{ width: "100%", height: "auto", display: "block", maxWidth: "100%", transform: hov ? "scale(1.02)" : "scale(1)", transition: "transform 0.5s cubic-bezier(0.22,1,0.36,1)", transformOrigin: "top center" }} />
-                    <div style={{ position: "absolute" as const, top: 10, right: 10, backgroundColor: "rgba(0,0,0,0.5)", borderRadius: 6, padding: "4px 9px", opacity: hov ? 1 : 0, transition: "opacity 0.2s", display: "flex", alignItems: "center", gap: 4, pointerEvents: "none" }}>
-                        <span style={{ fontFamily: I, fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.9)", letterSpacing: "0.04em" }}>Expand</span>
-                    </div>
-                </div>
-                <div style={{ display: "flex", gap: 12, alignItems: "flex-start", paddingLeft: 2 }}>
-                    <span style={{ fontFamily: Z, fontStyle: "italic", fontSize: 12, color: C.muted, flexShrink: 0, marginTop: 1 }}>{index}</span>
-                    <div>
-                        <p style={{ fontFamily: I, fontSize: 12, fontWeight: 700, color: C.ink, letterSpacing: "0.04em", textTransform: "uppercase" as const, marginBottom: 3 }}>{title}</p>
-                        <p style={{ fontFamily: I, fontSize: 12.5, lineHeight: 1.6, color: C.ink3, margin: 0 }}>{caption}</p>
-                    </div>
-                </div>
-            </div>
-        </>
+            <button onClick={() => setOpen(true)} aria-label={`View ${title} larger`} style={{ display: "block", width: "100%", padding: 16, border: "none", cursor: "zoom-in", ...MAT }}>
+                {frame
+                    ? <img src={src} alt={title} style={{ width: "100%", aspectRatio: frame, objectFit: "contain", display: "block" }} />
+                    : <img src={src} alt={title} style={IMG} />}
+            </button>
+            <figcaption style={{ marginTop: 12 }}>
+                <Num>{index}</Num>
+                <p style={{ fontFamily: I, fontSize: 14, fontWeight: 500, color: C.ink, margin: 0, marginTop: 4, marginBottom: 2 }}>{title}</p>
+                <p style={{ fontFamily: I, fontSize: 13, lineHeight: 1.55, color: C.ink3, margin: 0 }}>{caption}</p>
+            </figcaption>
+        </figure>
     )
 }
 
@@ -186,487 +207,420 @@ const ARTIFACTS = {
     messaging: "https://framerusercontent.com/images/perf4MeJm1az3KP5tGcLY2lR78.png",
 }
 
-const FRICTION_THEMES = [
-    { bg: "#F5F2EC", accent: "#9B8E7A", tag: "rgba(120,108,90,0.1)", tagText: "#7A6E5F", border: "rgba(155,142,122,0.18)" },
-    { bg: "#EDF0EC", accent: "#6E8C6A", tag: "rgba(90,120,86,0.08)", tagText: "#4E6E4A", border: "rgba(110,140,106,0.18)" },
-    { bg: "#ECF0F5", accent: "#6A7E9B", tag: "rgba(86,104,140,0.08)", tagText: "#4A5E7E", border: "rgba(106,126,155,0.18)" },
-    { bg: "#141414", accent: "#FFFFFF", tag: "rgba(255,255,255,0.08)", tagText: "rgba(255,255,255,0.5)", border: "rgba(255,255,255,0.1)" },
+// ── Design decisions ────────────────────────────────────────────────────────
+// Problem = the existing constraint/principle, What I Changed = the existing
+// solution, Why = the principle it serves. Wording comes from the original page.
+
+const DECISIONS = [
+    {
+        num: "01",
+        title: "Translate on Demand",
+        problem: "Auto-translating large volumes at load would impact page speed significantly, and reviews could not be translated all at once, only individual items on demand.",
+        changes: ["Each review has a \"Translate\" CTA, so users trigger translation when they need it, not before"],
+        why: "Users choose when to translate, rather than being forced into automatic language changes, and Apple's native translation runs without introducing performance overhead.",
+        src: "/slides/ios-discovery.png",
+        alt: "Review list with a \"Translate review to Spanish\" link under an English review",
+        caption: "A Translate CTA sits under each review in the list.",
+    },
+    {
+        num: "02",
+        title: "Toggle to Original, With Subtle Feedback",
+        problem: "The feature had to feel like a natural extension of the existing review UI, not a bolt-on.",
+        changes: ["A lightweight badge communicates when a review is translated", "Users can instantly switch back to the original language"],
+        why: "Shoppers always know when they are reading a translation, and the original wording stays one tap away, preserving authenticity.",
+        src: "/slides/ios-translated.png",
+        alt: "Translated review showing \"Reseña traducida\" with a \"Ver original\" link",
+        caption: "\"Reseña traducida: Ver original\" marks the translation and switches back.",
+    },
 ]
 
-function FrictionCard({ num, label, tag, themeIndex = 0 }: { num: string; label: string; tag: string; themeIndex?: number }) {
-    const [hov, setHov] = useState(false)
-    const t = FRICTION_THEMES[themeIndex]
-    const dark = themeIndex === 3
-    const textColor = dark ? "rgba(255,255,255,0.92)" : "#111111"
-    const numColor = dark ? "rgba(255,255,255,0.28)" : "rgba(0,0,0,0.22)"
+function DecisionBlock({ d, phone }: { d: typeof DECISIONS[number]; phone: boolean }) {
+    const group = { marginTop: 28 }
     return (
-        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ backgroundColor: t.bg, borderRadius: 14, overflow: "hidden", position: "relative" as const, padding: "22px 22px 20px", display: "flex", flexDirection: "column" as const, gap: 12, cursor: "default", border: `1px solid ${t.border}`, transform: hov ? "translateY(-4px) scale(1.01)" : "none", boxShadow: hov ? `0 14px 36px rgba(0,0,0,${dark ? 0.32 : 0.09})` : "none", transition: "transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease" }}>
-            <div style={{ position: "absolute" as const, top: 0, left: 0, width: 3, height: "100%", backgroundColor: t.accent, transformOrigin: "top", transform: hov ? "scaleY(1)" : "scaleY(0.2)", opacity: hov ? 0.9 : 0.25, transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1), opacity 0.3s" }} />
-            <span style={{ fontFamily: Z, fontStyle: "italic", fontSize: 12, color: numColor }}>{num}</span>
-            <p style={{ fontFamily: I, fontSize: 17, lineHeight: 1.38, color: textColor, margin: 0, fontWeight: 400, letterSpacing: "-0.01em" }}>{label}</p>
-            <div style={{ marginTop: 2 }}>
-                <span style={{ fontFamily: I, fontSize: 11, color: t.tagText, backgroundColor: t.tag, borderRadius: 20, padding: "3px 10px" }}>{tag}</span>
-            </div>
-        </div>
-    )
-}
-
-function ProcessSection({ phone }: { phone: boolean }) {
-    const { ref, visible } = useInView()
-    return (
-        <div ref={ref} style={{ opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(32px)", transition: "opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1)" }}>
-            <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Exploration Process</p>
-            <h2 style={{ fontFamily: I, fontWeight: 200, fontSize: "clamp(28px, 3.4vw, 42px)", letterSpacing: "-0.02em", color: C.ink, marginBottom: 20, lineHeight: 1.12 }}>
-                From ambiguity to architecture
-            </h2>
-            <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 680, marginBottom: 56 }}>
-                Before any UI was designed, the problem was mapped: scoping the ticket, surfacing open questions, and charting every possible translation path to find the right one.
-            </p>
-            <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: 28, marginBottom: 28 }}>
-                <ArtifactCard src={ARTIFACTS.ticketInfo} index="01" title="Ticket Brief" caption="Original Jira ticket defining scope, acceptance criteria, and the questions that needed answering before design could begin." />
-                <ArtifactCard src={ARTIFACTS.randomThoughts} index="02" title="Early Thinking" caption="Unfiltered sticky-note brainstorm: auto-translate logic, edge cases, CTA placement, and open questions about language detection." />
-            </div>
-            <div style={{ marginBottom: 28 }}>
-                <ArtifactCard src={ARTIFACTS.translationPath} index="03" title="Path Possibilities" caption="Three translation paths explored: auto-translate, translate-all, and per-review. Each came with different performance and UX trade-offs." />
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: 28, marginBottom: 28 }}>
-                <ArtifactCard src={ARTIFACTS.workflowV1} index="04" title="Workflow v1" caption="First decision tree, mapping where review text lives in the app and whether auto-translate or user-triggered made more sense." />
-                <ArtifactCard src={ARTIFACTS.workflowV2} index="05" title="Workflow v2" caption="Refined flow that landed on user-controlled translation with a global toggle and per-review 'show original' CTAs." />
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: 28 }}>
-                <ArtifactCard src={ARTIFACTS.messaging} index="06" title="Copy Exploration" caption="Micro-copy decisions for auto-translate banners and individual review CTAs, mapped against BV restriction logic." />
-                <div style={{ backgroundColor: C.ink, borderRadius: 14, padding: "32px 28px", display: "flex", flexDirection: "column" as const, justifyContent: "space-between", minHeight: 180 }}>
-                    <span style={{ fontFamily: Z, fontSize: 52, lineHeight: 0.85, color: "rgba(255,255,255,0.07)", userSelect: "none" as const }}>"</span>
-                    <div>
-                        <p style={{ fontFamily: I, fontWeight: 300, fontSize: "clamp(17px, 1.8vw, 22px)", lineHeight: 1.55, color: "rgba(255,255,255,0.96)", margin: 0, letterSpacing: "-0.015em" }}>
-                            Three translation paths were translated into low-fidelity concepts and discussed in design critiques with Senior Designers and Product partners, allowing the team to validate assumptions and refine the direction.
-                        </p>
-                    </div>
+        <div style={{
+            display: "grid",
+            // Phone screen column capped at 320px: readable, unstretched, uncropped
+            gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) minmax(0, 320px)",
+            columnGap: 80, rowGap: 32,
+            alignItems: "center",
+        }}>
+            <div style={{ maxWidth: 460 }}>
+                <Num>{d.num}</Num>
+                <h3 style={{ fontFamily: I, fontSize: phone ? 24 : 28, fontWeight: 300, color: C.ink, letterSpacing: "-0.02em", lineHeight: 1.2, margin: 0, marginTop: 10 }}>{d.title}</h3>
+                <div style={{ marginTop: 32 }}>
+                    <BoldLabel>Problem</BoldLabel>
+                    <p style={BODY}>{d.problem}</p>
+                </div>
+                <div style={group}>
+                    <BoldLabel>What I Changed</BoldLabel>
+                    <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                        {d.changes.map((c) => (
+                            <li key={c} style={{ ...BODY, padding: "7px 0", borderTop: `1px solid ${C.border}` }}>{c}</li>
+                        ))}
+                    </ul>
+                </div>
+                <div style={group}>
+                    <BoldLabel>Why</BoldLabel>
+                    <p style={BODY}>{d.why}</p>
                 </div>
             </div>
-        </div>
-    )
-}
-
-function BenefitCard({ icon, title, body }: { icon: string; title: string; body: string }) {
-    const [hov, setHov] = useState(false)
-    return (
-        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: hov ? C.ink : C.warm, borderRadius: 14, padding: "24px 22px", transition: "background 0.25s cubic-bezier(0.22,1,0.36,1), transform 0.22s cubic-bezier(0.22,1,0.36,1)", transform: hov ? "translateY(-4px)" : "none", cursor: "default" }}>
-            <div style={{ fontSize: 26, marginBottom: 14, lineHeight: 1 }}>{icon}</div>
-            <p style={{ fontFamily: I, fontWeight: 500, fontSize: 15, color: hov ? "#fff" : C.ink, marginBottom: 7, lineHeight: 1.3, transition: "color 0.25s" }}>{title}</p>
-            <p style={{ fontFamily: I, fontSize: 13, lineHeight: 1.65, color: hov ? "rgba(255,255,255,0.6)" : C.ink3, margin: 0, transition: "color 0.25s" }}>{body}</p>
-        </div>
-    )
-}
-
-function StatCard({ num, suffix, label, active }: { num: number; suffix: string; label: string; active: boolean }) {
-    const [hov, setHov] = useState(false)
-    return (
-        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: hov ? C.ink : C.surface, borderRadius: 12, padding: "26px 22px", transition: "background 0.25s, transform 0.22s cubic-bezier(0.22,1,0.36,1)", transform: hov ? "translateY(-4px)" : "none", cursor: "default" }}>
-            <p style={{ fontFamily: I, fontWeight: 200, fontSize: 44, letterSpacing: "-0.04em", color: hov ? "#fff" : C.ink, lineHeight: 1, marginBottom: 8, transition: "color 0.25s" }}>
-                <Counter target={num} suffix={suffix} active={active} />
-            </p>
-            <p style={{ fontFamily: I, fontSize: 12, lineHeight: 1.6, color: hov ? "rgba(255,255,255,0.55)" : C.ink3, margin: 0, transition: "color 0.25s" }}>{label}</p>
-        </div>
-    )
-}
-
-function PrincipleCard({ num, title, body, emoji }: { num: string; title: string; body: string; emoji: string }) {
-    const [hov, setHov] = useState(false)
-    return (
-        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: C.cream, borderRadius: 14, overflow: "hidden", transform: hov ? "translateY(-5px)" : "none", boxShadow: hov ? "0 16px 36px rgba(0,0,0,0.12)" : "none", transition: "transform 0.22s cubic-bezier(0.22,1,0.36,1), box-shadow 0.22s ease", cursor: "default" }}>
-            <div style={{ height: 3, backgroundColor: "rgba(0,0,0,0.55)", transformOrigin: "left", transform: hov ? "scaleX(1)" : "scaleX(0.1)", opacity: hov ? 1 : 0.18, transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1), opacity 0.3s" }} />
-            <div style={{ padding: "20px 22px 24px" }}>
-                <div style={{ fontSize: 24, marginBottom: 12 }}>{emoji}</div>
-                <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, color: "rgba(0,0,0,0.26)", letterSpacing: "0.08em", marginBottom: 5, textTransform: "uppercase" as const }}>{num}</p>
-                <p style={{ fontFamily: I, fontWeight: 500, fontSize: 16, color: C.ink, marginBottom: 8, lineHeight: 1.3 }}>{title}</p>
-                <p style={{ fontFamily: I, fontSize: 13, lineHeight: 1.6, color: C.ink3, marginBottom: 12 }}>{body}</p>
-                <span style={{ fontFamily: I, fontSize: 17, color: C.ink, opacity: hov ? 0.7 : 0.2, display: "inline-block", transform: hov ? "translateX(6px)" : "none", transition: "transform 0.22s cubic-bezier(0.22,1,0.36,1), opacity 0.22s" , fontWeight: 400}}>→</span>
-            </div>
-        </div>
-    )
-}
-
-function SolutionCard({ title, body, icon, i }: { title: string; body: string; icon: string; i: number }) {
-    const [hov, setHov] = useState(false)
-    return (
-        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: hov ? C.ink : C.surface, borderRadius: 14, padding: "22px 20px", transform: hov ? "translateY(-4px)" : "none", boxShadow: hov ? "0 18px 44px rgba(0,0,0,0.16)" : "none", transition: "background 0.25s, transform 0.22s cubic-bezier(0.22,1,0.36,1), box-shadow 0.22s", cursor: "default" }}>
-            <div style={{ fontSize: 20, marginBottom: 12 }}>{icon}</div>
-            <p style={{ fontFamily: I, fontWeight: 500, fontSize: 14.5, color: hov ? "#fff" : C.ink, marginBottom: 8, transition: "color 0.25s" }}>{title}</p>
-            <p style={{ fontFamily: I, fontSize: 13, lineHeight: 1.65, color: hov ? "rgba(255,255,255,0.6)" : C.ink3, marginBottom: 12, transition: "color 0.25s" }}>{body}</p>
-            <span style={{ fontFamily: I, fontSize: 11, fontWeight: 500, color: hov ? "rgba(255,255,255,0.35)" : C.muted, letterSpacing: "0.08em", textTransform: "uppercase" as const, transition: "color 0.25s" }}>0{i + 1}</span>
-        </div>
-    )
-}
-
-function CascadeLabel({ text }: { text: string }) {
-    return (
-        <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.muted, marginBottom: 16 }}>{text}</p>
-    )
-}
-
-function CascadeConnector({ text }: { text: string }) {
-    return (
-        <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "center", padding: "28px 0 22px", gap: 8 }}>
-            <div style={{ width: 1, height: 28, backgroundColor: "rgba(0,0,0,0.1)" }} />
-            <svg width={12} height={8} viewBox="0 0 12 8" fill="none">
-                <path d="M1 1L6 7L11 1" stroke="rgba(0,0,0,0.22)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 300, fontSize: 15, color: C.ink3, margin: 0, textAlign: "center" as const }}>{text}</p>
-        </div>
-    )
-}
-
-function PhoneCard({ src, label, num, desc, index, visible }: { src: string; label: string; num: string; desc: string; index: number; visible: boolean }) {
-    const [hov, setHov] = useState(false)
-    const [open, setOpen] = useState(false)
-    const spring = "cubic-bezier(0.22,1,0.36,1)"
-    const delay = index * 150
-    return (
-        <>
-            {open && <Lightbox src={src} title={label} caption={desc} onClose={() => setOpen(false)} />}
-            <div style={{ flex: 1, display: "flex", flexDirection: "column" as const, gap: 14, opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(36px)", transition: `opacity 0.6s ${spring} ${delay}ms, transform 0.7s ${spring} ${delay}ms` }}>
-                <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} onClick={() => setOpen(true)} style={{ position: "relative" as const, transform: hov ? "translateY(-5px)" : "none", boxShadow: hov ? "0 16px 44px rgba(0,0,0,0.1)" : "0 1px 6px rgba(0,0,0,0.04)", transition: `transform 0.35s ${spring}, box-shadow 0.35s ${spring}`, cursor: "zoom-in" }}>
-                    <img src={src} alt={label} style={{ width: "100%", height: "auto", display: "block", maxWidth: "100%", transform: hov ? "scale(1.02)" : "scale(1)", transition: `transform 0.5s ${spring}`, transformOrigin: "top center" }} />
-                    <div style={{ position: "absolute" as const, top: 10, right: 10, backgroundColor: "rgba(0,0,0,0.5)", borderRadius: 6, padding: "4px 9px", opacity: hov ? 1 : 0, transition: "opacity 0.2s", display: "flex", alignItems: "center", gap: 4, pointerEvents: "none" as const }}>
-                        <span style={{ fontFamily: I, fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.9)", letterSpacing: "0.04em" }}>Expand</span>
-                    </div>
+            <figure style={{ margin: 0, width: "100%", maxWidth: phone ? 300 : undefined }}>
+                <div style={{ ...MAT, padding: phone ? 20 : 28 }}>
+                    <img src={d.src} alt={d.alt} style={IMG} />
                 </div>
-                <div style={{ display: "flex", gap: 12, alignItems: "flex-start", paddingLeft: 2 }}>
-                    <span style={{ fontFamily: Z, fontStyle: "italic", fontSize: 12, color: C.muted, flexShrink: 0, marginTop: 1 }}>{num}</span>
-                    <div>
-                        <p style={{ fontFamily: I, fontSize: 12, fontWeight: 700, color: C.ink, letterSpacing: "0.04em", textTransform: "uppercase" as const, marginBottom: 3 }}>{label}</p>
-                        <p style={{ fontFamily: I, fontSize: 12.5, lineHeight: 1.6, color: C.ink3, margin: 0 }}>{desc}</p>
-                    </div>
-                </div>
-            </div>
-        </>
+                <Caption>{d.caption}</Caption>
+            </figure>
+        </div>
     )
 }
 
-function ResultCard({ num, label }: { num: string; label: string }) {
-    const [hov, setHov] = useState(false)
+// ── Side nav ────────────────────────────────────────────────────────────────
+
+function SideNav({ active }: { active: string }) {
     return (
-        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ flex: 1, backgroundColor: hov ? C.ink : C.surface, borderRadius: 12, padding: "20px", transition: "background 0.22s, transform 0.22s cubic-bezier(0.22,1,0.36,1)", transform: hov ? "translateY(-3px)" : "none", cursor: "default" }}>
-            <p style={{ fontFamily: Z, fontStyle: "italic", fontSize: 26, color: hov ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.09)", marginBottom: 6, lineHeight: 1, transition: "color 0.22s" }}>{num}</p>
-            <p style={{ fontFamily: I, fontSize: 15, color: hov ? "rgba(255,255,255,0.88)" : C.ink, lineHeight: 1.5, margin: 0, transition: "color 0.22s" }}>{label}</p>
-        </div>
+        <nav aria-label="Case study sections">
+            {SECTIONS.map(({ id, label }) => {
+                const isActive = active === id
+                return (
+                    <a key={id} href={`#${id}`}
+                        onClick={(e) => { e.preventDefault(); document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" }) }}
+                        aria-current={isActive ? "location" : undefined}
+                        style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", textDecoration: "none" }}
+                    >
+                        <span aria-hidden="true" style={{ width: isActive ? 12 : 0, height: 1, backgroundColor: C.ink, transition: `width 0.3s ${EASE_SPRING}` }} />
+                        <span style={{ fontFamily: I, fontSize: 12, fontWeight: isActive ? 500 : 400, color: isActive ? C.ink : C.muted, transition: "color 0.3s ease" }}>
+                            {label}
+                        </span>
+                    </a>
+                )
+            })}
+        </nav>
     )
 }
 
 export default function IOSCaseStudy() {
-    const { phone, tablet, desktop } = useResponsive()
-    const pad = phone ? 20 : tablet ? 40 : 80
+    const { phone, tablet, desktop, large } = useResponsive()
     const activeSection = useActiveSection(SECTIONS.map(s => s.id))
-
-    const statsRef = useRef<HTMLDivElement>(null)
-    const [statsVis, setStatsVis] = useState(false)
-    useEffect(() => {
-        const el = statsRef.current
-        if (!el) return
-        const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setStatsVis(true); obs.disconnect() } }, { threshold: 0.1 })
-        obs.observe(el)
-        return () => obs.disconnect()
-    }, [])
-
-    const phonesRef = useRef<HTMLDivElement>(null)
-    const [phonesVis, setPhonesVis] = useState(false)
-    useEffect(() => {
-        const el = phonesRef.current
-        if (!el) return
-        const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setPhonesVis(true); obs.disconnect() } }, { threshold: 0.1 })
-        obs.observe(el)
-        return () => obs.disconnect()
-    }, [])
+    const px = phone ? 20 : tablet ? 40 : large ? 120 : 80
+    const contentMax = large ? 1120 : 960
+    const sectionGap = phone ? 96 : tablet ? 128 : 160
+    const sub = phone ? 64 : 88
 
     return (
         <div style={{ width: "100%", backgroundColor: C.bg }}>
             <SharedNav />
             <div style={{
                 display: desktop ? "grid" : "block",
-                gridTemplateColumns: desktop ? "140px 1fr" : undefined,
-                gap: desktop ? 48 : undefined,
-                maxWidth: 1400,
+                gridTemplateColumns: desktop ? `140px minmax(0, ${contentMax}px)` : undefined,
+                justifyContent: "center",
+                columnGap: desktop ? 64 : undefined,
                 margin: "0 auto",
-                padding: `0 ${pad}px 180px`,
+                padding: `0 ${px}px 160px`,
             }}>
                 {desktop && (
                     <aside>
-                        <div style={{ position: "sticky", top: 80, paddingTop: 40 }}>
+                        <div style={{ position: "sticky", top: 96, paddingTop: 48 }}>
                             <SideNav active={activeSection} />
                         </div>
                     </aside>
                 )}
 
-                <div>
+                <main style={{ minWidth: 0 }}>
 
                     {/* ════════ OVERVIEW ════════ */}
-                    <section id="overview" style={{ scrollMarginTop: 80, paddingTop: phone ? 48 : 40 }}>
+                    <section id="overview" style={{ scrollMarginTop: 96, paddingTop: phone ? 32 : 48 }}>
                         <FadeIn>
-                            <img
-                                src="/slides/ios-hero.png"
-                                alt="iOS Review Translation"
-                                style={{ width: "100%", height: "auto", display: "block", boxShadow: "0 8px 40px rgba(0,0,0,0.10)", maxWidth: "100%" }}
-                            />
+                            <div style={MAT}>
+                                <img src="/slides/ios-hero.png" alt="iOS review translation on three iPhone screens" style={IMG} />
+                            </div>
                         </FadeIn>
 
                         <FadeIn delay={80}>
-                            <div style={{ display: desktop ? "grid" : "block", gridTemplateColumns: desktop ? "1.3fr 1fr" : undefined, gap: desktop ? 64 : 0, marginTop: 48 }}>
-                                <div>
-                                    <p style={{ fontFamily: I, fontSize: 11, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>
-                                        iOS · Mobile Experience · URBN
-                                    </p>
-                                    <h1 style={{ fontFamily: I, fontWeight: 300, fontSize: "clamp(32px, 4.5vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.03em", color: C.ink, marginBottom: desktop ? 0 : 24 }}>
-                                        Making Reviews Accessible Across Languages
-                                    </h1>
+                            <div style={{ marginTop: phone ? 36 : 56 }}>
+                                <BracketTag style={{ marginBottom: 16 }}>iOS · Mobile Experience · URBN</BracketTag>
+                                <h1 style={{ fontFamily: I, fontWeight: 300, fontSize: "clamp(34px, 4vw, 48px)", lineHeight: 1.1, letterSpacing: "-0.03em", color: C.ink, margin: 0, maxWidth: 760, textWrap: "balance" }}>
+                                    Making Reviews Accessible Across Languages
+                                </h1>
+                                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 18 }}>
+                                    {["Research", "UX/UI", "iOS"].map(tag => (
+                                        <span key={tag} style={{ fontFamily: I, fontSize: 11, color: C.muted, backgroundColor: "rgba(0,0,0,0.04)", borderRadius: 40, padding: "4px 10px" }}>{tag}</span>
+                                    ))}
                                 </div>
-                                <div style={{ paddingTop: desktop ? 36 : 0 }}>
-                                    <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.65, color: C.ink3, marginBottom: 20 }}>
-                                        Non-English speakers are 3× more likely to abandon a purchase when reviews aren't in their language. I designed an on-demand translation feature using Apple's API to close that gap across URBN's global apps.
-                                    </p>
-                                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 24 }}>
-                                        {["Research", "UX/UI", "iOS"].map(tag => (
-                                            <span key={tag} style={{ fontFamily: I, fontSize: 11, fontWeight: 500, color: C.ink3, border: `1px solid ${C.border}`, borderRadius: 20, padding: "6px 14px" }}>{tag}</span>
-                                        ))}
+                            </div>
+                        </FadeIn>
+
+                        {/* Summary: three aligned columns, stacked on phone */}
+                        <FadeIn delay={100}>
+                            <div style={{
+                                display: "grid",
+                                gridTemplateColumns: phone ? "minmax(0, 1fr)" : "repeat(3, minmax(0, 1fr))",
+                                columnGap: tablet ? 32 : 48, rowGap: 28,
+                                marginTop: phone ? 36 : 48,
+                            }}>
+                                {[
+                                    { k: "Problem", v: "Shoppers could set their app language, but product reviews stayed in English only, so non-English speakers lost one of the most valuable signals for purchase confidence." },
+                                    { k: "What I Did", v: "Designed an on-demand translation feature using Apple's Translation API, letting shoppers translate any review and switch back to the original." },
+                                    { k: "Impact", v: "Live on iPhone 15 and up for shoppers whose app language differs from their device language." },
+                                ].map(({ k, v }) => (
+                                    <div key={k}>
+                                        <BoldLabel>{k}</BoldLabel>
+                                        <p style={{ ...BODY, maxWidth: 340 }}>{v}</p>
                                     </div>
-                                </div>
+                                ))}
                             </div>
                         </FadeIn>
 
                         <FadeIn delay={120}>
-                            <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr 1fr" : "repeat(4, 1fr)", gap: phone ? 16 : 32, marginTop: 40, paddingTop: 32, borderTop: `1px solid ${C.border}` }}>
+                            <div style={{
+                                display: "grid", gridTemplateColumns: phone ? "repeat(2, minmax(0, 1fr))" : "repeat(4, minmax(0, 1fr))",
+                                columnGap: 32, rowGap: 24, marginTop: phone ? 36 : 48,
+                                paddingTop: 24, borderTop: `1px solid ${C.border}`,
+                            }}>
                                 {([["Role", "UX Designer"], ["Timeline", "Jul – Aug 2025"], ["Tools", "Figma · Confluence · Jira"], ["Team", "Mobile Optimization @URBN"]] as const).map(([k, v]) => (
                                     <div key={k}>
-                                        <p style={{ fontFamily: I, fontWeight: 500, fontSize: 11, color: C.muted, marginBottom: 6, textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>{k}</p>
-                                        <p style={{ fontFamily: I, fontWeight: 400, fontSize: 14, color: C.ink2, margin: 0 }}>{v}</p>
+                                        <Label>{k}</Label>
+                                        <p style={{ fontFamily: I, fontSize: 14, lineHeight: 1.45, color: C.ink2, margin: 0 }}>{v}</p>
                                     </div>
                                 ))}
                             </div>
                         </FadeIn>
                     </section>
 
-                    {/* ════════ ECOSYSTEM ════════ */}
-                    <section id="ecosystem" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
+                    {/* ════════ CHALLENGE ════════ */}
+                    <section id="challenge" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
-                            <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Business Context</p>
-                            <h2 style={{ fontFamily: I, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
-                                Why URBN's global scale created a localization gap
-                            </h2>
-                            <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 680, marginBottom: 40 }}>
-                                URBN operates Anthropologie, Free People, and Urban Outfitters across international markets, serving millions of shoppers who use the apps in their native language. The apps were built to be multilingual, but one critical surface wasn't: product reviews.
-                            </p>
-                            <img src="/slides/ios-ecosystem.png" alt="URBN Global Ecosystem" style={{ width: "100%", height: "auto", display: "block", maxWidth: "100%" }} />
+                            <SectionHead phone={phone} tag="Challenge" title="Why URBN's global scale created a localization gap"
+                                intro="URBN operates Anthropologie, Free People, and Urban Outfitters across international markets, serving millions of shoppers who use the apps in their native language. The apps were built to be multilingual, but one critical surface wasn't: product reviews." />
+                            <img src="/slides/ios-ecosystem.png" alt="URBN brands and their international markets" style={IMG} />
+                        </FadeIn>
+
+                        <FadeIn>
+                            <div style={{
+                                display: "grid",
+                                gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) minmax(0, 1fr)",
+                                columnGap: 64, rowGap: 32, alignItems: "center",
+                                marginTop: sub,
+                            }}>
+                                <div>
+                                    <SubHead title="There was a consistency gap in the global shopping experience" phone={phone} />
+                                    <p style={{ ...BODY, color: C.ink3, maxWidth: 460 }}>
+                                        Across URBN's mobile apps, users can set their preferred language, and navigation, product details, and system UI all adapt accordingly, except for product reviews, which remained in English only.
+                                    </p>
+                                    <p style={{ fontFamily: I, fontSize: 15, fontWeight: 500, color: C.ink, lineHeight: 1.5, margin: 0, marginTop: 20, maxWidth: 460 }}>
+                                        English-only reviews + global audience = accessibility gap
+                                    </p>
+                                </div>
+                                <figure style={{ margin: 0 }}>
+                                    <div style={MAT}>
+                                        <img src="/slides/ios-original.png" alt="Spain Urban Outfitters app showing product reviews in English" style={IMG} />
+                                    </div>
+                                    <Caption>The Spain Urban Outfitters app showing reviews in English, with no way to translate them.</Caption>
+                                </figure>
+                            </div>
+                        </FadeIn>
+
+                        <FadeIn>
+                            <div style={{ marginTop: sub, maxWidth: 720 }}>
+                                <SubHead title="Leading to friction points like" phone={phone} />
+                                <div style={{ marginTop: 16 }}>
+                                    <Rows numbered items={[
+                                        "The experience felt inconsistent with the rest of the app",
+                                        "Users struggled to understand fit & quality from English reviews",
+                                        "Confidence during purchase decisions was reduced",
+                                        "Reviews were inaccessible to non-English speakers",
+                                    ]} />
+                                </div>
+                            </div>
                         </FadeIn>
                     </section>
 
-                    {/* ════════ PROBLEM ════════ */}
-                    <section id="problem" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
+                    {/* ════════ RESEARCH ════════ */}
+                    <section id="research" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
-                            <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>The Problem</p>
-                            <h2 style={{ fontFamily: I, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
-                                There was a consistency gap in the global shopping experience
-                            </h2>
-                            <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 760, marginBottom: 24 }}>
-                                Across URBN's mobile apps, users can set their preferred language, and navigation, product details, and system UI all adapt accordingly, <strong>EXCEPT</strong> for product reviews, which remained in English only.
-                            </p>
+                            <SectionHead phone={phone} tag="Research" title="Reviews are decision tools, not just content"
+                                intro="In e-commerce, product reviews directly shape whether a shopper buys or bounces. They answer the questions a product page can't, and they only work if users can actually read them." />
                         </FadeIn>
 
-                        <FadeIn delay={60}>
-                            <div style={{ display: "flex", justifyContent: "center", margin: "40px 0 32px" }}>
-                                <div style={{ display: "inline-flex", alignItems: "center", gap: 10, backgroundColor: "#FFF2D6", borderRadius: 10, padding: phone ? "12px 14px" : "12px 18px" }}>
-                                    <span style={{ fontSize: 16 }}>⚠️</span>
-                                    <p style={{ fontFamily: Z, fontStyle: "italic", fontSize: phone ? 13 : 15, color: C.ink, margin: 0 }}>
-                                        English-Only Reviews + Global Audience = Accessibility Gap
-                                    </p>
-                                </div>
+                        <FadeIn>
+                            {/* What reviews do for shoppers, as a three-column list with hairlines */}
+                            <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "repeat(3, minmax(0, 1fr))", columnGap: 40 }}>
+                                {[
+                                    { title: "Validate quality", body: "Reviews confirm that a product lives up to its listing, or reveal when it doesn't." },
+                                    { title: "Learn from others", body: "Real customer experiences surface fit issues, hidden features, and honest caveats." },
+                                    { title: "Understand fit & sizing", body: "The most-read part of any review, and especially critical for international shoppers." },
+                                ].map((b) => (
+                                    <div key={b.title} style={{ borderTop: `1px solid ${C.border}`, padding: "20px 0 28px" }}>
+                                        <p style={{ fontFamily: I, fontSize: 16, fontWeight: 500, color: C.ink, margin: 0, marginBottom: 6 }}>{b.title}</p>
+                                        <p style={{ ...BODY, color: C.ink3 }}>{b.body}</p>
+                                    </div>
+                                ))}
                             </div>
-                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20, padding: "8px 0" }}>
-                                <img src="/slides/ios-original.png" alt="iOS original review experience showing English reviews in a Spanish-language app" style={{ width: phone ? "100%" : "70%", height: "auto", display: "block", maxWidth: "100%" }} />
-                                <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 300, fontSize: 14, color: C.ink3, textAlign: "center", maxWidth: 520, lineHeight: 1.65, margin: 0 }}>
-                                    The Spain Urban Outfitters app showing reviews in English. A non-English speaking user sees reviews with no way to translate them
+                        </FadeIn>
+
+                        <FadeIn>
+                            <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "repeat(3, minmax(0, 1fr))", columnGap: 40, rowGap: 32, marginTop: phone ? 48 : 64 }}>
+                                {[
+                                    { to: 74, suffix: "%", label: "of consumers expect seamless cross-language shopping" },
+                                    { to: 66, suffix: "%", label: "say poor mobile UX negatively affects brand credibility" },
+                                    { to: 3, suffix: "x", label: "more likely to abandon when reviews are in a foreign language" },
+                                ].map((m) => (
+                                    <div key={m.label}>
+                                        <p style={{ fontFamily: I, fontSize: phone ? 48 : 56, fontWeight: 200, color: C.ink, letterSpacing: "-0.04em", lineHeight: 1, margin: 0 }}><CountUp to={m.to} suffix={m.suffix} /></p>
+                                        <p style={{ fontFamily: I, fontSize: 14, color: C.ink3, lineHeight: 1.55, margin: 0, marginTop: 12, maxWidth: 260 }}>{m.label}</p>
+                                    </div>
+                                ))}
+                            </div>
+                            <div style={{ marginTop: phone ? 48 : 64, paddingTop: 28, borderTop: `1px solid ${C.border}`, maxWidth: 720 }}>
+                                <Label>Key insight: accessibility gap</Label>
+                                <p style={{ fontFamily: I, fontSize: phone ? 19 : 22, fontWeight: 300, color: C.ink, lineHeight: 1.45, letterSpacing: "-0.01em", margin: 0 }}>
+                                    Without access to reviews in their language, users lose one of the most valuable signals for purchase confidence, which increases hesitation and drop-off.
                                 </p>
                             </div>
                         </FadeIn>
-                    </section>
 
-                    {/* ════════ FRICTION POINTS ════════ */}
-                    <section id="friction" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
+                        {/* Exploration process */}
                         <FadeIn>
-                            <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Friction Points</p>
-                            <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 400, fontSize: "clamp(24px,3.5vw,42px)", lineHeight: 1.3, color: C.ink, letterSpacing: "-0.025em", maxWidth: 720, margin: "0 0 40px" }}>
-                                Leading to friction points like…
-                            </p>
-                        </FadeIn>
-                        <FadeIn delay={60}>
-                            <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: 10 }}>
-                                <FrictionCard num="01" label="The experience felt inconsistent with the rest of the app" tag="UX consistency" themeIndex={0} />
-                                <FrictionCard num="02" label="Users struggled to understand fit & quality from English reviews" tag="Fit & quality" themeIndex={1} />
-                                <FrictionCard num="03" label="Confidence during purchase decisions was reduced" tag="Purchase confidence" themeIndex={2} />
-                                <FrictionCard num="04" label="Reviews were inaccessible to non-English speakers" tag="Language access" themeIndex={3} />
-                            </div>
-                        </FadeIn>
-                    </section>
-
-                    {/* ════════ EXPLORATION ════════ */}
-                    <section id="exploration" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
-                        <ProcessSection phone={phone} />
-                    </section>
-
-                    {/* ════════ WHY IT MATTERS ════════ */}
-                    <section id="why-it-matters" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
-                        <FadeIn>
-                            <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Why It Matters</p>
-                            <h2 style={{ fontFamily: I, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 16 }}>
-                                Reviews are decision tools,<br />
-                                <span style={{ color: C.ink3, fontWeight: 300, fontStyle: "italic" }}>not just content.</span>
-                            </h2>
-                            <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 680, marginBottom: 36 }}>
-                                In e-commerce, product reviews directly shape whether a shopper buys or bounces. They answer the questions a product page can't, and they only work if users can actually read them.
-                            </p>
-                            <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(3, 1fr)", gap: 10, marginBottom: 36 }}>
-                                <BenefitCard icon="✅" title="Validate quality" body="Reviews confirm that a product lives up to its listing, or reveal when it doesn't." />
-                                <BenefitCard icon="💬" title="Learn from others" body="Real customer experiences surface fit issues, hidden features, and honest caveats." />
-                                <BenefitCard icon="📐" title="Understand fit & sizing" body="The most-read part of any review, and especially critical for international shoppers." />
-                            </div>
-                        </FadeIn>
-
-                        <FadeIn delay={60}>
-                            <div ref={statsRef} style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(3, 1fr)", gap: 10, marginBottom: 36 }}>
-                                <StatCard num={74} suffix="%" label="of consumers expect seamless cross-language shopping" active={statsVis} />
-                                <StatCard num={66} suffix="%" label="say poor mobile UX negatively affects brand credibility" active={statsVis} />
-                                <StatCard num={3} suffix="x" label="more likely to abandon when reviews are in a foreign language" active={statsVis} />
-                            </div>
-                            <div style={{ backgroundColor: C.ink, borderRadius: 16, padding: phone ? "24px 20px" : "32px 40px", display: "flex", gap: 22, alignItems: "flex-start" }}>
-                                <span style={{ fontFamily: Z, fontSize: 48, lineHeight: 0.8, color: "rgba(255,255,255,0.1)", flexShrink: 0 }}>"</span>
-                                <div>
-                                    <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 300, fontSize: phone ? 17 : 21, lineHeight: 1.55, color: "rgba(255,255,255,0.9)", margin: "0 0 14px" }}>
-                                        Without access to reviews in their language, users lose one of the most valuable signals for purchase confidence, which increases hesitation and drop-off.
-                                    </p>
-                                    <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, color: "rgba(255,255,255,0.28)", letterSpacing: "0.08em", textTransform: "uppercase" as const, margin: 0 }}>
-                                        Key insight: accessibility gap
-                                    </p>
+                            <div style={{ marginTop: sub }}>
+                                <SubHead title="From ambiguity to architecture" phone={phone} />
+                                <p style={{ ...BODY, color: C.ink3, maxWidth: MEASURE, marginBottom: phone ? 32 : 40 }}>
+                                    Before any UI was designed, the problem was mapped: scoping the ticket, surfacing open questions, and charting every possible translation path to find the right one. The three paths became low-fidelity concepts discussed in design critiques with Senior Designers and Product partners, allowing the team to validate assumptions and refine the direction.
+                                </p>
+                                <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "repeat(2, minmax(0, 1fr))", columnGap: 24, rowGap: 40 }}>
+                                    <Artifact src={ARTIFACTS.ticketInfo} index="01" title="Ticket Brief" frame="4 / 3" caption="Original Jira ticket defining scope, acceptance criteria, and the questions that needed answering before design could begin." />
+                                    <Artifact src={ARTIFACTS.randomThoughts} index="02" title="Early Thinking" frame="4 / 3" caption="Unfiltered sticky-note brainstorm: auto-translate logic, edge cases, CTA placement, and open questions about language detection." />
+                                    <div style={{ gridColumn: phone ? undefined : "1 / -1" }}>
+                                        <Artifact src={ARTIFACTS.translationPath} index="03" title="Path Possibilities" caption="Three translation paths explored: auto-translate, translate-all, and per-review. Each came with different performance and UX trade-offs." />
+                                    </div>
+                                    <Artifact src={ARTIFACTS.workflowV1} index="04" title="Workflow v1" frame="4 / 3" caption="First decision tree, mapping where review text lives in the app and whether auto-translate or user-triggered made more sense." />
+                                    <Artifact src={ARTIFACTS.workflowV2} index="05" title="Workflow v2" frame="4 / 3" caption="Refined flow that landed on user-controlled translation with a global toggle and per-review 'show original' CTAs." />
+                                    <Artifact src={ARTIFACTS.messaging} index="06" title="Copy Exploration" caption="Micro-copy decisions for auto-translate banners and individual review CTAs, mapped against BV restriction logic." />
                                 </div>
                             </div>
                         </FadeIn>
                     </section>
 
-                    {/* ════════ SOLUTION ════════ */}
-                    <section id="solution" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
+                    {/* ════════ DESIGN DECISIONS ════════ */}
+                    <section id="decisions" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
-                            <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>From Constraints to Solution</p>
-                            <h2 style={{ fontFamily: I, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
-                                Designing Within Constraints to Build the Right Solution
-                            </h2>
-                            <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 760, marginBottom: 56 }}>
-                                Every design decision in this project started with a real technical constraint. Rather than designing around them, I let them shape the strategy, from how translation is triggered to what the UI communicates.
-                            </p>
+                            <SectionHead phone={phone} tag="Design Decisions" title="Designing within constraints to build the right solution"
+                                intro="Every design decision in this project started with a real technical constraint. Rather than designing around them, I let them shape the strategy, from how translation is triggered to what the UI communicates." />
+                        </FadeIn>
 
-                            <CascadeLabel text="Constraints" />
-                            <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(3, 1fr)", gap: 10 }}>
-                                {[
-                                    { icon: "⚡", title: "Performance Limits", body: "Auto-translating large volumes at load would impact page speed significantly." },
-                                    { icon: "🚫", title: "No Bulk Translation", body: "Reviews could not be translated all at once, only individual items on demand." },
-                                    { icon: "📱", title: "iOS 18+ Only", body: "Apple's Translation API is exclusive to devices running iOS 18 or later." },
-                                ].map((c) => (
-                                    <div key={c.title} style={{ flex: 1, backgroundColor: C.surface, borderRadius: 12, padding: "20px 18px" }}>
-                                        <div style={{ fontSize: 20, marginBottom: 10 }}>{c.icon}</div>
-                                        <p style={{ fontFamily: I, fontWeight: 500, fontSize: 14.5, color: C.ink, marginBottom: 6 }}>{c.title}</p>
-                                        <p style={{ fontFamily: I, fontSize: 12.5, lineHeight: 1.6, color: C.ink3, margin: 0 }}>{c.body}</p>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <CascadeConnector text="These constraints shaped three core design principles:" />
-                            <CascadeLabel text="Principles" />
-                            <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(3, 1fr)", gap: 12 }}>
-                                <PrincipleCard num="01" title="User Control" emoji="🎛️" body="Allow users to choose when to translate, rather than forcing automatic language changes." />
-                                <PrincipleCard num="02" title="System Efficiency" emoji="⚙️" body="Leverage Apple's native translation capabilities without introducing performance overhead." />
-                                <PrincipleCard num="03" title="Seamless Integration" emoji="🪡" body="Ensure the feature feels like a natural extension of the existing review UI, not a bolt-on." />
-                            </div>
-
-                            <CascadeConnector text="Which led to a single, focused solution:" />
-                            <CascadeLabel text="Solution" />
-                            <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(3, 1fr)", gap: 10, marginBottom: 28 }}>
-                                {[
-                                    { title: "Translate on Demand", body: `Each review has a "Translate" CTA, so users trigger translation when they need it, not before.`, icon: "🌐" },
-                                    { title: "Toggle to Original", body: "Users can instantly switch back to the original language, preserving authenticity.", icon: "↩️" },
-                                    { title: "Subtle System Feedback", body: "A lightweight badge communicates when a review is translated and offers a view-original option.", icon: "💬" },
-                                ].map((c, i) => (
-                                    <SolutionCard key={c.title} {...c} i={i} />
-                                ))}
+                        <FadeIn>
+                            {/* Constraints and the principles they produced, side by side */}
+                            <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "repeat(2, minmax(0, 1fr))", columnGap: 56, rowGap: 40 }}>
+                                <div>
+                                    <BoldLabel>Constraints</BoldLabel>
+                                    {[
+                                        { t: "Performance Limits", b: "Auto-translating large volumes at load would impact page speed significantly." },
+                                        { t: "No Bulk Translation", b: "Reviews could not be translated all at once, only individual items on demand." },
+                                        { t: "iOS 18+ Only", b: "Apple's Translation API is exclusive to devices running iOS 18 or later." },
+                                    ].map((c) => (
+                                        <div key={c.t} style={{ borderTop: `1px solid ${C.border}`, padding: "14px 0" }}>
+                                            <p style={{ fontFamily: I, fontSize: 15, fontWeight: 500, color: C.ink, margin: 0, marginBottom: 4 }}>{c.t}</p>
+                                            <p style={{ ...BODY, color: C.ink3, fontSize: 14 }}>{c.b}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div>
+                                    <BoldLabel>Principles</BoldLabel>
+                                    {[
+                                        { t: "User Control", b: "Allow users to choose when to translate, rather than forcing automatic language changes." },
+                                        { t: "System Efficiency", b: "Leverage Apple's native translation capabilities without introducing performance overhead." },
+                                        { t: "Seamless Integration", b: "Ensure the feature feels like a natural extension of the existing review UI, not a bolt-on." },
+                                    ].map((c) => (
+                                        <div key={c.t} style={{ borderTop: `1px solid ${C.border}`, padding: "14px 0" }}>
+                                            <p style={{ fontFamily: I, fontSize: 15, fontWeight: 500, color: C.ink, margin: 0, marginBottom: 4 }}>{c.t}</p>
+                                            <p style={{ ...BODY, color: C.ink3, fontSize: 14 }}>{c.b}</p>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </FadeIn>
-                    </section>
 
-                    {/* ════════ EXPERIENCE ════════ */}
-                    <section id="experience" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
-                        <FadeIn>
-                            <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>The Experience</p>
-                            <h2 style={{ fontFamily: I, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
-                                See how it works in practice
-                            </h2>
-                            <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 680, marginBottom: 56 }}>
-                                Three states of the feature: the untranslated review, a single-tap translation, and the full list view with translation available on every review.
-                            </p>
-                        </FadeIn>
-                        <div ref={phonesRef} style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: 28, alignItems: "flex-start" }}>
-                            {[
-                                { src: "/slides/ios-og.png", label: "Original State", num: "01", desc: "The review appears in English only, with no translation option visible to Spanish-speaking users" },
-                                { src: "/slides/ios-translated.png", label: "After Translation", num: "02", desc: "One tap translates the review inline, and the user sees 'Ver original' to switch back" },
-                                { src: "/slides/ios-discovery.png", label: "Review List View", num: "03", desc: "Translation CTAs appear across all reviews giving users full control over every review on the page" },
-                            ].map((m, i) => (
-                                <PhoneCard key={m.label} {...m} index={i} visible={phonesVis} />
+                        <div style={{ display: "flex", flexDirection: "column", gap: phone ? 104 : 168, marginTop: phone ? 96 : 144 }}>
+                            {DECISIONS.map((d) => (
+                                <FadeIn key={d.num} distance={12} duration={450} threshold={0.15}>
+                                    <DecisionBlock d={d} phone={phone} />
+                                </FadeIn>
                             ))}
                         </div>
                     </section>
 
-                    {/* ════════ OUTCOME ════════ */}
-                    <section id="outcome" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
+                    {/* ════════ FINAL SOLUTION ════════ */}
+                    <section id="solution" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
-                            <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Outcome</p>
-                            <h2 style={{ fontFamily: I, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
-                                Closing the accessibility gap for millions of global shoppers
-                            </h2>
-                            <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 720, marginBottom: 28 }}>
-                                By aligning platform capabilities with user needs, the feature strengthens trust at one of the most critical moments in the shopping journey.
-                            </p>
-                            <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: 10, marginBottom: 32 }}>
-                                <ResultCard num="01" label="Improved accessibility for international shoppers" />
-                                <ResultCard num="02" label="Increased clarity around product fit and quality" />
-                                <ResultCard num="03" label="More consistent language experience across the app" />
-                                <ResultCard num="04" label="Greater purchase confidence for non-English speakers" />
+                            <SectionHead phone={phone} tag="Final Solution" title="See how it works in practice"
+                                intro="Three states of the feature: the untranslated review, a single-tap translation, and the full list view with translation available on every review." />
+                        </FadeIn>
+
+                        <FadeIn distance={12} duration={450}>
+                            <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "repeat(3, minmax(0, 1fr))", columnGap: tablet ? 24 : 40, rowGap: 56 }}>
+                                {[
+                                    { src: "/slides/ios-og.png", label: "Original State", num: "01", desc: "The review appears in English only, with no translation option visible to Spanish-speaking users." },
+                                    { src: "/slides/ios-translated.png", label: "After Translation", num: "02", desc: "One tap translates the review inline, and the user sees 'Ver original' to switch back." },
+                                    { src: "/slides/ios-discovery.png", label: "Review List View", num: "03", desc: "Translation CTAs appear across all reviews, giving users full control over every review on the page." },
+                                ].map((st) => (
+                                    <figure key={st.label} style={{ margin: 0, display: "flex", flexDirection: "column" }}>
+                                        {/* Heading and explanation above the screen they describe */}
+                                        <figcaption style={{ marginBottom: 20, minHeight: phone ? undefined : 124 }}>
+                                            <Num>{st.num}</Num>
+                                            <h4 style={{ fontFamily: I, fontSize: 18, fontWeight: 400, color: C.ink, letterSpacing: "-0.01em", lineHeight: 1.35, margin: 0, marginTop: 6, marginBottom: 6 }}>{st.label}</h4>
+                                            <p style={{ fontFamily: I, fontSize: 14, color: C.ink3, lineHeight: 1.55, margin: 0 }}>{st.desc}</p>
+                                        </figcaption>
+                                        <div style={{ ...MAT, padding: phone ? 20 : 24, maxWidth: phone ? 300 : undefined }}>
+                                            <img src={st.src} alt={`${st.label}: ${st.desc}`} style={IMG} />
+                                        </div>
+                                    </figure>
+                                ))}
                             </div>
-                            <p style={{ fontFamily: I, fontSize: 15, lineHeight: 1.65, color: C.ink2, maxWidth: 720, marginTop: 24, marginBottom: 0 }}>
-                                This feature is currently live across iPhone 15 and up for users whose app language is set to a different language than their device language.
-                            </p>
                         </FadeIn>
                     </section>
 
-                    {/* ════════ REFLECTION ════════ */}
-                    <section id="reflection" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
+                    {/* ════════ RESULTS ════════ */}
+                    <section id="results" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
-                            <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: C.accent, marginBottom: 20 }}>Reflection</p>
-                            <h2 style={{ fontFamily: I, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
-                                Constraint-driven design is still good design
-                            </h2>
-                            <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 580, marginBottom: 0 }}>
+                            <SectionHead phone={phone} tag="Results" title="Closing the accessibility gap for millions of global shoppers"
+                                intro="By aligning platform capabilities with user needs, the feature strengthens trust at one of the most critical moments in the shopping journey." />
+                        </FadeIn>
+                        <FadeIn>
+                            <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) minmax(0, 1fr)", columnGap: 64, rowGap: 40, alignItems: "start" }}>
+                                <Rows numbered items={[
+                                    "Improved accessibility for international shoppers",
+                                    "Increased clarity around product fit and quality",
+                                    "More consistent language experience across the app",
+                                    "Greater purchase confidence for non-English speakers",
+                                ]} />
+                                <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 16 }}>
+                                    <BoldLabel>Live</BoldLabel>
+                                    <p style={BODY}>This feature is currently live across iPhone 15 and up for users whose app language is set to a different language than their device language.</p>
+                                </div>
+                            </div>
+                        </FadeIn>
+                    </section>
+
+                    {/* ════════ LEARNINGS ════════ */}
+                    <section id="learnings" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
+                        <FadeIn>
+                            <SectionHead phone={phone} tag="Learnings" title="Constraint-driven design is still good design" />
+                            <p style={{ fontFamily: I, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: MEASURE, margin: 0, marginTop: phone ? -16 : -24 }}>
                                 This project reinforced that the best design decisions often emerge from working within limits. iOS 18-only support and the no-bulk-translation constraint weren't obstacles. They defined the user experience. By leaning into on-demand, user-triggered translation, I delivered a solution that felt native and intentional, not bolted-on. The constraint became the strategy.
                             </p>
                         </FadeIn>
-
                     </section>
 
                     {/* Back to work */}
-                    <div style={{ paddingTop: 64, marginTop: 80, borderTop: "1px solid rgba(0,0,0,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <a href="/#work" style={{ fontFamily: I, fontSize: 14, fontWeight: 500, color: "#8A8A82", textDecoration: "none", letterSpacing: "-0.01em", transition: "color 0.18s", minHeight: 44, display: "flex", alignItems: "center" }}
-                            onMouseEnter={(e) => (e.currentTarget.style.color = "#111111")}
-                            onMouseLeave={(e) => (e.currentTarget.style.color = "#8A8A82")}
+                    <div style={{ paddingTop: 40, marginTop: phone ? 80 : 120, borderTop: `1px solid ${C.border}` }}>
+                        <a href="/#work"
+                            style={{ fontFamily: I, fontSize: 14, color: C.ink3, textDecoration: "none", minHeight: 44, display: "inline-flex", alignItems: "center", transition: "color 0.18s" }}
+                            onMouseEnter={(e) => (e.currentTarget.style.color = C.ink)}
+                            onMouseLeave={(e) => (e.currentTarget.style.color = C.ink3)}
                         >
                             ← Back to work
                         </a>
                     </div>
 
-                </div>
+                </main>
             </div>
         </div>
     )
