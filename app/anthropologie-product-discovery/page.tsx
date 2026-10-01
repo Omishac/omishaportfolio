@@ -195,52 +195,64 @@ const RESULTS = [
 ]
 
 const BRANDS = [
-    { name: "Urban Outfitters", href: "https://www.urbanoutfitters.com/womens-clothing" },
-    { name: "Free People", href: "https://www.freepeople.com/clothes" },
-    { name: "Anthropologie", href: "https://www.anthropologie.com/womens-clothing" },
+    // brandColor: the original hover fills, from git history (pre-refinement page)
+    { name: "Urban Outfitters", href: "https://www.urbanoutfitters.com/womens-clothing", brandColor: "#11120C" },
+    { name: "Free People", href: "https://www.freepeople.com/clothes", brandColor: "#D52975" },
+    { name: "Anthropologie", href: "https://www.anthropologie.com/womens-clothing", brandColor: "#167A92" },
 ]
 
 // ── Blocks ──────────────────────────────────────────────────────────────────
 
-function StrategyBlock({ s, phone }: { s: typeof STRATEGIES[number]; phone: boolean }) {
+// The recordings are 2940×1602 desktop screens with the filter drawer docked
+// on the right. The drawer starts at 61.6% of the width (measured from the
+// frames); start the crop just past it so no page content shows.
+const DRAWER_LEFT = 0.618
+const DRAWER_ASPECT = `${Math.round((1 - DRAWER_LEFT) * 2940)} / 1602`
+
+function DrawerVideo({ src, label }: { src: string; label: string }) {
     return (
-        <div>
-            {/* Text on a two-column grid: what was wrong | what changed and why */}
-            <div style={{
-                display: "grid",
-                gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) minmax(0, 1fr)",
-                columnGap: 56, rowGap: 28,
-                marginBottom: phone ? 28 : 36,
-            }}>
-                <div>
-                    <Num>{s.num}</Num>
-                    <h3 style={{ fontFamily: INTER, fontSize: phone ? 20 : 22, fontWeight: 400, color: C.ink, letterSpacing: "-0.015em", lineHeight: 1.3, margin: 0, marginTop: 8, marginBottom: 16 }}>{s.title}</h3>
+        <div style={{ ...MAT, position: "relative", aspectRatio: DRAWER_ASPECT }}>
+            {/* Full height, pinned right: the frame shows only the drawer, unstretched */}
+            <video src={src} autoPlay loop muted playsInline aria-label={label}
+                style={{ position: "absolute", top: 0, right: 0, height: "100%", width: "auto", maxWidth: "none", display: "block" }} />
+        </div>
+    )
+}
+
+function StrategyBlock({ s, phone }: { s: typeof STRATEGIES[number]; phone: boolean }) {
+    const group = { marginTop: 28 } // same gap before Problem, What I Changed and Why
+    return (
+        <div style={{
+            display: "grid",
+            gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) minmax(0, 1fr)",
+            columnGap: 64, rowGap: 32,
+            alignItems: "center",
+        }}>
+            <div>
+                <Num>{s.num}</Num>
+                <h3 style={{ fontFamily: INTER, fontSize: phone ? 20 : 22, fontWeight: 400, color: C.ink, letterSpacing: "-0.015em", lineHeight: 1.3, margin: 0, marginTop: 8 }}>{s.title}</h3>
+
+                <div style={group}>
                     <Label>Problem</Label>
                     <p style={{ fontFamily: INTER, fontSize: 15, color: C.ink3, lineHeight: 1.65, margin: 0 }}>{s.problem}</p>
                 </div>
-                <div style={{ paddingTop: phone ? 0 : 71 }}>
-                    <Label>What We Changed</Label>
+
+                <div style={group}>
+                    <Label>What I Changed</Label>
                     <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                         {s.changes.map((c, ci) => (
                             <li key={ci} style={{ fontFamily: INTER, fontSize: 15, color: C.ink2, lineHeight: 1.6, padding: "8px 0", borderTop: `1px solid ${C.border}` }}>{c}</li>
                         ))}
                     </ul>
-                    <Label style={{ marginTop: 24 }}>Why It Matters</Label>
-                    <p style={{ fontFamily: INTER, fontSize: 15, fontWeight: 400, color: C.ink, lineHeight: 1.6, margin: 0 }}>{s.why}</p>
+                </div>
+
+                <div style={group}>
+                    <Label>Why</Label>
+                    <p style={{ fontFamily: INTER, fontSize: 15, color: C.ink, lineHeight: 1.6, margin: 0 }}>{s.why}</p>
                 </div>
             </div>
-            {/* Full-width recording so the drawer UI stays legible. On phones the
-                frame crops to the drawer (right side) instead of shrinking it. */}
-            {phone ? (
-                <div style={{ ...MAT, position: "relative", aspectRatio: "0.72" }}>
-                    <video src={s.video} autoPlay loop muted playsInline aria-label={`${s.title} recording`}
-                        style={{ position: "absolute", top: 0, right: 0, height: "100%", width: "auto", maxWidth: "none", display: "block" }} />
-                </div>
-            ) : (
-                <div style={MAT}>
-                    <video src={s.video} autoPlay loop muted playsInline aria-label={`${s.title} recording`} style={IMG} />
-                </div>
-            )}
+
+            <DrawerVideo src={s.video} label={`${s.title} recording`} />
         </div>
     )
 }
@@ -554,6 +566,10 @@ export default function AnthropologieProductDiscovery() {
                                         { title: "Pickup Store Unavailable", desc: "Disabled state communicating limited availability", desktop: "/images/state-unavailable-desktop.png", mobile: "/images/state-unavailable-mobile.png" },
                                     ].map((state) => (
                                         <figure key={state.title} style={{ margin: 0 }}>
+                                            <figcaption style={{ marginBottom: 20 }}>
+                                                <h4 style={{ fontFamily: INTER, fontSize: phone ? 17 : 18, fontWeight: 400, color: C.ink, letterSpacing: "-0.01em", lineHeight: 1.35, margin: 0, marginBottom: 4 }}>{state.title}</h4>
+                                                <p style={{ fontFamily: INTER, fontSize: 14, color: C.ink3, margin: 0, lineHeight: 1.55 }}>{state.desc}</p>
+                                            </figcaption>
                                             {/* Desktop and mobile side by side, top-aligned */}
                                             <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 3fr) minmax(0, 1fr)", gap: phone ? 16 : 24, alignItems: "start" }}>
                                                 <div style={MAT}>
@@ -563,10 +579,6 @@ export default function AnthropologieProductDiscovery() {
                                                     <img src={state.mobile} alt={`${state.title}, mobile`} style={IMG} />
                                                 </div>
                                             </div>
-                                            <figcaption style={{ marginTop: 14 }}>
-                                                <p style={{ fontFamily: INTER, fontSize: 15, fontWeight: 500, color: C.ink, margin: 0, marginBottom: 2 }}>{state.title}</p>
-                                                <p style={{ fontFamily: INTER, fontSize: 13, color: C.ink3, margin: 0, lineHeight: 1.55 }}>{state.desc}</p>
-                                            </figcaption>
                                         </figure>
                                     ))}
                                 </div>
@@ -604,21 +616,25 @@ export default function AnthropologieProductDiscovery() {
 
                         <FadeIn delay={40}>
                             <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: phone ? -16 : -24 }}>
-                                {BRANDS.map((brand) => (
-                                    <a key={brand.name} href={brand.href} target="_blank" rel="noopener noreferrer" style={{
-                                        fontFamily: INTER, fontSize: 14, fontWeight: 400, color: C.ink2,
-                                        textDecoration: "none", padding: "10px 18px",
-                                        borderRadius: 100, border: `1px solid ${C.border}`,
-                                        transition: "border-color 0.2s ease, color 0.2s ease",
-                                    }}
-                                        onMouseEnter={e => { e.currentTarget.style.borderColor = C.ink; e.currentTarget.style.color = C.ink }}
-                                        onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.ink2 }}
-                                        onFocus={e => { e.currentTarget.style.borderColor = C.ink }}
-                                        onBlur={e => { e.currentTarget.style.borderColor = C.border }}
-                                    >
-                                        {brand.name} &nbsp;&#8599;
-                                    </a>
-                                ))}
+                                {BRANDS.map((brand) => {
+                                    const on = (el: HTMLElement) => { el.style.backgroundColor = brand.brandColor; el.style.borderColor = brand.brandColor; el.style.color = "#fff" }
+                                    const off = (el: HTMLElement) => { el.style.backgroundColor = "transparent"; el.style.borderColor = C.border; el.style.color = C.ink2 }
+                                    return (
+                                        <a key={brand.name} href={brand.href} target="_blank" rel="noopener noreferrer" style={{
+                                            fontFamily: INTER, fontSize: 14, fontWeight: 400, color: C.ink2,
+                                            textDecoration: "none", padding: "10px 18px",
+                                            borderRadius: 100, border: `1px solid ${C.border}`,
+                                            transition: "background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease",
+                                        }}
+                                            onMouseEnter={e => on(e.currentTarget)}
+                                            onMouseLeave={e => { if (document.activeElement !== e.currentTarget) off(e.currentTarget) }}
+                                            onFocus={e => on(e.currentTarget)}
+                                            onBlur={e => off(e.currentTarget)}
+                                        >
+                                            {brand.name} &nbsp;&#8599;
+                                        </a>
+                                    )
+                                })}
                             </div>
                         </FadeIn>
 
