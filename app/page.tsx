@@ -799,7 +799,7 @@ function Hero({
                         <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
                             style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block" }} />
 
-                        <h1 style={{ ...rotText(263.2, 162, 2.74), fontSize: 20.585, fontWeight: 700, color: "#FFFFFF" }}>
+                        <h1 style={{ ...rotText(263.2, 156, 2.74), fontFamily: NAV_Z, fontSize: 34, fontWeight: 700, letterSpacing: "-0.01em", color: "#FFFFFF" }}>
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
@@ -809,7 +809,7 @@ function Hero({
 
                         {/* Intro line: sits between the role line and "Take what you need:",
                             angled between their two rotations so it reads as part of the paper */}
-                        <p style={{ ...rotText(261, 222, 2.4), width: 340, whiteSpace: "normal", textWrap: "balance", fontSize: 12.5, fontWeight: 400, lineHeight: 1.5, color: "#FFF1F6" }}>
+                        <p style={{ ...rotText(261, 226, 2.4), width: 340, whiteSpace: "normal", textWrap: "balance", fontSize: 12.5, fontWeight: 400, lineHeight: 1.5, color: "#FFF1F6" }}>
                             Analytics-driven product designer creating intuitive, customer-centered digital experiences for <span style={{ whiteSpace: "nowrap" }}>consumer-facing</span> brands.
                         </p>
 
