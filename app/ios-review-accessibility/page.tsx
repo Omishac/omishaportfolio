@@ -266,11 +266,11 @@ function DecisionBlock({ d, phone }: { d: typeof DECISIONS[number]; phone: boole
     return (
         <div style={{
             display: "grid",
-            // Text and phone as one connected unit; the phone uses the shared mockup width
+            // Text on the left, phone at the right edge of the content column,
+            // with open space between them
             gridTemplateColumns: phone ? "minmax(0, 1fr)" : `minmax(0, 1fr) minmax(0, ${PHONE_W}px)`,
-            columnGap: 56, rowGap: 28,
+            columnGap: 80, rowGap: 28,
             alignItems: "center",
-            maxWidth: 840,
         }}>
             <div style={{ maxWidth: 480 }}>
                 <Num>{d.num}</Num>
