@@ -88,14 +88,14 @@ function CountUp({ to, suffix = "", duration = 1200 }: { to: number; suffix?: st
 }
 
 // Same fade-and-rise the landing page uses (0.6s, 16px, EASE_SPRING).
-function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
-    const { ref, visible } = useInView()
+function FadeIn({ children, delay = 0, distance = 16, duration = 600, threshold = 0.08 }: { children: React.ReactNode; delay?: number; distance?: number; duration?: number; threshold?: number }) {
+    const { ref, visible } = useInView(threshold) // observer disconnects after the first reveal: plays once
     const reduced = useReducedMotion()
     const shown = visible || reduced
     return (
         <div ref={ref} style={{
-            opacity: shown ? 1 : 0, transform: shown ? "none" : "translateY(16px)",
-            transition: reduced ? "none" : `opacity 0.6s ${EASE_SPRING} ${delay}ms, transform 0.6s ${EASE_SPRING} ${delay}ms`,
+            opacity: shown ? 1 : 0, transform: shown ? "none" : `translateY(${distance}px)`,
+            transition: reduced ? "none" : `opacity ${duration}ms ${EASE_SPRING} ${delay}ms, transform ${duration}ms ${EASE_SPRING} ${delay}ms`,
         }}>{children}</div>
     )
 }
@@ -219,40 +219,49 @@ function DrawerVideo({ src, label }: { src: string; label: string }) {
     )
 }
 
+// Bold label on its own line, regular supporting copy below.
+function StrategyLabel({ children }: { children: React.ReactNode }) {
+    return <p style={{ fontFamily: INTER, fontSize: 14, fontWeight: 600, color: C.ink, lineHeight: 1.4, margin: 0, marginBottom: 8 }}>{children}</p>
+}
+
 function StrategyBlock({ s, phone }: { s: typeof STRATEGIES[number]; phone: boolean }) {
-    const group = { marginTop: 28 } // same gap before Problem, What I Changed and Why
+    const group = { marginTop: 28 } // same gap between Problem, What I Changed and Why
+    const body: React.CSSProperties = { fontFamily: INTER, fontSize: 15, fontWeight: 400, color: C.ink2, lineHeight: 1.65, margin: 0 }
     return (
         <div style={{
             display: "grid",
-            gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) minmax(0, 1fr)",
-            columnGap: 64, rowGap: 32,
+            // Video column capped at 400px: smaller, still legible at drawer scale
+            gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) minmax(0, 400px)",
+            columnGap: 72, rowGap: 32,
             alignItems: "center",
         }}>
-            <div>
+            <div style={{ maxWidth: 460 }}>
                 <Num>{s.num}</Num>
-                <h3 style={{ fontFamily: INTER, fontSize: phone ? 20 : 22, fontWeight: 400, color: C.ink, letterSpacing: "-0.015em", lineHeight: 1.3, margin: 0, marginTop: 8 }}>{s.title}</h3>
+                <h3 style={{ fontFamily: INTER, fontSize: phone ? 24 : 28, fontWeight: 300, color: C.ink, letterSpacing: "-0.02em", lineHeight: 1.2, margin: 0, marginTop: 10 }}>{s.title}</h3>
 
-                <div style={group}>
-                    <Label>Problem</Label>
-                    <p style={{ fontFamily: INTER, fontSize: 15, color: C.ink3, lineHeight: 1.65, margin: 0 }}>{s.problem}</p>
+                <div style={{ marginTop: 32 }}>
+                    <StrategyLabel>Problem</StrategyLabel>
+                    <p style={body}>{s.problem}</p>
                 </div>
 
                 <div style={group}>
-                    <Label>What I Changed</Label>
+                    <StrategyLabel>What I Changed</StrategyLabel>
                     <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                         {s.changes.map((c, ci) => (
-                            <li key={ci} style={{ fontFamily: INTER, fontSize: 15, color: C.ink2, lineHeight: 1.6, padding: "8px 0", borderTop: `1px solid ${C.border}` }}>{c}</li>
+                            <li key={ci} style={{ ...body, padding: "7px 0", borderTop: `1px solid ${C.border}` }}>{c}</li>
                         ))}
                     </ul>
                 </div>
 
                 <div style={group}>
-                    <Label>Why</Label>
-                    <p style={{ fontFamily: INTER, fontSize: 15, color: C.ink, lineHeight: 1.6, margin: 0 }}>{s.why}</p>
+                    <StrategyLabel>Why</StrategyLabel>
+                    <p style={body}>{s.why}</p>
                 </div>
             </div>
 
-            <DrawerVideo src={s.video} label={`${s.title} recording`} />
+            <div style={{ width: "100%", maxWidth: phone ? 400 : undefined }}>
+                <DrawerVideo src={s.video} label={`${s.title} recording`} />
+            </div>
         </div>
     )
 }
@@ -437,9 +446,9 @@ export default function AnthropologieProductDiscovery() {
                                 intro="Based on the research findings, the redesign focused on reducing uncertainty throughout the filtering experience by making interactions clearer, more predictable, and easier to navigate." />
                         </FadeIn>
 
-                        <div style={{ display: "flex", flexDirection: "column", gap: phone ? 72 : 112 }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: phone ? 104 : 168 }}>
                             {STRATEGIES.map((s) => (
-                                <FadeIn key={s.num}>
+                                <FadeIn key={s.num} distance={12} duration={450} threshold={0.15}>
                                     <StrategyBlock s={s} phone={phone} />
                                 </FadeIn>
                             ))}
