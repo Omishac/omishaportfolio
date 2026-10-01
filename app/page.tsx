@@ -941,7 +941,7 @@ type CaseStudy = {
     company: string
     desc: string
     live?: boolean
-    comingSoon?: boolean   // shows the "Coming soon" badge on the cover
+    comingSoon?: boolean   // shows the "Currently building" badge on the cover
 }
 
 // Case study grid, in display order: 2 × 2 on tablet/desktop, one column on phone.
@@ -1060,7 +1060,7 @@ function CoverCard({
                     color: "#FFFFFF",
                     whiteSpace: "nowrap",
                 }}>
-                    Coming soon
+                    Currently building
                 </span>
             )}
         </div>
