@@ -100,24 +100,6 @@ function FadeIn({ children, delay = 0, distance = 16, duration = 600, threshold 
     )
 }
 
-function CountUp({ to, suffix = "", duration = 1200 }: { to: number; suffix?: string; duration?: number }) {
-    const { ref, visible } = useInView(0.3)
-    const reduced = useReducedMotion()
-    const [value, setValue] = useState(0)
-    useEffect(() => {
-        if (!visible) return
-        if (reduced) { setValue(to); return }
-        const start = performance.now()
-        const tick = (now: number) => {
-            const t = Math.min((now - start) / duration, 1)
-            setValue(Math.round((1 - Math.pow(1 - t, 3)) * to))
-            if (t < 1) requestAnimationFrame(tick)
-        }
-        requestAnimationFrame(tick)
-    }, [visible, to, duration, reduced])
-    return <span ref={ref}>{value}{suffix}</span>
-}
-
 // ── Type ────────────────────────────────────────────────────────────────────
 
 function SectionHead({ tag, title, intro, phone, flush = false }: { tag?: string; title: string; intro?: React.ReactNode; phone: boolean; flush?: boolean }) {
@@ -500,21 +482,9 @@ export default function IOSCaseStudy() {
                             </div>
                         </FadeIn>
 
-                        {/* Group 2: the numbers, then the insight they add up to */}
+                        {/* Group 2: the insight */}
                         <FadeIn>
-                            <div style={{ display: "grid", gridTemplateColumns: threeCol, columnGap: 40, rowGap: 32, marginTop: sp.group }}>
-                                {[
-                                    { to: 74, suffix: "%", label: "of consumers expect seamless cross-language shopping" },
-                                    { to: 66, suffix: "%", label: "say poor mobile UX negatively affects brand credibility" },
-                                    { to: 3, suffix: "x", label: "more likely to abandon when reviews are in a foreign language" },
-                                ].map((m) => (
-                                    <div key={m.label}>
-                                        <p style={{ fontFamily: I, fontSize: phone ? 48 : 56, fontWeight: 200, color: C.ink, letterSpacing: "-0.04em", lineHeight: 1, margin: 0 }}><CountUp to={m.to} suffix={m.suffix} /></p>
-                                        <p style={{ fontFamily: I, fontSize: 14, color: C.ink3, lineHeight: 1.55, margin: 0, marginTop: 12, maxWidth: 260 }}>{m.label}</p>
-                                    </div>
-                                ))}
-                            </div>
-                            <div style={{ marginTop: phone ? 40 : 56, paddingTop: 24, borderTop: `1px solid ${C.border}`, maxWidth: 720 }}>
+                            <div style={{ marginTop: sp.group, paddingTop: 24, borderTop: `1px solid ${C.border}`, maxWidth: 720 }}>
                                 <Label>Key insight: accessibility gap</Label>
                                 <p style={{ fontFamily: I, fontSize: phone ? 19 : 22, fontWeight: 300, color: C.ink, lineHeight: 1.45, letterSpacing: "-0.01em", margin: 0 }}>
                                     Without access to reviews in their language, users lose one of the most valuable signals for purchase confidence, which increases hesitation and drop-off.
