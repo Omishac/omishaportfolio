@@ -328,32 +328,40 @@ export default function AnthropologieProductDiscovery() {
                         </FadeIn>
 
                         <FadeIn delay={80}>
+                            <div style={{ marginTop: phone ? 36 : 56 }}>
+                                <BracketTag style={{ marginBottom: 16 }}>URBN: Anthropologie · Urban Outfitters · Free People</BracketTag>
+                                <h1 style={{
+                                    fontFamily: INTER, fontWeight: 300, fontSize: "clamp(34px, 4vw, 48px)",
+                                    lineHeight: 1.1, letterSpacing: "-0.03em", color: C.ink, margin: 0, maxWidth: 760, textWrap: "balance",
+                                }}>
+                                    Redesigning Product Filters Across the URBN Ecosystem
+                                </h1>
+                                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 18 }}>
+                                    {["Product Design", "Design Systems", "E-Commerce"].map(tag => (
+                                        <span key={tag} style={{ fontFamily: INTER, fontSize: 11, color: C.muted, backgroundColor: "rgba(0,0,0,0.04)", borderRadius: 40, padding: "4px 10px" }}>{tag}</span>
+                                    ))}
+                                </div>
+                            </div>
+                        </FadeIn>
+
+                        {/* Summary: three aligned columns on desktop/tablet, stacked on phone */}
+                        <FadeIn delay={100}>
                             <div style={{
                                 display: "grid",
-                                gridTemplateColumns: desktop ? "minmax(0, 1.4fr) minmax(0, 1fr)" : "minmax(0, 1fr)",
-                                columnGap: 64, rowGap: 20,
-                                marginTop: phone ? 36 : 56,
-                                alignItems: "end",
+                                gridTemplateColumns: phone ? "minmax(0, 1fr)" : "repeat(3, minmax(0, 1fr))",
+                                columnGap: tablet ? 32 : 48, rowGap: 28,
+                                marginTop: phone ? 36 : 48,
                             }}>
-                                <div>
-                                    <BracketTag style={{ marginBottom: 16 }}>URBN: Anthropologie · Urban Outfitters · Free People</BracketTag>
-                                    <h1 style={{
-                                        fontFamily: INTER, fontWeight: 300, fontSize: "clamp(34px, 4vw, 48px)",
-                                        lineHeight: 1.1, letterSpacing: "-0.03em", color: C.ink, margin: 0, textWrap: "balance",
-                                    }}>
-                                        Redesigning Product Filters Across the URBN Ecosystem
-                                    </h1>
-                                </div>
-                                <div>
-                                    <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.65, color: C.ink3, margin: 0, marginBottom: 16 }}>
-                                        Improving product discovery across Mobile Web and Desktop for Anthropologie, Urban Outfitters, and Free People.
-                                    </p>
-                                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                                        {["Product Design", "Design Systems", "E-Commerce"].map(tag => (
-                                            <span key={tag} style={{ fontFamily: INTER, fontSize: 11, color: C.muted, backgroundColor: "rgba(0,0,0,0.04)", borderRadius: 40, padding: "4px 10px" }}>{tag}</span>
-                                        ))}
+                                {[
+                                    { k: "Problem", v: "Shoppers struggled to track filter selections and understand pickup availability." },
+                                    { k: "What I Did", v: "Redesigned selection feedback, navigation, and pickup controls to reduce uncertainty." },
+                                    { k: "Impact", v: "100% task completion in usability retesting. Launched across three brands." },
+                                ].map(({ k, v }) => (
+                                    <div key={k}>
+                                        <p style={{ fontFamily: INTER, fontSize: 14, fontWeight: 600, color: C.ink, lineHeight: 1.4, margin: 0, marginBottom: 8 }}>{k}</p>
+                                        <p style={{ fontFamily: INTER, fontSize: 15, fontWeight: 400, color: C.ink2, lineHeight: 1.6, margin: 0, maxWidth: 340 }}>{v}</p>
                                     </div>
-                                </div>
+                                ))}
                             </div>
                         </FadeIn>
 
