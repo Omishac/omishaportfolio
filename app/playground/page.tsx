@@ -44,7 +44,7 @@ const PROJECTS_EMBEDS = [
 ]
 
 const SECTIONS = [
-    { id: "visual-design", num: "01", title: "Visual Design & Branding", desc: "Brand identities, posters, and creative direction." },
+    { id: "visual-design", num: "01", nav: "Visual Design", title: "Visual Design & Branding", desc: "Brand identities, posters, and creative direction." },
     { id: "photography", num: "02", title: "Photography", desc: "Personal photography: light, texture, and moment." },
     { id: "motion", num: "03", title: "Motion", desc: "Video editing and motion design experiments." },
     { id: "projects", num: "04", title: "Projects", desc: "Miscellaneous work made for the love of making." },
@@ -86,6 +86,48 @@ function useResponsive() {
     return { phone, tablet, desktop: !phone && !tablet, large }
 }
 
+function useActiveSection(ids: string[]) {
+    const [active, setActive] = useState("")
+    useEffect(() => {
+        const onScroll = () => {
+            let best = ""; let bestDist = Infinity
+            for (const id of ids) {
+                const el = document.getElementById(id)
+                if (el) { const top = el.getBoundingClientRect().top; if (top <= 200 && Math.abs(top) < bestDist) { bestDist = Math.abs(top); best = id } }
+            }
+            setActive(best)
+        }
+        onScroll()
+        window.addEventListener("scroll", onScroll, { passive: true })
+        return () => window.removeEventListener("scroll", onScroll)
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    return active
+}
+
+// Sticky section nav, same as the case studies.
+function SideNav({ active }: { active: string }) {
+    return (
+        <nav aria-label="Playground sections">
+            {SECTIONS.map(({ id, title, ...rest }) => {
+                const label = "nav" in rest ? rest.nav : title
+                const isActive = active === id
+                return (
+                    <a key={id} href={`#${id}`}
+                        onClick={(e) => { e.preventDefault(); document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" }) }}
+                        aria-current={isActive ? "location" : undefined}
+                        style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", textDecoration: "none" }}
+                    >
+                        <span aria-hidden="true" style={{ width: isActive ? 12 : 0, height: 1, backgroundColor: C.ink, transition: `width 0.3s ${EASE_SPRING}` }} />
+                        <span style={{ fontFamily: I, fontSize: 12, fontWeight: isActive ? 500 : 400, color: isActive ? C.ink : C.muted, transition: "color 0.3s ease" }}>
+                            {label}
+                        </span>
+                    </a>
+                )
+            })}
+        </nav>
+    )
+}
+
 // Homepage section label: "[ 01 ]" tag over a light Inter title, short description below.
 function SectionHeader({ num, title, desc, phone, tablet, large }: { num: string; title: string; desc: string; phone: boolean; tablet: boolean; large: boolean }) {
     return (
@@ -117,10 +159,11 @@ function EmbedFrame({ src, aspect = "16/9", fill = false, title }: { src: string
 }
 
 export default function PlaygroundPage() {
-    const { phone, tablet, large } = useResponsive()
+    const { phone, tablet, desktop, large } = useResponsive()
+    const activeSection = useActiveSection(SECTIONS.map(s => s.id))
     // Same page padding and content width as the homepage.
     const px = phone ? 20 : tablet ? 40 : large ? 120 : 80
-    const maxW = large ? 1280 : 1040
+    const maxW = large ? 1120 : 960 // content column next to the side nav, as on the case studies
     const sectionGap = phone ? 72 : tablet ? 96 : 120
     const gap = phone ? 12 : 16 // gutter inside galleries
 
@@ -129,7 +172,22 @@ export default function PlaygroundPage() {
             <SharedNav />
             <style dangerouslySetInnerHTML={{ __html: PAGE_STYLES }} />
 
-            <main style={{ maxWidth: maxW, margin: "0 auto", padding: `0 ${px}px 120px`, boxSizing: "content-box" }}>
+            <div style={{
+                display: desktop ? "grid" : "block",
+                gridTemplateColumns: desktop ? `140px minmax(0, ${maxW}px)` : undefined,
+                justifyContent: "center",
+                columnGap: desktop ? 64 : undefined,
+                margin: "0 auto",
+                padding: `0 ${px}px 120px`,
+            }}>
+            {desktop && (
+                <aside>
+                    <div style={{ position: "sticky", top: 96, paddingTop: phone ? 48 : 72 }}>
+                        <SideNav active={activeSection} />
+                    </div>
+                </aside>
+            )}
+            <main style={{ minWidth: 0 }}>
 
                 {/* ── Introduction ── */}
                 <header style={{ paddingTop: phone ? 48 : 72 }}>
@@ -141,8 +199,8 @@ export default function PlaygroundPage() {
                         Not case studies. Just things made for the love of making.
                     </p>
 
-                    {/* Section index: jump straight to a gallery */}
-                    <nav aria-label="Playground sections" className="pg-index" style={{
+                    {/* Section index: jump straight to a gallery (desktop has the side nav) */}
+                    {!desktop && <nav aria-label="Playground sections" className="pg-index" style={{
                         display: "grid",
                         gridTemplateColumns: phone ? "repeat(2, minmax(0, 1fr))" : "repeat(4, minmax(0, 1fr))",
                         columnGap: 24, rowGap: 4,
@@ -157,7 +215,7 @@ export default function PlaygroundPage() {
                                 {s.title}
                             </a>
                         ))}
-                    </nav>
+                    </nav>}
                 </header>
 
                 {/* ── 01 Visual Design & Branding ── */}
@@ -250,6 +308,7 @@ export default function PlaygroundPage() {
                     </p>
                 </div>
             </main>
+            </div>
         </div>
     )
 }
