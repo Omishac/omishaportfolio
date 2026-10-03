@@ -7,6 +7,16 @@ import { NavStyles, NavLink, MenuLink, NAV_LINK_GAP } from "../components/NavLin
 import { FONT_SANS, COLORS, EASE_SPRING, EASE_OUT, HOVER_COLORS, useReducedMotion, useFinePointer, HoverLetters, BracketTag } from "../components/site"
 
 const CURSOR_STYLES = `
+  /* Inter Medium Italic for the flyer greeting. Self-hosted under its own
+     family name: next/font's Inter (v14) has no italic, and registering a
+     face named "Inter" could change other text on the site. */
+  @font-face {
+    font-family: "Inter Flyer Italic";
+    font-style: italic;
+    font-weight: 500;
+    font-display: swap;
+    src: url("/fonts/inter-italic-latin.woff2") format("woff2");
+  }
   @keyframes hi-float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-6px); }
@@ -799,7 +809,7 @@ function Hero({
                         <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
                             style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block" }} />
 
-                        <h1 style={{ ...rotText(263.2, 156, 2.74), fontFamily: NAV_Z, fontStyle: "italic", fontSize: 34, fontWeight: 700, letterSpacing: "-0.01em", color: "#A3214A" /* deep rose */ }}>
+                        <h1 style={{ ...rotText(263.2, 156, 2.74), fontFamily: "'Inter Flyer Italic', var(--font-inter), system-ui, sans-serif", fontStyle: "italic", fontSize: 32, fontWeight: 500, letterSpacing: "-0.02em", color: "#A3214A" /* deep rose */ }}>
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
