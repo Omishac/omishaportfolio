@@ -2742,7 +2742,7 @@ export default function ResponsiveHome() {
                     alignItems: "center",
                 }}
             >
-                <style>{CURSOR_STYLES}</style>
+                <style dangerouslySetInnerHTML={{ __html: CURSOR_STYLES }} />
                 <HomeNav phone={phone} tablet={tablet} large={large} px={px} />
                 <Hero phone={phone} tablet={tablet} px={px} w={w} />
                 <WorkSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />
