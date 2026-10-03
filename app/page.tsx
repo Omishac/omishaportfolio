@@ -951,6 +951,7 @@ type CaseStudy = {
 }
 
 // Case study grid, in display order: 2 × 2 on tablet/desktop, one column on phone.
+// The in-progress Aurevion case study sits last.
 const CARDS: CaseStudy[] = [
     {
         href: "/anthropologie-product-discovery",
@@ -970,6 +971,14 @@ const CARDS: CaseStudy[] = [
         desc: "Improving how shoppers read and trust customer reviews inside the iOS app.",
         live: true,
     },
+    {
+        href: "/anthropologie-mcommerce",
+        image: "https://framerusercontent.com/images/vE5NBaasSteSM6lORQbcDZsAU.png",
+        title: "Anthropologie M-Commerce",
+        tags: ["A/B Testing", "Strategy", "iOS"],
+        company: "URBN",
+        desc: "Testing and refining the mobile shopping journey to lift conversion across the app.",
+    },
     // ── Aurevion: add the case study URL to `href` and drop `comingSoon` when it goes live ──
     {
         href: "",                                     // TODO: case study URL, e.g. "/aurevion"
@@ -979,14 +988,6 @@ const CARDS: CaseStudy[] = [
         company: "Aurevion",
         desc: "Built a visual identity and responsive website that helped an early-stage diagnostics company present its vision to investors.",
         comingSoon: true,                             // remove once the case study is live
-    },
-    {
-        href: "/anthropologie-mcommerce",
-        image: "https://framerusercontent.com/images/vE5NBaasSteSM6lORQbcDZsAU.png",
-        title: "Anthropologie M-Commerce",
-        tags: ["A/B Testing", "Strategy", "iOS"],
-        company: "URBN",
-        desc: "Testing and refining the mobile shopping journey to lift conversion across the app.",
     },
 ]
 
