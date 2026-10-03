@@ -191,7 +191,8 @@ function SectionLabel({
                         color: C.ink3,
                         margin: 0,
                         lineHeight: 1.55,
-                        maxWidth: 640,
+                        maxWidth: 760,
+                        textWrap: "balance", // short line: split evenly, no one-word last line
                     }}
                 >
                     {sub}
@@ -209,7 +210,8 @@ function Body({ children }: { children: React.ReactNode }) {
                 fontSize: "16px",
                 lineHeight: "1.7",
                 color: C.ink2,
-                maxWidth: "620px",
+                maxWidth: "680px",
+                textWrap: "pretty",
                 marginBottom: "16px",
                 letterSpacing: "-0.005em",
             }}
@@ -235,64 +237,27 @@ function AnimStat({
 }) {
     const { ref, visible } = useInView(0.1)
     const val = useCounter(num, visible)
-    const [hov, setHov] = useState(false)
+    // Static stat card (no hover)
     return (
         <div
             ref={ref}
-            onMouseEnter={() => setHov(true)}
-            onMouseLeave={() => setHov(false)}
             style={{
                 flex: 1,
-                backgroundColor: hov ? C.ink : bg,
+                backgroundColor: bg,
                 padding: "36px 28px",
                 borderRadius: "10px",
-                transition:
-                    "background-color 0.35s cubic-bezier(0.22,1,0.36,1), transform 0.35s cubic-bezier(0.22,1,0.36,1), opacity 0.35s cubic-bezier(0.22,1,0.36,1)",
-                transform: hov ? "translateY(-6px)" : "none",
-                boxShadow: "0 24px 48px rgba(0,0,0,0.15)",
-                opacity: hov ? 1 : 0.92,
-                cursor: "default",
                 border: `1px solid ${C.border}`,
             }}
         >
-            <p
-                style={{
-                    fontFamily: INTER,
-                    fontWeight: 200,
-                    fontSize: "clamp(36px, 4vw, 52px)",
-                    letterSpacing: "-0.04em",
-                    color: hov ? "#fff" : C.ink,
-                    lineHeight: 1,
-                    marginBottom: "10px",
-                    transition: "color 0.3s",
-                }}
-            >
+            <p style={{ fontFamily: INTER, fontWeight: 200, fontSize: "clamp(36px, 4vw, 52px)", letterSpacing: "-0.04em", color: C.ink, lineHeight: 1, marginBottom: "10px" }}>
                 {val}
                 {suffix}
             </p>
-            <p
-                style={{
-                    fontFamily: INTER,
-                    fontSize: "12px",
-                    fontWeight: 500,
-                    color: hov ? "rgba(255,255,255,0.8)" : C.ink2,
-                    marginBottom: "4px",
-                    transition: "color 0.3s",
-                    lineHeight: 1.5,
-                }}
-            >
+            <p style={{ fontFamily: INTER, fontSize: "12px", fontWeight: 500, color: C.ink2, marginBottom: "4px", lineHeight: 1.5 }}>
                 {label}
             </p>
             {sub && (
-                <p
-                    style={{
-                        fontFamily: INTER,
-                        fontSize: "11px",
-                        color: hov ? "rgba(255,255,255,0.45)" : C.muted,
-                        margin: 0,
-                        transition: "color 0.3s",
-                    }}
-                >
+                <p style={{ fontFamily: INTER, fontSize: "11px", color: C.muted, margin: 0 }}>
                     {sub}
                 </p>
             )}
@@ -604,22 +569,17 @@ function ABCard({
 }
 
 // ── Finding card ───────────────────────────────────────────────────────────────
-function FindingCard({ num, title, body, icon, active, onClick, onMouseEnter, onMouseLeave }: any) {
+// Static card (no hover or click state)
+function FindingCard({ num, title, body, icon }: any) {
+    const active = false
     return (
         <div
-            onClick={onClick}
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
             style={{
                 flex: 1,
                 borderRadius: "10px",
                 padding: "28px 22px",
-                cursor: "pointer",
-                backgroundColor: active ? C.ink : C.surface,
-                border: active ? "none" : `1px solid ${C.border}`,
-                transition: "background 0.3s, transform 0.3s, box-shadow 0.3s",
-                transform: active ? "translateY(-6px)" : "none",
-                boxShadow: active ? "0 16px 36px rgba(0,0,0,0.13)" : "none",
+                backgroundColor: C.surface,
+                border: `1px solid ${C.border}`,
             }}
         >
             <span
@@ -890,51 +850,6 @@ const IMGS = {
 }
 
 // ── Nav bar ────────────────────────────────────────────────────────────────────
-function StatCell({ pct, lbl, i, total, phone }: { pct: string; lbl: string; i: number; total: number; phone: boolean }) {
-    const [hov, setHov] = useState(false)
-    return (
-        <div
-            onMouseEnter={() => setHov(true)}
-            onMouseLeave={() => setHov(false)}
-            style={{
-                flex: 1,
-                padding: phone ? "20px 16px" : "28px 24px",
-                borderRight: i < total - 1 ? `1px solid ${C.border}` : "none",
-                backgroundColor: hov ? C.ink : "transparent",
-                transition: "background 0.3s",
-                cursor: "default",
-            }}
-        >
-            <p
-                style={{
-                    fontFamily: INTER,
-                    fontSize: phone ? "32px" : "44px",
-                    fontWeight: 200,
-                    letterSpacing: "-0.04em",
-                    color: hov ? "#fff" : C.ink,
-                    lineHeight: 1,
-                    marginBottom: "8px",
-                    transition: "color 0.25s",
-                }}
-            >
-                {pct}
-            </p>
-            <p
-                style={{
-                    fontFamily: INTER,
-                    fontSize: "12px",
-                    color: hov ? "rgba(255,255,255,0.65)" : C.ink3,
-                    lineHeight: 1.6,
-                    margin: 0,
-                    transition: "color 0.25s",
-                }}
-            >
-                {lbl}
-            </p>
-        </div>
-    )
-}
-
 function SideNav({ active }: { active: string }) {
     return (
         <nav>
@@ -970,16 +885,7 @@ export default function AnthropologieCaseStudy() {
     const pad = phone ? 20 : tablet ? 40 : 80
     const activeSection = useActiveSection(SECTIONS.map(s => s.id))
 
-    const [activeFinding, setActiveFinding] = useState(0)
     const [activeRec, setActiveRec] = useState<number | null>(null)
-    const [isDesktop, setIsDesktop] = useState(true)
-    useEffect(() => {
-        const check = () => setIsDesktop(document.documentElement.clientWidth >= 768)
-        check()
-        window.addEventListener("resize", check, { passive: true })
-        return () => window.removeEventListener("resize", check)
-    }, [])
-
     const findings = [
         {
             num: "01",
@@ -1057,7 +963,7 @@ export default function AnthropologieCaseStudy() {
                 <div>
                 {/* ── HERO ── */}
                 <FadeIn>
-                    <div id="overview" style={{ scrollMarginTop: 80, paddingTop: phone ? "48px" : "80px", paddingBottom: "64px" }}>
+                    <div id="overview" style={{ scrollMarginTop: 80, paddingTop: phone ? "48px" : "80px", paddingBottom: 0 }}>
                         <p
                             style={{
                                 fontFamily: INTER,
@@ -1100,16 +1006,14 @@ export default function AnthropologieCaseStudy() {
                             Mobile commerce is projected to reach $856B by 2027.
                             I led a data-driven audit of Anthropologie's mobile
                             experience, identifying conversion gaps and
-                            delivering three strategic recommendations to the
-                            digital analytics team.
+                            presenting three strategic recommendations to the
+                            Director of E-Commerce.
                         </p>
                         <div
                             style={{
                                 display: "flex",
                                 flexWrap: "wrap",
                                 gap: phone ? 20 : "48px",
-                                paddingBottom: "40px",
-                                borderBottom: `1px solid ${C.border}`,
                             }}
                         >
                             {[
@@ -1150,6 +1054,24 @@ export default function AnthropologieCaseStudy() {
                             ))}
                         </div>
 
+                    </div>
+                </FadeIn>
+
+                {/* ── 01 CONTEXT ── */}
+                <div id="context" style={{ scrollMarginTop: 80 }} />
+                <Divider />
+                <FadeIn>
+                    <SectionLabel
+                        step="01 · Context"
+                        title="M-commerce is the fastest growing retail channel"
+                        sub="Three stats that defined the research opportunity"
+                    />
+                    <Body>
+                        Mobile retail e-commerce in the United States has grown
+                        from $220B in 2019 to a projected $856B by 2027, a near
+                        4× increase. The expectations customers bring to these
+                        experiences have grown just as fast.
+                    </Body>
                         {/* M-Commerce data card */}
                         <div
                             style={{
@@ -1157,13 +1079,13 @@ export default function AnthropologieCaseStudy() {
                                 borderRadius: "12px",
                                 overflow: "hidden",
                                 border: `1px solid ${C.border}`,
-                                marginTop: 40,
+                                marginTop: 24,
+                                marginBottom: 16,
                             }}
                         >
                             <div
                                 style={{
                                     padding: phone ? "20px 16px 16px" : "32px 36px 24px",
-                                    borderBottom: `1px solid ${C.border}`,
                                     backgroundColor: "#FAFAF8",
                                 }}
                             >
@@ -1270,43 +1192,7 @@ export default function AnthropologieCaseStudy() {
                                     *Projected · Source: Statista 2024
                                 </p>
                             </div>
-                            <div style={{ display: "flex", flexWrap: phone ? "wrap" : "nowrap" }}>
-                                {[
-                                    [
-                                        "74%",
-                                        "of consumers expect a seamless online-to-offline shopping experience",
-                                    ],
-                                    [
-                                        "66%",
-                                        "say poor mobile UX negatively affects brand credibility",
-                                    ],
-                                    [
-                                        "45%",
-                                        "value virtual shopping assistants for recommendations",
-                                    ],
-                                ].map((item, i, arr) => (
-                                <StatCell key={item[0]} pct={item[0]} lbl={item[1]} i={i} total={arr.length} phone={phone} />
-                                ))}
-                            </div>
                         </div>
-                    </div>
-                </FadeIn>
-
-                {/* ── 01 CONTEXT ── */}
-                <div id="context" style={{ scrollMarginTop: 80 }} />
-                <Divider />
-                <FadeIn>
-                    <SectionLabel
-                        step="01 · Context"
-                        title="M-commerce is the fastest growing retail channel"
-                        sub="Three stats that defined the research opportunity"
-                    />
-                    <Body>
-                        Mobile retail e-commerce in the United States has grown
-                        from $220B in 2019 to a projected $856B by 2027, a near
-                        4× increase. The expectations customers bring to these
-                        experiences have grown just as fast.
-                    </Body>
                     <div
                         style={{
                             display: "flex",
@@ -1343,8 +1229,8 @@ export default function AnthropologieCaseStudy() {
                 <FadeIn>
                     <SectionLabel
                         step="02 · Trends"
-                        title="Three capabilities defining next-gen mobile retail"
-                        sub="From competitive analysis of Sephora, Nike, and emerging brands"
+                        title="Three key features"
+                        sub="Competitive analysis of major retailers like Sephora and Nike"
                     />
                     <Body>
                         Analysis of best-in-class competitors revealed three
@@ -1589,18 +1475,9 @@ export default function AnthropologieCaseStudy() {
                         step="05 · Findings"
                         title="What the data revealed about mobile drop-off"
                     />
-                    <div
-                        style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(4, 1fr)", gap: "10px" }}
-                        onMouseLeave={() => isDesktop && setActiveFinding(0)}
-                    >
+                    <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(4, 1fr)", gap: "10px" }}>
                         {findings.map((f, i) => (
-                            <FindingCard
-                                key={i}
-                                {...f}
-                                active={activeFinding === i}
-                                onClick={() => !isDesktop && setActiveFinding(i)}
-                                onMouseEnter={isDesktop ? () => setActiveFinding(i) : undefined}
-                            />
+                            <FindingCard key={i} {...f} />
                         ))}
                     </div>
                 </FadeIn>
@@ -1648,7 +1525,7 @@ export default function AnthropologieCaseStudy() {
                     <SectionLabel
                         step="07 · Recommendations"
                         title="From insight to action"
-                        sub="Five changes to prioritize. Click each to see the detail"
+                        sub="Three changes to prioritize. Click each to see the detail"
                     />
                     <div
                         style={{
@@ -1677,13 +1554,13 @@ export default function AnthropologieCaseStudy() {
                     <SectionLabel
                         step="08 · Impact"
                         title="Positioning mobile as a strategic growth lever"
-                        sub="Delivered to Anthropologie's digital analytics team"
+                        sub="Presented to Anthropologie's Director of E-Commerce"
                     />
                     <Body>
-                        I delivered these recommendations to Anthropologie's
-                        digital analytics team, backed by A/B testing results,
+                        I presented these recommendations to Anthropologie's
+                        Director of E-Commerce, backed by A/B testing results,
                         competitive benchmarking data, and behavioral insights.
-                        The five changes I proposed addressed both immediate
+                        The three changes I proposed addressed both immediate
                         conversion friction and longer-term loyalty drivers.
                     </Body>
                     <Body>
@@ -1693,7 +1570,7 @@ export default function AnthropologieCaseStudy() {
                         every point of friction is measurable loss.
                     </Body>
                     <Body>
-                        Recommendations were formally presented to the digital analytics team and flagged for Q3 roadmap consideration.
+                        Recommendations were formally presented to the Director of E-Commerce and flagged for Q3 roadmap consideration.
                     </Body>
                 </FadeIn>
 
