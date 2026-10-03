@@ -36,7 +36,7 @@ const EASE_OUT    = "cubic-bezier(0.23,1,0.32,1)"
 - Text (all white-ish on pink): "Hi, I'm Omisha!" Inter Bold 20.6px (the h1); role line Inter Medium 12px; "Take what you need:" Inter Bold 10.4px `#FFE2ED`
 - Nav links on all pages (`components/NavLinks.tsx`, Figma 115:42): Inter ExtraLight 12.9px, black, lowercase, 19.5px gaps; pink hand-drawn underline on hover/focus/current page, dashed pink focus ring; phone menu 34px
 - Tabs (Inter Light 15.5px, rotated 92.3°): Redesign, Mobile Design, Digital Strategy, Freelancing (italic), Say hello (mailto, dog-eared corner); two tabs shown torn off
-- CTA below flyer: "Here's a closer look at what that means" in Zodiak (`NAV_Z`) + pink curved SVG arrow
+- CTA below flyer: "Interested? Learn more" in Zodiak (`NAV_Z`) + pink curved SVG arrow
 - Entrance: flyer fade + translateY/rotate settle (EASE_SPRING), CTA fades in after; off under reduced motion
 - Tear-off tabs: each tab is its own clipped copy of the paper (`TABS` + `tabGeometry`), styles in `FLYER_TAB_STYLES`. Hover/focus/touch = peel + curl + flutter + shadow. Destinations: Redesign → /anthropologie-product-discovery, Mobile Design → /ios-review-accessibility, Digital Strategy → /anthropologie-mcommerce, Freelancing → /playground, Say hello → LinkedIn (new tab). Click = crumple: the tab is swapped for `.ft-wad` whose clip-path morphs from the tab outline to a jagged wad (`WAD_GEOMETRY`), then it's tossed up and the link opens (~0.8s). New-tab/mailto tabs return in place; bfcache restore resets. Reduced motion: click navigates immediately
 

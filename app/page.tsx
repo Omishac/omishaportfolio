@@ -893,7 +893,7 @@ function Hero({
                 }}
             >
                 <span style={{ fontFamily: NAV_Z, fontSize: phone ? 13 : 14, color: C.ink2, whiteSpace: "nowrap" }}>
-                    Here&apos;s a closer look at what that means
+                    Interested? Learn more
                 </span>
                 <svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true" style={{ display: "block", flexShrink: 0, marginTop: 22 }}>
                     <path d="M 8 6 C 12 6, 40 14, 40 40" stroke="#E8B4C8" strokeWidth="3" strokeLinecap="round" fill="none" />
