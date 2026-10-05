@@ -33,7 +33,7 @@ const EASE_OUT    = "cubic-bezier(0.23,1,0.32,1)"
 - Figma file: https://www.figma.com/design/HT6JZC5NjxGzIoWlNrVllH/Untitled?node-id=115-4
 - Tear-off paper flyer (pink `#D33361` + crumpled texture at 38% + clear tape) on a fixed 518×581 stage using Figma coordinates; stage scales down to fit `w - 2*px`
 - Assets in `public/hero-flyer/` (tape is cropped out of the `tape-clear.png` sticker sheet)
-- Text (all Zodiak): "Hi, I'm Omisha!" Light Italic 29.2px `#7F1D43` (the h1); "A product designer shaping experiences through data and brand storytelling" Bold 14.5px `#FFFBF2`; "Take what you need:" Bold 10.4px `#FFFBF2`
+- Text (all Zodiak): "Hi, I'm Omisha!" Regular Italic 29.2px `#7F1D43` (the h1); "A product designer shaping experiences through data and brand storytelling" Bold 14.5px `#FFFBF2`; "Take what you need:" Bold 10.4px `#FFFBF2`
 - Nav links on all pages (`components/NavLinks.tsx`, Figma 115:42): Inter ExtraLight 12.9px, black, lowercase, 19.5px gaps; pink hand-drawn underline on hover/focus/current page, dashed pink focus ring; phone menu 34px
 - Tabs (Zodiak 15.5px `#7F1D43`, rotated 92.3°; Freelancing italic): Redesign, Mobile Design, Digital Strategy, Freelancing (italic), Say hello (mailto, dog-eared corner); two tabs shown torn off
 - CTA below flyer: "Take a look at my work" in Zodiak (`NAV_Z`) + pink curved SVG arrow
