@@ -17,6 +17,13 @@ const CURSOR_STYLES = `
     font-display: swap;
     src: url("/fonts/inter-italic-latin.woff2") format("woff2");
   }
+  @font-face {
+    font-family: "Inter Flyer Italic";
+    font-style: italic;
+    font-weight: 600;
+    font-display: swap;
+    src: url("/fonts/inter-semibold-italic-latin.woff2") format("woff2");
+  }
   @keyframes hi-float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-6px); }
@@ -809,11 +816,11 @@ function Hero({
                         <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
                             style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block" }} />
 
-                        <h1 style={{ ...rotText(263.2, 156, 2.74), fontFamily: "'Inter Flyer Italic', var(--font-inter), system-ui, sans-serif", fontStyle: "italic", fontSize: 32, fontWeight: 500, letterSpacing: "-0.02em", color: "#A3214A" /* deep rose */ }}>
+                        <h1 style={{ ...rotText(263.2, 156, 2.74), fontFamily: "'Inter Flyer Italic', var(--font-inter), system-ui, sans-serif", fontStyle: "italic", fontSize: 32, fontWeight: 600, letterSpacing: "-0.02em", color: "#FFFFFF" }}>
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
-                        <p style={{ ...rotText(266, 72, 2.0), fontSize: 12.03, fontWeight: 500, color: "#FFFFFF" }}>
+                        <p style={{ ...rotText(266, 72, 2.0), fontSize: 12.03, fontWeight: 500, color: "#9B111E" /* ruby red */ }}>
                             product designer . digital analyst . brand storyteller.
                         </p>
 
@@ -903,7 +910,7 @@ function Hero({
                 }}
             >
                 <span style={{ fontFamily: NAV_Z, fontSize: phone ? 13 : 14, color: C.ink2, whiteSpace: "nowrap" }}>
-                    Interested? Learn more
+                    Take a look at my work
                 </span>
                 <svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true" style={{ display: "block", flexShrink: 0, marginTop: 22 }}>
                     <path d="M 8 6 C 12 6, 40 14, 40 40" stroke="#E8B4C8" strokeWidth="3" strokeLinecap="round" fill="none" />
