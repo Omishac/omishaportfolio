@@ -449,9 +449,8 @@ type TabSpec = {
     flutter: number       // flutter period, s
 }
 
-// Dark rose for the greeting and tab labels; warm off-white for the rest
+// Dark rose for the flyer text (the intro line is white)
 const FLYER_INK = "#7F1D43"
-const FLYER_CREAM = "#FFFBF2"
 
 const TABS: TabSpec[] = [
     { label: "Redesign",         cx: 41.2,   cy: 419.83, color: FLYER_INK, href: "/anthropologie-product-discovery", left: null, right: 0, tilt: -1.1, spin: -9,  drift: -40, flutter: 1.5 },
@@ -807,7 +806,7 @@ function Hero({
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
-                        <p style={{ ...rotText(259.44, 217.84, 3.33), transform: "translate(-50%, -50%) rotate(3.33deg) skewX(0.83deg)", width: 350, whiteSpace: "normal", fontSize: 14.461, fontWeight: 800, letterSpacing: "0.01em", color: FLYER_CREAM }}>
+                        <p style={{ ...rotText(259.44, 219, 1.8), width: 380, whiteSpace: "normal", fontSize: 16, fontWeight: 800, letterSpacing: "0.01em", color: "#FFFFFF" }}>
                             A product designer shaping experiences through data and brand storytelling
                         </p>
 
