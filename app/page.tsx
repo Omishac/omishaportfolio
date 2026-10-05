@@ -7,22 +7,15 @@ import { NavStyles, NavLink, MenuLink, NAV_LINK_GAP } from "../components/NavLin
 import { FONT_SANS, COLORS, EASE_SPRING, EASE_OUT, HOVER_COLORS, useReducedMotion, useFinePointer, HoverLetters, BracketTag } from "../components/site"
 
 const CURSOR_STYLES = `
-  /* Inter Medium Italic for the flyer greeting. Self-hosted under its own
+  /* Inter Light Italic for the flyer greeting. Self-hosted under its own
      family name: next/font's Inter (v14) has no italic, and registering a
      face named "Inter" could change other text on the site. */
   @font-face {
     font-family: "Inter Flyer Italic";
     font-style: italic;
-    font-weight: 500;
+    font-weight: 300;
     font-display: swap;
-    src: url("/fonts/inter-italic-latin.woff2") format("woff2");
-  }
-  @font-face {
-    font-family: "Inter Flyer Italic";
-    font-style: italic;
-    font-weight: 600;
-    font-display: swap;
-    src: url("/fonts/inter-semibold-italic-latin.woff2") format("woff2");
+    src: url("/fonts/inter-light-italic-latin.woff2") format("woff2");
   }
   @keyframes hi-float {
     0%, 100% { transform: translateY(0px); }
@@ -816,17 +809,17 @@ function Hero({
                         <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
                             style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block" }} />
 
-                        <h1 style={{ ...rotText(263.2, 156, 2.74), fontFamily: "'Inter Flyer Italic', var(--font-inter), system-ui, sans-serif", fontStyle: "italic", fontSize: 32, fontWeight: 600, letterSpacing: "-0.02em", color: "#FFFFFF" }}>
+                        <h1 style={{ ...rotText(263.2, 138, 2.6), fontFamily: "'Inter Flyer Italic', var(--font-inter), system-ui, sans-serif", fontStyle: "italic", fontSize: 36, fontWeight: 300, letterSpacing: "-0.02em", color: "#FFFFFF" }}>
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
                         {/* Intro line: sits between the greeting and "Take what you need:",
                             angled between their two rotations so it reads as part of the paper */}
-                        <p style={{ ...rotText(261, 226, 2.4), width: 340, whiteSpace: "normal", textWrap: "balance", fontSize: 12.5, fontWeight: 400, lineHeight: 1.5, color: "#FFF1F6" }}>
+                        <p style={{ ...rotText(261, 196, 2.3), width: 300, whiteSpace: "normal", textWrap: "balance", fontSize: 14, fontWeight: 500, lineHeight: 1.45, letterSpacing: "-0.005em", color: "#FFF1F6" }}>
                             Product designer shaping experiences through data and brand storytelling
                         </p>
 
-                        <p style={{ ...rotText(256.03, 306.98, 1.89), fontSize: 10.393, fontWeight: 700, color: "#FFE2ED" }}>
+                        <p style={{ ...rotText(256.03, 306.98, 1.89), fontSize: 11, fontWeight: 600, letterSpacing: "0.01em", color: "#FFE2ED" }}>
                             Take what you need:
                         </p>
 
