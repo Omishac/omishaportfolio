@@ -2,9 +2,10 @@
 
 import React, { useState, useRef, useEffect } from "react"
 import SharedNav from "../../components/SharedNav"
+import { FONT_SANS } from "../../components/site"
 
 const Z = "Zodiak, 'Times New Roman', serif"
-const INTER = "Inter, system-ui, sans-serif"
+const INTER = FONT_SANS
 
 const C = {
     bg: "#FFFFFF",
