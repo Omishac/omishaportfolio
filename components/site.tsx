@@ -8,10 +8,10 @@ import React, { useState, useEffect } from "react"
 
 // ── Tokens ──────────────────────────────────────────────────────────────────
 
-// var(--font-inter) is the Inter loaded by next/font in app/layout.tsx. The
-// plain name "Inter" never matches that font, so without the variable every
-// device fell back to its own system font.
-export const FONT_SANS = "var(--font-inter), Inter, system-ui, sans-serif"
+// The site's main text font. It's Zodiak (loaded from Fontshare in
+// app/layout.tsx) everywhere; the name is kept so pages don't need to change.
+// To go back to Inter: "var(--font-inter), Inter, system-ui, sans-serif".
+export const FONT_SANS = "Zodiak, 'Times New Roman', serif"
 export const FONT_SERIF = "Zodiak, 'Times New Roman', serif"
 
 export const COLORS = {

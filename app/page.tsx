@@ -7,16 +7,6 @@ import { NavStyles, NavLink, MenuLink, NAV_LINK_GAP } from "../components/NavLin
 import { FONT_SANS, COLORS, EASE_SPRING, EASE_OUT, HOVER_COLORS, useReducedMotion, useFinePointer, HoverLetters, BracketTag } from "../components/site"
 
 const CURSOR_STYLES = `
-  /* Inter Light Italic for the flyer greeting. Self-hosted under its own
-     family name: next/font's Inter (v14) has no italic, and registering a
-     face named "Inter" could change other text on the site. */
-  @font-face {
-    font-family: "Inter Flyer Italic";
-    font-style: italic;
-    font-weight: 300;
-    font-display: swap;
-    src: url("/fonts/inter-light-italic-latin.woff2") format("woff2");
-  }
   @keyframes hi-float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-6px); }
@@ -448,7 +438,6 @@ type TabSpec = {
     cy: number
     color: string
     italic?: boolean
-    instrument?: boolean  // label set in Instrument Sans instead of Inter
     href?: string
     ext?: boolean         // opens in a new tab
     left: number | null   // perforation index, null = paper edge
@@ -463,13 +452,12 @@ type TabSpec = {
 // Dark rose for the greeting and tab labels; warm off-white for the rest
 const FLYER_INK = "#7F1D43"
 const FLYER_CREAM = "#FFFBF2"
-const INSTRUMENT = "var(--font-instrument-sans), var(--font-inter), system-ui, sans-serif"
 
 const TABS: TabSpec[] = [
     { label: "Redesign",         cx: 41.2,   cy: 419.83, color: FLYER_INK, href: "/anthropologie-product-discovery", left: null, right: 0, tilt: -1.1, spin: -9,  drift: -40, flutter: 1.5 },
     { label: "Mobile Design",    cx: 117,    cy: 420.77, color: FLYER_INK, href: "/ios-review-accessibility", left: 0, right: 1, bottom: "mobile", tilt: 0.8, spin: 7, drift: 30, flutter: 1.8 },
-    { label: "Digital Strategy", cx: 189.21, cy: 421.64, color: FLYER_INK, instrument: true, href: "/anthropologie-mcommerce", left: 1, right: 2, tilt: -0.6, spin: -12, drift: -55, flutter: 1.35 },
-    { label: "Freelancing",      cx: 337.17, cy: 431.99, color: FLYER_INK, italic: true, instrument: true, href: "/playground", left: 3, right: 4, tilt: 1.2, spin: 10, drift: 45, flutter: 1.7 },
+    { label: "Digital Strategy", cx: 189.21, cy: 421.64, color: FLYER_INK, href: "/anthropologie-mcommerce", left: 1, right: 2, tilt: -0.6, spin: -12, drift: -55, flutter: 1.35 },
+    { label: "Freelancing",      cx: 337.17, cy: 431.99, color: FLYER_INK, italic: true, href: "/playground", left: 3, right: 4, tilt: 1.2, spin: 10, drift: 45, flutter: 1.7 },
     { label: "Say hello",        cx: 476.19, cy: 434.67, color: FLYER_INK, href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true, left: 5, right: null, bottom: "sayHello", tilt: -0.9, spin: -6, drift: -30, flutter: 1.55 },
 ]
 
@@ -565,7 +553,6 @@ function TabFace({ tab }: { tab: TabSpec }) {
             })}
             <span className="ft-label" style={{
                 ...rotText(tab.cx, tab.cy, 92.31),
-                ...(tab.instrument && { fontFamily: INSTRUMENT }),
                 fontSize: 15.458,
                 fontWeight: 400,
                 fontStyle: tab.italic ? "italic" : "normal",
@@ -816,11 +803,11 @@ function Hero({
                         <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
                             style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block" }} />
 
-                        <h1 style={{ ...rotText(261.77, 162.56, 3.54), transform: "translate(-50%, -50%) rotate(3.54deg) skewX(0.78deg)", fontFamily: "'Inter Flyer Italic', var(--font-inter), system-ui, sans-serif", fontStyle: "italic", fontSize: 29.154, fontWeight: 300, color: FLYER_INK }}>
+                        <h1 style={{ ...rotText(261.77, 162.56, 3.54), transform: "translate(-50%, -50%) rotate(3.54deg) skewX(0.78deg)", fontStyle: "italic", fontSize: 29.154, fontWeight: 300, color: FLYER_INK }}>
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
-                        <p style={{ ...rotText(259.44, 217.84, 3.33), transform: "translate(-50%, -50%) rotate(3.33deg) skewX(0.83deg)", width: 350, whiteSpace: "normal", fontFamily: INSTRUMENT, fontSize: 14.461, fontWeight: 700, color: FLYER_CREAM }}>
+                        <p style={{ ...rotText(259.44, 217.84, 3.33), transform: "translate(-50%, -50%) rotate(3.33deg) skewX(0.83deg)", width: 350, whiteSpace: "normal", fontSize: 14.461, fontWeight: 700, color: FLYER_CREAM }}>
                             A product designer shaping experiences through data and brand storytelling
                         </p>
 
