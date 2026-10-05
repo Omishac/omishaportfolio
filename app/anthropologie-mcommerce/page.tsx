@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react"
 import SharedNav from "../../components/SharedNav"
-import { FONT_SANS } from "../../components/site"
+import { COLORS, EASE_SPRING, FONT_SANS } from "../../components/site"
 
 const Z = "Zodiak, 'Times New Roman', serif"
 const INTER = FONT_SANS
@@ -853,25 +853,17 @@ const IMGS = {
 // ── Nav bar ────────────────────────────────────────────────────────────────────
 function SideNav({ active }: { active: string }) {
     return (
-        <nav>
+        <nav aria-label="Case study sections">
             {SECTIONS.map(({ id, label }) => {
                 const isActive = active === id
                 return (
                     <a key={id} href={`#${id}`}
                         onClick={(e) => { e.preventDefault(); document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" }) }}
-                        style={{
-                            display: "block", padding: "6px 0",
-                            textDecoration: "none", transition: "opacity 0.3s ease",
-                            opacity: isActive ? 1 : 0.3,
-                        }}
+                        aria-current={isActive ? "location" : undefined}
+                        style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", textDecoration: "none" }}
                     >
-                        <span style={{
-                            fontFamily: INTER, fontSize: 11, fontWeight: 500,
-                            color: C.ink, letterSpacing: "0.08em", textTransform: "uppercase",
-                            transition: "font-weight 0.2s",
-                            borderLeft: isActive ? `2px solid ${C.ink}` : "2px solid transparent",
-                            paddingLeft: 12,
-                        }}>
+                        <span aria-hidden="true" style={{ width: isActive ? 12 : 0, height: 1, backgroundColor: COLORS.ink, transition: `width 0.3s ${EASE_SPRING}` }} />
+                        <span style={{ fontFamily: INTER, fontSize: 12, fontWeight: isActive ? 500 : 400, color: isActive ? COLORS.ink : COLORS.muted, transition: "color 0.3s ease" }}>
                             {label}
                         </span>
                     </a>
@@ -956,7 +948,7 @@ export default function AnthropologieCaseStudy() {
             >
                 {desktop && (
                     <aside>
-                        <div style={{ position: "sticky", top: 80, paddingTop: 40 }}>
+                        <div style={{ position: "sticky", top: 96, paddingTop: 48 }}>
                             <SideNav active={activeSection} />
                         </div>
                     </aside>
@@ -964,7 +956,7 @@ export default function AnthropologieCaseStudy() {
                 <div>
                 {/* ── HERO ── */}
                 <FadeIn>
-                    <div id="overview" style={{ scrollMarginTop: 80, paddingTop: phone ? "48px" : "80px", paddingBottom: 0 }}>
+                    <div id="overview" style={{ scrollMarginTop: 96, paddingTop: phone ? "48px" : "80px", paddingBottom: 0 }}>
                         <p
                             style={{
                                 fontFamily: INTER,
@@ -1059,7 +1051,7 @@ export default function AnthropologieCaseStudy() {
                 </FadeIn>
 
                 {/* ── 01 CONTEXT ── */}
-                <div id="context" style={{ scrollMarginTop: 80 }} />
+                <div id="context" style={{ scrollMarginTop: 96 }} />
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1225,7 +1217,7 @@ export default function AnthropologieCaseStudy() {
                 </FadeIn>
 
                 {/* ── 02 TRENDS ── */}
-                <div id="trends" style={{ scrollMarginTop: 80 }} />
+                <div id="trends" style={{ scrollMarginTop: 96 }} />
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1311,7 +1303,7 @@ export default function AnthropologieCaseStudy() {
                 </FadeIn>
 
                 {/* ── 03 BENCHMARKING ── */}
-                <div id="benchmarking" style={{ scrollMarginTop: 80 }} />
+                <div id="benchmarking" style={{ scrollMarginTop: 96 }} />
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1402,7 +1394,7 @@ export default function AnthropologieCaseStudy() {
                 </FadeIn>
 
                 {/* ── 04 A/B TESTS ── */}
-                <div id="ab-tests" style={{ scrollMarginTop: 80 }} />
+                <div id="ab-tests" style={{ scrollMarginTop: 96 }} />
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1469,7 +1461,7 @@ export default function AnthropologieCaseStudy() {
                 </FadeIn>
 
                 {/* ── 05 FINDINGS ── */}
-                <div id="findings" style={{ scrollMarginTop: 80 }} />
+                <div id="findings" style={{ scrollMarginTop: 96 }} />
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1484,7 +1476,7 @@ export default function AnthropologieCaseStudy() {
                 </FadeIn>
 
                 {/* ── 06 INSIGHT ── */}
-                <div id="insight" style={{ scrollMarginTop: 80 }} />
+                <div id="insight" style={{ scrollMarginTop: 96 }} />
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1520,7 +1512,7 @@ export default function AnthropologieCaseStudy() {
                 </FadeIn>
 
                 {/* ── 07 RECOMMENDATIONS ── */}
-                <div id="recommendations" style={{ scrollMarginTop: 80 }} />
+                <div id="recommendations" style={{ scrollMarginTop: 96 }} />
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1549,7 +1541,7 @@ export default function AnthropologieCaseStudy() {
                 </FadeIn>
 
                 {/* ── 08 IMPACT ── */}
-                <div id="impact" style={{ scrollMarginTop: 80 }} />
+                <div id="impact" style={{ scrollMarginTop: 96 }} />
                 <Divider />
                 <FadeIn>
                     <SectionLabel
@@ -1576,7 +1568,7 @@ export default function AnthropologieCaseStudy() {
                 </FadeIn>
 
                 {/* ── 09 REFLECTION ── */}
-                <div id="reflection" style={{ scrollMarginTop: 80 }} />
+                <div id="reflection" style={{ scrollMarginTop: 96 }} />
                 <Divider />
                 <FadeIn>
                     <SectionLabel

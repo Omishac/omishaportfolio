@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react"
 import SharedNav from "../../components/SharedNav"
-import { FONT_SANS } from "../../components/site"
+import { COLORS, EASE_SPRING, FONT_SANS } from "../../components/site"
 
 const Z = "Zodiak, 'Times New Roman', serif"
 const INTER = FONT_SANS
@@ -307,25 +307,17 @@ function MoodCarousel() {
 
 function SideNav({ active }: { active: string }) {
     return (
-        <nav>
+        <nav aria-label="Case study sections">
             {SECTIONS.map(({ id, label }) => {
                 const isActive = active === id
                 return (
                     <a key={id} href={`#${id}`}
                         onClick={(e) => { e.preventDefault(); document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" }) }}
-                        style={{
-                            display: "block", padding: "6px 0",
-                            textDecoration: "none", transition: "opacity 0.3s ease",
-                            opacity: isActive ? 1 : 0.3,
-                        }}
+                        aria-current={isActive ? "location" : undefined}
+                        style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", textDecoration: "none" }}
                     >
-                        <span style={{
-                            fontFamily: INTER, fontSize: 11, fontWeight: 500,
-                            color: C.ink, letterSpacing: "0.08em", textTransform: "uppercase",
-                            transition: "font-weight 0.2s",
-                            borderLeft: isActive ? `2px solid ${C.muted}` : "2px solid transparent",
-                            paddingLeft: 12,
-                        }}>
+                        <span aria-hidden="true" style={{ width: isActive ? 12 : 0, height: 1, backgroundColor: COLORS.ink, transition: `width 0.3s ${EASE_SPRING}` }} />
+                        <span style={{ fontFamily: INTER, fontSize: 12, fontWeight: isActive ? 500 : 400, color: isActive ? COLORS.ink : COLORS.muted, transition: "color 0.3s ease" }}>
                             {label}
                         </span>
                     </a>
@@ -355,7 +347,7 @@ export default function RFNDCaseStudy() {
             }}>
                 {desktop && (
                     <aside>
-                        <div style={{ position: "sticky", top: 80, paddingTop: 40 }}>
+                        <div style={{ position: "sticky", top: 96, paddingTop: 48 }}>
                             <SideNav active={activeSection} />
                         </div>
                     </aside>
@@ -364,7 +356,7 @@ export default function RFNDCaseStudy() {
                 <div>
 
                     {/* ════════ OVERVIEW ════════ */}
-                    <section id="overview" style={{ scrollMarginTop: 80, paddingTop: phone ? 48 : 40 }}>
+                    <section id="overview" style={{ scrollMarginTop: 96, paddingTop: phone ? 48 : 40 }}>
                         <FadeIn>
                             <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 28 }}>
                                 {tags.map(tag => (
@@ -416,7 +408,7 @@ export default function RFNDCaseStudy() {
                     </section>
 
                     {/* ════════ CONTEXT ════════ */}
-                    <section id="context" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
+                    <section id="context" style={{ scrollMarginTop: 96, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
                             <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 20 }}>Context</p>
                             <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
@@ -449,7 +441,7 @@ export default function RFNDCaseStudy() {
                     </section>
 
                     {/* ════════ RESEARCH ════════ */}
-                    <section id="research" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
+                    <section id="research" style={{ scrollMarginTop: 96, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
                             <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 20 }}>Research</p>
                             <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
@@ -492,7 +484,7 @@ export default function RFNDCaseStudy() {
                     </section>
 
                     {/* ════════ OPPORTUNITY ════════ */}
-                    <section id="opportunity" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
+                    <section id="opportunity" style={{ scrollMarginTop: 96, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
                             <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 20 }}>Opportunity</p>
                             <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
@@ -534,7 +526,7 @@ export default function RFNDCaseStudy() {
                     </section>
 
                     {/* ════════ SOLUTION ════════ */}
-                    <section id="solution" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
+                    <section id="solution" style={{ scrollMarginTop: 96, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
                             <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 20 }}>Solution</p>
                             <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
@@ -566,7 +558,7 @@ export default function RFNDCaseStudy() {
                     </section>
 
                     {/* ════════ RESULTS ════════ */}
-                    <section id="results" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
+                    <section id="results" style={{ scrollMarginTop: 96, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
                             <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 20 }}>Results</p>
                             <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
@@ -649,7 +641,7 @@ export default function RFNDCaseStudy() {
                     </section>
 
                     {/* ════════ REFLECTION ════════ */}
-                    <section id="reflection" style={{ scrollMarginTop: 80, marginTop: phone ? 96 : 144 }}>
+                    <section id="reflection" style={{ scrollMarginTop: 96, marginTop: phone ? 96 : 144 }}>
                         <FadeIn>
                             <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 20 }}>Reflection</p>
                             <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
