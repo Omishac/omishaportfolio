@@ -820,14 +820,10 @@ function Hero({
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
-                        <p style={{ ...rotText(266, 72, 2.0), fontSize: 12.03, fontWeight: 500, color: "#9B111E" /* ruby red */ }}>
-                            product designer . digital analyst . brand storyteller.
-                        </p>
-
-                        {/* Intro line: sits between the role line and "Take what you need:",
+                        {/* Intro line: sits between the greeting and "Take what you need:",
                             angled between their two rotations so it reads as part of the paper */}
                         <p style={{ ...rotText(261, 226, 2.4), width: 340, whiteSpace: "normal", textWrap: "balance", fontSize: 12.5, fontWeight: 400, lineHeight: 1.5, color: "#FFF1F6" }}>
-                            Analytics-driven product designer creating intuitive, customer-centered digital experiences for <span style={{ whiteSpace: "nowrap" }}>consumer-facing</span> brands.
+                            Product designer shaping experiences through data and brand storytelling
                         </p>
 
                         <p style={{ ...rotText(256.03, 306.98, 1.89), fontSize: 10.393, fontWeight: 700, color: "#FFE2ED" }}>
