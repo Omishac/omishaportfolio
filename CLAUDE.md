@@ -8,7 +8,7 @@ Next.js 14 App Router, TypeScript, inline styles (no Tailwind), "use client" com
 
 ## Key files
 - `app/page.tsx` — homepage only. All hero/section changes live here.
-- `components/site.tsx` — shared design language: tokens (FONT_SANS/FONT_SERIF — the whole site is set in Zodiak: FONT_SANS and the body font in globals.css both point at it; Zodiak weights 300/400/700 + italics load from Fontshare in layout.tsx, COLORS incl. `paper` #F4F2EF and `pink` #D33361, HOVER_COLORS, EASE_*), hooks (useReducedMotion, useFinePointer) and small pieces (HoverLetters, BracketTag, Squiggle). Homepage, NavLinks and the URBN filter case study import from here; don't redefine these values locally.
+- `components/site.tsx` — shared design language: tokens (FONT_SANS/FONT_SERIF — the whole site is set in Zodiak: FONT_SANS and the body font in globals.css both point at it; Zodiak weights 300/400/700 + italics, plus 800 for the flyer intro line, load from Fontshare in layout.tsx, COLORS incl. `paper` #F4F2EF and `pink` #D33361, HOVER_COLORS, EASE_*), hooks (useReducedMotion, useFinePointer) and small pieces (HoverLetters, BracketTag, Squiggle). Homepage, NavLinks and the URBN filter case study import from here; don't redefine these values locally.
 - `components/NavLinks.tsx` — nav link styling shared by EVERY page's nav (homepage `HomeNav` and `SharedNav`). Change nav typography/states here so all pages stay in sync.
 - `components/SharedNav.tsx` — the nav bar for the playground and all four case studies (same geometry as the homepage `HomeNav`: 64/54px tall, logo at page padding 20/40/80/120px, 14px links above 1440px). Change it here, not per page.
 - `app/globals.css` — global resets, easing tokens, keyframes.
@@ -33,7 +33,7 @@ const EASE_OUT    = "cubic-bezier(0.23,1,0.32,1)"
 - Figma file: https://www.figma.com/design/HT6JZC5NjxGzIoWlNrVllH/Untitled?node-id=115-4
 - Tear-off paper flyer (pink `#D33361` + crumpled texture at 38% + clear tape) on a fixed 518×581 stage using Figma coordinates; stage scales down to fit `w - 2*px`
 - Assets in `public/hero-flyer/` (tape is cropped out of the `tape-clear.png` sticker sheet)
-- Text (all Zodiak): "Hi, I'm Omisha!" Regular Italic 29.2px `#7F1D43` (the h1); "A product designer shaping experiences through data and brand storytelling" Bold 14.5px `#FFFBF2`; "Take what you need:" Bold 10.4px `#FFFBF2`
+- Text (all Zodiak): "Hi, I'm Omisha!" Regular Italic 29.2px `#7F1D43` (the h1); "A product designer shaping experiences through data and brand storytelling" Extrabold 14.5px `#FFFBF2`; "Take what you need:" Bold 10.4px `#FFFBF2`
 - Nav links on all pages (`components/NavLinks.tsx`, Figma 115:42): Inter ExtraLight 12.9px, black, lowercase, 19.5px gaps; pink hand-drawn underline on hover/focus/current page, dashed pink focus ring; phone menu 34px
 - Tabs (Zodiak 15.5px `#7F1D43`, rotated 92.3°; Freelancing italic): Redesign, Mobile Design, Digital Strategy, Freelancing (italic), Say hello (mailto, dog-eared corner); two tabs shown torn off
 - CTA below flyer: "Take a look at my work" in Zodiak (`NAV_Z`) + pink curved SVG arrow

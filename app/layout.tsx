@@ -35,7 +35,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://api.fontshare.com" />
         <link
           rel="stylesheet"
-          href="https://api.fontshare.com/v2/css?f[]=zodiak@300,301,400,401,700,701&display=swap"
+          href="https://api.fontshare.com/v2/css?f[]=zodiak@300,301,400,401,700,701,800&display=swap"
         />
       </head>
       <body>{children}</body>

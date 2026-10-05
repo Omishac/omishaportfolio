@@ -807,7 +807,7 @@ function Hero({
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
-                        <p style={{ ...rotText(259.44, 217.84, 3.33), transform: "translate(-50%, -50%) rotate(3.33deg) skewX(0.83deg)", width: 350, whiteSpace: "normal", fontSize: 14.461, fontWeight: 700, color: FLYER_CREAM }}>
+                        <p style={{ ...rotText(259.44, 217.84, 3.33), transform: "translate(-50%, -50%) rotate(3.33deg) skewX(0.83deg)", width: 350, whiteSpace: "normal", fontSize: 14.461, fontWeight: 800, color: FLYER_CREAM }}>
                             A product designer shaping experiences through data and brand storytelling
                         </p>
 
