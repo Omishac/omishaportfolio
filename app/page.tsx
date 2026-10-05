@@ -806,7 +806,7 @@ function Hero({
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
-                        <p style={{ ...rotText(259.44, 219, 1.8), width: 380, whiteSpace: "normal", fontSize: 16, fontWeight: 800, letterSpacing: "0.01em", color: "#FFFFFF" }}>
+                        <p style={{ ...rotText(259.44, 219, 1.8), width: 380, whiteSpace: "normal", fontSize: 16, fontWeight: 700, letterSpacing: "0.01em", color: "#FFFFFF" }}>
                             A product designer shaping experiences through data and brand storytelling
                         </p>
 
