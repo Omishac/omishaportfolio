@@ -802,7 +802,7 @@ function Hero({
                         <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
                             style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block" }} />
 
-                        <h1 style={{ ...rotText(261.77, 162.56, 3.54), transform: "translate(-50%, -50%) rotate(3.54deg) skewX(0.78deg)", fontStyle: "italic", fontSize: 29.154, fontWeight: 400, color: FLYER_INK }}>
+                        <h1 style={{ ...rotText(261.77, 162.56, 1.8), fontStyle: "italic", fontSize: 29.154, fontWeight: 400, color: FLYER_INK }}>
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
