@@ -811,7 +811,7 @@ function Hero({
                             A product designer shaping experiences through data and brand storytelling
                         </p>
 
-                        <p style={{ ...rotText(256.03, 306.98, 1.89), fontSize: 10.393, fontWeight: 700, color: FLYER_CREAM }}>
+                        <p style={{ ...rotText(256.03, 306.98, 1.89), fontSize: 10.393, fontWeight: 700, color: FLYER_INK }}>
                             Take what you need:
                         </p>
 
