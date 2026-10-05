@@ -1,10 +1,18 @@
 import type { Metadata } from "next"
-import { Inter, Yuji_Boku } from "next/font/google"
+import { Inter, Instrument_Sans, Yuji_Boku } from "next/font/google"
 import "./globals.css"
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
+})
+
+// Instrument Sans: used on the homepage flyer (intro line and two tab labels)
+const instrumentSans = Instrument_Sans({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-instrument-sans",
   display: "swap",
 })
 
@@ -30,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${yujiBoku.variable}`}>
+    <html lang="en" className={`${inter.variable} ${instrumentSans.variable} ${yujiBoku.variable}`}>
       <head>
         <link rel="preconnect" href="https://api.fontshare.com" />
         <link
