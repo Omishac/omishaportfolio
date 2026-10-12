@@ -48,7 +48,7 @@ const PROJECTS_EMBEDS = [
 const SECTIONS = [
     { id: "visual-design", num: "01", nav: "Visual Design", title: "Visual Design & Branding", desc: "Brand identities, posters, and creative direction." },
     { id: "photography", num: "02", title: "Photography", desc: "Personal photography: light, texture, and moment." },
-    { id: "motion", num: "03", title: "Motion", desc: "Video editing and motion design experiments." },
+    { id: "motion", num: "03", title: "Motion", desc: "Video editing and motion design experiments. The low quality is intentional: shot on a camcorder." },
     { id: "projects", num: "04", title: "Projects", desc: "Miscellaneous work made for the love of making." },
 ]
 
