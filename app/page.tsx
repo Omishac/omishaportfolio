@@ -524,6 +524,27 @@ function wadGeometry(tab: TabSpec, g: ReturnType<typeof tabGeometry>) {
     return { center, from, to }
 }
 
+// The scrap left hanging above the first torn-off tab
+// (Figma's torn-edge-1 shape), cut from the paper itself so it keeps the same shade.
+function cubic(p0: Pt, p1: Pt, p2: Pt, p3: Pt, n: number): Pt[] {
+    return Array.from({ length: n }, (_, i) => {
+        const t = (i + 1) / n, u = 1 - t
+        return [
+            u * u * u * p0[0] + 3 * u * u * t * p1[0] + 3 * u * t * t * p2[0] + t * t * t * p3[0],
+            u * u * u * p0[1] + 3 * u * u * t * p1[1] + 3 * u * t * t * p2[1] + t * t * t * p3[1],
+        ]
+    })
+}
+const TORN_SCRAP_CLIP = clipPoly(rotBoxPoints(
+    { l: 232, t: 328.63, w: 71.475, h: 12.567 }, { w: 71.375, h: 12.384 }, 0.87,
+    [
+        [0.06, 0.45],
+        ...cubic([0.06, 0.45], [0.06, 0.45], [18.87, 2.78], [32.07, 9.97], 10),
+        ...cubic([32.07, 9.97], [45.27, 17.17], [70.9, 2.26], [70.9, 2.26], 10),
+        [71.36, 2.26],
+    ],
+))
+
 const TAB_GEOMETRY = TABS.map(tabGeometry)
 const WAD_GEOMETRY = TABS.map((t, i) => wadGeometry(t, TAB_GEOMETRY[i]))
 
@@ -802,7 +823,7 @@ function Hero({
                         <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
                             style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block" }} />
 
-                        <h1 style={{ ...rotText(261.77, 162.56, 1.8), fontStyle: "italic", fontSize: 29.154, fontWeight: 400, color: "#C64B6F" }}>
+                        <h1 style={{ ...rotText(261.77, 162.56, 1.8), fontStyle: "italic", fontSize: 29.154, fontWeight: 400, color: "#B1395C" }}>
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
@@ -815,8 +836,9 @@ function Hero({
                         </p>
 
                         {/* Ragged edges left behind by the two tabs already torn off */}
-                        <img src="/hero-flyer/torn-edge-1.svg" alt="" aria-hidden="true"
-                            style={{ ...rotBox({ l: 232, t: 328.63, w: 71.475, h: 12.567 }, { w: 71.375, h: 12.384 }, 0.87), display: "block" }} />
+                        <span aria-hidden="true" style={{ ...FILL, clipPath: TORN_SCRAP_CLIP }}>
+                            <PaperFace />
+                        </span>
                         <img src="/hero-flyer/torn-edge-2.svg" alt="" aria-hidden="true"
                             style={{ ...rotBox({ l: 378.93, t: 325.77, w: 70.679, h: 13.136 }, { w: 70.728, h: 12.934 }, 179.1), display: "block" }} />
 
