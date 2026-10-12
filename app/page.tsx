@@ -1366,9 +1366,50 @@ function LogoTicker({
         { top: "76%", left: "65%" },
         { top: "76%", left: "36%" },
     ]
-    const logoH = phone ? 26 : tablet ? 32 : large ? 46 : 40
+    const logoH = tablet ? 32 : large ? 46 : 40
     // Lakmé and URBN read small next to the wordmarks around them — scale them up.
     const SIZE_MULT = [1, 1, 1, 1, 1.7, 1.7]
+
+    if (phone) {
+        // Phone: a compact block instead of a full-screen stage — heading, then
+        // the logos in an even 2-column grid, each fitted to the same box so the
+        // wide wordmarks and the small marks read at a similar weight.
+        return (
+            <section ref={outerRef} style={{ width: "100%", boxSizing: "border-box", padding: `56px ${px}px 64px`, backgroundColor: C.bg }}>
+                <SectionLabel tag="Application" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
+                <div
+                    style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                        columnGap: 24,
+                        rowGap: 28,
+                        marginTop: 28,
+                    }}
+                >
+                    {LOGOS.map(({ src, alt }, i) => (
+                        // No per-logo scroll fade here: in a tight grid it just washes out whole rows
+                        <div key={alt} style={{ height: 56, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <img
+                                src={src}
+                                alt={alt}
+                                className="logo-img"
+                                style={{
+                                    maxHeight: 30 * SIZE_MULT[i],
+                                    maxWidth: "100%",
+                                    width: "auto",
+                                    height: "auto",
+                                    display: "block",
+                                    animation: reducedMotion
+                                        ? "none"
+                                        : `illust-float ${5.5 + (i % 3) * 0.6}s ease-in-out infinite ${i * 0.35}s`,
+                                }}
+                            />
+                        </div>
+                    ))}
+                </div>
+            </section>
+        )
+    }
 
     return (
         <section
@@ -1390,90 +1431,44 @@ function LogoTicker({
                     willChange: "transform",
                 }}
             >
-                {phone ? (
-                    // Scattering six logos across a phone-width viewport reads as
-                    // clutter, not a composition — keep the simple centered cluster.
-                    <div
-                        style={{
-                            position: "absolute",
-                            top: "50%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
-                            width: `calc(100% - ${px * 2}px)`,
-                        }}
-                    >
+                <>
+                    <div style={{ position: "absolute", top: "54%", left: "50%", transform: "translate(-50%, -50%)" }}>
                         <SectionLabel tag="Application" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
+                    </div>
+                    {LOGOS.map(({ src, alt }, i) => (
+                        // Positioning transform lives on this wrapper, not the img — the
+                        // img's own transform gets overwritten each frame by the
+                        // illust-float keyframes, which would otherwise fight the centering.
+                        // The scroll-in/out fade+scale (no translate, so it doesn't fight
+                        // either transform) lives on the middle wrapper, which is also what
+                        // its own scroll position is measured from.
                         <div
+                            key={alt}
                             style={{
-                                display: "flex",
-                                flexWrap: "wrap",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                columnGap: 28,
-                                rowGap: 22,
-                                width: "100%",
-                                marginTop: 16,
+                                position: "absolute",
+                                top: SCATTER[i].top,
+                                left: SCATTER[i].left,
+                                transform: "translate(-50%, -50%)",
                             }}
                         >
-                            {LOGOS.map(({ src, alt }, i) => (
-                                <div key={alt} ref={(el) => { logoRefs.current[i] = el }} style={logoScrollStyle(i)}>
-                                    <img
-                                        src={src}
-                                        alt={alt}
-                                        className="logo-img"
-                                        style={{
-                                            height: logoH,
-                                            width: "auto",
-                                            display: "block",
-                                            animation: reducedMotion
-                                                ? "none"
-                                                : `illust-float ${5.5 + (i % 3) * 0.6}s ease-in-out infinite ${i * 0.35}s`,
-                                        }}
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                ) : (
-                    <>
-                        <div style={{ position: "absolute", top: "54%", left: "50%", transform: "translate(-50%, -50%)" }}>
-                            <SectionLabel tag="Application" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
-                        </div>
-                        {LOGOS.map(({ src, alt }, i) => (
-                            // Positioning transform lives on this wrapper, not the img — the
-                            // img's own transform gets overwritten each frame by the
-                            // illust-float keyframes, which would otherwise fight the centering.
-                            // The scroll-in/out fade+scale (no translate, so it doesn't fight
-                            // either transform) lives on the middle wrapper, which is also what
-                            // its own scroll position is measured from.
-                            <div
-                                key={alt}
-                                style={{
-                                    position: "absolute",
-                                    top: SCATTER[i].top,
-                                    left: SCATTER[i].left,
-                                    transform: "translate(-50%, -50%)",
-                                }}
-                            >
-                                <div ref={(el) => { logoRefs.current[i] = el }} style={logoScrollStyle(i)}>
-                                    <img
-                                        src={src}
-                                        alt={alt}
-                                        className="logo-img"
-                                        style={{
-                                            height: logoH * SIZE_MULT[i],
-                                            width: "auto",
-                                            display: "block",
-                                            animation: reducedMotion
-                                                ? "none"
-                                                : `illust-float ${5.5 + (i % 3) * 0.6}s ease-in-out infinite ${i * 0.35}s`,
-                                        }}
-                                    />
-                                </div>
+                            <div ref={(el) => { logoRefs.current[i] = el }} style={logoScrollStyle(i)}>
+                                <img
+                                    src={src}
+                                    alt={alt}
+                                    className="logo-img"
+                                    style={{
+                                        height: logoH * SIZE_MULT[i],
+                                        width: "auto",
+                                        display: "block",
+                                        animation: reducedMotion
+                                            ? "none"
+                                            : `illust-float ${5.5 + (i % 3) * 0.6}s ease-in-out infinite ${i * 0.35}s`,
+                                    }}
+                                />
                             </div>
-                        ))}
-                    </>
-                )}
+                        </div>
+                    ))}
+                </>
             </div>
         </section>
     )
