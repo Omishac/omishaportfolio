@@ -1375,7 +1375,7 @@ function LogoTicker({
         // the logos in an even 2-column grid, each fitted to the same box so the
         // wide wordmarks and the small marks read at a similar weight.
         return (
-            <section ref={outerRef} style={{ width: "100%", boxSizing: "border-box", padding: `56px ${px}px 64px`, backgroundColor: C.bg }}>
+            <section ref={outerRef} style={{ width: "100%", boxSizing: "border-box", padding: `56px ${px}px 24px`, backgroundColor: C.bg }}>
                 <SectionLabel tag="Application" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
                 <div
                     style={{
@@ -1575,7 +1575,7 @@ function SkillsSection({
     maxW: number
     sp: ReturnType<typeof useBP>["sp"]
 }) {
-    const sectionPad = phone ? 64 : tablet ? 80 : large ? 120 : 100
+    const sectionPad = phone ? 40 : tablet ? 80 : large ? 120 : 100
     const sectionRef = useRef<HTMLElement>(null)
     const [skillsY, setSkillsY] = useState(0)
     const reducedMotion = useReducedMotion()
