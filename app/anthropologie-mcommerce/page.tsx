@@ -1491,9 +1491,9 @@ export default function AnthropologieCaseStudy() {
                         sub="Hypothesis-driven design experiments"
                     />
                     <Body>
-                        To validate hypotheses, I designed and ran A/B tests on
-                        the mobile homepage layout and category page navigation
-                        structure.
+                        To validate hypotheses, the testing team ran A/B tests
+                        on the mobile homepage layout and category page
+                        navigation structure.
                     </Body>
                     <div style={{ marginTop: phone ? 8 : 12, display: "grid", gridTemplateColumns: phone || tablet ? "1fr" : "1fr 1fr", gap: phone ? 16 : 20 }}>
                         <ABComparison
@@ -1520,7 +1520,7 @@ export default function AnthropologieCaseStudy() {
                         <ABComparison
                             num="03"
                             title="Category pages: hiding the topper image"
-                            note="I tested hiding the topper image to bring products above the fold faster, benchmarking against Mango and Everlane, which both lead directly with product grids."
+                            note="The testing team ran a test hiding the topper image to bring products above the fold faster, benchmarked against Mango and Everlane, which both lead directly with product grids."
                             phone={phone}
                             tablet={tablet}
                             variants={[
