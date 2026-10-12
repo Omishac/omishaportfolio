@@ -909,21 +909,22 @@ function Hero({
                 </div>
             </div>
 
-            {/* CTA */}
+            {/* CTA: fixed line height and a top-anchored arrow, so the arrow lands in the
+                same spot whatever font metrics or "normal" line height a browser uses */}
             <div
                 style={{
                     display: "flex",
-                    alignItems: "center",
+                    alignItems: "flex-start",
                     gap: 8,
                     marginTop: phone ? 32 : 56,
                     opacity: revealed ? 1 : 0,
                     transition: reducedMotion ? "none" : `opacity 0.5s ${EASE_OUT} 500ms`,
                 }}
             >
-                <span style={{ fontFamily: NAV_Z, fontSize: phone ? 13 : 14, color: C.ink2, whiteSpace: "nowrap" }}>
+                <span style={{ display: "block", fontFamily: NAV_Z, fontSize: phone ? 13 : 14, lineHeight: "20px", color: C.ink2, whiteSpace: "nowrap" }}>
                     Take a look at my work
                 </span>
-                <svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true" style={{ display: "block", flexShrink: 0, marginTop: 22 }}>
+                <svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true" style={{ display: "block", flexShrink: 0, marginTop: 6 }}>
                     <path d="M 8 6 C 12 6, 40 14, 40 40" stroke={FLYER_LABEL} strokeWidth="3" strokeLinecap="round" fill="none" />
                     <path d="M 33 32 L 40 42 L 47 32" stroke={FLYER_LABEL} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
                 </svg>
