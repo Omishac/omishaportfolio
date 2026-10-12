@@ -449,17 +449,16 @@ type TabSpec = {
     flutter: number       // flutter period, s
 }
 
-// Dark rose for the flyer text
+// Dark rose for the flyer text; the tear-off tabs are a lighter rose
 const FLYER_INK = "#7F1D43"
-// Greeting and intro line
-const FLYER_HEADLINE = "#B1395C"
+const FLYER_TAB_INK = "#B1395C"
 
 const TABS: TabSpec[] = [
-    { label: "Redesign",         cx: 41.2,   cy: 419.83, color: FLYER_INK, href: "/anthropologie-product-discovery", left: null, right: 0, tilt: -1.1, spin: -9,  drift: -40, flutter: 1.5 },
-    { label: "Mobile Design",    cx: 117,    cy: 420.77, color: FLYER_INK, href: "/ios-review-accessibility", left: 0, right: 1, bottom: "mobile", tilt: 0.8, spin: 7, drift: 30, flutter: 1.8 },
-    { label: "Digital Strategy", cx: 189.21, cy: 421.64, color: FLYER_INK, href: "/anthropologie-mcommerce", left: 1, right: 2, tilt: -0.6, spin: -12, drift: -55, flutter: 1.35 },
-    { label: "Freelancing",      cx: 337.17, cy: 431.99, color: FLYER_INK, href: "/playground", left: 3, right: 4, tilt: 1.2, spin: 10, drift: 45, flutter: 1.7 },
-    { label: "Say hello",        cx: 476.19, cy: 434.67, color: FLYER_INK, href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true, left: 5, right: null, bottom: "sayHello", tilt: -0.9, spin: -6, drift: -30, flutter: 1.55 },
+    { label: "Redesign",         cx: 41.2,   cy: 419.83, color: FLYER_TAB_INK, href: "/anthropologie-product-discovery", left: null, right: 0, tilt: -1.1, spin: -9,  drift: -40, flutter: 1.5 },
+    { label: "Mobile Design",    cx: 117,    cy: 420.77, color: FLYER_TAB_INK, href: "/ios-review-accessibility", left: 0, right: 1, bottom: "mobile", tilt: 0.8, spin: 7, drift: 30, flutter: 1.8 },
+    { label: "Digital Strategy", cx: 189.21, cy: 421.64, color: FLYER_TAB_INK, href: "/anthropologie-mcommerce", left: 1, right: 2, tilt: -0.6, spin: -12, drift: -55, flutter: 1.35 },
+    { label: "Freelancing",      cx: 337.17, cy: 431.99, color: FLYER_TAB_INK, href: "/playground", left: 3, right: 4, tilt: 1.2, spin: 10, drift: 45, flutter: 1.7 },
+    { label: "Say hello",        cx: 476.19, cy: 434.67, color: FLYER_TAB_INK, href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true, left: 5, right: null, bottom: "sayHello", tilt: -0.9, spin: -6, drift: -30, flutter: 1.55 },
 ]
 
 // Clip polygons (stage coords) for one tab: the part above the curl hinge,
@@ -825,11 +824,11 @@ function Hero({
                         <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
                             style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block" }} />
 
-                        <h1 style={{ ...rotText(261.77, 162.56, 1.8), fontStyle: "italic", fontSize: 29.154, fontWeight: 400, color: FLYER_HEADLINE }}>
+                        <h1 style={{ ...rotText(261.77, 162.56, 1.8), fontStyle: "italic", fontSize: 29.154, fontWeight: 400, color: FLYER_INK }}>
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
-                        <p style={{ ...rotText(259.44, 219, 1.8), width: 380, whiteSpace: "normal", fontSize: 16, fontWeight: 700, letterSpacing: "0.01em", color: FLYER_HEADLINE }}>
+                        <p style={{ ...rotText(259.44, 219, 1.8), width: 380, whiteSpace: "normal", fontSize: 16, fontWeight: 700, letterSpacing: "0.01em", color: FLYER_INK }}>
                             A product designer shaping experiences through data and brand storytelling
                         </p>
 
