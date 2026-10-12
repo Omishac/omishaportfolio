@@ -321,7 +321,7 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
 const TAPE_OVERHANG = 33.28
 const FLYER_W = 518
 const FLYER_H = 548 + TAPE_OVERHANG
-const FLYER_PINK = "#EEA5B8"
+const FLYER_PINK = "#FF7D94"
 
 type Pt = [number, number]
 const rad = (deg: number) => (deg * Math.PI) / 180
@@ -802,7 +802,7 @@ function Hero({
                         <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
                             style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block" }} />
 
-                        <h1 style={{ ...rotText(261.77, 162.56, 1.8), fontStyle: "italic", fontSize: 29.154, fontWeight: 400, color: FLYER_INK }}>
+                        <h1 style={{ ...rotText(261.77, 162.56, 1.8), fontStyle: "italic", fontSize: 29.154, fontWeight: 400, color: "#C64B6F" }}>
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
