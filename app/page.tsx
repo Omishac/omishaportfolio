@@ -456,6 +456,8 @@ const FLYER_TAB_INK = "#B1395C"
 // Greeting label: dark rose strip with light pink lettering
 const FLYER_LABEL = "#A4425C"
 const FLYER_LABEL_TEXT = "#FFB8C4"
+// Clean sans for the flyer copy (everything but the greeting)
+const FLYER_SANS = "var(--font-inter), system-ui, sans-serif"
 
 const TABS: TabSpec[] = [
     { label: "Redesign",         cx: 41.2,   cy: 419.83, color: FLYER_TAB_INK, href: "/anthropologie-product-discovery", left: null, right: 0, tilt: -1.1, spin: -9,  drift: -40, flutter: 1.5 },
@@ -578,7 +580,8 @@ function TabFace({ tab }: { tab: TabSpec }) {
             })}
             <span className="ft-label" style={{
                 ...rotText(tab.cx, tab.cy, 92.31),
-                fontSize: 15.458,
+                fontFamily: FLYER_SANS,
+                fontSize: 15,
                 fontWeight: 400,
                 fontStyle: tab.italic ? "italic" : "normal",
                 color: tab.color,
@@ -833,11 +836,11 @@ function Hero({
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
-                        <p style={{ ...rotText(259.44, 219, 1.8), width: 380, whiteSpace: "normal", fontFamily: "var(--font-inter), system-ui, sans-serif", fontSize: 15, fontWeight: 500, letterSpacing: "-0.005em", lineHeight: 1.4, color: FLYER_INK }}>
+                        <p style={{ ...rotText(259.44, 219, 1.8), width: 380, whiteSpace: "normal", fontFamily: FLYER_SANS, fontSize: 15, fontWeight: 500, letterSpacing: "-0.005em", lineHeight: 1.4, color: FLYER_INK }}>
                             A product designer shaping experiences through data and brand storytelling
                         </p>
 
-                        <p style={{ ...rotText(256.03, 306.98, 1.89), fontSize: 10.393, fontWeight: 800, color: FLYER_INK }}>
+                        <p style={{ ...rotText(256.03, 306.98, 1.89), fontFamily: FLYER_SANS, fontSize: 12, fontWeight: 500, color: FLYER_INK }}>
                             Take what you need:
                         </p>
 
@@ -921,8 +924,8 @@ function Hero({
                     Take a look at my work
                 </span>
                 <svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true" style={{ display: "block", flexShrink: 0, marginTop: 22 }}>
-                    <path d="M 8 6 C 12 6, 40 14, 40 40" stroke="#E8B4C8" strokeWidth="3" strokeLinecap="round" fill="none" />
-                    <path d="M 33 32 L 40 42 L 47 32" stroke="#E8B4C8" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                    <path d="M 8 6 C 12 6, 40 14, 40 40" stroke={FLYER_LABEL} strokeWidth="3" strokeLinecap="round" fill="none" />
+                    <path d="M 33 32 L 40 42 L 47 32" stroke={FLYER_LABEL} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
                 </svg>
             </div>
         </section>
