@@ -1137,12 +1137,12 @@ function CoverCard({
                         // Rose outline pills, in the flyer's label colour
                         <span key={i} style={{
                             fontFamily: FLYER_SANS,
-                            fontSize: 11.5,
-                            fontWeight: 500,
-                            color: FLYER_LABEL,
-                            border: "1px solid rgba(164,66,92,0.35)",
+                            fontSize: 11,
+                            fontWeight: 400,
+                            color: "rgba(164,66,92,0.85)",
+                            border: "1px solid rgba(164,66,92,0.18)",
                             borderRadius: 40,
-                            padding: "4px 11px",
+                            padding: "3px 10px",
                         }}>
                             {t}
                         </span>
