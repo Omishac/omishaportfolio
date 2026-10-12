@@ -983,7 +983,8 @@ type CaseStudy = {
 const CARDS: CaseStudy[] = [
     {
         href: "/anthropologie-product-discovery",
-        image: "/case-studies/product-filter-cover.gif",
+        image: "/case-studies/product-filter-cover-poster.jpg",   // first frame, shown while the video loads
+        video: "/case-studies/product-filter-cover.mp4",
         title: "Product Filter Redesign",
         tags: ["Product Design", "Design Systems", "E-Commerce"],
         company: "URBN",
@@ -1042,7 +1043,14 @@ function CoverCard({
     useEffect(() => {
         if (!video || !videoContainerRef.current) return
         const v = document.createElement("video")
-        v.src = video
+        // WebM first (smaller, every modern browser), MP4 as the Safari/H.264 fallback
+        for (const [ext, type] of [["webm", "video/webm"], ["mp4", "video/mp4"]]) {
+            const s = document.createElement("source")
+            s.src = video.replace(/\.mp4$/, `.${ext}`)
+            s.type = type
+            v.appendChild(s)
+        }
+        v.poster = image
         v.setAttribute("autoplay", "")
         v.setAttribute("loop", "")
         v.setAttribute("muted", "")
@@ -1053,7 +1061,7 @@ function CoverCard({
         videoContainerRef.current.appendChild(v)
         v.play().catch(() => {})
         return () => { v.pause(); v.remove() }
-    }, [video])
+    }, [video, image])
 
     // Every cover sits in the same 4:3 frame (the existing covers are ~4:3
     // already) and lifts off the page like a sheet of paper on hover/focus.
