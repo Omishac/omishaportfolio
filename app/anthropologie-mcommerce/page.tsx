@@ -1666,7 +1666,7 @@ export default function AnthropologieCaseStudy() {
                         }}
                     />
                     {[
-                        "I defined hypotheses before testing, not after, which made the A/B results defensible, not post-hoc",
+                        "Define hypotheses before testing, not after, which made the A/B results defensible, not post-hoc",
                         "I tied every UX recommendation to a business metric: Apple Pay adoption, checkout drop-off, scroll depth",
                         "I learned that the most persuasive design argument isn't 'it looks better.' It's 'here's what it costs us not to fix this'",
                     ].map((t, i) => (
