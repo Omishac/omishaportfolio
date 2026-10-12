@@ -1383,7 +1383,8 @@ function LogoTicker({
                         gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
                         columnGap: 24,
                         rowGap: 28,
-                        marginTop: 28,
+                        maxWidth: 320,
+                        margin: "28px auto 0",
                     }}
                 >
                     {LOGOS.map(({ src, alt }, i) => (
