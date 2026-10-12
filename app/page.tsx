@@ -322,7 +322,7 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
 const TAPE_OVERHANG = 33.28
 const FLYER_W = 518
 const FLYER_H = 548 + TAPE_OVERHANG
-const FLYER_PINK = "#FF7D94"
+const FLYER_PINK = "#F5A3B7"
 
 type Pt = [number, number]
 const rad = (deg: number) => (deg * Math.PI) / 180
@@ -833,7 +833,7 @@ function Hero({
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
-                        <p style={{ ...rotText(259.44, 219, 1.8), width: 380, whiteSpace: "normal", fontSize: 16, fontWeight: 700, letterSpacing: "0.01em", color: FLYER_INK }}>
+                        <p style={{ ...rotText(259.44, 219, 1.8), width: 380, whiteSpace: "normal", fontFamily: "var(--font-inter), system-ui, sans-serif", fontSize: 15, fontWeight: 500, letterSpacing: "-0.005em", lineHeight: 1.4, color: FLYER_INK }}>
                             A product designer shaping experiences through data and brand storytelling
                         </p>
 
