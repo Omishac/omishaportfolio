@@ -1132,15 +1132,17 @@ function CoverCard({
                 {desc}
             </p>
             {tags.length > 0 && (
-                <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 5, marginTop: 10 }}>
+                <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6, marginTop: 12 }}>
                     {tags.map((t, i) => (
+                        // Rose outline pills, in the flyer's label colour
                         <span key={i} style={{
-                            fontFamily: I,
-                            fontSize: 10,
-                            color: C.muted,
-                            backgroundColor: "rgba(0,0,0,0.04)",
+                            fontFamily: FLYER_SANS,
+                            fontSize: 11.5,
+                            fontWeight: 500,
+                            color: FLYER_LABEL,
+                            border: "1px solid rgba(164,66,92,0.35)",
                             borderRadius: 40,
-                            padding: "3px 9px",
+                            padding: "4px 11px",
                         }}>
                             {t}
                         </span>
