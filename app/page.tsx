@@ -199,8 +199,8 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    // A little tighter than the page padding so the logo and links sit nearer the edges
-                    padding: `0 ${Math.round(px * 0.8)}px`,
+                    // Tighter than the page padding so the logo and links sit near the edges
+                    padding: `0 ${Math.max(16, Math.round(px * 0.5))}px`,
                     boxSizing: "border-box",
                     backgroundColor: scrolled || menuOpen ? "rgba(255,255,255,0.98)" : C.bg,
                     backdropFilter: scrolled || menuOpen ? "blur(20px)" : "none",
