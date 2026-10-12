@@ -320,6 +320,7 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
 // TAPE_OVERHANG so the tape poking above the paper stays inside the stage),
 // and the whole stage is scaled down to fit narrower viewports.
 const TAPE_OVERHANG = 33.28
+const CTA_H = 31    // CTA row height: the 30px arrow + its 1px offset
 const FLYER_W = 518
 const FLYER_H = 548 + TAPE_OVERHANG
 const FLYER_PINK = "#F5A3B7"
@@ -785,6 +786,7 @@ function Hero({
     }
 
     const scale = Math.min(1, (w - px * 2) / FLYER_W)
+    const ctaGap = phone ? 36 : 61    // flyer box bottom → CTA text
     const padTop = phone ? 12 : 16
     const padBottom = phone ? 32 : tablet ? 24 : 16
 
@@ -803,6 +805,10 @@ function Hero({
             }}
         >
             <style dangerouslySetInnerHTML={{ __html: FLYER_TAB_STYLES }} />
+            {/* Flyer + CTA share one fixed-size box: the CTA is pinned a set distance
+                under the flyer instead of following it in the page flow, so every
+                browser puts it in the same place (Safari used to pull it up ~15px) */}
+            <div style={{ position: "relative", flexShrink: 0, width: FLYER_W * scale, height: FLYER_H * scale + ctaGap + CTA_H }}>
             {/* Outer box reserves the scaled footprint; inner stage keeps Figma coordinates */}
             <div
                 style={{
@@ -912,15 +918,17 @@ function Hero({
                 </div>
             </div>
 
-            {/* CTA: the text box is trimmed to the letters (cap height to baseline), so
-                Safari and Chrome place it identically; they read Zodiak's line metrics
-                differently, which used to shift the text and arrow between browsers */}
+            {/* CTA: the text box is trimmed to the letters (cap height to baseline) so
+                font metrics, which Safari and Chrome read differently, don't move it */}
             <div
                 style={{
+                    position: "absolute",
+                    top: FLYER_H * scale + ctaGap,
+                    left: "50%",
+                    transform: "translateX(-50%)",
                     display: "flex",
                     alignItems: "flex-start",
                     gap: 8,
-                    marginTop: phone ? 36 : 61,
                     opacity: revealed ? 1 : 0,
                     transition: reducedMotion ? "none" : `opacity 0.5s ${EASE_OUT} 500ms`,
                 }}
@@ -932,6 +940,7 @@ function Hero({
                     <path d="M 8 6 C 12 6, 40 14, 40 40" stroke={FLYER_LABEL} strokeWidth="3" strokeLinecap="round" fill="none" />
                     <path d="M 33 32 L 40 42 L 47 32" stroke={FLYER_LABEL} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
                 </svg>
+            </div>
             </div>
         </section>
     )
