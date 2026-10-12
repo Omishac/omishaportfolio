@@ -34,6 +34,8 @@ const MOTION = {
     feature: { src: "https://www.canva.com/design/DAHJZrqnmsE/6S17BE9bGV_u6BT_OdhVhA/watch?embed", title: "Kolkata Food Crawl" },
     skyline: { src: "https://www.canva.com/design/DAHFL_7oX_Y/RMm3KsCaL30KVsZ6jOuKhw/watch?embed", title: "City skyline from the road" },
     vertical: { src: "https://www.canva.com/design/DAHEvJgim7M/DtchAXWYjHURuX8Vm3Xl1A/watch?embed", title: "Vertical video edit" },
+    // Self-hosted (not Canva): WebM first, MP4 fallback; only the poster loads until play
+    nightOut: { src: "/videos/motion-night-out", poster: "/videos/motion-night-out-poster.jpg", title: "Night out edit" },
 }
 
 const PROJECTS_EMBEDS = [
@@ -137,6 +139,18 @@ function SectionHeader({ num, title, desc, phone, tablet, large }: { num: string
                 <HoverLetters text={title} />
             </h2>
             <p style={{ fontFamily: I, fontSize: 14, color: C.ink3, margin: 0, marginTop: 10, lineHeight: 1.55 }}>{desc}</p>
+        </div>
+    )
+}
+
+function VideoFrame({ src, poster, title }: { src: string; poster: string; title: string }) {
+    return (
+        <div style={{ width: "100%", aspectRatio: "16/9", overflow: "hidden", backgroundColor: "#000" }}>
+            <video controls playsInline preload="none" poster={poster} aria-label={title}
+                style={{ width: "100%", height: "100%", display: "block", objectFit: "cover" }}>
+                <source src={`${src}.webm`} type="video/webm" />
+                <source src={`${src}.mp4`} type="video/mp4" />
+            </video>
         </div>
     )
 }
@@ -280,6 +294,10 @@ export default function PlaygroundPage() {
                             justifySelf: phone ? "center" : undefined,
                         }}>
                             <EmbedFrame src={MOTION.vertical.src} title={MOTION.vertical.title} aspect="9/16" fill={!phone} />
+                        </div>
+                        {/* Full-width row under the pair */}
+                        <div style={{ gridColumn: phone ? undefined : "1 / -1", gridRow: phone ? undefined : 3 }}>
+                            <VideoFrame src={MOTION.nightOut.src} poster={MOTION.nightOut.poster} title={MOTION.nightOut.title} />
                         </div>
                     </div>
                 </section>
