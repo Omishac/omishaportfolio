@@ -34,7 +34,7 @@ const EASE_OUT    = "cubic-bezier(0.23,1,0.32,1)"
 - Tear-off paper flyer (bubblegum pink `#F5A3B7` + crumpled texture at 38% + clear tape) on a fixed 518×581 stage using Figma coordinates; stage scales down to fit `w - 2*px`
 - Assets in `public/hero-flyer/` (tape is cropped out of the `tape-clear.png` sticker sheet)
 - Text (greeting in Zodiak; everything else on the flyer in Inter via `FLYER_SANS`): "Hi, I'm Omisha!" Regular Italic 29.2px `#FFB8C4` on a `#A4425C` label strip (the h1, tilted 1.8° to match the paper); "A product designer shaping experiences through data and brand storytelling" Inter Medium 15px `#7F1D43`, tilted 1.8° to match the paper; "Take what you need:" Inter Medium 12px `#7F1D43`
-- Homepage nav (`HomeNav`) side padding is half the page padding, min 16px (16/20/40/60px), a little tighter than `SharedNav`
+- Homepage nav (`HomeNav`) side padding is 80% of the page padding (16/32/64/96px), a little tighter than `SharedNav`
 - Nav links on all pages (`components/NavLinks.tsx`, Figma 115:42): Inter ExtraLight 12.9px, black, lowercase, 19.5px gaps; rose `#A4425C` hand-drawn underline on hover/focus/current page, dashed rose focus ring; phone menu 34px
 - Tabs (Inter Regular 15px `#B1395C`, rotated 92.3°, all upright): Redesign, Mobile Design, Digital Strategy, Freelancing, Say hello (mailto, dog-eared corner in the label colour `#A4425C`); two tabs shown torn off
 - CTA below flyer: "Take a look at my work" in Zodiak (`NAV_Z`) + rose `#A4425C` curved SVG arrow
