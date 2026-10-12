@@ -381,15 +381,17 @@ function rotText(cx: number, cy: number, deg: number): React.CSSProperties {
 const clipPoly = (pts: Pt[]) => `polygon(${pts.map(([x, y]) => `${x.toFixed(2)}px ${y.toFixed(2)}px`).join(", ")})`
 
 const FILL: React.CSSProperties = { position: "absolute", inset: 0, display: "block" }
+// Perforation between tabs: 1.8px dashes, 1.8px gaps (matches the Figma line)
+const PERF_DASH = "repeating-linear-gradient(90deg, #E7F7FF 0 1.8px, transparent 1.8px 3.6px)"
 
 // Perforations between tabs (vertical dashed lines).
 const PERFS = [
-    { src: "/hero-flyer/perf-a.svg", l: 76.54,  t: 325.48, h: 201.256, len: 201.457, deg: -87.44 },
-    { src: "/hero-flyer/perf-b.svg", l: 149.65, t: 328.18, h: 198.55,  len: 198.753, deg: -87.41 },
-    { src: "/hero-flyer/perf-a.svg", l: 222.75, t: 330.89, h: 201.256, len: 201.457, deg: -87.44 },
-    { src: "/hero-flyer/perf-c.svg", l: 295.85, t: 330.89, h: 201.256, len: 201.458, deg: -87.43 },
-    { src: "/hero-flyer/perf-a.svg", l: 368.95, t: 333.6,  h: 201.256, len: 201.457, deg: -87.44 },
-    { src: "/hero-flyer/perf-d.svg", l: 442.05, t: 336.31, h: 201.255, len: 201.457, deg: -87.43 },
+    { l: 76.54,  t: 325.48, h: 201.256, len: 201.457, deg: -87.44 },
+    { l: 149.65, t: 328.18, h: 198.55,  len: 198.753, deg: -87.41 },
+    { l: 222.75, t: 330.89, h: 201.256, len: 201.457, deg: -87.44 },
+    { l: 295.85, t: 330.89, h: 201.256, len: 201.458, deg: -87.43 },
+    { l: 368.95, t: 333.6,  h: 201.256, len: 201.457, deg: -87.44 },
+    { l: 442.05, t: 336.31, h: 201.255, len: 201.457, deg: -87.43 },
 ]
 
 // ── Tab geometry ─────────────────────────────────────────────────────────────
@@ -575,8 +577,9 @@ function TabFace({ tab }: { tab: TabSpec }) {
             {[tab.left, tab.right].map((i) => {
                 if (i === null) return null
                 const p = PERFS[i]
-                return <img key={i} src={p.src} alt=""
-                    style={{ ...rotBox({ l: p.l, t: p.t, w: 9.01, h: p.h }, { w: p.len, h: 0.902 }, p.deg), display: "block" }} />
+                // Drawn with CSS, not the 0.9px-tall SVG: Safari skips images under 1px tall
+                return <span key={i} aria-hidden="true"
+                    style={{ ...rotBox({ l: p.l, t: p.t, w: 9.01, h: p.h }, { w: p.len, h: 0.902 }, p.deg), display: "block", backgroundImage: PERF_DASH }} />
             })}
             <span className="ft-label" style={{
                 ...rotText(tab.cx, tab.cy, 92.31),
@@ -828,8 +831,8 @@ function Hero({
                         </span>
 
                         {/* Tear line above the tabs */}
-                        <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
-                            style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block" }} />
+                        <span aria-hidden="true"
+                            style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block", backgroundColor: "#C8E9FB" }} />
 
                         {/* Greeting printed on a dark rose label strip, paper-pink letters */}
                         <h1 style={{ ...rotText(261.77, 162.56, 1.8), fontStyle: "italic", fontSize: 29.154, fontWeight: 400, color: FLYER_LABEL_TEXT, backgroundColor: FLYER_LABEL, padding: "5px 16px 6px" }}>
@@ -909,22 +912,23 @@ function Hero({
                 </div>
             </div>
 
-            {/* CTA: fixed line height and a top-anchored arrow, so the arrow lands in the
-                same spot whatever font metrics or "normal" line height a browser uses */}
+            {/* CTA: the text box is trimmed to the letters (cap height to baseline), so
+                Safari and Chrome place it identically; they read Zodiak's line metrics
+                differently, which used to shift the text and arrow between browsers */}
             <div
                 style={{
                     display: "flex",
                     alignItems: "flex-start",
                     gap: 8,
-                    marginTop: phone ? 32 : 56,
+                    marginTop: phone ? 36 : 61,
                     opacity: revealed ? 1 : 0,
                     transition: reducedMotion ? "none" : `opacity 0.5s ${EASE_OUT} 500ms`,
                 }}
             >
-                <span style={{ display: "block", fontFamily: NAV_Z, fontSize: phone ? 13 : 14, lineHeight: "20px", color: C.ink2, whiteSpace: "nowrap" }}>
+                <span style={{ display: "block", fontFamily: NAV_Z, fontSize: phone ? 13 : 14, lineHeight: "20px", color: C.ink2, whiteSpace: "nowrap", ...({ textBox: "trim-both cap alphabetic" } as React.CSSProperties) }}>
                     Take a look at my work
                 </span>
-                <svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true" style={{ display: "block", flexShrink: 0, marginTop: 6 }}>
+                <svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true" style={{ display: "block", flexShrink: 0, marginTop: 1 }}>
                     <path d="M 8 6 C 12 6, 40 14, 40 40" stroke={FLYER_LABEL} strokeWidth="3" strokeLinecap="round" fill="none" />
                     <path d="M 33 32 L 40 42 L 47 32" stroke={FLYER_LABEL} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
                 </svg>
