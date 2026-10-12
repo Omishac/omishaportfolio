@@ -321,7 +321,7 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
 const TAPE_OVERHANG = 33.28
 const FLYER_W = 518
 const FLYER_H = 548 + TAPE_OVERHANG
-const FLYER_PINK = COLORS.pink
+const FLYER_PINK = "#EEA5B8"
 
 type Pt = [number, number]
 const rad = (deg: number) => (deg * Math.PI) / 180
@@ -449,7 +449,7 @@ type TabSpec = {
     flutter: number       // flutter period, s
 }
 
-// Dark rose for the flyer text (the intro line is white)
+// Dark rose for all the flyer text
 const FLYER_INK = "#7F1D43"
 
 const TABS: TabSpec[] = [
@@ -806,7 +806,7 @@ function Hero({
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
-                        <p style={{ ...rotText(259.44, 219, 1.8), width: 380, whiteSpace: "normal", fontSize: 16, fontWeight: 700, letterSpacing: "0.01em", color: "#FFFFFF" }}>
+                        <p style={{ ...rotText(259.44, 219, 1.8), width: 380, whiteSpace: "normal", fontSize: 16, fontWeight: 700, letterSpacing: "0.01em", color: FLYER_INK }}>
                             A product designer shaping experiences through data and brand storytelling
                         </p>
 
