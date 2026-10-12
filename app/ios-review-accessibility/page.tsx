@@ -347,11 +347,10 @@ export default function IOSCaseStudy() {
 
                     {/* ════════ OVERVIEW ════════ */}
                     <section id="overview" style={{ scrollMarginTop: 96, paddingTop: phone ? 32 : 48 }}>
-                        <FadeIn>
-                            <div style={MAT}>
-                                <img src="/slides/ios-hero.png" alt="iOS review translation on three iPhone screens" style={IMG} />
-                            </div>
-                        </FadeIn>
+                        {/* Header image shows straight away (no fade-in wait) and is fetched first */}
+                        <div style={MAT}>
+                            <img src="/slides/ios-hero.webp" alt="iOS review translation on three iPhone screens" width={1536} height={1024} loading="eager" decoding="async" fetchPriority="high" style={IMG} />
+                        </div>
 
                         <FadeIn delay={80}>
                             <div style={{ marginTop: sp.head }}>
@@ -406,7 +405,7 @@ export default function IOSCaseStudy() {
                             <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1.1fr) minmax(0, 1fr)", columnGap: 56, rowGap: 28, alignItems: "center" }}>
                                 <SectionHead flush phone={phone} tag="Challenge" title="Why URBN's global scale created a localization gap"
                                     intro="URBN operates Anthropologie, Free People, and Urban Outfitters across international markets, serving millions of shoppers who use the apps in their native language. The apps were built to be multilingual, but one critical surface wasn't: product reviews." />
-                                <img src="/slides/ios-ecosystem.png" alt="URBN brands and their international markets" style={{ ...IMG, maxWidth: phone ? 360 : 420, justifySelf: phone ? "start" : "end" }} />
+                                <img src="/slides/ios-ecosystem.webp" alt="URBN brands and their international markets" style={{ ...IMG, maxWidth: phone ? 360 : 420, justifySelf: phone ? "start" : "end" }} />
                             </div>
                         </FadeIn>
 
@@ -428,7 +427,7 @@ export default function IOSCaseStudy() {
                             </div>
                             <figure style={{ margin: 0, marginTop: phone ? 40 : 56 }}>
                                 {/* Transparent PNG with two devices; no backing container */}
-                                <img src="/slides/ios-original.png" alt="Spain Urban Outfitters app showing product reviews in English" style={{ ...IMG, maxWidth: phone ? "100%" : 640, margin: "0 auto" }} />
+                                <img src="/slides/ios-original.webp" alt="Spain Urban Outfitters app showing product reviews in English" style={{ ...IMG, maxWidth: phone ? "100%" : 640, margin: "0 auto" }} />
                                 <figcaption style={{ fontFamily: I, fontSize: 12.5, lineHeight: 1.55, color: C.ink3, marginTop: 12, textAlign: "center" }}>
                                     The Spain Urban Outfitters app showing reviews in English, with no way to translate them.
                                 </figcaption>

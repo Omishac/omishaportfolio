@@ -321,11 +321,10 @@ export default function AnthropologieProductDiscovery() {
 
                     {/* ════════ OVERVIEW ════════ */}
                     <section id="overview" style={{ scrollMarginTop: 96, paddingTop: phone ? 32 : 48 }}>
-                        <FadeIn>
-                            <div style={MAT}>
-                                <img src="/images/filter-comparison.webp" alt="Filter experience across Free People, Urban Outfitters, and Anthropologie" style={IMG} />
-                            </div>
-                        </FadeIn>
+                        {/* Header image shows straight away (no fade-in wait) and is fetched first */}
+                        <div style={MAT}>
+                            <img src="/images/filter-comparison.webp" alt="Filter experience across Free People, Urban Outfitters, and Anthropologie" width={2400} height={1200} loading="eager" decoding="async" fetchPriority="high" style={IMG} />
+                        </div>
 
                         <FadeIn delay={80}>
                             <div style={{ marginTop: phone ? 36 : 56 }}>
