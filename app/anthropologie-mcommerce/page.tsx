@@ -514,59 +514,115 @@ function CompRow({
     )
 }
 
-// ── A/B card ───────────────────────────────────────────────────────────────────
-function ABCard({
-    label,
-    desc,
-    bg,
-}: {
-    label: string
-    desc: string
-    bg: string
-}) {
-    const [hov, setHov] = useState(false)
+// ── A/B comparison ─────────────────────────────────────────────────────────────
+// One card per test: a header, then the variants side by side as cropped
+// screens, each tagged Control / Variant / Benchmark with a one-line note.
+type ABVariant = { tag: "Control" | "Variant" | "Benchmark"; name: string; desc?: string; src: string }
+
+function ABScreen({ v, phone }: { v: ABVariant; phone: boolean }) {
+    const tagStyle: React.CSSProperties =
+        v.tag === "Variant"
+            ? { backgroundColor: C.ink, color: "#fff", border: `1px solid ${C.ink}` }
+            : v.tag === "Benchmark"
+                ? { backgroundColor: "transparent", color: C.muted, border: `1px dashed ${C.muted}` }
+                : { backgroundColor: "#fff", color: C.ink2, border: `1px solid ${C.border}` }
     return (
-        <div
-            onMouseEnter={() => setHov(true)}
-            onMouseLeave={() => setHov(false)}
-            style={{
-                flex: 1,
-                padding: "24px 20px",
-                borderRadius: "8px",
-                cursor: "default",
-                backgroundColor: hov ? C.ink : bg,
+        <div style={{ display: "flex", flexDirection: "column", gap: phone ? 10 : 14, minWidth: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                <span style={{
+                    ...tagStyle,
+                    fontFamily: INTER, fontSize: "10px", fontWeight: 500, letterSpacing: "0.08em",
+                    textTransform: "uppercase", borderRadius: 999, padding: "4px 9px", lineHeight: 1,
+                }}>
+                    {v.tag}
+                </span>
+                <span style={{ fontFamily: INTER, fontSize: phone ? "13px" : "14px", color: C.ink, lineHeight: 1.3 }}>
+                    {v.name}
+                </span>
+            </div>
+            <div style={{
+                width: "100%",
+                maxWidth: 240,
+                aspectRatio: "9 / 18",
+                borderRadius: 16,
+                overflow: "hidden",
+                backgroundColor: "#fff",
                 border: `1px solid ${C.border}`,
-                transition: "background 0.3s, transform 0.25s",
-                transform: hov ? "translateY(-3px)" : "none",
-            }}
-        >
-            <p
-                style={{
-                    fontFamily: INTER,
-                    fontSize: "11px",
-                    fontWeight: 500,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.08em",
-                    color: hov ? "rgba(255,255,255,0.4)" : C.muted,
-                    marginBottom: "10px",
-                }}
-            >
-                {label}
-            </p>
-            <p
-                style={{
-                    fontFamily: INTER,
-                    fontSize: "15px",
-                    color: hov ? "#fff" : C.ink2,
-                    lineHeight: 1.65,
-                    margin: 0,
-                    fontWeight: 400,
-                }}
-            >
-                {desc}
-            </p>
+                boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
+            }}>
+                <img src={v.src} alt={`${v.tag}: ${v.name}`} loading="lazy"
+                    style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }} />
+            </div>
+            {v.desc && (
+                <p style={{ fontFamily: INTER, fontSize: "13px", lineHeight: 1.6, color: C.ink3, margin: 0 }}>
+                    {v.desc}
+                </p>
+            )}
         </div>
     )
+}
+
+function ABComparison({ num, title, note, variants, phone, tablet }: {
+    num: string
+    title: string
+    note?: string
+    variants: ABVariant[]
+    phone: boolean
+    tablet: boolean
+}) {
+    const cols = variants.length > 2 && !phone && !tablet ? variants.length : 2
+    return (
+        <div style={{
+            backgroundColor: C.surface,
+            border: `1px solid ${C.border}`,
+            borderRadius: 14,
+            padding: phone ? "20px 14px" : "28px",
+        }}>
+            <p style={{
+                fontFamily: INTER, fontSize: "11px", fontWeight: 500, textTransform: "uppercase",
+                letterSpacing: "0.08em", color: C.muted, margin: "0 0 6px",
+            }}>
+                Comparison {num}
+            </p>
+            <p style={{ fontFamily: INTER, fontSize: phone ? "17px" : "19px", fontWeight: 400, color: C.ink, margin: note ? "0 0 6px" : "0 0 22px", lineHeight: 1.35 }}>
+                {title}
+            </p>
+            {note && (
+                <p style={{ fontFamily: INTER, fontSize: "14px", lineHeight: 1.65, color: C.ink3, margin: "0 0 22px", maxWidth: 640 }}>
+                    {note}
+                </p>
+            )}
+            <div style={{ display: "grid", gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, gap: phone ? 12 : 20 }}>
+                {variants.map((v) => <ABScreen key={v.name} v={v} phone={phone} />)}
+            </div>
+        </div>
+    )
+}
+
+// ── Finding icons ──────────────────────────────────────────────────────────────
+// Simple line icons in place of emoji, drawn on a 24px grid.
+const FINDING_ICONS: Record<string, React.ReactNode> = {
+    speed: <path d="M13 3 5 13.5h6L10 21l8-10.5h-6L13 3Z" />,
+    gesture: (
+        <>
+            <path d="M9 11.5V5.5a1.5 1.5 0 0 1 3 0V11" />
+            <path d="M12 10.5V9a1.5 1.5 0 0 1 3 0v2" />
+            <path d="M15 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-.6a6 6 0 0 1-4.5-2.1L4.6 16a1.6 1.6 0 0 1 2.3-2.2L9 15.5" />
+        </>
+    ),
+    gift: (
+        <>
+            <rect x="3.5" y="8" width="17" height="4" rx="1" />
+            <path d="M5 12v8h14v-8M12 8v12" />
+            <path d="M12 8C10.5 5 7 4.5 7 6.5S10 8 12 8Zm0 0c1.5-3 5-3.5 5-1.5S14 8 12 8Z" />
+        </>
+    ),
+    link: (
+        <>
+            <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1" />
+            <path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" />
+        </>
+    ),
 }
 
 // ── Finding card ───────────────────────────────────────────────────────────────
@@ -584,13 +640,22 @@ function FindingCard({ num, title, body, icon }: any) {
             }}
         >
             <span
+                aria-hidden="true"
                 style={{
-                    fontSize: "24px",
-                    display: "block",
-                    marginBottom: "12px",
+                    width: 40,
+                    height: 40,
+                    borderRadius: 10,
+                    backgroundColor: "#fff",
+                    border: `1px solid ${C.border}`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: "16px",
                 }}
             >
-                {icon}
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.ink} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    {FINDING_ICONS[icon]}
+                </svg>
             </span>
             <p
                 style={{
@@ -743,7 +808,7 @@ function RecRow({ num, title, body, detail, img, clip, open, onClick, phone }: a
                         <div style={{
                             overflow: "hidden",
                             lineHeight: 0,
-                            height: phone ? "220px" : "460px",
+                            height: phone ? "300px" : "460px",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
@@ -884,25 +949,25 @@ export default function AnthropologieCaseStudy() {
             num: "01",
             title: "Speed is a Competitive Advantage",
             body: "Top-performing brands minimized steps across checkout and cart interactions.",
-            icon: "⚡",
+            icon: "speed",
         },
         {
             num: "02",
             title: "Mobile is Interaction-Driven",
             body: "Gesture-based interactions like swipe-to-delete significantly reduced friction.",
-            icon: "👆",
+            icon: "gesture",
         },
         {
             num: "03",
             title: "Engagement Requires Incentive",
             body: "App-exclusive features created stronger retention and repeat usage.",
-            icon: "🎁",
+            icon: "gift",
         },
         {
             num: "04",
             title: "Omnichannel is Expected",
             body: "Users expect a unified view of their relationship with a brand across all touchpoints.",
-            icon: "🔗",
+            icon: "link",
         },
     ]
 
@@ -912,8 +977,8 @@ export default function AnthropologieCaseStudy() {
             title: "Reduce Friction in Micro-Interactions",
             body: "Introduce swipe-to-delete in cart to align with native mobile behavior.",
             detail: "Drawing from our homepage redesign A/B test, which showed a positive lift in engagement when category content was less cluttered and products were surfaced faster, I recommended applying the same principle to micro-interactions in the cart. Past test data showed that reducing visual noise and simplifying user actions directly improved conversion, and the same logic applies here. By introducing swipe-to-delete in the cart, we align with a native iOS gesture users already know, reducing friction at a critical drop-off point. Bringing analytical data from previous tests to back new design decisions is how we move fast with confidence.",
-            img: "/slides/rec1.gif",
-            clip: true,
+            img: "/slides/rec1.png",
+            clip: false,
         },
         {
             num: "02",
@@ -929,7 +994,7 @@ export default function AnthropologieCaseStudy() {
             body: "Develop a virtual stylist chatbot for real-time, personalized recommendations.",
             detail: "Levi's StyleBot and ASOS FashionBot demonstrate how guided chatbots increase product discovery. Anthropologie's current chatbot is limited to order support. Expanding to styling advice mirrors the in-store experience.",
             img: "/slides/rec3.png",
-            clip: true,
+            clip: false,
         },
     ]
 
@@ -1430,57 +1495,43 @@ export default function AnthropologieCaseStudy() {
                         the mobile homepage layout and category page navigation
                         structure.
                     </Body>
-                    {/* Comparison 1: Control vs V1 */}
-                    <p style={{
-                        fontFamily: INTER, fontSize: "11px", fontWeight: 500,
-                        textTransform: "uppercase", letterSpacing: "0.08em",
-                        color: C.muted, margin: "0 0 20px",
-                    }}>
-                        Comparison 01 · Control vs. V1: New Layout
-                    </p>
-                    <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: "10px", marginBottom: "16px" }}>
-                        <ABCard label="Control"       desc="Existing layout with category pills and stacked hero banner"                bg={C.surface}  />
-                        <ABCard label="V1: New Layout" desc="Full-bleed stacked images with embedded category labels, no pills"         bg={C.surface2} />
+                    <div style={{ marginTop: phone ? 8 : 12, display: "grid", gridTemplateColumns: phone || tablet ? "1fr" : "1fr 1fr", gap: phone ? 16 : 20 }}>
+                        <ABComparison
+                            num="01"
+                            title="Homepage layout: category pills vs. full-bleed images"
+                            phone={phone}
+                            tablet={tablet}
+                            variants={[
+                                { tag: "Control", name: "Current layout", desc: "Existing layout with category pills and a stacked hero banner", src: "/slides/control.png" },
+                                { tag: "Variant", name: "V1: New layout", desc: "Full-bleed stacked images with embedded category labels, no pills", src: "/slides/v1.png" },
+                            ]}
+                        />
+                        <ABComparison
+                            num="02"
+                            title="Image density: stacked vs. slider"
+                            phone={phone}
+                            tablet={tablet}
+                            variants={[
+                                { tag: "Control", name: "Stacked", desc: "Tall editorial images stacked vertically to maximize scroll engagement", src: "/slides/stack.png" },
+                                { tag: "Variant", name: "Slider", desc: "Two-column grid of images with horizontal swipe that increases density", src: "/slides/slider.png" },
+                            ]}
+                        />
+                        <div style={{ gridColumn: "1 / -1" }}>
+                        <ABComparison
+                            num="03"
+                            title="Category pages: hiding the topper image"
+                            note="I tested hiding the topper image to bring products above the fold faster, benchmarking against Mango and Everlane, which both lead directly with product grids."
+                            phone={phone}
+                            tablet={tablet}
+                            variants={[
+                                { tag: "Control", name: "With topper", src: "/slides/topper-control.png" },
+                                { tag: "Variant", name: "V1: Hide topper", src: "/slides/topper-v1.png" },
+                                { tag: "Benchmark", name: "Mango", src: "/slides/bench-mango.png" },
+                                { tag: "Benchmark", name: "Everlane", src: "/slides/bench-everlane.png" },
+                            ]}
+                        />
+                        </div>
                     </div>
-                    <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: "10px", marginBottom: "56px" }}>
-                        {[
-                            { src: "/slides/control.png", alt: "Control variant",  lbl: "Control"        },
-                            { src: "/slides/v1.png",      alt: "V1: New Layout",   lbl: "V1: New Layout" },
-                        ].map(({ src, alt, lbl }) => (
-                            <div key={lbl} style={{ flex: 1 }}>
-                                <img src={src} alt={alt} style={{ width: "100%", height: phone ? "auto" : "250px", objectFit: "contain", objectPosition: "top", display: "block", maxWidth: "100%" }} />
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Comparison 2: Stack vs Slider */}
-                    <p style={{
-                        fontFamily: INTER, fontSize: "11px", fontWeight: 500,
-                        textTransform: "uppercase", letterSpacing: "0.08em",
-                        color: C.muted, margin: "0 0 20px",
-                    }}>
-                        Comparison 02 · Stack vs. Slider
-                    </p>
-                    <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: "10px", marginBottom: "16px" }}>
-                        <ABCard label="Stacked" desc="Tall editorial images stacked vertically to maximize scroll engagement"      bg={C.surface3} />
-                        <ABCard label="Slider"  desc="Two-column grid of images with horizontal swipe that increases density"         bg="#D8D6CF"    />
-                    </div>
-                    <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: "10px", marginBottom: "16px" }}>
-                        {[
-                            { src: "/slides/stack.png",  alt: "Stacked variant", lbl: "Stacked" },
-                            { src: "/slides/slider.png", alt: "Slider variant",  lbl: "Slider"  },
-                        ].map(({ src, alt, lbl }) => (
-                            <div key={lbl} style={{ flex: 1 }}>
-                                <img src={src} alt={alt} style={{ width: "100%", height: phone ? "auto" : "250px", objectFit: "contain", objectPosition: "top", display: "block", maxWidth: "100%" }} />
-                            </div>
-                        ))}
-                    </div>
-                    <Body>
-                        For category pages, I tested hiding the topper image to
-                        bring products above the fold faster, benchmarking
-                        against Mango and Everlane, which both lead directly
-                        with product grids.
-                    </Body>
                 </FadeIn>
 
                 {/* ── 05 FINDINGS ── */}
