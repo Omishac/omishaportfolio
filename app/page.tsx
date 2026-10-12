@@ -786,7 +786,7 @@ function Hero({
     }
 
     const scale = Math.min(1, (w - px * 2) / FLYER_W)
-    const ctaGap = phone ? 36 : 61    // flyer box bottom → CTA text
+    const ctaGap = phone ? 52 : 78    // flyer box bottom → CTA text (Chrome's original placement)
     const padTop = phone ? 12 : 16
     const padBottom = phone ? 32 : tablet ? 24 : 16
 
