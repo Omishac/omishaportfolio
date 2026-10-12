@@ -453,6 +453,9 @@ type TabSpec = {
 // Dark rose for the flyer text; the tear-off tabs are a lighter rose
 const FLYER_INK = "#7F1D43"
 const FLYER_TAB_INK = "#B1395C"
+// Greeting label: dark rose strip with light pink lettering
+const FLYER_LABEL = "#A4425C"
+const FLYER_LABEL_TEXT = "#FFB8C4"
 
 const TABS: TabSpec[] = [
     { label: "Redesign",         cx: 41.2,   cy: 419.83, color: FLYER_TAB_INK, href: "/anthropologie-product-discovery", left: null, right: 0, tilt: -1.1, spin: -9,  drift: -40, flutter: 1.5 },
@@ -825,7 +828,8 @@ function Hero({
                         <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
                             style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block" }} />
 
-                        <h1 style={{ ...rotText(261.77, 162.56, 1.8), fontStyle: "italic", fontSize: 29.154, fontWeight: 400, color: FLYER_INK }}>
+                        {/* Greeting printed on a dark rose label strip, paper-pink letters */}
+                        <h1 style={{ ...rotText(261.77, 162.56, 1.8), fontStyle: "italic", fontSize: 29.154, fontWeight: 400, color: FLYER_LABEL_TEXT, backgroundColor: FLYER_LABEL, padding: "5px 16px 6px" }}>
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
