@@ -1259,10 +1259,10 @@ export default function AnthropologieCaseStudy() {
                     {/* Trend image gallery */}
                     <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: "16px", marginTop: "40px" }}>
                         {([
-                            { src: "/slides/zeroparty.gif",   alt: "Zero-party data · Sephora",       caption: "Zero-Party Data · Sephora",  clip: true,  size: 1    },
+                            { src: "/slides/zeroparty-poster.jpg", video: "/slides/zeroparty", alt: "Zero-party data · Sephora", caption: "Zero-Party Data · Sephora", clip: true, size: 1 },
                             { src: "/slides/ARtryon.png",     alt: "Augmented Reality try-on · Nike", caption: "Augmented Reality · Nike",   clip: false, size: 1    },
                             { src: "/slides/appxclusive.png", alt: "App-exclusive perks · Nike",      caption: "App-Exclusive Perks · Nike", clip: false, size: 1    },
-                        ] as { src: string; alt: string; caption: string; clip: boolean; size: number }[]).map(({ src, alt, caption, clip, size }) => (
+                        ] as { src: string; video?: string; alt: string; caption: string; clip: boolean; size: number }[]).map(({ src, video, alt, caption, clip, size }) => (
                             <div key={caption} style={{ flex: phone ? "unset" : size, display: "flex", flexDirection: "column", gap: "10px" }}>
                                 <div style={{
                                     overflow: "hidden",
@@ -1272,18 +1272,41 @@ export default function AnthropologieCaseStudy() {
                                     alignItems: "center",
                                     justifyContent: "center",
                                 }}>
-                                    <img
-                                        src={src}
-                                        alt={alt}
-                                        style={{
-                                            width: "100%",
-                                            height: "100%",
-                                            display: "block",
-                                            objectFit: clip ? "cover" : "contain",
-                                            transform: clip ? "scale(1.02)" : "none",
-                                            maxWidth: "100%",
-                                        }}
-                                    />
+                                    {video ? (
+                                        // Looping screen recording as video, not GIF (20MB → under 1MB)
+                                        <video
+                                            autoPlay
+                                            loop
+                                            muted
+                                            playsInline
+                                            poster={src}
+                                            aria-label={alt}
+                                            style={{
+                                                width: "100%",
+                                                height: "100%",
+                                                display: "block",
+                                                objectFit: clip ? "cover" : "contain",
+                                                transform: clip ? "scale(1.02)" : "none",
+                                                maxWidth: "100%",
+                                            }}
+                                        >
+                                            <source src={`${video}.webm`} type="video/webm" />
+                                            <source src={`${video}.mp4`} type="video/mp4" />
+                                        </video>
+                                    ) : (
+                                        <img
+                                            src={src}
+                                            alt={alt}
+                                            style={{
+                                                width: "100%",
+                                                height: "100%",
+                                                display: "block",
+                                                objectFit: clip ? "cover" : "contain",
+                                                transform: clip ? "scale(1.02)" : "none",
+                                                maxWidth: "100%",
+                                            }}
+                                        />
+                                    )}
                                 </div>
                                 <p style={{
                                     fontFamily: INTER,
