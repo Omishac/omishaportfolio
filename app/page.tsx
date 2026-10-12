@@ -2248,6 +2248,19 @@ function tossStep(s: TossState, w: TossWorld) {
     if (s.t > 6) s.done = "missed"
 }
 
+// Pull → launch direction. Any backward pull throws: the angle is kept between
+// 20° and 75° above horizontal, so pulling straight back (or a little up) still
+// lobs the ball instead of silently doing nothing.
+const MIN_LAUNCH = (20 * Math.PI) / 180
+const MAX_LAUNCH = (75 * Math.PI) / 180
+function launchVector(pull: Vec, power: number): Vec {
+    const len = Math.hypot(pull.x, pull.y)
+    const a = Math.min(MAX_LAUNCH, Math.max(MIN_LAUNCH, Math.atan2(-pull.y, Math.max(pull.x, 0.001))))
+    return { x: Math.cos(a) * len * power, y: -Math.sin(a) * len * power }
+}
+// A real throw: pulled far enough, and not toward the can.
+const isThrow = (pull: Vec) => Math.hypot(pull.x, pull.y) >= 16 && pull.x > -8
+
 const shortThought = (t: string) => (t.length > 34 ? `${t.slice(0, 32).trimEnd()}…` : t)
 
 const GAME_STYLES = `
@@ -2507,7 +2520,7 @@ function FooterGame({
         const off = { x: -px_ * 0.22, y: Math.min(0, -py * 0.22) }
         setBall(off.x, off.y)
         const start = { x: d.rest.x + off.x, y: d.rest.y + off.y }
-        setAim({ from: start, pull: { x: start.x - px_ * 0.6, y: start.y - py * 0.6 }, dots: len > 12 ? predict(d.world, start, { x: px_ * d.power, y: py * d.power }) : [] })
+        setAim({ from: start, pull: { x: start.x - px_ * 0.6, y: start.y - py * 0.6 }, dots: isThrow(d.pull) ? predict(d.world, start, launchVector(d.pull, d.power)) : [] })
     }
 
     const endDrag = (e: React.PointerEvent<HTMLDivElement>, cancelled: boolean) => {
@@ -2516,11 +2529,10 @@ function FooterGame({
         drag.current = null
         delete e.currentTarget.dataset.dragging
         setAim(null)
-        // Only a real pull (back and down, launching up toward the can) throws;
-        // a stray swipe or scroll-like gesture on the ball just puts it back.
-        if (cancelled || Math.hypot(d.pull.x, d.pull.y) < 16 || d.pull.x < 8 || d.pull.y > -4) { setBall(0, 0); setPhase("ready"); return }
+        // Any backward pull throws; a tiny nudge or a pull toward the can puts it back.
+        if (cancelled || !isThrow(d.pull)) { setBall(0, 0); setPhase("ready"); return }
         const off = { x: -d.pull.x * 0.22, y: Math.min(0, -d.pull.y * 0.22) }
-        throwBall(d.world, { x: d.rest.x + off.x, y: d.rest.y + off.y }, d.rest, { x: d.pull.x * d.power, y: d.pull.y * d.power })
+        throwBall(d.world, { x: d.rest.x + off.x, y: d.rest.y + off.y }, d.rest, launchVector(d.pull, d.power))
     }
 
     // ── Keyboard / no-drag throw: a clean shot at the can ──
@@ -2628,6 +2640,8 @@ function FooterGame({
                         onPointerMove={onPointerMove}
                         onPointerUp={(e) => endDrag(e, false)}
                         onPointerCancel={(e) => endDrag(e, true)}
+                        // If the browser takes the gesture over mid-pull, reset instead of sticking in "aiming"
+                        onLostPointerCapture={(e) => endDrag(e, true)}
                         style={{
                             position: "absolute",
                             left: pileW * (phone ? 0.84 : 0.86),
