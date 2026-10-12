@@ -449,8 +449,10 @@ type TabSpec = {
     flutter: number       // flutter period, s
 }
 
-// Dark rose for all the flyer text
+// Dark rose for the flyer text
 const FLYER_INK = "#7F1D43"
+// Greeting and intro line
+const FLYER_HEADLINE = "#B1395C"
 
 const TABS: TabSpec[] = [
     { label: "Redesign",         cx: 41.2,   cy: 419.83, color: FLYER_INK, href: "/anthropologie-product-discovery", left: null, right: 0, tilt: -1.1, spin: -9,  drift: -40, flutter: 1.5 },
@@ -823,11 +825,11 @@ function Hero({
                         <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
                             style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block" }} />
 
-                        <h1 style={{ ...rotText(261.77, 162.56, 1.8), fontStyle: "italic", fontSize: 29.154, fontWeight: 400, color: "#B1395C" }}>
+                        <h1 style={{ ...rotText(261.77, 162.56, 1.8), fontStyle: "italic", fontSize: 29.154, fontWeight: 400, color: FLYER_HEADLINE }}>
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
-                        <p style={{ ...rotText(259.44, 219, 1.8), width: 380, whiteSpace: "normal", fontSize: 16, fontWeight: 700, letterSpacing: "0.01em", color: FLYER_INK }}>
+                        <p style={{ ...rotText(259.44, 219, 1.8), width: 380, whiteSpace: "normal", fontSize: 16, fontWeight: 700, letterSpacing: "0.01em", color: FLYER_HEADLINE }}>
                             A product designer shaping experiences through data and brand storytelling
                         </p>
 
