@@ -1145,9 +1145,9 @@ function CoverCard({
             </div>
             <p style={{
                 fontFamily: I,
-                fontSize: 12.5,
+                fontSize: 13,
                 lineHeight: 1.55,
-                color: C.ink3,
+                color: C.ink2,
                 margin: "5px 0 0",
                 maxWidth: 460,
             }}>
