@@ -18,7 +18,7 @@ const yujiBoku = Yuji_Boku({
 export const metadata: Metadata = {
   title: "Omisha Chabria · Product Designer",
   description:
-    "I design digital products by balancing Creativity & Insights; always grounded in how people experience them.",
+    "Omisha Chabria, product designer bringing together UX, analytics, and the business of fashion. Explore product design and mobile commerce work from URBN and Anthropologie.",
   icons: {
     icon: "/favicon.png",
   },

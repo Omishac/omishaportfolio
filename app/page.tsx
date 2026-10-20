@@ -466,7 +466,7 @@ const TABS: TabSpec[] = [
     { label: "Redesign",         cx: 41.2,   cy: 419.83, color: FLYER_TAB_INK, href: "/anthropologie-product-discovery", left: null, right: 0, tilt: -1.1, spin: -9,  drift: -40, flutter: 1.5 },
     { label: "Mobile Design",    cx: 117,    cy: 420.77, color: FLYER_TAB_INK, href: "/ios-review-accessibility", left: 0, right: 1, bottom: "mobile", tilt: 0.8, spin: 7, drift: 30, flutter: 1.8 },
     { label: "Digital Strategy", cx: 189.21, cy: 421.64, color: FLYER_TAB_INK, href: "/anthropologie-mcommerce", left: 1, right: 2, tilt: -0.6, spin: -12, drift: -55, flutter: 1.35 },
-    { label: "Freelancing",      cx: 337.17, cy: 431.99, color: FLYER_TAB_INK, href: "/playground", left: 3, right: 4, tilt: 1.2, spin: 10, drift: 45, flutter: 1.7 },
+    { label: "Creative work",    cx: 337.17, cy: 431.99, color: FLYER_TAB_INK, href: "/playground", left: 3, right: 4, tilt: 1.2, spin: 10, drift: 45, flutter: 1.7 },
     { label: "Say hello",        cx: 476.19, cy: 434.67, color: FLYER_TAB_INK, href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true, left: 5, right: null, bottom: "sayHello", tilt: -0.9, spin: -6, drift: -30, flutter: 1.55 },
 ]
 
@@ -846,7 +846,7 @@ function Hero({
                         </h1>
 
                         <p style={{ ...rotText(259.44, 219, 1.8), width: 380, whiteSpace: "normal", fontFamily: FLYER_SANS, fontSize: 15, fontWeight: 500, letterSpacing: "-0.005em", lineHeight: 1.4, color: FLYER_INK }}>
-                            A product designer shaping experiences through data and brand storytelling
+                            A product designer shaping products through data and brand storytelling.
                         </p>
 
                         <p style={{ ...rotText(256.03, 306.98, 1.89), fontFamily: FLYER_SANS, fontSize: 12, fontWeight: 500, color: FLYER_INK }}>
@@ -988,7 +988,7 @@ type CaseStudy = {
     tags: string[]
     company: string
     desc: string
-    live?: boolean
+    shipped?: boolean
     comingSoon?: boolean   // shows the "Currently building" badge on the cover
 }
 
@@ -1003,24 +1003,24 @@ const CARDS: CaseStudy[] = [
         tags: ["Product Design", "Design Systems", "E-Commerce"],
         company: "URBN",
         desc: "Redesigning the filter experience across four retail brands, balancing discoverability with speed for millions of shoppers.",
-        live: true,
+        shipped: true,
     },
     {
         href: "/ios-review-accessibility",
         image: "/case-studies/ios-review-cover.png",
-        title: "iOS Review Accessibility",
+        title: "Review Translation",
         tags: ["Research", "UX/UI", "iOS"],
         company: "URBN",
-        desc: "Improving how shoppers read and trust customer reviews inside the iOS app.",
-        live: true,
+        desc: "Designed on-demand review translation so shoppers can read reviews in their language and return to the original text.",
+        shipped: true,
     },
     {
         href: "/anthropologie-mcommerce",
         image: "https://framerusercontent.com/images/vE5NBaasSteSM6lORQbcDZsAU.png",
-        title: "Anthropologie M-Commerce",
+        title: "Anthropologie Mobile Web Audit",
         tags: ["A/B Testing", "Strategy", "iOS"],
         company: "URBN",
-        desc: "Testing and refining the mobile shopping journey to lift conversion across the app.",
+        desc: "Turned analytics and A/B test findings into three recommendations for Anthropologie's mobile web experience.",
     },
     // ── Aurevion: add the case study URL to `href` and drop `comingSoon` when it goes live ──
     {
@@ -1041,7 +1041,7 @@ function CoverCard({
     title,
     tags,
     desc,
-    live,
+    shipped,
     comingSoon,
     titleSize,
     tilt = 0,
@@ -1125,11 +1125,11 @@ function CoverCard({
 
     const caption = (
         <div style={{ marginTop: phone ? 14 : 18 }}>
-            {live && (
+            {shipped && (
                 <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
                     <span style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: "#6EBF8B", display: "inline-block" }} />
                     <span style={{ fontFamily: I, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#6EBF8B" }}>
-                        Live
+                        Shipped
                     </span>
                 </div>
             )}
@@ -1273,7 +1273,7 @@ function WorkSection({
                 willChange: "transform",
             }}>
                 <SectionLabel
-                    tag="UX Strategy · Research · Digital Commerce"
+                    tag="UX · Data · Brand Strategy"
                     title="inside my work"
                     phone={phone}
                     tablet={tablet}
@@ -1500,8 +1500,8 @@ function LogoTicker({
 }
 
 const SKILLS = [
-    { num: "01", title: "Data Analytics & AI", sub: "Google Analytics · Excel · Confluence · LLMs · Prompt Engineering" },
-    { num: "02", title: "User Experience Design", sub: "Research · UX/UI · Design Systems" },
+    { num: "01", title: "User Experience Design", sub: "Research · UX/UI · Design Systems" },
+    { num: "02", title: "Data Analytics & AI", sub: "Google Analytics · Excel · Confluence · LLMs · Prompt Engineering" },
     { num: "03", title: "Digital Marketing", sub: "Research · Strategy · A/B Testing" },
     { num: "04", title: "Branding & Content Creation", sub: "Brand kits · Photography · Video Content" },
 ]
