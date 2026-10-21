@@ -29,15 +29,16 @@ function useResponsive() {
     const [phone, setPhone] = useState(false)
     const [tablet, setTablet] = useState(false)
     const [large, setLarge] = useState(false)
+    const [wide, setWide] = useState(false) // room for side-by-side figure + text
     useEffect(() => {
         // clientWidth, not innerWidth: overflowing content widens the layout
         // viewport on phones, which would lock in the desktop layout.
-        const check = () => { const w = document.documentElement.clientWidth; setPhone(w < 768); setTablet(w >= 768 && w < 1024); setLarge(w > 1440) }
+        const check = () => { const w = document.documentElement.clientWidth; setPhone(w < 768); setTablet(w >= 768 && w < 1024); setLarge(w > 1440); setWide(w >= 1200) }
         check()
         window.addEventListener("resize", check, { passive: true })
         return () => window.removeEventListener("resize", check)
     }, [])
-    return { phone, tablet, desktop: !phone && !tablet, large }
+    return { phone, tablet, desktop: !phone && !tablet, large, wide }
 }
 
 function useInView(threshold = 0.08) {
@@ -141,43 +142,72 @@ const IMG: React.CSSProperties = { width: "100%", height: "auto", display: "bloc
 
 // ── Content ─────────────────────────────────────────────────────────────────
 
+// Each concept answers the research finding with the same number.
+// before/after replace the old Problem/Why paragraphs (they restated the
+// research findings); chips show the real CTA copy change for 03.
 const STRATEGIES = [
     {
         num: "01", title: "Make Selections More Visible",
-        problem: "Selected filters lacked visibility. Users couldn't tell which filters were active.",
+        before: "Users couldn\u2019t tell which filters were active.",
+        after: "Clear feedback on which filters have been applied.",
         changes: ["Introduced checkboxes", "Improved selected-state visibility", "Repositioned active refinements"],
-        why: "Users receive clearer feedback and can immediately understand which filters have been applied.",
         video: "/videos/strategy-01-selections.mp4",
     },
     {
         num: "02", title: "Reduce Navigation Friction",
-        problem: "Multi-filter workflows felt fragile. Users questioned whether previous selections remained active.",
+        before: "Users questioned whether earlier selections were still active.",
+        after: "Users explore multiple filters without second-guessing earlier selections.",
         changes: ["Introduced accordion architecture", "Improved movement between filter groups", "Reduced backtracking"],
-        why: "Users can explore multiple filters without questioning whether previous selections remain active.",
         video: "/videos/strategy-02-navigation.mp4",
     },
     {
         num: "03", title: "Create a Clear Exit Path",
-        problem: "Exiting the drawer was unclear. Users didn't know how to leave without applying filters.",
-        changes: ["Changed CTA copy from \"Done\" to \"View Results\" when a filter is selected", "Clarified exit actions", "Improved drawer navigation"],
-        why: "Users always understand how to continue their shopping journey.",
+        before: "No clear way to leave without applying filters.",
+        after: "A clear way to continue shopping.",
+        beforeChip: "Done", afterChip: "View Results",
+        changes: ["CTA reads \u201cView Results\u201d once a filter is selected", "Clarified exit actions", "Improved drawer navigation"],
         video: "/videos/strategy-03-exit.mp4",
     },
     {
         num: "04", title: "Clarify Store Pickup Availability",
-        problem: "Inventory language created confusion. Users read \"Available Within 24 Hours\" as a shipping promise.",
+        before: "\u201cAvailable Within 24 Hours\u201d read as a shipping promise.",
+        after: "Clearer availability, so users make more informed decisions.",
         changes: ["Introduced new pickup toggle behavior", "Improved copy hierarchy", "Supported multiple pickup states"],
-        why: "Users can better understand product availability and make more informed decisions.",
         video: "/videos/strategy-04-inventory.mp4",
+    },
+] as { num: string; title: string; before: string; after: string; beforeChip?: string; afterChip?: string; changes: string[]; video: string }[]
+
+// Research findings, pinned to where each friction lives in the old filter
+// (the Challenge screens). `where` is the callout label on the screenshot.
+const FINDINGS = [
+    { num: "01", title: "Selected Filters Lacked Visibility", where: "Selections shrink to a count badge or faint highlight", quote: "I can\u2019t tell if that filter actually applied?" },
+    { num: "02", title: "Multi-Filter Workflows Felt Fragile", where: "One screen per group, Back to switch", quote: "Are my previous filters still selected?" },
+    { num: "03", title: "Exiting the Drawer Was Unclear", where: "No close, only \u201cclear all\u201d or \u201cview results\u201d", quote: "How do I close this?" },
+    { num: "04", title: "Inventory Language Created Confusion", where: "Read as shipping, not local inventory", quote: "Does available within 24 hours mean shipping?" },
+]
+
+// Callout markers on the two old screens (375×716), in % of the image so
+// they scale. Positions measured from the PNGs.
+const ANNOTATED_SCREENS = [
+    {
+        src: "/images/Sort%20Modal.png", alt: "Old Filter & Sort screen: a list of filter groups, Color showing a count badge of 10, Availability at the bottom",
+        marks: [{ num: "01", left: 68, top: 32 }, { num: "04", left: 42, top: 86.5 }],
+    },
+    {
+        src: "/images/Sort%20Modal-1.png", alt: "Old Color filter screen: Back link, one faintly highlighted selected row, clear all and view results buttons",
+        marks: [{ num: "02", left: 31, top: 4.9 }, { num: "01", left: 62, top: 14 }, { num: "03", left: 50, top: 88.5 }],
     },
 ]
 
-const FINDINGS = [
-    { num: "01", title: "Selected Filters Lacked Visibility", desc: "Users struggled to determine which filters were currently active after making a selection.", quote: "I can’t tell if that filter actually applied?" },
-    { num: "02", title: "Multi-Filter Workflows Felt Fragile", desc: "Participants questioned whether previous selections remained active while navigating between filter groups.", quote: "Are my previous filters still selected?" },
-    { num: "03", title: "Exiting the Drawer Was Unclear", desc: "Users struggled to understand how to leave the filtering experience without applying filters.", quote: "How do I close this?" },
-    { num: "04", title: "Inventory Language Created Confusion", desc: "Participants frequently interpreted “Available Within 24 Hours” as a shipping promise rather than local inventory availability.", quote: "Does available within 24 hours mean shipping?" },
+// Launch recap: every value is stated elsewhere on the page.
+const RECAP = [
+    { value: "4", label: "friction patterns found in usability testing" },
+    { value: "4", label: "concepts in one tested prototype" },
+    { value: "100%", label: "task completion in retesting" },
+    { value: "3", label: "URBN brands live" },
 ]
+
+const ROSE = "#A4425C" // site accent: callout markers only
 
 const OLD_FLOW = [
     { num: "01", title: "Open Filter Modal", caption: "Users open the centralized filter drawer.", src: "/images/Sort%20Modal.png" },
@@ -219,43 +249,94 @@ function DrawerVideo({ src, label }: { src: string; label: string }) {
     )
 }
 
-// Bold label on its own line, regular supporting copy below.
-function StrategyLabel({ children }: { children: React.ReactNode }) {
-    return <p style={{ fontFamily: INTER, fontSize: 14, fontWeight: 600, color: C.ink, lineHeight: 1.4, margin: 0, marginBottom: 8 }}>{children}</p>
+// Numbered rose callout marker (white on #A4425C ≈ 6.4:1).
+function Marker({ num, size = 22 }: { num: string; size?: number }) {
+    return (
+        <span style={{
+            display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+            width: size, height: size, borderRadius: "50%", backgroundColor: ROSE, color: "#fff",
+            fontFamily: INTER, fontSize: size > 20 ? 11 : 10, fontWeight: 600, lineHeight: 1, letterSpacing: "0.02em",
+            fontVariantNumeric: "tabular-nums",
+        }}>{num}</span>
+    )
 }
 
-function StrategyBlock({ s, phone }: { s: typeof STRATEGIES[number]; phone: boolean }) {
-    const group = { marginTop: 28 } // same gap between Problem, What I Changed and Why
+// Old filter screens with markers that match the findings list.
+function AnnotatedScreens({ phone }: { phone: boolean }) {
+    return (
+        <figure style={{ margin: 0 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: phone ? 10 : 14 }}>
+                {ANNOTATED_SCREENS.map((screen) => (
+                    <div key={screen.src} style={{ ...MAT, padding: phone ? 10 : 14 }}>
+                        <div style={{ position: "relative" }}>
+                            <img src={screen.src} alt={screen.alt} width={375} height={716} style={{ ...IMG, outline: `1px solid ${C.border}` }} />
+                            {screen.marks.map((m) => (
+                                <span key={m.num + m.left} aria-hidden="true" style={{
+                                    position: "absolute", left: `${m.left}%`, top: `${m.top}%`, transform: "translate(-50%, -50%)",
+                                    display: "flex", borderRadius: "50%", boxShadow: "0 0 0 2px #fff, 0 1px 4px rgba(0,0,0,0.18)",
+                                }}>
+                                    <Marker num={m.num} size={phone ? 18 : 22} />
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+            <Caption>The original filter. Markers match the findings.</Caption>
+        </figure>
+    )
+}
+
+function BeforeAfter({ s, phone, stack }: { s: typeof STRATEGIES[number]; phone: boolean; stack: boolean }) {
+    const cell: React.CSSProperties = { padding: phone ? "16px 16px 18px" : "18px 20px 20px", display: "flex", flexDirection: "column", gap: 10 }
+    const text: React.CSSProperties = { fontFamily: INTER, fontSize: 15, color: C.ink2, lineHeight: 1.5, margin: 0 }
+    const tag = (color: string): React.CSSProperties => ({ fontFamily: INTER, fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color, margin: 0 })
+    const chip = (label: string, muted: boolean) => (
+        <span style={{
+            alignSelf: "flex-start", fontFamily: INTER, fontSize: 12, fontWeight: 600, lineHeight: 1,
+            padding: "8px 14px", backgroundColor: muted ? "#fff" : C.ink, color: muted ? C.ink2 : "#fff",
+            border: `1px solid ${muted ? "rgba(0,0,0,0.18)" : C.ink}`,
+        }}>{label}</span>
+    )
+    return (
+        <div style={{ display: "grid", gridTemplateColumns: stack ? "minmax(0, 1fr)" : "repeat(2, minmax(0, 1fr))", gap: 1, backgroundColor: C.border, border: `1px solid ${C.border}` }}>
+            <div style={{ ...cell, backgroundColor: C.paper }}>
+                <p style={tag(C.ink3)}>Before</p>
+                <p style={text}>{s.before}</p>
+                {s.beforeChip && chip(s.beforeChip, true)}
+            </div>
+            <div style={{ ...cell, backgroundColor: "#fff" }}>
+                <p style={tag(ROSE)}>After</p>
+                <p style={text}>{s.after}</p>
+                {s.afterChip && chip(s.afterChip, false)}
+            </div>
+        </div>
+    )
+}
+
+function StrategyBlock({ s, phone, wide }: { s: typeof STRATEGIES[number]; phone: boolean; wide: boolean }) {
     const body: React.CSSProperties = { fontFamily: INTER, fontSize: 15, fontWeight: 400, color: C.ink2, lineHeight: 1.65, margin: 0 }
     return (
         <div style={{
             display: "grid",
-            // Video column capped at 400px: smaller, still legible at drawer scale
-            gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) minmax(0, 400px)",
-            columnGap: 72, rowGap: 32,
+            // Video column capped at 400px (320 below 1200px so the text keeps room)
+            gridTemplateColumns: phone ? "minmax(0, 1fr)" : `minmax(0, 1fr) minmax(0, ${wide ? 400 : 320}px)`,
+            columnGap: wide ? 64 : 48, rowGap: 32,
             alignItems: "center",
         }}>
-            <div style={{ maxWidth: 460 }}>
+            <div style={{ maxWidth: 480 }}>
                 <Num>{s.num}</Num>
-                <h3 style={{ fontFamily: INTER, fontSize: phone ? 24 : 28, fontWeight: 300, color: C.ink, letterSpacing: "-0.02em", lineHeight: 1.2, margin: 0, marginTop: 10 }}>{s.title}</h3>
+                <h3 style={{ fontFamily: INTER, fontSize: phone ? 24 : 28, fontWeight: 300, color: C.ink, letterSpacing: "-0.02em", lineHeight: 1.2, margin: 0, marginTop: 10, marginBottom: 28 }}>{s.title}</h3>
 
-                <div style={{ marginTop: 32 }}>
-                    <StrategyLabel>Problem</StrategyLabel>
-                    <p style={body}>{s.problem}</p>
-                </div>
+                <BeforeAfter s={s} phone={phone} stack={phone || !wide} />
 
-                <div style={group}>
-                    <StrategyLabel>What I Changed</StrategyLabel>
+                <div style={{ marginTop: 28 }}>
+                    <p style={{ fontFamily: INTER, fontSize: 14, fontWeight: 600, color: C.ink, lineHeight: 1.4, margin: 0, marginBottom: 8 }}>What I Changed</p>
                     <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                         {s.changes.map((c, ci) => (
                             <li key={ci} style={{ ...body, padding: "7px 0", borderTop: `1px solid ${C.border}` }}>{c}</li>
                         ))}
                     </ul>
-                </div>
-
-                <div style={group}>
-                    <StrategyLabel>Why</StrategyLabel>
-                    <p style={body}>{s.why}</p>
                 </div>
             </div>
 
@@ -263,6 +344,34 @@ function StrategyBlock({ s, phone }: { s: typeof STRATEGIES[number]; phone: bool
                 <DrawerVideo src={s.video} label={`${s.title} recording`} />
             </div>
         </div>
+    )
+}
+
+// Findings → concepts → retest → launch, as step boxes with arrows.
+function RecapFlow({ phone }: { phone: boolean }) {
+    const arrow = (
+        <span aria-hidden="true" style={{ display: "flex", alignItems: "center", justifyContent: "center", color: C.ink3, padding: phone ? "6px 0" : "0 2px" }}>
+            <svg width={phone ? 14 : 18} height={phone ? 18 : 14} viewBox={phone ? "0 0 14 18" : "0 0 18 14"} fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                {phone ? <><path d="M7 1v15" /><path d="M2 11l5 5 5-5" /></> : <><path d="M1 7h15" /><path d="M11 2l5 5-5 5" /></>}
+            </svg>
+        </span>
+    )
+    return (
+        <ol aria-label="From research to launch" style={{
+            listStyle: "none", padding: 0, margin: 0,
+            display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr)",
+            alignItems: "stretch",
+        }}>
+            {RECAP.map((step, i) => (
+                <React.Fragment key={i}>
+                    {i > 0 && <li aria-hidden="true" style={{ display: "flex", justifyContent: phone ? "flex-start" : "center", paddingLeft: phone ? 20 : 0 }}>{arrow}</li>}
+                    <li style={{ ...MAT, padding: phone ? "16px 18px" : "18px 18px 20px", display: phone ? "flex" : "block", alignItems: "center", gap: 16 }}>
+                        <p style={{ fontFamily: INTER, fontSize: phone ? 26 : 30, fontWeight: 300, color: C.ink, letterSpacing: "-0.03em", lineHeight: 1, margin: 0, minWidth: phone ? 64 : undefined }}>{step.value}</p>
+                        <p style={{ fontFamily: INTER, fontSize: 13.5, color: C.ink2, lineHeight: 1.45, margin: 0, marginTop: phone ? 0 : 10 }}>{step.label}</p>
+                    </li>
+                </React.Fragment>
+            ))}
+        </ol>
     )
 }
 
@@ -289,7 +398,7 @@ function SideNav({ active }: { active: string }) {
 }
 
 export default function AnthropologieProductDiscovery() {
-    const { phone, tablet, desktop, large } = useResponsive()
+    const { phone, tablet, desktop, large, wide } = useResponsive()
     const activeSection = useActiveSection(SECTIONS.map(s => s.id))
     // Same page padding and content width as the landing page.
     const px = phone ? 20 : tablet ? 40 : large ? 120 : 80
@@ -416,20 +525,31 @@ export default function AnthropologieProductDiscovery() {
                     <section id="research" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
                             <SectionHead phone={phone} tag="Research Findings" title="Four patterns that shaped our direction"
-                                intro="Partnering with the UX Research team, we analyzed usability testing sessions to understand where users experienced friction throughout the filtering journey. Across participants, four recurring patterns emerged." />
+                                intro="Usability sessions we analyzed with the UX Research team surfaced four recurring friction patterns." />
                         </FadeIn>
 
                         <FadeIn delay={60}>
-                            {/* Numbered list on a two-column grid, separated by hairlines */}
-                            <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "repeat(2, minmax(0, 1fr))", columnGap: 56 }}>
-                                {FINDINGS.map((f) => (
-                                    <div key={f.num} style={{ borderTop: `1px solid ${C.border}`, padding: phone ? "24px 0 32px" : "28px 0 44px" }}>
-                                        <Num>{f.num}</Num>
-                                        <h3 style={{ fontFamily: INTER, fontSize: phone ? 18 : 20, fontWeight: 400, color: C.ink, letterSpacing: "-0.01em", lineHeight: 1.3, margin: 0, marginTop: 8, marginBottom: 10 }}>{f.title}</h3>
-                                        <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, marginBottom: 14 }}>{f.desc}</p>
-                                        <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.55, color: C.ink2, margin: 0, paddingLeft: 12, borderLeft: `1px solid ${C.ink3}` }}>&ldquo;{f.quote}&rdquo;</p>
-                                    </div>
-                                ))}
+                            {/* Annotated old screens beside the findings they illustrate */}
+                            <div style={{
+                                display: "grid",
+                                gridTemplateColumns: wide ? "minmax(0, 5fr) minmax(0, 6fr)" : "minmax(0, 1fr)",
+                                columnGap: large ? 72 : 48, rowGap: phone ? 32 : 40, alignItems: "start",
+                            }}>
+                                <div style={{ maxWidth: wide ? undefined : 460 }}>
+                                    <AnnotatedScreens phone={phone} />
+                                </div>
+                                <ol style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                                    {FINDINGS.map((f) => (
+                                        <li key={f.num} style={{ display: "flex", gap: 14, borderTop: `1px solid ${C.border}`, padding: phone ? "18px 0 20px" : "20px 0 22px" }}>
+                                            <span style={{ paddingTop: 1 }}><Marker num={f.num} /></span>
+                                            <div style={{ minWidth: 0 }}>
+                                                <h3 style={{ fontFamily: INTER, fontSize: phone ? 17 : 18, fontWeight: 400, color: C.ink, letterSpacing: "-0.01em", lineHeight: 1.3, margin: 0 }}>{f.title}</h3>
+                                                <p style={{ fontFamily: INTER, fontSize: 13.5, lineHeight: 1.5, color: C.ink3, margin: 0, marginTop: 4 }}>{f.where}</p>
+                                                <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.5, color: C.ink2, margin: 0, marginTop: 10, paddingLeft: 12, borderLeft: `1px solid ${C.ink3}` }}>&ldquo;{f.quote}&rdquo;</p>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ol>
                             </div>
                         </FadeIn>
                     </section>
@@ -450,13 +570,13 @@ export default function AnthropologieProductDiscovery() {
                     <section id="strategy" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
                             <SectionHead phone={phone} tag="Strategy" title="Four concepts tested and refined"
-                                intro="Based on the research findings, the redesign focused on reducing uncertainty throughout the filtering experience by making interactions clearer, more predictable, and easier to navigate." />
+                                intro="Each concept answers the research finding with the same number, aiming to make filtering clearer and more predictable." />
                         </FadeIn>
 
-                        <div style={{ display: "flex", flexDirection: "column", gap: phone ? 104 : 168 }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: phone ? 88 : 128 }}>
                             {STRATEGIES.map((s) => (
                                 <FadeIn key={s.num} distance={12} duration={450} threshold={0.15}>
-                                    <StrategyBlock s={s} phone={phone} />
+                                    <StrategyBlock s={s} phone={phone} wide={wide} />
                                 </FadeIn>
                             ))}
                         </div>
@@ -479,7 +599,7 @@ export default function AnthropologieProductDiscovery() {
                                 <div>
                                     <Metric phone={phone} value={<CountUp to={45} suffix="%" />} label="Reduced Design Iteration Time" />
                                     <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, marginTop: 20, maxWidth: 440 }}>
-                                        Using Builder.io and URBN's existing design system components, I turned Figma concepts into coded prototypes and checked them against the interaction requirements, so each design iteration took less time and concepts were validated before development.
+                                        Using Builder.io and URBN's existing design system components, I turned Figma concepts into coded prototypes, so concepts were validated before development.
                                     </p>
                                 </div>
                                 <figure style={{ margin: 0, maxWidth: phone ? 280 : undefined }}>
@@ -627,7 +747,7 @@ export default function AnthropologieProductDiscovery() {
                     <section id="launch" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
                             <SectionHead phone={phone} tag="Launch & Reflection" title="Shipping across three brands"
-                                intro="This redesign is now live across Urban Outfitters, Free People, and Anthropologie, helping shoppers navigate large product catalogs with greater clarity and confidence." />
+                                intro="Live on all three brands, helping shoppers navigate large catalogs with more confidence." />
                         </FadeIn>
 
                         <FadeIn delay={40}>
@@ -655,15 +775,18 @@ export default function AnthropologieProductDiscovery() {
                         </FadeIn>
 
                         <FadeIn delay={60}>
-                            <div style={{ marginTop: phone ? 64 : 96, paddingTop: phone ? 40 : 56, borderTop: `1px solid ${C.border}` }}>
-                                <p style={{ fontFamily: INTER, fontWeight: 300, fontSize: "clamp(22px, 2.6vw, 30px)", lineHeight: 1.35, color: C.ink, letterSpacing: "-0.02em", maxWidth: 720, margin: 0, marginBottom: 32, textWrap: "balance" }}>
+                            <div style={{ marginTop: phone ? 48 : 64 }}>
+                                <RecapFlow phone={phone} />
+                            </div>
+                        </FadeIn>
+
+                        <FadeIn delay={60}>
+                            <div style={{ marginTop: phone ? 64 : 88, paddingTop: phone ? 40 : 56, borderTop: `1px solid ${C.border}` }}>
+                                <p style={{ fontFamily: INTER, fontWeight: 300, fontSize: "clamp(22px, 2.6vw, 30px)", lineHeight: 1.35, color: C.ink, letterSpacing: "-0.02em", maxWidth: 720, margin: 0, marginBottom: 24, textWrap: "balance" }}>
                                     Designing better filters wasn't the goal.{" "}<br />Building confidence was.
                                 </p>
                                 <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: MEASURE, margin: 0 }}>
-                                    Usability testing revealed that the biggest friction wasn't functionality. It was uncertainty. Small moments of hesitation compounded throughout the experience, causing users to question whether the system was working as expected.
-                                </p>
-                                <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: MEASURE, margin: 0, marginTop: 20 }}>
-                                    This project reinforced that effective product design is often less about adding new features and more about creating experiences that feel clear, predictable, and trustworthy.
+                                    The biggest friction wasn&rsquo;t functionality, it was uncertainty: small hesitations that compounded until users questioned whether the system was working. Good product design is often less about new features than about feeling clear, predictable, and trustworthy.
                                 </p>
                             </div>
                         </FadeIn>
