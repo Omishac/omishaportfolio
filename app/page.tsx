@@ -2196,7 +2196,7 @@ type TossWorld = {
     openL: number; openR: number; rimL: number; rimR: number; rimY: number; sinkY: number
     bodyL: number; bodyR: number; canCx: number
 }
-type TossState = { x: number; y: number; vx: number; vy: number; angle: number; inside: boolean; t: number; done: null | "scored" | "missed" }
+type TossState = { x: number; y: number; vx: number; vy: number; angle: number; inside: boolean; landed: boolean; rimHits: number; t: number; done: null | "scored" | "missed" }
 
 const TOSS_DT = 1 / 120
 
@@ -2208,7 +2208,9 @@ function tossStep(s: TossState, w: TossWorld) {
     s.vy += w.g * TOSS_DT
     s.x += s.vx * TOSS_DT
     s.y += s.vy * TOSS_DT
-    s.angle += (s.vx * TOSS_DT * 180) / (Math.PI * w.r)
+    // Full rolling spin on the floor; a lazy tumble in the air (rolling-rate
+    // spin mid-flight read as the ball whirling)
+    s.angle += ((s.vx * TOSS_DT * 180) / (Math.PI * w.r)) * (s.landed ? 1 : 0.2)
 
     if (s.inside) {
         s.x = Math.min(Math.max(s.x, w.openL + w.r * 0.2), w.openR - w.r * 0.2)
@@ -2224,10 +2226,17 @@ function tossStep(s: TossState, w: TossWorld) {
             return
         }
         if (s.x > w.rimL - w.r * 0.6 && s.x < w.rimR + w.r * 0.6) {
-            // Clipped the rim: pop up and away from the can
+            // Rattled around the rim long enough: let it drop in rather than jitter
+            if (++s.rimHits > 3) { s.inside = true; s.vx *= 0.25; return }
+            // Clipped the rim: pop up and away from the can, toward whichever
+            // side has room to fall (on phones the can sits flush with the right
+            // edge, and bouncing into the wall trapped the ball on the rim)
+            let dir = s.x < w.canCx ? -1 : 1
+            const room = dir < 0 ? w.rimL - w.r * 0.6 > w.r * 2 : w.rimR + w.r * 0.6 < w.W - w.r * 2
+            if (!room) dir = -dir
             s.y = w.rimY - 0.5
             s.vy = -Math.abs(s.vy) * 0.35
-            s.vx = (s.x < w.canCx ? -1 : 1) * Math.max(Math.abs(s.vx) * 0.5, 70)
+            s.vx = dir * Math.max(Math.abs(s.vx) * 0.5, 70)
         }
     }
     // Side of the can
@@ -2238,12 +2247,14 @@ function tossStep(s: TossState, w: TossWorld) {
     // Edges of the play area
     if (s.x < w.r) { s.x = w.r; s.vx = Math.abs(s.vx) * 0.4 }
     if (s.x > w.W - w.r) { s.x = w.W - w.r; s.vx = -Math.abs(s.vx) * 0.4 }
-    // Floor: a low bounce, then roll to a stop
+    // Floor: once it lands outside the can it's a miss (the caller says so
+    // straight away); a low bounce, then a short roll to a stop
     if (s.y >= w.floorY) {
         s.y = w.floorY
-        if (s.vy > 140) { s.vy = -s.vy * 0.32; s.vx *= 0.7 }
-        else { s.vy = 0; s.vx *= 1 - 3.2 * TOSS_DT }
-        if (s.vy === 0 && Math.abs(s.vx) < 8) s.done = "missed"
+        s.landed = true
+        if (s.vy > 140) { s.vy = -s.vy * 0.32; s.vx *= 0.6 }
+        else { s.vy = 0; s.vx *= 1 - 9 * TOSS_DT }
+        if (s.vy === 0 && Math.abs(s.vx) < 12) s.done = "missed"
     }
     if (s.t > 6) s.done = "missed"
 }
@@ -2437,7 +2448,7 @@ function FooterGame({
     }, [phase])
 
     const throwBall = (world: TossWorld, start: Vec, rest: Vec, v: Vec) => {
-        const s: TossState = { x: start.x, y: start.y, vx: v.x, vy: v.y, angle: 0, inside: false, t: 0, done: null }
+        const s: TossState = { x: start.x, y: start.y, vx: v.x, vy: v.y, angle: 0, inside: false, landed: false, rimHits: 0, t: 0, done: null }
         const finish = (outcome: "scored" | "missed") => {
             setBall(s.x - rest.x, s.y - rest.y, s.angle, s.inside)
             if (outcome === "scored" && ballRef.current) ballRef.current.style.visibility = "hidden"
@@ -2449,6 +2460,7 @@ function FooterGame({
             return
         }
         setPhase("flying")
+        let announced = false
         let last = performance.now()
         let acc = 0
         const frame = (now: number) => {
@@ -2457,6 +2469,8 @@ function FooterGame({
             while (acc >= TOSS_DT && !s.done) { tossStep(s, world); acc -= TOSS_DT }
             setBall(s.x - rest.x, s.y - rest.y, s.angle, s.inside)
             if (s.done) { finish(s.done); return }
+            // Say "So close." the moment it lands, not after it rolls to a stop
+            if (s.landed && !s.inside && !announced) { announced = true; setPhase("missed") }
             raf.current = requestAnimationFrame(frame)
         }
         raf.current = requestAnimationFrame(frame)
@@ -2487,7 +2501,7 @@ function FooterGame({
 
     // ── Pull back and release ──
     const predict = (world: TossWorld, start: Vec, v: Vec) => {
-        const s: TossState = { x: start.x, y: start.y, vx: v.x, vy: v.y, angle: 0, inside: false, t: 0, done: null }
+        const s: TossState = { x: start.x, y: start.y, vx: v.x, vy: v.y, angle: 0, inside: false, landed: false, rimHits: 0, t: 0, done: null }
         const dots: Vec[] = []
         for (let i = 1; i <= 42 && !s.done; i++) {
             tossStep(s, world)
