@@ -962,7 +962,7 @@ function SectionLabel({
     const titleSize = phone ? 26 : tablet ? 30 : large ? 44 : 36
     return (
         <div style={{ marginBottom: phone ? 28 : tablet ? 40 : 52 }}>
-            <BracketTag style={{ marginBottom: 10 }} bracketColor={FLYER_LABEL}>{tag}</BracketTag>
+            <BracketTag style={{ marginBottom: 10 }}>{tag}</BracketTag>
             <h2
                 style={{
                     fontFamily: I,
@@ -2623,7 +2623,7 @@ function FooterGame({
             >
             <div style={{ maxWidth: Math.min(maxW, 880), width: "100%", margin: "0 auto" }}>
                 <div>
-                <BracketTag style={{ marginBottom: 8 }} bracketColor={FLYER_LABEL}>before you go</BracketTag>
+                <BracketTag style={{ marginBottom: 8 }}>before you go</BracketTag>
                 <h2 id="toss-heading" style={{ fontFamily: I, fontWeight: 200, fontSize: phone ? 24 : 30, lineHeight: 1.1, letterSpacing: "-0.02em", color: C.ink, margin: 0 }}>
                     clear your head
                 </h2>

@@ -101,8 +101,8 @@ export function HoverLetters({ text }: { text: string }) {
 }
 
 // "[ tag ]" label used above section titles.
-// `bracketColor` tints just the brackets (the homepage uses its rose accent).
-export function BracketTag({ children, style, bracketColor = COLORS.muted }: { children: React.ReactNode; style?: React.CSSProperties; bracketColor?: string }) {
+// Brackets in the site's rose accent (#A4425C) on every page; `bracketColor` overrides.
+export function BracketTag({ children, style, bracketColor = "#A4425C" }: { children: React.ReactNode; style?: React.CSSProperties; bracketColor?: string }) {
     return (
         <div style={{ display: "flex", alignItems: "center", gap: 5, ...style }}>
             <span style={{ fontFamily: FONT_SANS, fontSize: 12, color: bracketColor }}>[</span>
