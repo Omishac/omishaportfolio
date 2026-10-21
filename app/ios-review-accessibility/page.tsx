@@ -200,6 +200,75 @@ const GAP_NOTES: Note[] = [
     { label: "Same in the full review list, with no way to translate.", box: [58.4, 62.8, 92.2, 70.2], side: "right" },
 ]
 
+// Research: the questions shoppers bring to reviews, typed in like a chat
+const SHOPPER_QS = [
+    { title: "Validate quality", q: "Does it live up to the listing?", tilt: -1.6 },
+    { title: "Learn from other shoppers", q: "How does it hold up in everyday use?", tilt: 1.2 },
+    { title: "Understand fit & sizing", q: "Which size should I buy?", tilt: -0.8 },
+]
+const BUBBLE_BG = "#FCE7EC"
+const BUBBLE_INK = "#7F1D43"
+const SQ_STYLES = `
+@keyframes sq-dot { 0%, 80%, 100% { opacity: .25; transform: translateY(0) } 40% { opacity: 1; transform: translateY(-3px) } }
+.sq-dots span { width: 6px; height: 6px; border-radius: 50%; background: ${BUBBLE_INK}; display: inline-block; animation: sq-dot 1s infinite ease-in-out; }
+.sq-dots span:nth-child(2) { animation-delay: .15s } .sq-dots span:nth-child(3) { animation-delay: .3s }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .sq-bubble[data-in]:hover { transform: rotate(0deg) translateY(-4px) scale(1.02) !important; box-shadow: 0 14px 24px -16px rgba(127,29,67,0.45); }
+}
+`
+
+function ShopperQuestions({ phone, cols }: { phone: boolean; cols: string }) {
+    const { ref, visible } = useInView(0.3)
+    const reduced = useReducedMotion()
+    // step 2i+1: bubble i pops in with typing dots; step 2i+2: its question appears
+    const [step, setStep] = useState(0)
+    useEffect(() => {
+        if (!visible) return
+        if (reduced) { setStep(SHOPPER_QS.length * 2); return }
+        const id = setInterval(() => setStep((n) => (n >= SHOPPER_QS.length * 2 ? n : n + 1)), 420)
+        return () => clearInterval(id)
+    }, [visible, reduced])
+    return (
+        <div ref={ref}>
+            <style dangerouslySetInnerHTML={{ __html: SQ_STYLES }} />
+            <p style={{ ...SMALL, fontWeight: 500, color: C.ink, marginBottom: 18 }}>The questions shoppers bring to reviews</p>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gridTemplateColumns: cols, columnGap: 24, rowGap: 28 }}>
+                {SHOPPER_QS.map((b, i) => {
+                    const popped = step >= i * 2 + 1
+                    const typed = step >= i * 2 + 2
+                    return (
+                        <li key={b.title} style={{ display: "flex", flexDirection: "column" }}>
+                            <div className="sq-bubble" data-in={popped ? "" : undefined} style={{
+                                position: "relative", flex: 1,
+                                backgroundColor: BUBBLE_BG, borderRadius: "20px 20px 20px 4px",
+                                padding: phone ? "20px 20px 22px" : "26px 24px 28px",
+                                transformOrigin: "0% 100%",
+                                transform: popped ? `rotate(${b.tilt}deg)` : "translateY(12px) scale(0.6)",
+                                opacity: popped ? 1 : 0,
+                                transition: reduced ? "none" : `transform 0.45s ${EASE_SPRING}, opacity 0.25s ease, box-shadow 0.3s ease`,
+                            }}>
+                                {/* The question is always in the DOM for screen readers; dots cover it until it's "typed" */}
+                                <p style={{ fontFamily: I, fontSize: phone ? 19 : 21, fontWeight: 400, color: BUBBLE_INK, lineHeight: 1.3, letterSpacing: "-0.015em", margin: 0, textWrap: "balance", opacity: typed ? 1 : 0, transition: reduced ? "none" : "opacity 0.3s ease" }}>
+                                    &ldquo;{b.q}&rdquo;
+                                </p>
+                                {!typed && (
+                                    <span aria-hidden="true" className="sq-dots" style={{ position: "absolute", left: phone ? 20 : 24, top: phone ? 26 : 34, display: "flex", gap: 5 }}>
+                                        <span /><span /><span />
+                                    </span>
+                                )}
+                            </div>
+                            <p style={{ display: "flex", alignItems: "baseline", gap: 8, fontFamily: I, fontSize: 14, fontWeight: 600, color: C.ink, margin: 0, marginTop: 16, paddingLeft: 4 }}>
+                                <span style={{ fontSize: 11, fontWeight: 500, letterSpacing: "0.06em", color: ROSE }}>0{i + 1}</span>
+                                {b.title}
+                            </p>
+                        </li>
+                    )
+                })}
+            </ul>
+        </div>
+    )
+}
+
 // Hairline-separated list rows (no cards)
 function Rows({ items, numbered = false }: { items: string[]; numbered?: boolean }) {
     return (
@@ -511,21 +580,8 @@ export default function IOSCaseStudy() {
                                 intro="In e-commerce, product reviews directly shape whether a shopper buys or bounces. They answer the questions a product page can't, and they only work if users can actually read them." />
                         </FadeIn>
 
-                        {/* Group 1: what reviews do */}
-                        <FadeIn>
-                            <div style={{ display: "grid", gridTemplateColumns: threeCol, columnGap: 40 }}>
-                                {[
-                                    { title: "Validate quality", body: "Reviews confirm that a product lives up to its listing, or reveal when it doesn't." },
-                                    { title: "Learn from other shoppers", body: "Reviews help shoppers understand how a product performs in everyday use, including details and drawbacks that product descriptions may miss." },
-                                    { title: "Understand fit & sizing", body: "Feedback on fit, sizing, and measurements helps shoppers decide which size to choose, especially when shopping across different sizing systems." },
-                                ].map((b) => (
-                                    <div key={b.title} style={{ borderTop: `1px solid ${C.border}`, padding: "16px 0 24px" }}>
-                                        <p style={{ fontFamily: I, fontSize: 15, fontWeight: 600, color: C.ink, lineHeight: 1.4, margin: 0, marginBottom: 6 }}>{b.title}</p>
-                                        <p style={{ ...BODY, color: C.ink3 }}>{b.body}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </FadeIn>
+                        {/* Group 1: what reviews do, as the questions shoppers bring to them */}
+                        <ShopperQuestions phone={phone} cols={threeCol} />
 
                         {/* Group 2: the insight */}
                         <FadeIn>
