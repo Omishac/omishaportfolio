@@ -101,14 +101,15 @@ export function HoverLetters({ text }: { text: string }) {
 }
 
 // "[ tag ]" label used above section titles.
-export function BracketTag({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
+// `bracketColor` tints just the brackets (the homepage uses its rose accent).
+export function BracketTag({ children, style, bracketColor = COLORS.muted }: { children: React.ReactNode; style?: React.CSSProperties; bracketColor?: string }) {
     return (
         <div style={{ display: "flex", alignItems: "center", gap: 5, ...style }}>
-            <span style={{ fontFamily: FONT_SANS, fontSize: 12, color: COLORS.muted }}>[</span>
+            <span style={{ fontFamily: FONT_SANS, fontSize: 12, color: bracketColor }}>[</span>
             <span style={{ fontFamily: FONT_SANS, fontWeight: 300, fontSize: 12, color: COLORS.ink, letterSpacing: "-0.01em" }}>
                 {children}
             </span>
-            <span style={{ fontFamily: FONT_SANS, fontSize: 12, color: COLORS.muted }}>]</span>
+            <span style={{ fontFamily: FONT_SANS, fontSize: 12, color: bracketColor }}>]</span>
         </div>
     )
 }
