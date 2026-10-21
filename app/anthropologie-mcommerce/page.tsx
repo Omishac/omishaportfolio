@@ -267,6 +267,27 @@ function AnimStat({
 }
 
 // ── Trend card ─────────────────────────────────────────────────────────────────
+// Line icons for the Trends cards (same 24px stroke style as the findings icons)
+const TREND_ICONS: Record<string, React.ReactNode> = {
+    // Zero-party data: a target
+    target: (
+        <>
+            <circle cx="12" cy="12" r="8.5" />
+            <circle cx="12" cy="12" r="5" />
+            <circle cx="12" cy="12" r="1.5" />
+        </>
+    ),
+    // AR try-on: a 3D cube
+    ar: (
+        <>
+            <path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3Z" />
+            <path d="M4 7.5 12 12l8-4.5M12 12v9" />
+        </>
+    ),
+    // App-exclusive perks: a star
+    star: <path d="m12 3.5 2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8L12 3.5Z" />,
+}
+
 function TrendCard({
     title,
     what,
@@ -304,7 +325,17 @@ function TrendCard({
                       : "none",
             }}
         >
-            <div style={{ fontSize: "28px", marginBottom: "14px" }}>{icon}</div>
+            <span aria-hidden="true" style={{
+                width: 40, height: 40, borderRadius: 10, marginBottom: "14px",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                backgroundColor: open ? "rgba(255,255,255,0.08)" : "#fff",
+                border: `1px solid ${open ? "rgba(255,255,255,0.2)" : C.border}`,
+                transition: "background-color 0.35s ease, border-color 0.35s ease",
+            }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={open ? "#fff" : C.ink} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: "stroke 0.35s ease" }}>
+                    {TREND_ICONS[icon]}
+                </svg>
+            </span>
             <p
                 style={{
                     fontFamily: INTER,
@@ -1304,19 +1335,19 @@ export default function AnthropologieCaseStudy() {
                     >
                         <TrendCard
                             title="Zero-Party Data Personalization"
-                            icon="🎯"
+                            icon="target"
                             what="Information a customer intentionally and proactively shares with a brand"
                             why="Trustworthy, reliable basis for personalization. Sephora's Beauty Preferences feature is a leading example"
                         />
                         <TrendCard
                             title="Augmented Reality Try-Ons"
-                            icon="📱"
+                            icon="ar"
                             what="AR overlays digital content in the real world through smartphones, tablets, and AR glasses"
                             why="Allows customers to engage with products and reduces return rates. Nike's foot scanner is a benchmark"
                         />
                         <TrendCard
                             title="App-Exclusive Perks"
-                            icon="⭐"
+                            icon="star"
                             what="Special benefits and incentives available only to app customers"
                             why="Entices app downloads and drives customer loyalty. Nike Member Rewards is a strong model"
                         />
