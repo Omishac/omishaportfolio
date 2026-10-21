@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react"
 import SharedNav from "../../components/SharedNav"
+import { TypingBubble } from "../../components/TypingBubble"
 import { FONT_SANS, COLORS, EASE_SPRING, useReducedMotion, BracketTag } from "../../components/site"
 
 // Landing page tokens (components/site.tsx): Inter only, neutral palette.
@@ -422,12 +423,13 @@ export default function AnthropologieProductDiscovery() {
                         <FadeIn delay={60}>
                             {/* Numbered list on a two-column grid, separated by hairlines */}
                             <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "repeat(2, minmax(0, 1fr))", columnGap: 56 }}>
-                                {FINDINGS.map((f) => (
+                                {FINDINGS.map((f, i) => (
                                     <div key={f.num} style={{ borderTop: `1px solid ${C.border}`, padding: phone ? "24px 0 32px" : "28px 0 44px" }}>
                                         <Num>{f.num}</Num>
                                         <h3 style={{ fontFamily: INTER, fontSize: phone ? 18 : 20, fontWeight: 400, color: C.ink, letterSpacing: "-0.01em", lineHeight: 1.3, margin: 0, marginTop: 8, marginBottom: 10 }}>{f.title}</h3>
-                                        <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, marginBottom: 14 }}>{f.desc}</p>
-                                        <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.55, color: C.ink2, margin: 0, paddingLeft: 12, borderLeft: `1px solid ${C.ink3}` }}>&ldquo;{f.quote}&rdquo;</p>
+                                        <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, marginBottom: 18 }}>{f.desc}</p>
+                                        {/* The participant's own words, as a chat bubble (right-hand column types in a beat later) */}
+                                        <TypingBubble text={f.quote} size="md" fit tilt={[-1.4, 1.1, 0.9, -1][i]} delay={phone ? 0 : (i % 2) * 300} />
                                     </div>
                                 ))}
                             </div>
