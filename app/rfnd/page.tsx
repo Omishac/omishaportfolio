@@ -277,7 +277,7 @@ function MoodCarousel() {
         <div style={{ backgroundColor: C.surface, borderRadius: "14px", padding: "40px", marginTop: "8px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "24px", justifyContent: "center" }}>
                 <button onClick={prev} style={{ width: 40, height: 40, borderRadius: "50%", border: `1px solid ${C.border}`, backgroundColor: "white", cursor: "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center", minHeight: 44, minWidth: 44 }}>&larr;</button>
-                <div style={{ flex: 1, maxWidth: 400, height: 200, display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
+                <div style={{ flex: 1, maxWidth: 400, height: 200, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
                     {moods.map((mood, i) => {
                         const offset = i - currentIndex
                         const isActive = i === currentIndex
@@ -302,6 +302,137 @@ function MoodCarousel() {
                 Envisioned interaction: mood-first entry point for the discovery experience
             </p>
         </div>
+    )
+}
+
+const ROSE = "#A4425C"
+
+const EYEBROW: React.CSSProperties = { fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.ink3, margin: "0 0 12px" }
+
+type ComparePane = { eyebrow: string; title: string; items: string[]; note?: string; chosen?: boolean }
+
+function ComparePanel({ label, panes, footer, phone }: { label?: string; panes: [ComparePane, ComparePane]; footer?: string; phone: boolean }) {
+    return (
+        <div style={{ margin: "40px 0" }}>
+            {label && <p style={{ ...EYEBROW, color: C.muted, marginBottom: 16 }}>{label}</p>}
+            <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: phone ? 12 : 16 }}>
+                {panes.map((p) => (
+                    <div key={p.title} style={{
+                        backgroundColor: p.chosen ? C.bg : C.surface,
+                        border: p.chosen ? `1.5px solid ${C.ink}` : `1.5px solid transparent`,
+                        borderRadius: 14, padding: phone ? "24px 22px" : "28px 30px", position: "relative",
+                    }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+                            <p style={EYEBROW}>{p.eyebrow}</p>
+                            {p.chosen && (
+                                <span style={{ fontFamily: INTER, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: "#fff", backgroundColor: ROSE, borderRadius: 20, padding: "3px 10px", flexShrink: 0 }}>Chosen</span>
+                            )}
+                        </div>
+                        <p style={{ fontFamily: INTER, fontSize: 19, fontWeight: 400, color: C.ink, lineHeight: 1.35, margin: "0 0 16px" }}>{p.title}</p>
+                        <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+                            {p.items.map((it) => (
+                                <li key={it} style={{ display: "flex", gap: 10, fontFamily: INTER, fontSize: 14, lineHeight: 1.55, color: C.ink2 }}>
+                                    <span aria-hidden="true" style={{ color: C.muted, flexShrink: 0 }}>&ndash;</span>{it}
+                                </li>
+                            ))}
+                        </ul>
+                        {p.note && (
+                            <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 400, fontSize: 15, color: C.ink2, margin: "18px 0 0", paddingTop: 14, borderTop: `1px solid ${C.border}`, lineHeight: 1.5 }}>{p.note}</p>
+                        )}
+                    </div>
+                ))}
+            </div>
+            {footer && (
+                <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: "18px 0 0", maxWidth: 600 }}>{footer}</p>
+            )}
+        </div>
+    )
+}
+
+function FlowArrow({ vertical, label }: { vertical: boolean; label?: string }) {
+    return (
+        <div aria-hidden="true" style={{
+            display: "flex", flexDirection: vertical ? "row" : "column", alignItems: "center", justifyContent: "center",
+            gap: 6, padding: vertical ? "4px 0 4px 22px" : "0 4px", flexShrink: 0,
+        }}>
+            <svg width={vertical ? 12 : 28} height={vertical ? 22 : 12} viewBox={vertical ? "0 0 12 22" : "0 0 28 12"} fill="none">
+                {vertical
+                    ? <path d="M6 1v18M1.5 14.5L6 20l4.5-5.5" stroke={C.ink3} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                    : <path d="M1 6h24M19.5 1.5L26 6l-6.5 4.5" stroke={C.ink3} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />}
+            </svg>
+            {label && <span style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, color: C.ink3, letterSpacing: "0.04em" }}>{label}</span>}
+        </div>
+    )
+}
+
+function FlowStep({ n, title, sub, tone = "plain" }: { n?: string; title: string; sub?: string; tone?: "plain" | "pass" | "fail" }) {
+    const bg = tone === "pass" ? C.ink : C.surface
+    return (
+        <li style={{
+            listStyle: "none", flex: 1, minWidth: 0, backgroundColor: bg, borderRadius: 12,
+            border: tone === "fail" ? "1.5px dashed rgba(200,60,60,0.45)" : "1.5px solid transparent",
+            padding: "18px 18px", display: "flex", flexDirection: "column", justifyContent: "center",
+        }}>
+            {n && <p style={{ ...EYEBROW, margin: "0 0 6px", color: tone === "pass" ? "rgba(255,255,255,0.72)" : C.ink3 }}>{n}</p>}
+            <p style={{ fontFamily: INTER, fontSize: 15, fontWeight: 500, lineHeight: 1.4, margin: 0, color: tone === "pass" ? "#fff" : C.ink }}>{title}</p>
+            {sub && <p style={{ fontFamily: INTER, fontSize: 13, lineHeight: 1.5, margin: "6px 0 0", color: tone === "pass" ? "rgba(255,255,255,0.78)" : tone === "fail" ? "#A33030" : C.ink3 }}>{sub}</p>}
+        </li>
+    )
+}
+
+function FeatureFilterFlow({ phone }: { phone: boolean }) {
+    const vertical = phone
+    return (
+        <figure style={{ margin: "0 0 56px" }}>
+            <ol aria-label="Feature filter: each proposed feature passed through two questions before it was kept" style={{
+                display: "flex", flexDirection: vertical ? "column" : "row", alignItems: "stretch", padding: 0, margin: 0,
+            }}>
+                <FlowStep n="Input" title="Proposed feature" sub="6 candidates" />
+                <FlowArrow vertical={vertical} />
+                <FlowStep n="Filter 1" title="Solves a friction documented in research?" />
+                <FlowArrow vertical={vertical} />
+                <FlowStep n="Filter 2" title="Creates lasting value, not just novelty?" />
+                <FlowArrow vertical={vertical} />
+                <li style={{ listStyle: "none", flex: 1, minWidth: 0 }}>
+                    <ul style={{ padding: 0, margin: 0, display: "flex", flexDirection: vertical ? "row" : "column", gap: 8, height: "100%" }}>
+                        <FlowStep tone="pass" n="Passed both" title="5 validated" />
+                        <FlowStep tone="fail" n="Novelty only" title="1 eliminated" sub="Gamified discovery mechanic" />
+                    </ul>
+                </li>
+            </ol>
+        </figure>
+    )
+}
+
+type Note = { x: number; y: number; label: string }
+
+function AnnotatedShot({ src, alt, title, notes, phone }: { src: string; alt: string; title: string; notes: Note[]; phone: boolean }) {
+    const size = phone ? 18 : 20
+    return (
+        <figure style={{ flex: 1, minWidth: 0, margin: 0, display: "flex", flexDirection: "column", gap: 16 }}>
+            <div style={{ position: "relative" }}>
+                <img src={src} alt={alt} style={{ width: "100%", height: "auto", display: "block", boxShadow: "0 4px 52px rgba(0,0,0,0.10)" }} />
+                {notes.map((n, i) => (
+                    <span key={i} aria-hidden="true" style={{
+                        position: "absolute", left: `${n.x}%`, top: `${n.y}%`, transform: "translate(-50%, -50%)",
+                        width: size, height: size, borderRadius: "50%", backgroundColor: ROSE, color: "#fff",
+                        fontFamily: INTER, fontSize: phone ? 10 : 11, fontWeight: 600, lineHeight: `${size}px`, textAlign: "center",
+                        boxShadow: "0 0 0 2px #fff, 0 2px 8px rgba(0,0,0,0.18)",
+                    }}>{i + 1}</span>
+                ))}
+            </div>
+            <figcaption>
+                <p style={{ fontFamily: INTER, fontWeight: 700, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: C.ink, margin: "0 0 10px" }}>{title}</p>
+                <ol style={{ padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+                    {notes.map((n, i) => (
+                        <li key={i} style={{ listStyle: "none", display: "flex", gap: 10, alignItems: "flex-start" }}>
+                            <span aria-hidden="true" style={{ width: 18, height: 18, borderRadius: "50%", border: `1px solid ${ROSE}`, color: ROSE, fontFamily: INTER, fontSize: 10, fontWeight: 600, lineHeight: "16px", textAlign: "center", flexShrink: 0, marginTop: 1 }}>{i + 1}</span>
+                            <span style={{ fontFamily: INTER, fontSize: 13, color: C.ink3, lineHeight: 1.5 }}><span style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" }}>{`Callout ${i + 1}: `}</span>{n.label}</span>
+                        </li>
+                    ))}
+                </ol>
+            </figcaption>
+        </figure>
     )
 }
 
@@ -414,29 +545,28 @@ export default function RFNDCaseStudy() {
                             <h2 style={{ fontFamily: INTER, fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 200, letterSpacing: "-0.02em", color: C.ink, lineHeight: 1.12, maxWidth: 680, marginBottom: 20 }}>
                                 The industry was optimizing for speed and sacrificing connection
                             </h2>
-                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
-                                Fashion e-commerce generates $700B+ annually. It returns $100–300B of that inventory every year. Not a logistics problem. An emotional one.
-                            </p>
                         </FadeIn>
 
                         <FadeIn delay={60}>
-                            <BulletList items={[
-                                "The industry optimized for transaction speed and sacrificed emotional connection in the process",
-                                "Faster checkout did not reduce buyer's remorse",
-                                "Smarter algorithms did not reduce return rates",
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: phone ? 12 : 16, maxWidth: 680, margin: "8px 0 0" }}>
+                                {([
+                                    ["$700B+", "Fashion e-commerce revenue, every year"],
+                                    ["$100–300B", "Of that inventory, returned every year"],
+                                ] as const).map(([v, l]) => (
+                                    <div key={v} style={{ borderTop: `1px solid ${C.ink}`, paddingTop: 14 }}>
+                                        <p style={{ fontFamily: INTER, fontSize: phone ? 30 : 44, fontWeight: 200, letterSpacing: "-0.03em", color: C.ink, lineHeight: 1, margin: "0 0 10px" }}>{v}</p>
+                                        <p style={{ fontFamily: INTER, fontSize: 13, color: C.ink3, lineHeight: 1.5, margin: 0 }}>{l}</p>
+                                    </div>
+                                ))}
+                            </div>
+                            <BoldLine>Not a logistics problem. An emotional one.</BoldLine>
+
+                            <ComparePanel phone={phone} label="The reframe" panes={[
+                                { eyebrow: "How the industry framed it", title: "Shopping as an efficiency problem", items: ["Faster checkout did not reduce buyer’s remorse", "Smarter algorithms did not reduce return rates"] },
+                                { eyebrow: "How I framed it", title: "Shopping as a psychology problem", items: ["What if a commerce product understood how someone felt when they showed up?", "Could it meet the psychology of desire with the nuance of a great in-store experience?"] },
                             ]} />
 
-                            <BoldLine>I started this project with one question: what would it look like if a commerce product understood how someone felt when they showed up?</BoldLine>
-
-                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
-                                Most UX briefs frame shopping as an efficiency problem. I reframed it as a psychology problem.
-                            </p>
-
                             <PullQuote text="How do emotional responses elicited by e-commerce design influence purchasing decisions, impulse behavior, and long-term brand loyalty?" />
-
-                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 0 }}>
-                                This wasn't about designing better filters. It was about investigating the psychology of desire, and whether a digital product could meet that psychology with the same nuance a great in-store experience does.
-                            </p>
                         </FadeIn>
                     </section>
 
@@ -448,14 +578,24 @@ export default function RFNDCaseStudy() {
                                 Understanding the person before designing the product
                             </h2>
                             <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
-                                I spent the first two months not designing. I needed to understand the emotional arc of a shopping session before proposing any solution.
+                                I spent the first two months not designing, mapping the emotional arc of a shopping session instead.
                             </p>
-                            <BulletList items={[
-                                "Interviews with frequent online shoppers about browsing and buying behavior",
-                                "Diary studies capturing real-time emotional states during shopping sessions",
-                                "Behavioral economics research on consumer decision-making and cognitive load",
-                                "Analysis of physical retail experiences and what made them emotionally resonant",
-                            ]} />
+                            <ul aria-label="Research methods" style={{ listStyle: "none", padding: 0, margin: "28px 0 0", display: "grid", gridTemplateColumns: phone ? "1fr" : "1fr 1fr", gap: phone ? 10 : 12 }}>
+                                {([
+                                    ["Interviews", "Frequent online shoppers on browsing and buying"],
+                                    ["Diary studies", "Real-time emotional states during sessions"],
+                                    ["Behavioral economics", "Decision-making and cognitive load"],
+                                    ["Physical retail analysis", "What made in-store experiences resonate"],
+                                ] as const).map(([t, d], i) => (
+                                    <li key={t} style={{ display: "flex", gap: 14, alignItems: "baseline", backgroundColor: C.surface, borderRadius: 12, padding: "16px 18px" }}>
+                                        <span aria-hidden="true" style={{ fontFamily: INTER, fontSize: 12, fontWeight: 500, color: C.ink3, flexShrink: 0 }}>0{i + 1}</span>
+                                        <span>
+                                            <span style={{ display: "block", fontFamily: INTER, fontSize: 15, fontWeight: 500, color: C.ink, lineHeight: 1.4 }}>{t}</span>
+                                            <span style={{ display: "block", fontFamily: INTER, fontSize: 13, color: C.ink3, lineHeight: 1.5, marginTop: 2 }}>{d}</span>
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
                         </FadeIn>
 
                         <FadeIn delay={80}>
@@ -465,21 +605,20 @@ export default function RFNDCaseStudy() {
                                     boxShadow: "0 4px 52px rgba(0,0,0,0.10)",
                                 }} />
                                 <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 400, fontSize: 13, color: C.ink3, textAlign: "center", margin: "16px 0 0", lineHeight: 1.6 }}>
-                                    Synthesized persona: the emotionally-driven, discovery-oriented modern shopper this concept was designed for
+                                    Synthesized persona: the emotionally-driven, discovery-oriented shopper this concept was designed for
                                 </p>
                             </div>
                         </FadeIn>
 
                         <FadeIn>
                             <BoldLine>She wasn't failing because the product was hard to use. She was failing because the product didn't know who she was that day.</BoldLine>
-                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
-                                The person this concept was designed for showed up differently on a Sunday afternoon than she did on a Tuesday lunch break. Every existing app treated her exactly the same both times.
+                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 0 }}>
+                                She showed up differently on a Sunday afternoon than on a Tuesday lunch break. Every existing app treated her the same both times.
                             </p>
-                            <Callout
-                                type="insight"
-                                title="People don't shop in one mode. They oscillate between two distinct emotional states"
-                                body="Intent mode: goal-driven, efficiency-focused, knows what they want. Discovery mode: exploratory, emotionally open, looking for inspiration or surprise. Most platforms serve neither mode well because they assume both are the same person with the same need."
-                            />
+                            <ComparePanel phone={phone} label="Key insight: one shopper, two emotional states" panes={[
+                                { eyebrow: "Intent mode", title: "Knows what she wants", items: ["Goal-driven", "Efficiency-focused"] },
+                                { eyebrow: "Discovery mode", title: "Looking for inspiration or surprise", items: ["Exploratory", "Emotionally open"] },
+                            ]} footer="Most platforms serve neither mode well because they assume both are the same person with the same need." />
                         </FadeIn>
                     </section>
 
@@ -533,18 +672,16 @@ export default function RFNDCaseStudy() {
                                 The one decision that shaped everything else
                             </h2>
                             <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
-                                The core product decision in this concept was one I almost didn't make.
+                                The core product decision in this concept was one I almost didn&apos;t make.
                             </p>
-                            <BulletList items={[
-                                "Option A: Smarter algorithm that infers emotional intent from past behavioral data",
-                                "Option B: Explicit mood input that lets the user define their context before browsing",
-                                "I chose Option B",
+                            <ComparePanel phone={phone} panes={[
+                                { eyebrow: "Option A", title: "A smarter algorithm infers emotional intent from past behavior", items: ["Built on behavioral data", "Reflects who they were last Tuesday"], note: "“We noticed you like this” — surveillance" },
+                                { eyebrow: "Option B", title: "The shopper sets her context before browsing", items: ["Occasion, mood, aesthetic intent", "Adapts to who they are today"], note: "“You told us how you feel tonight” — conversation", chosen: true },
                             ]} />
-                            <BoldLine>The difference between "we noticed you like this" and "you told us how you feel tonight" is the difference between surveillance and conversation.</BoldLine>
                             <Callout
                                 type="decision"
                                 title="Voluntary signal over behavioral inference"
-                                body="The envisioned system asks users to set their emotional context (occasion, mood, aesthetic intent) before browsing, rather than inferring it. Personalization feels like a conversation. It also adapts to who they are today, not last Tuesday. People trust systems they feel in control of."
+                                body="People trust systems they feel in control of."
                             />
                             <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, margin: "52px 0 16px" }}>
                                 Concept Demo: Proposed Dual-Mode Experience
@@ -565,7 +702,7 @@ export default function RFNDCaseStudy() {
                                 Validating every feature against real behavior
                             </h2>
                             <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 48 }}>
-                                Every proposed feature was evaluated against two questions: does this solve a real behavioral friction I documented in research? And does this create lasting value, or just novelty?
+                                Novelty drives short-term engagement; genuine value drives return behavior. So every proposed feature had to pass two filters.
                             </p>
                         </FadeIn>
 
@@ -582,10 +719,7 @@ export default function RFNDCaseStudy() {
                         </FadeIn>
 
                         <FadeIn delay={60}>
-                            <BoldLine>Novelty drives short-term engagement. Genuine value drives return behavior.</BoldLine>
-                            <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 32 }}>
-                                For a concept competing on emotional loyalty, every feature needed to pass both filters.
-                            </p>
+                            <FeatureFilterFlow phone={phone} />
 
                             <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                                 {[
@@ -620,22 +754,21 @@ export default function RFNDCaseStudy() {
                         </FadeIn>
 
                         <FadeIn delay={80}>
-                            <div style={{ marginTop: 64 }}>
-                                <BoldLine>The interface should adapt to the user's emotional intent, not force the user to adapt to the interface.</BoldLine>
-                            </div>
-                            <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: 20, margin: "44px 0" }}>
-                                {[
-                                    { src: "/images/rfnd-discover.webp", label: "Discover Screen", desc: "Proposed mood-aware discovery: editorial curation adapting to emotional intent and occasion" },
-                                    { src: "/images/rfnd-profile.webp", label: "Profile Screen", desc: "Proposed style hub: digital closet, style history, and preference memory across sessions" },
-                                ].map(({ src, label, desc }) => (
-                                    <div key={label} style={{ flex: 1, display: "flex", flexDirection: "column", gap: 16 }}>
-                                        <img src={src} alt={label} style={{ width: "100%", height: "auto", display: "block", boxShadow: "0 4px 52px rgba(0,0,0,0.10)", maxWidth: "100%" }} />
-                                        <div>
-                                            <p style={{ fontFamily: INTER, fontWeight: 700, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: C.ink, margin: "0 0 5px" }}>{label}</p>
-                                            <p style={{ fontFamily: Z, fontStyle: "italic", fontWeight: 400, fontSize: 13, color: C.ink3, margin: 0, lineHeight: 1.55 }}>{desc}</p>
-                                        </div>
-                                    </div>
-                                ))}
+                            <div style={{ display: "flex", flexDirection: phone ? "column" : "row", gap: phone ? 40 : 24, margin: "64px 0 44px" }}>
+                                <AnnotatedShot phone={phone} src="/images/rfnd-discover.webp" title="Discover screen"
+                                    alt="Proposed RFND Discover screen: 'Discover Your Style' with chips to select type, values and mood"
+                                    notes={[
+                                        { x: 12.2, y: 43.9, label: "Type: what she is shopping for" },
+                                        { x: 36.6, y: 43.9, label: "Values, e.g. sustainable, timeless" },
+                                        { x: 61, y: 43.9, label: "Mood: the explicit, voluntary signal (Option B)" },
+                                    ]} />
+                                <AnnotatedShot phone={phone} src="/images/rfnd-profile.webp" title="Profile screen"
+                                    alt="Proposed RFND Profile screen for Maya: sizes, values, saved items and a Digital Closet tab"
+                                    notes={[
+                                        { x: 37.2, y: 40.2, label: "Style profile memory: sizes and values carried across sessions" },
+                                        { x: 83.4, y: 24.4, label: "Saved items, gathered in one place" },
+                                        { x: 27.6, y: 58.8, label: "Digital closet: style continuity over time" },
+                                    ]} />
                             </div>
                         </FadeIn>
                     </section>
@@ -648,15 +781,13 @@ export default function RFNDCaseStudy() {
                                 What this project taught me
                             </h2>
                             <p style={{ fontFamily: INTER, fontSize: 16, lineHeight: 1.7, color: C.ink3, maxWidth: 600, marginBottom: 24 }}>
-                                RFND clarified how I think about design at a strategic level, as a discipline that sits at the intersection of business, psychology, and behavior. This project concluded with a full concept presentation: a speculative capstone exploring what emotionally-aware commerce could look like if built from first principles.
+                                RFND ended as a full concept presentation, and clarified how I see design: a discipline at the intersection of business, psychology, and behavior.
                             </p>
                             <BulletList items={[
-                                "Knowing what to build is half the work. Knowing what not to build is the other half",
-                                "Several early concepts didn't survive contact with the research. That's not failure. That's process working correctly",
-                                "The transition between modes is where this concept would be stress-tested most with a real team",
-                                "Behavioral testing at scale, over time, would be the immediate next step if this were to move beyond a conceptual exploration",
+                                "Knowing what not to build is half the work. Early concepts that didn't survive the research were the process working",
+                                "The transition between modes is where a real team would stress-test this concept most",
+                                "Next step beyond concept: behavioral testing at scale, over time",
                             ]} />
-                            <BoldLine>Every feature decision was downstream of a strategic question. Every visual choice was in service of an emotional outcome.</BoldLine>
                         </FadeIn>
 
                         <FadeIn delay={60}>
