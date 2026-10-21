@@ -226,7 +226,7 @@ function StrategyLabel({ children }: { children: React.ReactNode }) {
 }
 
 function StrategyBlock({ s, phone }: { s: typeof STRATEGIES[number]; phone: boolean }) {
-    const group = { marginTop: 28 } // same gap between Problem, What I Changed and Why
+    const group = { marginTop: 28 } // same gap between Problem, What Changed and Why
     const body: React.CSSProperties = { fontFamily: INTER, fontSize: 15, fontWeight: 400, color: C.ink2, lineHeight: 1.65, margin: 0 }
     return (
         <div style={{
@@ -246,7 +246,7 @@ function StrategyBlock({ s, phone }: { s: typeof STRATEGIES[number]; phone: bool
                 </div>
 
                 <div style={group}>
-                    <StrategyLabel>What I Changed</StrategyLabel>
+                    <StrategyLabel>What Changed</StrategyLabel>
                     <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                         {s.changes.map((c, ci) => (
                             <li key={ci} style={{ ...body, padding: "7px 0", borderTop: `1px solid ${C.border}` }}>{c}</li>
@@ -385,7 +385,7 @@ export default function AnthropologieProductDiscovery() {
                     <section id="challenge" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
                             <SectionHead phone={phone} tag="Challenge" title="The existing filtering experience"
-                                intro="Product filters play a critical role in helping shoppers navigate large product catalogs. As assortments expanded across URBN brands, the team set out to understand how the filtering experience supported product discovery across Mobile Web and Desktop." />
+                                intro="Product filters play a critical role in helping shoppers navigate large product catalogs. As assortments expanded across URBN brands, the business wanted to better understand how the filtering experience supported product discovery across Mobile Web and Desktop." />
                             <p style={{ fontFamily: INTER, fontSize: phone ? 18 : 20, fontWeight: 400, color: C.ink, lineHeight: 1.45, maxWidth: phone ? 520 : "none", whiteSpace: phone ? "normal" : "nowrap", letterSpacing: "-0.01em", margin: 0, marginTop: phone ? -16 : -24, marginBottom: phone ? 40 : 56 }}>
                                 Users moved between multiple screens to apply and review filters.
                             </p>
@@ -416,8 +416,8 @@ export default function AnthropologieProductDiscovery() {
                     {/* ════════ RESEARCH FINDINGS ════════ */}
                     <section id="research" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
-                            <SectionHead phone={phone} tag="Research Findings" title="Four patterns that shaped the design"
-                                intro="The UX Research team ran and analyzed usability testing sessions to understand where users experienced friction throughout the filtering journey. I took the four recurring patterns they found and applied them to the design." />
+                            <SectionHead phone={phone} tag="Research Findings" title="Four patterns that shaped my design direction"
+                                intro="The UX Research team analyzed usability testing sessions to understand where users experienced friction throughout the filtering journey. The four recurring patterns they found shaped my design direction." />
                         </FadeIn>
 
                         <FadeIn delay={60}>
