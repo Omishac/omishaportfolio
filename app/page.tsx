@@ -467,7 +467,7 @@ const TABS: TabSpec[] = [
     { label: "Redesign",         cx: 117,    cy: 420.77, color: FLYER_TAB_INK, href: "/anthropologie-product-discovery", left: 0, right: 1, bottom: "mobile", tilt: 0.8, spin: 7, drift: 30, flutter: 1.8 },
     { label: "Digital Strategy", cx: 189.21, cy: 421.64, color: FLYER_TAB_INK, href: "/anthropologie-mcommerce", left: 1, right: 2, tilt: -0.6, spin: -12, drift: -55, flutter: 1.35 },
     { label: "Mobile Design",    cx: 337.17, cy: 431.99, color: FLYER_TAB_INK, href: "/ios-review-accessibility", left: 3, right: 4, tilt: 1.2, spin: 10, drift: 45, flutter: 1.7 },
-    { label: "Say hello",        cx: 476.19, cy: 434.67, color: FLYER_TAB_INK, href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true, left: 5, right: null, bottom: "sayHello", tilt: -0.9, spin: -6, drift: -30, flutter: 1.55 },
+    { label: "Say hello",        cx: 476.19, cy: 434.67, color: FLYER_TAB_INK, href: "mailto:omishachabria3@gmail.com", left: 5, right: null, bottom: "sayHello", tilt: -0.9, spin: -6, drift: -30, flutter: 1.55 },
 ]
 
 // Clip polygons (stage coords) for one tab: the part above the curl hinge,
