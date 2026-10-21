@@ -747,7 +747,7 @@ function RecRow({ num, title, body, detail, img, clip, open, onClick, phone }: a
                         fontWeight: 200,
                         fontSize: phone ? "28px" : "44px",
                         lineHeight: "1",
-                        color: open ? C.ink : "rgba(0,0,0,0.07)",
+                        color: open ? C.ink : C.muted,
                         minWidth: phone ? "40px" : "64px",
                         userSelect: "none" as const,
                         transition: "color 0.25s",
