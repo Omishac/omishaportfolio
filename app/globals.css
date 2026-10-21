@@ -61,3 +61,15 @@ a {
     transition: transform 160ms var(--ease-out) !important;
   }
 }
+
+/* Decorative looping videos (autoplay + loop, no controls): never show Safari's
+   native play overlay, which appears when autoplay is refused (e.g. iOS Low
+   Power Mode). The poster/first frame shows as a still instead. */
+video[autoplay][loop]:not([controls])::-webkit-media-controls,
+video[autoplay][loop]:not([controls])::-webkit-media-controls-panel,
+video[autoplay][loop]:not([controls])::-webkit-media-controls-overlay-play-button,
+video[autoplay][loop]:not([controls])::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
+  opacity: 0;
+}

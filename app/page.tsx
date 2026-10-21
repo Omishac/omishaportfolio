@@ -7,6 +7,8 @@ import { NavStyles, NavLink, MenuLink, NAV_LINK_GAP } from "../components/NavLin
 import { FONT_SANS, COLORS, EASE_SPRING, EASE_OUT, HOVER_COLORS, useReducedMotion, useFinePointer, HoverLetters, BracketTag } from "../components/site"
 
 const CURSOR_STYLES = `
+/* Cover videos are decorative: clicks go to the card link (Safari overlay hidden in globals.css) */
+.cover-video { pointer-events: none; }
   @keyframes hi-float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-6px); }
@@ -1057,8 +1059,14 @@ function CoverCard({
     useEffect(() => {
         if (!video || !videoContainerRef.current) return
         const v = document.createElement("video")
-        // WebM first (smaller, every modern browser), MP4 as the Safari/H.264 fallback
-        for (const [ext, type] of [["webm", "video/webm"], ["mp4", "video/mp4"]]) {
+        // WebM first (smaller) everywhere but Safari, which gets the H.264 MP4
+        // first: its WebM support is patchy and a stalled source shows the
+        // native play button over the cover.
+        const safari = /^((?!chrome|chromium|crios|fxios|android).)*safari/i.test(navigator.userAgent)
+        const sources: [string, string][] = safari
+            ? [["mp4", "video/mp4"], ["webm", "video/webm"]]
+            : [["webm", "video/webm"], ["mp4", "video/mp4"]]
+        for (const [ext, type] of sources) {
             const s = document.createElement("source")
             s.src = video.replace(/\.mp4$/, `.${ext}`)
             s.type = type
@@ -1071,10 +1079,28 @@ function CoverCard({
         v.setAttribute("playsinline", "")
         v.setAttribute("preload", "auto")
         v.muted = true
+        v.className = "cover-video"
         v.style.cssText = "width:100%;height:100%;object-fit:cover;display:block;"
         videoContainerRef.current.appendChild(v)
-        v.play().catch(() => {})
-        return () => { v.pause(); v.remove() }
+        // Autoplay can be refused (iOS Low Power Mode, Safari autoplay rules):
+        // the poster then stays as a still cover (the native play button is
+        // hidden via .cover-video CSS), and we retry once it's ready, when it
+        // scrolls into view, and on the visitor's first touch or click.
+        const tryPlay = () => { if (v.paused) v.play().catch(() => {}) }
+        tryPlay()
+        v.addEventListener("canplay", tryPlay)
+        const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) tryPlay() })
+        io.observe(v)
+        const onGesture = () => tryPlay()
+        window.addEventListener("touchstart", onGesture, { passive: true })
+        window.addEventListener("pointerdown", onGesture)
+        return () => {
+            io.disconnect()
+            v.removeEventListener("canplay", tryPlay)
+            window.removeEventListener("touchstart", onGesture)
+            window.removeEventListener("pointerdown", onGesture)
+            v.pause(); v.remove()
+        }
     }, [video, image])
 
     // Every cover sits in the same 4:3 frame (the existing covers are ~4:3
