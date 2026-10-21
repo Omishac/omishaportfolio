@@ -355,7 +355,7 @@ export default function AnthropologieProductDiscovery() {
                                 {[
                                     { k: "Problem", v: "Shoppers struggled to track filter selections and understand pickup availability." },
                                     { k: "What I Did", v: "Redesigned selection feedback, navigation, and pickup controls to reduce uncertainty." },
-                                    { k: "Impact", v: "100% task completion in usability retesting. Launched across three brands." },
+                                    { k: "Impact", v: "100% task completion in UX Research's usability retest. Launched across three brands." },
                                 ].map(({ k, v }) => (
                                     <div key={k}>
                                         <p style={{ fontFamily: INTER, fontSize: 14, fontWeight: 600, color: C.ink, lineHeight: 1.4, margin: 0, marginBottom: 8 }}>{k}</p>
@@ -385,7 +385,7 @@ export default function AnthropologieProductDiscovery() {
                     <section id="challenge" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
                             <SectionHead phone={phone} tag="Challenge" title="The existing filtering experience"
-                                intro="Product filters play a critical role in helping shoppers navigate large product catalogs. As assortments expanded across URBN brands, we wanted to better understand how the filtering experience supported product discovery across Mobile Web and Desktop." />
+                                intro="Product filters play a critical role in helping shoppers navigate large product catalogs. As assortments expanded across URBN brands, the team set out to understand how the filtering experience supported product discovery across Mobile Web and Desktop." />
                             <p style={{ fontFamily: INTER, fontSize: phone ? 18 : 20, fontWeight: 400, color: C.ink, lineHeight: 1.45, maxWidth: phone ? 520 : "none", whiteSpace: phone ? "normal" : "nowrap", letterSpacing: "-0.01em", margin: 0, marginTop: phone ? -16 : -24, marginBottom: phone ? 40 : 56 }}>
                                 Users moved between multiple screens to apply and review filters.
                             </p>
@@ -416,8 +416,8 @@ export default function AnthropologieProductDiscovery() {
                     {/* ════════ RESEARCH FINDINGS ════════ */}
                     <section id="research" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
-                            <SectionHead phone={phone} tag="Research Findings" title="Four patterns that shaped our direction"
-                                intro="Partnering with the UX Research team, we analyzed usability testing sessions to understand where users experienced friction throughout the filtering journey. Across participants, four recurring patterns emerged." />
+                            <SectionHead phone={phone} tag="Research Findings" title="Four patterns that shaped the design"
+                                intro="The UX Research team ran and analyzed usability testing sessions to understand where users experienced friction throughout the filtering journey. I took the four recurring patterns they found and applied them to the design." />
                         </FadeIn>
 
                         <FadeIn delay={60}>
@@ -451,8 +451,8 @@ export default function AnthropologieProductDiscovery() {
                     {/* ════════ STRATEGY ════════ */}
                     <section id="strategy" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
-                            <SectionHead phone={phone} tag="Strategy" title="Four concepts tested and refined"
-                                intro="Based on the research findings, the redesign focused on reducing uncertainty throughout the filtering experience by making interactions clearer, more predictable, and easier to navigate." />
+                            <SectionHead phone={phone} tag="Strategy" title="Four concepts I designed and refined"
+                                intro="Based on the research findings, I focused the redesign on reducing uncertainty throughout the filtering experience by making interactions clearer, more predictable, and easier to navigate." />
                         </FadeIn>
 
                         <div style={{ display: "flex", flexDirection: "column", gap: phone ? 104 : 168 }}>
@@ -468,7 +468,7 @@ export default function AnthropologieProductDiscovery() {
                     <section id="prototyping" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
                             <SectionHead phone={phone} title="Bringing the solutions together"
-                                intro="The four design improvements were combined into one interactive prototype and tested as a complete filtering experience before development." />
+                                intro="I combined the four design improvements into one interactive prototype, which the UX Research team tested as a complete filtering experience before development." />
                         </FadeIn>
 
                         <FadeIn delay={40}>
@@ -532,7 +532,7 @@ export default function AnthropologieProductDiscovery() {
                                         Designing the Core Pattern
                                     </h3>
                                     <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, maxWidth: 440 }}>
-                                        The component was first designed as a white-label pattern before being adapted across individual brand experiences.
+                                        I first designed the component as a white-label pattern, then adapted it to each brand's experience.
                                     </p>
                                 </div>
                                 <div style={{ ...MAT, padding: phone ? 16 : 24 }}>
@@ -549,7 +549,7 @@ export default function AnthropologieProductDiscovery() {
                                     Adapting Across Brands
                                 </h3>
                                 <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, maxWidth: MEASURE, marginBottom: 32 }}>
-                                    While the interaction remained consistent, visual treatments were adapted to align with each brand's established design language.
+                                    The interaction stayed consistent, and I adapted the visual treatment to each brand's established design language.
                                 </p>
                                 <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "repeat(3, minmax(0, 1fr))", columnGap: 24, rowGap: 28 }}>
                                     {[
@@ -576,7 +576,7 @@ export default function AnthropologieProductDiscovery() {
                                     Supporting Different States
                                 </h3>
                                 <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, maxWidth: MEASURE, marginBottom: 40 }}>
-                                    The component was designed to adapt to multiple pickup and availability scenarios while maintaining a consistent interaction model.
+                                    I designed the component to handle multiple pickup and availability scenarios with one consistent interaction model.
                                 </p>
                                 <div style={{ display: "flex", flexDirection: "column", gap: phone ? 48 : 64 }}>
                                     {[
@@ -611,7 +611,7 @@ export default function AnthropologieProductDiscovery() {
                                     Implementation Ready
                                 </h3>
                                 <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, maxWidth: MEASURE, marginBottom: 24 }}>
-                                    Full specifications were documented and handed off to engineering for production implementation.
+                                    I documented the full specifications and handed them off to engineering for production.
                                 </p>
                                 <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "repeat(2, minmax(0, 1fr))", columnGap: 56, maxWidth: 720 }}>
                                     {["States documented", "Interaction logic defined", "Copy variations documented", "Engineering handoff completed"].map((item) => (

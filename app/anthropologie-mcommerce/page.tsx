@@ -976,7 +976,7 @@ export default function AnthropologieCaseStudy() {
             num: "01",
             title: "Reduce Friction in Micro-Interactions",
             body: "Introduce swipe-to-delete in cart to align with native mobile behavior.",
-            detail: "Drawing from our homepage redesign A/B test, which showed a positive lift in engagement when category content was less cluttered and products were surfaced faster, I recommended applying the same principle to micro-interactions in the cart. Past test data showed that reducing visual noise and simplifying user actions directly improved conversion, and the same logic applies here. By introducing swipe-to-delete in the cart, we align with a native iOS gesture users already know, reducing friction at a critical drop-off point. Bringing analytical data from previous tests to back new design decisions is how we move fast with confidence.",
+            detail: "Drawing from the brand team's homepage A/B test, which showed a positive lift in engagement when category content was less cluttered and products were surfaced faster, I recommended applying the same principle to micro-interactions in the cart. Past test data showed that reducing visual noise and simplifying user actions directly improved conversion, and the same logic applies here. By introducing swipe-to-delete in the cart, we align with a native iOS gesture users already know, reducing friction at a critical drop-off point. Bringing analytical data from previous tests to back new design decisions is how we move fast with confidence.",
             img: "/slides/rec1.png",
             clip: false,
         },
@@ -1491,7 +1491,7 @@ export default function AnthropologieCaseStudy() {
                         sub="Hypothesis-driven design experiments"
                     />
                     <Body>
-                        To validate hypotheses, the testing team ran A/B tests
+                        To validate the brand team's hypotheses, the testing team ran A/B tests
                         on the mobile homepage layout and category page
                         navigation structure.
                     </Body>
