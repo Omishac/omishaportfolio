@@ -421,7 +421,7 @@ const edgeTop = (edge: Edge): Pt => {
     return [edge(y), y]
 }
 
-// Figma's "Rectangle 6": white cover giving the Mobile Design tab its ragged bottom.
+// Figma's "Rectangle 6": white cover giving the second tab (Redesign) its ragged bottom.
 const MOBILE_TORN_BOTTOM = rotBoxPoints(
     { l: 76.14, t: 508.62, w: 72.999, h: 27.521 }, { w: 71.971, h: 24.281 }, 2.6,
     [[0, 0.04], [10, -0.18], [21.18, -0.2], [30, 1.2], [36.92, 2.57], [46, 4.6], [58.18, 6.33], [71.8, 8.74]],
@@ -463,10 +463,10 @@ const FLYER_LABEL_TEXT = "#FFB8C4"
 const FLYER_SANS = "var(--font-inter), system-ui, sans-serif"
 
 const TABS: TabSpec[] = [
-    { label: "Redesign",         cx: 41.2,   cy: 419.83, color: FLYER_TAB_INK, href: "/anthropologie-product-discovery", left: null, right: 0, tilt: -1.1, spin: -9,  drift: -40, flutter: 1.5 },
-    { label: "Mobile Design",    cx: 117,    cy: 420.77, color: FLYER_TAB_INK, href: "/ios-review-accessibility", left: 0, right: 1, bottom: "mobile", tilt: 0.8, spin: 7, drift: 30, flutter: 1.8 },
+    { label: "Creative work",    cx: 41.2,   cy: 419.83, color: FLYER_TAB_INK, href: "/playground", left: null, right: 0, tilt: -1.1, spin: -9,  drift: -40, flutter: 1.5 },
+    { label: "Redesign",         cx: 117,    cy: 420.77, color: FLYER_TAB_INK, href: "/anthropologie-product-discovery", left: 0, right: 1, bottom: "mobile", tilt: 0.8, spin: 7, drift: 30, flutter: 1.8 },
     { label: "Digital Strategy", cx: 189.21, cy: 421.64, color: FLYER_TAB_INK, href: "/anthropologie-mcommerce", left: 1, right: 2, tilt: -0.6, spin: -12, drift: -55, flutter: 1.35 },
-    { label: "Creative work",    cx: 337.17, cy: 431.99, color: FLYER_TAB_INK, href: "/playground", left: 3, right: 4, tilt: 1.2, spin: 10, drift: 45, flutter: 1.7 },
+    { label: "Mobile Design",    cx: 337.17, cy: 431.99, color: FLYER_TAB_INK, href: "/ios-review-accessibility", left: 3, right: 4, tilt: 1.2, spin: 10, drift: 45, flutter: 1.7 },
     { label: "Say hello",        cx: 476.19, cy: 434.67, color: FLYER_TAB_INK, href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true, left: 5, right: null, bottom: "sayHello", tilt: -0.9, spin: -6, drift: -30, flutter: 1.55 },
 ]
 
