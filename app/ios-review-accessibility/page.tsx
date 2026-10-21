@@ -193,28 +193,11 @@ function NoteList({ notes, style }: { notes: Note[]; style?: React.CSSProperties
     )
 }
 
-function Arrow({ down = false, align = "center" }: { down?: boolean; align?: "center" | "flex-start" }) {
-    return (
-        <span aria-hidden="true" style={{ display: "flex", justifyContent: align, alignItems: "center", color: C.muted, paddingLeft: align === "flex-start" ? 4 : 0 }}>
-            {down
-                ? <svg width="14" height="22" viewBox="0 0 14 22" fill="none"><path d="M7 1v19M1.5 14.5L7 20l5.5-5.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                : <svg width="28" height="14" viewBox="0 0 28 14" fill="none"><path d="M1 7h25M20 1.5L26 7l-6 5.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
-        </span>
-    )
-}
-
 // Challenge: the Spain app, localized everywhere except the reviews
 const GAP_NOTES: Note[] = [
     { label: "App UI is in Spanish: headings, buttons and tabs.", box: [7.4, 12.6, 21.6, 17.8], side: "left" },
     { label: "The review itself stays in English.", box: [9, 41.2, 35.6, 50.6], side: "left" },
     { label: "Same in the full review list, with no way to translate.", box: [58.4, 62.8, 92.2, 70.2], side: "right" },
-]
-
-// Design decisions: the three paths from Exploration, checked against the constraints
-const PATHS = [
-    { path: "Auto-translate at load", hits: "Performance Limits", body: "Auto-translating large volumes at load would impact page speed significantly.", ok: false },
-    { path: "Translate all", hits: "No Bulk Translation", body: "Reviews could not be translated all at once, only individual items on demand.", ok: false },
-    { path: "Per review, on demand", hits: "Chosen", body: "Fits both: one review at a time, only when the shopper asks.", ok: true },
 ]
 
 // Hairline-separated list rows (no cards)
@@ -582,29 +565,41 @@ export default function IOSCaseStudy() {
                     <section id="decisions" style={{ scrollMarginTop: 96, marginTop: sp.section }}>
                         <FadeIn>
                             <SectionHead phone={phone} tag="Design Decisions" title="Designing within constraints to build the right solution"
-                                intro="Each decision started from a technical constraint, from how translation is triggered to what the UI communicates." />
+                                intro="Every design decision in this project started with a real technical constraint. Rather than designing around them, I let them shape the strategy, from how translation is triggered to what the UI communicates." />
                         </FadeIn>
 
-                        {/* The three Exploration paths, each checked against the constraints */}
                         <FadeIn>
-                            <p style={{ ...SMALL, fontWeight: 500, color: C.ink, marginBottom: 16 }}>Three translation paths, checked against the constraints</p>
-                            <ol style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gridTemplateColumns: threeCol, columnGap: tablet ? 16 : 24, rowGap: 12 }}>
-                                {PATHS.map((p, i) => (
-                                    <li key={p.path} style={{ ...MAT, padding: 20, borderRadius: 2, display: "flex", flexDirection: "column", gap: 10, outline: p.ok ? `1.5px solid ${ROSE}` : "none", outlineOffset: -1.5 }}>
-                                        <Num>Path 0{i + 1}</Num>
-                                        <p style={{ fontFamily: I, fontSize: 16, fontWeight: 500, color: C.ink, margin: 0 }}>{p.path}</p>
-                                        <Arrow down align="flex-start" />
-                                        <p style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: I, fontSize: 14, fontWeight: 600, color: p.ok ? ROSE : C.ink2, margin: 0 }}>
-                                            <span aria-hidden="true" style={{ width: 20, height: 20, borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 11, backgroundColor: p.ok ? ROSE : "rgba(0,0,0,0.08)", color: p.ok ? "#fff" : C.ink2 }}>{p.ok ? "✓" : "✕"}</span>
-                                            {p.ok ? p.hits : <span>Runs into {p.hits}</span>}
-                                        </p>
-                                        <p style={SMALL}>{p.body}</p>
-                                    </li>
+                            {/* Constraints informed the principles: arrow right on desktop, down on phone */}
+                            <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) auto minmax(0, 1fr)", columnGap: 28, rowGap: 16, alignItems: "center" }}>
+                                {[
+                                    { label: "Constraints", items: [
+                                        { t: "Performance Limits", b: "Auto-translating large volumes at load would impact page speed significantly." },
+                                        { t: "No Bulk Translation", b: "Reviews could not be translated all at once, only individual items on demand." },
+                                        { t: "iOS 18+ Only", b: "Apple's Translation API is exclusive to devices running iOS 18 or later." },
+                                    ] },
+                                    null,
+                                    { label: "Principles", items: [
+                                        { t: "User Control", b: "Allow users to choose when to translate, rather than forcing automatic language changes." },
+                                        { t: "System Efficiency", b: "Leverage Apple's native translation capabilities without introducing performance overhead." },
+                                        { t: "Seamless Integration", b: "Ensure the feature feels like a natural extension of the existing review UI, not a bolt-on." },
+                                    ] },
+                                ].map((col, ci) => col === null ? (
+                                    <div key="arrow" aria-hidden="true" style={{ display: "flex", justifyContent: "center", color: C.muted }}>
+                                        <svg width="28" height="14" viewBox="0 0 28 14" fill="none" style={{ transform: phone ? "rotate(90deg)" : "none" }}>
+                                            <path d="M1 7h25M20 1.5L26 7l-6 5.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </div>
+                                ) : (
+                                    <div key={ci} style={{ alignSelf: "start" }}>
+                                        <BoldLabel>{col.label}</BoldLabel>
+                                        {col.items.map((c) => (
+                                            <div key={c.t} style={{ borderTop: `1px solid ${C.border}`, padding: "12px 0" }}>
+                                                <p style={{ fontFamily: I, fontSize: 15, fontWeight: 500, color: C.ink, margin: 0, marginBottom: 4 }}>{c.t}</p>
+                                                <p style={{ ...BODY, color: C.ink3, fontSize: 14 }}>{c.b}</p>
+                                            </div>
+                                        ))}
+                                    </div>
                                 ))}
-                            </ol>
-                            <div style={{ display: "flex", flexWrap: "wrap", columnGap: 12, rowGap: 4, alignItems: "baseline", marginTop: 12, padding: "14px 0", borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}` }}>
-                                <span style={{ fontFamily: I, fontSize: 14, fontWeight: 600, color: C.ink }}>iOS 18+ Only</span>
-                                <span style={SMALL}>Apple's Translation API is exclusive to devices running iOS 18 or later.</span>
                             </div>
                         </FadeIn>
 
