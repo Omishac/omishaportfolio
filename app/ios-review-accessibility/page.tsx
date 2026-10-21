@@ -557,7 +557,7 @@ export default function IOSCaseStudy() {
                     <section id="exploration" style={{ scrollMarginTop: 96, marginTop: sp.section }}>
                         <FadeIn>
                             <SectionHead phone={phone} tag="Exploration" title="Mapping every way translation could work"
-                                intro="Before any UI was designed, the problem was mapped: scoping the ticket, surfacing open questions, and charting every possible translation path to find the right one. The three paths became low-fidelity concepts discussed in design critiques with Senior Designers and Product partners, allowing the team to validate assumptions and refine the direction." />
+                                intro="Before designing any UI, I mapped the problem: scoping the ticket, surfacing open questions, and charting every possible translation path to find the right one. I turned the three paths into low-fidelity concepts and brought them to design critiques with Senior Designers and Product partners to validate assumptions and refine the direction." />
                         </FadeIn>
                         <FadeIn>
                             {/* Brief and early thinking, then the paths in full, then the three refinements */}
