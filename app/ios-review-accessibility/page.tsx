@@ -125,7 +125,7 @@ function SubHead({ num, title, phone }: { num?: string; title: string; phone: bo
 }
 
 function Label({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
-    return <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, margin: 0, marginBottom: 8, ...style }}>{children}</p>
+    return <p style={{ fontFamily: I, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.ink3, margin: 0, marginBottom: 8, ...style }}>{children}</p>
 }
 
 function BoldLabel({ children }: { children: React.ReactNode }) {
@@ -133,7 +133,7 @@ function BoldLabel({ children }: { children: React.ReactNode }) {
 }
 
 function Num({ children }: { children: React.ReactNode }) {
-    return <span style={{ fontFamily: I, fontSize: 11, fontWeight: 400, letterSpacing: "0.06em", color: C.muted }}>{children}</span>
+    return <span style={{ fontFamily: I, fontSize: 11, fontWeight: 400, letterSpacing: "0.06em", color: C.ink3 }}>{children}</span>
 }
 
 function Caption({ children }: { children: React.ReactNode }) {
@@ -234,7 +234,7 @@ function Rows({ items, numbered = false }: { items: string[]; numbered?: boolean
         <div>
             {items.map((t, i) => (
                 <div key={i} style={{ display: "flex", gap: 14, alignItems: "baseline", padding: "12px 0", borderTop: `1px solid ${C.border}` }}>
-                    {numbered && <span style={{ fontFamily: I, fontSize: 11, color: C.muted, letterSpacing: "0.06em", width: 18, flexShrink: 0 }}>0{i + 1}</span>}
+                    {numbered && <span style={{ fontFamily: I, fontSize: 11, color: C.ink3, letterSpacing: "0.06em", width: 18, flexShrink: 0 }}>0{i + 1}</span>}
                     <span style={{ ...BODY, color: C.ink2 }}>{t}</span>
                 </div>
             ))}
@@ -370,7 +370,7 @@ function SideNav({ active }: { active: string }) {
                         style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", textDecoration: "none" }}
                     >
                         <span aria-hidden="true" style={{ width: isActive ? 12 : 0, height: 1, backgroundColor: C.ink, transition: `width 0.3s ${EASE_SPRING}` }} />
-                        <span style={{ fontFamily: I, fontSize: 12, fontWeight: isActive ? 500 : 400, color: isActive ? C.ink : C.muted, transition: "color 0.3s ease" }}>
+                        <span style={{ fontFamily: I, fontSize: 12, fontWeight: isActive ? 500 : 400, color: isActive ? C.ink : C.ink3, transition: "color 0.3s ease" }}>
                             {label}
                         </span>
                     </a>
@@ -433,7 +433,7 @@ export default function IOSCaseStudy() {
                                 </h1>
                                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 16 }}>
                                     {["Research", "UX/UI", "iOS"].map(tag => (
-                                        <span key={tag} style={{ fontFamily: I, fontSize: 11, color: C.muted, backgroundColor: "rgba(0,0,0,0.04)", borderRadius: 40, padding: "4px 10px" }}>{tag}</span>
+                                        <span key={tag} style={{ fontFamily: I, fontSize: 11, color: C.ink3, backgroundColor: "rgba(0,0,0,0.04)", borderRadius: 40, padding: "4px 10px" }}>{tag}</span>
                                     ))}
                                 </div>
                             </div>
@@ -520,7 +520,7 @@ export default function IOSCaseStudy() {
                                         { h: "Language access", t: "Reviews were inaccessible to non-English speakers." },
                                     ].map((f, i) => (
                                         <div key={f.h} style={{ display: "flex", gap: 14, borderTop: `1px solid ${C.border}`, padding: "16px 0 20px" }}>
-                                            <span style={{ fontFamily: I, fontSize: 11, color: C.muted, letterSpacing: "0.06em", width: 18, flexShrink: 0, paddingTop: 3 }}>0{i + 1}</span>
+                                            <span style={{ fontFamily: I, fontSize: 11, color: C.ink3, letterSpacing: "0.06em", width: 18, flexShrink: 0, paddingTop: 3 }}>0{i + 1}</span>
                                             <div>
                                                 <p style={{ fontFamily: I, fontSize: 15, fontWeight: 600, color: C.ink, lineHeight: 1.4, margin: 0, marginBottom: 4 }}>{f.h}</p>
                                                 <p style={{ ...BODY, color: C.ink3 }}>{f.t}</p>

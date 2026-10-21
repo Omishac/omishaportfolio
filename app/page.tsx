@@ -1128,7 +1128,7 @@ function CoverCard({
             {shipped && (
                 <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
                     <span style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: "#6EBF8B", display: "inline-block" }} />
-                    <span style={{ fontFamily: I, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#6EBF8B" }}>
+                    <span style={{ fontFamily: I, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#2F7A4B" }}>
                         Shipped
                     </span>
                 </div>
@@ -1161,7 +1161,7 @@ function CoverCard({
                             fontFamily: FLYER_SANS,
                             fontSize: 11,
                             fontWeight: 400,
-                            color: "rgba(164,66,92,0.85)",
+                            color: "#A4425C",
                             border: "1px solid rgba(164,66,92,0.18)",
                             borderRadius: 40,
                             padding: "3px 10px",

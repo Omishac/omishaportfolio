@@ -116,11 +116,11 @@ function SectionHead({ tag, title, intro, phone }: { tag?: string; title: string
 }
 
 function Label({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
-    return <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, margin: 0, marginBottom: 8, ...style }}>{children}</p>
+    return <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.ink3, margin: 0, marginBottom: 8, ...style }}>{children}</p>
 }
 
 function Num({ children }: { children: React.ReactNode }) {
-    return <span style={{ fontFamily: INTER, fontSize: 11, fontWeight: 400, letterSpacing: "0.06em", color: C.muted }}>{children}</span>
+    return <span style={{ fontFamily: INTER, fontSize: 11, fontWeight: 400, letterSpacing: "0.06em", color: C.ink3 }}>{children}</span>
 }
 
 function Caption({ children }: { children: React.ReactNode }) {
@@ -279,7 +279,7 @@ function SideNav({ active }: { active: string }) {
                         style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", textDecoration: "none" }}
                     >
                         <span aria-hidden="true" style={{ width: isActive ? 12 : 0, height: 1, backgroundColor: C.ink, transition: `width 0.3s ${EASE_SPRING}` }} />
-                        <span style={{ fontFamily: INTER, fontSize: 12, fontWeight: isActive ? 500 : 400, color: isActive ? C.ink : C.muted, transition: "color 0.3s ease" }}>
+                        <span style={{ fontFamily: INTER, fontSize: 12, fontWeight: isActive ? 500 : 400, color: isActive ? C.ink : C.ink3, transition: "color 0.3s ease" }}>
                             {label}
                         </span>
                     </a>
@@ -338,7 +338,7 @@ export default function AnthropologieProductDiscovery() {
                                 </h1>
                                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 18 }}>
                                     {["Product Design", "Design Systems", "E-Commerce"].map(tag => (
-                                        <span key={tag} style={{ fontFamily: INTER, fontSize: 11, color: C.muted, backgroundColor: "rgba(0,0,0,0.04)", borderRadius: 40, padding: "4px 10px" }}>{tag}</span>
+                                        <span key={tag} style={{ fontFamily: INTER, fontSize: 11, color: C.ink3, backgroundColor: "rgba(0,0,0,0.04)", borderRadius: 40, padding: "4px 10px" }}>{tag}</span>
                                     ))}
                                 </div>
                             </div>
@@ -498,7 +498,7 @@ export default function AnthropologieProductDiscovery() {
                     <section id="validation" style={{ scrollMarginTop: 96, marginTop: phone ? 72 : 96 }}>
                         <FadeIn>
                             <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: phone ? 40 : 56 }}>
-                                <p style={{ fontFamily: INTER, fontSize: 14, color: C.muted, margin: 0, marginBottom: 12 }}>Leading to&hellip;</p>
+                                <p style={{ fontFamily: INTER, fontSize: 14, color: C.ink3, margin: 0, marginBottom: 12 }}>Leading to&hellip;</p>
                                 <Metric phone={phone} value={<CountUp to={100} suffix="%" duration={1400} />} label="Task Completion Rate" />
                             </div>
                         </FadeIn>

@@ -163,7 +163,7 @@ function SectionLabel({
                     fontWeight: 500,
                     letterSpacing: "0.08em",
                     textTransform: "uppercase",
-                    color: C.muted,
+                    color: C.ink3,
                     marginBottom: "12px",
                 }}
             >
@@ -258,7 +258,7 @@ function AnimStat({
                 {label}
             </p>
             {sub && (
-                <p style={{ fontFamily: INTER, fontSize: "11px", color: C.muted, margin: 0 }}>
+                <p style={{ fontFamily: INTER, fontSize: "11px", color: C.ink3, margin: 0 }}>
                     {sub}
                 </p>
             )}
@@ -367,7 +367,7 @@ function TrendCard({
                     style={{
                         fontFamily: INTER,
                         fontSize: "11px",
-                        color: C.muted,
+                        color: C.ink3,
                         marginTop: "10px",
                         letterSpacing: "0.02em",
                     }}
@@ -422,7 +422,7 @@ function PhoneFrame({ src, alt, label, width = 180 }: {
                     fontFamily: INTER,
                     fontSize: "11px",
                     fontWeight: 500,
-                    color: C.muted,
+                    color: C.ink3,
                     textAlign: "center",
                     margin: 0,
                     letterSpacing: "0.02em",
@@ -470,7 +470,7 @@ function CompRow({
                         fontFamily: INTER,
                         fontSize: "11px",
                         fontWeight: 500,
-                        color: C.muted,
+                        color: C.ink3,
                         textTransform: "uppercase",
                         letterSpacing: "0.08em",
                         margin: 0,
@@ -524,7 +524,7 @@ function ABScreen({ v, phone }: { v: ABVariant; phone: boolean }) {
         v.tag === "Variant"
             ? { backgroundColor: C.ink, color: "#fff", border: `1px solid ${C.ink}` }
             : v.tag === "Benchmark"
-                ? { backgroundColor: "transparent", color: C.muted, border: `1px dashed ${C.muted}` }
+                ? { backgroundColor: "transparent", color: C.ink3, border: `1px dashed ${C.muted}` }
                 : { backgroundColor: "#fff", color: C.ink2, border: `1px solid ${C.border}` }
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: phone ? 10 : 14, minWidth: 0 }}>
@@ -580,7 +580,7 @@ function ABComparison({ num, title, note, variants, phone, tablet }: {
         }}>
             <p style={{
                 fontFamily: INTER, fontSize: "11px", fontWeight: 500, textTransform: "uppercase",
-                letterSpacing: "0.08em", color: C.muted, margin: "0 0 6px",
+                letterSpacing: "0.08em", color: C.ink3, margin: "0 0 6px",
             }}>
                 Comparison {num}
             </p>
@@ -662,7 +662,7 @@ function FindingCard({ num, title, body, icon }: any) {
                     fontFamily: INTER,
                     fontWeight: 700,
                     fontSize: "10px",
-                    color: active ? "rgba(255,255,255,0.3)" : C.muted,
+                    color: active ? "rgba(255,255,255,0.3)" : C.ink3,
                     marginBottom: "8px",
                     letterSpacing: "0.08em",
                 }}
@@ -928,7 +928,7 @@ function SideNav({ active }: { active: string }) {
                         style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", textDecoration: "none" }}
                     >
                         <span aria-hidden="true" style={{ width: isActive ? 12 : 0, height: 1, backgroundColor: COLORS.ink, transition: `width 0.3s ${EASE_SPRING}` }} />
-                        <span style={{ fontFamily: INTER, fontSize: 12, fontWeight: isActive ? 500 : 400, color: isActive ? COLORS.ink : COLORS.muted, transition: "color 0.3s ease" }}>
+                        <span style={{ fontFamily: INTER, fontSize: 12, fontWeight: isActive ? 500 : 400, color: isActive ? COLORS.ink : COLORS.ink3, transition: "color 0.3s ease" }}>
                             {label}
                         </span>
                     </a>
@@ -1029,7 +1029,7 @@ export default function AnthropologieCaseStudy() {
                                 fontWeight: 500,
                                 letterSpacing: "0.08em",
                                 textTransform: "uppercase",
-                                color: C.muted,
+                                color: C.ink3,
                                 marginBottom: "20px",
                             }}
                         >
@@ -1088,7 +1088,7 @@ export default function AnthropologieCaseStudy() {
                                             fontFamily: INTER,
                                             fontWeight: 500,
                                             fontSize: "11px",
-                                            color: C.muted,
+                                            color: C.ink3,
                                             marginBottom: "7px",
                                             textTransform: "uppercase",
                                             letterSpacing: "0.08em",
@@ -1154,7 +1154,7 @@ export default function AnthropologieCaseStudy() {
                                         fontWeight: 500,
                                         letterSpacing: "0.08em",
                                         textTransform: "uppercase",
-                                        color: C.muted,
+                                        color: C.ink3,
                                         marginBottom: "20px",
                                     }}
                                 >
@@ -1189,7 +1189,7 @@ export default function AnthropologieCaseStudy() {
                                                 style={{
                                                     fontFamily: INTER,
                                                     fontSize: "11px",
-                                                    color: C.muted,
+                                                    color: C.ink3,
                                                     width: "38px",
                                                     flexShrink: 0,
                                                     fontVariantNumeric:
@@ -1243,7 +1243,7 @@ export default function AnthropologieCaseStudy() {
                                     style={{
                                         fontFamily: INTER,
                                         fontSize: "10px",
-                                        color: C.muted,
+                                        color: C.ink3,
                                         marginTop: "10px",
                                     }}
                                 >
@@ -1377,7 +1377,7 @@ export default function AnthropologieCaseStudy() {
                                     fontFamily: INTER,
                                     fontSize: "11px",
                                     fontWeight: 500,
-                                    color: C.muted,
+                                    color: C.ink3,
                                     margin: 0,
                                     textAlign: "center",
                                     letterSpacing: "0.02em",
@@ -1413,7 +1413,7 @@ export default function AnthropologieCaseStudy() {
                             fontWeight: 500,
                             textTransform: "uppercase",
                             letterSpacing: "0.08em",
-                            color: C.muted,
+                            color: C.ink3,
                             margin: "0 0 16px",
                         }}>
                             Homepage
@@ -1450,7 +1450,7 @@ export default function AnthropologieCaseStudy() {
                             fontWeight: 500,
                             textTransform: "uppercase",
                             letterSpacing: "0.08em",
-                            color: C.muted,
+                            color: C.ink3,
                             margin: "0 0 16px",
                         }}>
                             Checkout
@@ -1728,7 +1728,7 @@ export default function AnthropologieCaseStudy() {
                             fontFamily: INTER,
                             fontSize: 14,
                             fontWeight: 500,
-                            color: "#8A8A82",
+                            color: "#5A5A54",
                             textDecoration: "none",
                             letterSpacing: "-0.01em",
                             transition: "color 0.18s",
@@ -1737,7 +1737,7 @@ export default function AnthropologieCaseStudy() {
                             alignItems: "center",
                         }}
                         onMouseEnter={(e) => (e.currentTarget.style.color = "#111111")}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = "#8A8A82")}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = "#5A5A54")}
                     >
                         ← Back to work
                     </a>

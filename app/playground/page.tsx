@@ -122,7 +122,7 @@ function SideNav({ active }: { active: string }) {
                         style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", textDecoration: "none" }}
                     >
                         <span aria-hidden="true" style={{ width: isActive ? 12 : 0, height: 1, backgroundColor: C.ink, transition: `width 0.3s ${EASE_SPRING}` }} />
-                        <span style={{ fontFamily: I, fontSize: 12, fontWeight: isActive ? 500 : 400, color: isActive ? C.ink : C.muted, transition: "color 0.3s ease" }}>
+                        <span style={{ fontFamily: I, fontSize: 12, fontWeight: isActive ? 500 : 400, color: isActive ? C.ink : C.ink3, transition: "color 0.3s ease" }}>
                             {label}
                         </span>
                     </a>
@@ -231,7 +231,7 @@ export default function PlaygroundPage() {
                             <a key={s.id} href={`#${s.id}`}
                                 onClick={(e) => { e.preventDefault(); document.getElementById(s.id)?.scrollIntoView({ behavior: "smooth", block: "start" }) }}
                                 style={{ display: "flex", gap: 10, alignItems: "baseline", padding: "14px 0", fontFamily: I, fontSize: 14 }}>
-                                <span style={{ fontSize: 10, color: C.muted, letterSpacing: "0.06em" }}>{s.num}</span>
+                                <span style={{ fontSize: 10, color: C.ink3, letterSpacing: "0.06em" }}>{s.num}</span>
                                 {s.title}
                             </a>
                         ))}
@@ -327,7 +327,7 @@ export default function PlaygroundPage() {
                     >
                         ← Back to work
                     </a>
-                    <p style={{ fontFamily: I, fontSize: 12, color: C.muted, margin: 0 }}>
+                    <p style={{ fontFamily: I, fontSize: 12, color: C.ink3, margin: 0 }}>
                         © {new Date().getFullYear()} Omisha Chabria
                     </p>
                 </div>
