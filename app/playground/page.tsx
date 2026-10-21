@@ -72,6 +72,7 @@ function useResponsive() {
     const [phone, setPhone] = useState(false)
     const [tablet, setTablet] = useState(false)
     const [large, setLarge] = useState(false)
+    const [wide, setWide] = useState(false)
     useEffect(() => {
         // clientWidth, not innerWidth: overflowing content widens the layout
         // viewport on phones, which would lock in the desktop layout.
@@ -80,12 +81,13 @@ function useResponsive() {
             setPhone(w < 768)
             setTablet(w >= 768 && w < 1024)
             setLarge(w > 1440)
+            setWide(w >= 1200)
         }
         check()
         window.addEventListener("resize", check, { passive: true })
         return () => window.removeEventListener("resize", check)
     }, [])
-    return { phone, tablet, desktop: !phone && !tablet, large }
+    return { phone, tablet, large, wide }
 }
 
 function useActiveSection(ids: string[]) {
@@ -173,7 +175,11 @@ function EmbedFrame({ src, aspect = "16/9", fill = false, title }: { src: string
 }
 
 export default function PlaygroundPage() {
-    const { phone, tablet, desktop, large } = useResponsive()
+    const { phone, tablet, large, wide } = useResponsive()
+    // The side nav takes 204px; below 1200px that squeezed the content column
+    // to ~660px (322px tiles, 181px-tall decks), so small desktops use the
+    // single-column layout with the in-page section index instead.
+    const desktop = wide
     const activeSection = useActiveSection(SECTIONS.map(s => s.id))
     // Same page padding and content width as the homepage.
     const px = phone ? 20 : tablet ? 40 : large ? 120 : 80
