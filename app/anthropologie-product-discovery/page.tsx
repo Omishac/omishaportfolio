@@ -349,25 +349,32 @@ function StrategyBlock({ s, phone, wide }: { s: typeof STRATEGIES[number]; phone
 
 // Findings → concepts → retest → launch, as step boxes with arrows.
 function RecapFlow({ phone }: { phone: boolean }) {
+    // Light editorial row: hairline above each step, thin arrows between, no boxes.
     const arrow = (
-        <span aria-hidden="true" style={{ display: "flex", alignItems: "center", justifyContent: "center", color: C.ink3, padding: phone ? "6px 0" : "0 2px" }}>
-            <svg width={phone ? 14 : 18} height={phone ? 18 : 14} viewBox={phone ? "0 0 14 18" : "0 0 18 14"} fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-                {phone ? <><path d="M7 1v15" /><path d="M2 11l5 5 5-5" /></> : <><path d="M1 7h15" /><path d="M11 2l5 5-5 5" /></>}
+        <span aria-hidden="true" style={{ display: "flex", alignItems: "center", color: C.ink3, opacity: 0.6, paddingTop: phone ? 0 : 22 }}>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M1 6h13" /><path d="M10 2l4 4-4 4" />
             </svg>
         </span>
     )
     return (
         <ol aria-label="From research to launch" style={{
             listStyle: "none", padding: 0, margin: 0,
-            display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr)",
-            alignItems: "stretch",
+            display: "grid",
+            gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr)",
+            columnGap: phone ? 0 : 16,
+            alignItems: "start",
         }}>
             {RECAP.map((step, i) => (
                 <React.Fragment key={i}>
-                    {i > 0 && <li aria-hidden="true" style={{ display: "flex", justifyContent: phone ? "flex-start" : "center", paddingLeft: phone ? 20 : 0 }}>{arrow}</li>}
-                    <li style={{ ...MAT, padding: phone ? "16px 18px" : "18px 18px 20px", display: phone ? "flex" : "block", alignItems: "center", gap: 16 }}>
-                        <p style={{ fontFamily: INTER, fontSize: phone ? 26 : 30, fontWeight: 300, color: C.ink, letterSpacing: "-0.03em", lineHeight: 1, margin: 0, minWidth: phone ? 64 : undefined }}>{step.value}</p>
-                        <p style={{ fontFamily: INTER, fontSize: 13.5, color: C.ink2, lineHeight: 1.45, margin: 0, marginTop: phone ? 0 : 10 }}>{step.label}</p>
+                    {i > 0 && !phone && <li aria-hidden="true">{arrow}</li>}
+                    <li style={{
+                        borderTop: `1px solid ${C.border}`,
+                        padding: phone ? "14px 0" : "16px 0 0",
+                        display: phone ? "flex" : "block", alignItems: "baseline", gap: 16,
+                    }}>
+                        <p style={{ fontFamily: INTER, fontSize: phone ? 22 : 26, fontWeight: 200, color: C.ink, letterSpacing: "-0.03em", lineHeight: 1, margin: 0, minWidth: phone ? 56 : undefined }}>{step.value}</p>
+                        <p style={{ fontFamily: INTER, fontSize: 13, color: C.ink3, lineHeight: 1.45, margin: 0, marginTop: phone ? 0 : 8 }}>{step.label}</p>
                     </li>
                 </React.Fragment>
             ))}
@@ -747,7 +754,7 @@ export default function AnthropologieProductDiscovery() {
                     <section id="launch" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
                             <SectionHead phone={phone} tag="Launch & Reflection" title="Shipping across three brands"
-                                intro="Live on all three brands, helping shoppers navigate large catalogs with more confidence." />
+                                intro={<span style={{ whiteSpace: phone ? "normal" : "nowrap" }}>Live on all three brands, helping shoppers navigate large catalogs with more confidence.</span>} />
                         </FadeIn>
 
                         <FadeIn delay={40}>
