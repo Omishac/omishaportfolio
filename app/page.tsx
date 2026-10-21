@@ -2338,19 +2338,24 @@ function FooterGame({
     const footerOpacity = useTransform(p, range(0, 0.6, 1, 0.85))
     // A soft shadow where the page "opens", strongest mid-reveal.
     const seamOpacity = useTransform(p, (v) => (v < 0.3 ? range(0, 0.3, 0, 1)(v) : range(0.3, 0.85, 1, 0)(v)))
-    // Game comes forward from below and settles flat; identity from p = 0.88.
-    const stageZ = useTransform(p, range(0.1, 0.88, -220, 0))
-    const stageY = useTransform(p, range(0.1, 0.88, 90, 0))
-    const stageTilt = useTransform(p, range(0.1, 0.88, 16, 0))
-    const stageOpacity = useTransform(p, range(0.05, 0.6, 0, 1))
+    // Game comes forward from below and settles flat; identity from p = 0.75,
+    // well before the very bottom of the page (see playable below).
+    const stageZ = useTransform(p, range(0.1, 0.75, -220, 0))
+    const stageY = useTransform(p, range(0.1, 0.75, 90, 0))
+    const stageTilt = useTransform(p, range(0.1, 0.75, 16, 0))
+    const stageOpacity = useTransform(p, range(0.05, 0.5, 0, 1))
     const fadeIn = useTransform(p, range(0.2, 0.8, 0, 1)) // reduced motion: fade only
 
-    // Playable only once the reveal has fully settled, so a throw is never
+    // Playable once the reveal has settled (p >= 0.75), so a throw is never
     // measured against a moving stage and scrolling past can't grab the ball.
+    // Not tied to the very bottom of the page: on phones a scroll often stops a
+    // little short, and tapping brings back the browser toolbars, which shrinks
+    // the viewport and pulls p down by ~0.05. Hysteresis (off below 0.6) keeps
+    // that from switching the game off mid-play.
     const [playable, setPlayable] = useState(false)
     const playableRef = useRef(false)
     const updatePlayable = (v: number) => {
-        const next = v >= 0.96
+        const next = playableRef.current ? v >= 0.6 : v >= 0.75
         if (next === playableRef.current) return
         playableRef.current = next
         setPlayable(next)
