@@ -626,73 +626,82 @@ const FINDING_ICONS: Record<string, React.ReactNode> = {
 }
 
 // ── Finding card ───────────────────────────────────────────────────────────────
-// Static card (no hover or click state)
-function FindingCard({ num, title, body, icon }: any) {
-    const active = false
+// Static, scannable card: big thin numeral + icon on top, bold headline,
+// hairline rule, one-line takeaway.
+function FindingCard({ num, title, body, icon, phone }: any) {
     return (
-        <div
+        <article
             style={{
-                flex: 1,
-                borderRadius: "10px",
-                padding: "28px 22px",
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",
+                boxSizing: "border-box",
+                borderRadius: "12px",
+                padding: phone ? "24px 22px 26px" : "32px 32px 34px",
                 backgroundColor: C.surface,
                 border: `1px solid ${C.border}`,
             }}
         >
-            <span
-                aria-hidden="true"
-                style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 10,
-                    backgroundColor: "#fff",
-                    border: `1px solid ${C.border}`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginBottom: "16px",
-                }}
-            >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.ink} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    {FINDING_ICONS[icon]}
-                </svg>
-            </span>
-            <p
+            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: phone ? 22 : 32 }}>
+                <span
+                    style={{
+                        fontFamily: INTER,
+                        fontWeight: 200,
+                        fontSize: phone ? "40px" : "52px",
+                        letterSpacing: "-0.04em",
+                        lineHeight: 1,
+                        color: C.ink,
+                    }}
+                >
+                    {num}
+                </span>
+                <span
+                    aria-hidden="true"
+                    style={{
+                        width: 40,
+                        height: 40,
+                        flexShrink: 0,
+                        borderRadius: "50%",
+                        backgroundColor: C.bg,
+                        border: `1px solid ${C.border}`,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
+                >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.ink} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        {FINDING_ICONS[icon]}
+                    </svg>
+                </span>
+            </div>
+            <h3
                 style={{
                     fontFamily: INTER,
+                    fontSize: phone ? "19px" : "22px",
                     fontWeight: 700,
-                    fontSize: "10px",
-                    color: active ? "rgba(255,255,255,0.3)" : C.muted,
-                    marginBottom: "8px",
-                    letterSpacing: "0.08em",
+                    letterSpacing: "-0.01em",
+                    color: C.ink,
+                    lineHeight: 1.25,
+                    margin: "0 0 16px",
+                    textWrap: "balance",
                 }}
             >
-                {num}
-            </p>
+                {title}
+            </h3>
+            <div aria-hidden="true" style={{ width: 28, height: 1, backgroundColor: C.ink, opacity: 0.25, marginBottom: 16 }} />
             <p
                 style={{
                     fontFamily: INTER,
                     fontSize: "15px",
-                    color: active ? "#fff" : C.ink,
-                    marginBottom: "8px",
-                    lineHeight: 1.4,
-                    fontWeight: 400,
-                }}
-            >
-                {title}
-            </p>
-            <p
-                style={{
-                    fontFamily: INTER,
-                    fontSize: "13px",
-                    lineHeight: "1.65",
-                    color: active ? "rgba(255,255,255,0.65)" : C.ink3,
+                    lineHeight: 1.6,
+                    color: C.ink3,
                     margin: 0,
+                    maxWidth: 440,
                 }}
             >
                 {body}
             </p>
-        </div>
+        </article>
     )
 }
 
@@ -1542,9 +1551,9 @@ export default function AnthropologieCaseStudy() {
                         step="05 · Findings"
                         title="What the data revealed about mobile drop-off"
                     />
-                    <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(4, 1fr)", gap: "10px" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : "repeat(2, minmax(0, 1fr))", gap: phone ? 12 : 20 }}>
                         {findings.map((f, i) => (
-                            <FindingCard key={i} {...f} />
+                            <FindingCard key={f.num} {...f} phone={phone} />
                         ))}
                     </div>
                 </FadeIn>

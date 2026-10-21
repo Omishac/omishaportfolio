@@ -385,7 +385,7 @@ export default function AnthropologieProductDiscovery() {
                         <FadeIn>
                             <SectionHead phone={phone} tag="Challenge" title="The existing filtering experience"
                                 intro="Product filters play a critical role in helping shoppers navigate large product catalogs. As assortments expanded across URBN brands, we wanted to better understand how the filtering experience supported product discovery across Mobile Web and Desktop." />
-                            <p style={{ fontFamily: INTER, fontSize: phone ? 18 : 20, fontWeight: 400, color: C.ink, lineHeight: 1.45, maxWidth: 520, letterSpacing: "-0.01em", margin: 0, marginTop: phone ? -16 : -24, marginBottom: phone ? 40 : 56 }}>
+                            <p style={{ fontFamily: INTER, fontSize: phone ? 18 : 20, fontWeight: 400, color: C.ink, lineHeight: 1.45, maxWidth: phone ? 520 : "none", whiteSpace: phone ? "normal" : "nowrap", letterSpacing: "-0.01em", margin: 0, marginTop: phone ? -16 : -24, marginBottom: phone ? 40 : 56 }}>
                                 Users moved between multiple screens to apply and review filters.
                             </p>
                         </FadeIn>
@@ -477,9 +477,9 @@ export default function AnthropologieProductDiscovery() {
                                 alignItems: "center",
                             }}>
                                 <div>
-                                    <Metric phone={phone} value={<CountUp to={45} suffix="%" />} label="Faster Prototype Creation & Testing Preparation" />
+                                    <Metric phone={phone} value={<CountUp to={45} suffix="%" />} label="Reduced Design Iteration Time" />
                                     <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, marginTop: 20, maxWidth: 440 }}>
-                                        Using Builder.io and URBN's existing design system components, I rapidly transformed concepts into a testable experience, allowing faster validation before development.
+                                        Using Builder.io and URBN's existing design system components, I turned Figma concepts into coded prototypes and checked them against the interaction requirements, so each design iteration took less time and concepts were validated before development.
                                     </p>
                                 </div>
                                 <figure style={{ margin: 0, maxWidth: phone ? 280 : undefined }}>

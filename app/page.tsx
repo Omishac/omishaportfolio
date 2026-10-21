@@ -1002,7 +1002,7 @@ const CARDS: CaseStudy[] = [
         title: "Product Filter Redesign",
         tags: ["Product Design", "Design Systems", "E-Commerce"],
         company: "URBN",
-        desc: "Redesigning the filter experience across four retail brands, balancing discoverability with speed for millions of shoppers.",
+        desc: "Redesigning the filter experience across three retail brands, balancing discoverability with speed for millions of shoppers.",
         shipped: true,
     },
     {
@@ -1546,7 +1546,7 @@ function SkillRow({ num, title, sub, phone, tablet, revealDelay }: { num: string
             }}
         >
             <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                <span style={{ fontFamily: I, fontSize: 10, color: C.muted, letterSpacing: "0.06em", width: 24, flexShrink: 0 }}>
+                <span style={{ fontFamily: I, fontSize: 10, color: C.ink3, letterSpacing: "0.06em", width: 24, flexShrink: 0 }}>
                     {num}
                 </span>
                 <span
@@ -1564,7 +1564,7 @@ function SkillRow({ num, title, sub, phone, tablet, revealDelay }: { num: string
             </div>
             <div style={{ display: "flex", flexWrap: "wrap" as const, paddingLeft: isColumn ? 40 : 0, justifyContent: isColumn ? "flex-start" : "flex-end" }}>
                 {sub.split("·").map((s, i) => (
-                    <span key={i} style={{ fontFamily: I, fontSize: phone ? 11 : 12, color: C.muted }}>
+                    <span key={i} style={{ fontFamily: I, fontSize: phone ? 11 : 12, color: C.ink3 }}>
                         {i > 0 && <span style={{ margin: "0 5px", opacity: 0.3 }}>·</span>}
                         {s.trim()}
                     </span>
@@ -1702,7 +1702,7 @@ function Footer({
                         alt="OC"
                         style={{ width: logoW, objectFit: "contain", display: "block", flexShrink: 0 }}
                     />
-                    <p style={{ fontFamily: I, fontSize: 12, color: C.muted, margin: 0, whiteSpace: "nowrap" as const }}>
+                    <p style={{ fontFamily: I, fontSize: 12, color: C.ink3, margin: 0, whiteSpace: "nowrap" as const }}>
                         © {new Date().getFullYear()} Omisha Chabria
                     </p>
                 </div>
@@ -1928,7 +1928,7 @@ function TravelDashboard() {
 
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <KeychainIcon />
-                <span style={{ fontFamily: I, fontSize: 11, color: C.muted }}>
+                <span style={{ fontFamily: I, fontSize: 11, color: C.ink3 }}>
                     collecting keychains &amp; beli ratings
                 </span>
             </div>
@@ -1971,7 +1971,7 @@ function FolderModalContent({ id }: { id: string }) {
     if (id === "songs") {
         // Spotify integration is pending API credentials — see prior
         // conversation. Placeholder until that's wired up.
-        return <p style={{ fontFamily: I, fontSize: 13, color: C.muted, margin: 0 }}>Coming soon.</p>
+        return <p style={{ fontFamily: I, fontSize: 13, color: C.ink3, margin: 0 }}>Coming soon.</p>
     }
 
     if (id === "travel") return <TravelDashboard />
