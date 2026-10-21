@@ -37,21 +37,18 @@ function useResponsive() {
     const [phone, setPhone] = useState(false)
     const [tablet, setTablet] = useState(false)
     const [large, setLarge] = useState(false)
-    const [wide, setWide] = useState(true)
     useEffect(() => {
         const check = () => {
             const w = document.documentElement.clientWidth
             setPhone(w < 768)
             setTablet(w >= 768 && w < 1024)
             setLarge(w > 1440)
-            setWide(w >= 1200)
         }
         check()
         window.addEventListener("resize", check, { passive: true })
         return () => window.removeEventListener("resize", check)
     }, [])
-    // wide: enough room for flow diagrams to run left → right
-    return { phone, tablet, desktop: !phone && !tablet, large, wide }
+    return { phone, tablet, desktop: !phone && !tablet, large }
 }
 
 // ── Utilities ─────────────────────────────────────────────────────────────────
@@ -232,14 +229,12 @@ function AnimStat({
     label,
     sub,
     bg,
-    rec,
 }: {
     num: number
     suffix: string
     label: string
     sub?: string
     bg: string
-    rec?: { num: string; title: string; onOpen: () => void }
 }) {
     const { ref, visible } = useInView(0.1)
     const val = useCounter(num, visible)
@@ -263,24 +258,9 @@ function AnimStat({
                 {label}
             </p>
             {sub && (
-                <p style={{ fontFamily: INTER, fontSize: "11px", color: C.ink3, margin: 0 }}>
+                <p style={{ fontFamily: INTER, fontSize: "11px", color: C.muted, margin: 0 }}>
                     {sub}
                 </p>
-            )}
-            {rec && (
-                <a
-                    href="#recommendations"
-                    onClick={(e) => { e.preventDefault(); rec.onOpen() }}
-                    style={{
-                        display: "inline-flex", alignItems: "center", gap: 6, marginTop: 18, minHeight: 24,
-                        fontFamily: INTER, fontSize: "12px", fontWeight: 500, color: C.ink2, textDecoration: "none",
-                    }}
-                >
-                    <span style={{ textDecoration: "underline", textDecorationColor: "rgba(0,0,0,0.3)", textUnderlineOffset: 3 }}>
-                        Informs Rec {rec.num}: {rec.title}
-                    </span>
-                    <span aria-hidden="true">→</span>
-                </a>
             )}
         </div>
     )
@@ -716,137 +696,21 @@ function FindingCard({ num, title, body, icon }: any) {
     )
 }
 
-// ── Annotation markers ─────────────────────────────────────────────────────────
-// Numbered pin drawn on a screenshot; the same number is repeated inline in
-// the text beside it (PinRef) so the callout labels are real, readable text.
-function PinRef({ n }: { n: number }) {
-    return (
-        <span
-            aria-label={`(marker ${n})`}
-            style={{
-                display: "inline-flex", alignItems: "center", justifyContent: "center",
-                width: 18, height: 18, borderRadius: "50%",
-                // Inverts inside the dark "Proposed" step (see FlowSteps)
-                backgroundColor: `var(--pin-bg, ${C.ink})`, color: `var(--pin-fg, #fff)`,
-                fontFamily: INTER, fontSize: 10, fontWeight: 600, lineHeight: 1,
-                verticalAlign: "1px", margin: "0 2px", fontVariantNumeric: "tabular-nums",
-            }}
-        >
-            {n}
-        </span>
-    )
-}
-
-type Pin = { n: number; x: number; y: number }
-
-// Screenshot at its natural aspect ratio with pins positioned in %, so they
-// stay on target at every width.
-function AnnotatedShot({ src, alt, w, h, pins, phone }: { src: string; alt: string; w: number; h: number; pins: Pin[]; phone: boolean }) {
-    const size = phone ? 22 : 28
-    return (
-        <div style={{ position: "relative", width: "100%", maxWidth: 820, aspectRatio: `${w} / ${h}` }}>
-            <img src={src} alt={alt} loading="lazy" style={{ width: "100%", height: "100%", display: "block", maxWidth: "100%" }} />
-            {pins.map((p) => (
-                <span
-                    key={p.n}
-                    aria-hidden="true"
-                    style={{
-                        position: "absolute", left: `${p.x}%`, top: `${p.y}%`,
-                        width: size, height: size, transform: "translate(-50%, -50%)",
-                        borderRadius: "50%", backgroundColor: C.ink, color: "#fff",
-                        border: "2px solid #fff", boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        fontFamily: INTER, fontSize: phone ? 11 : 13, fontWeight: 600, lineHeight: 1,
-                    }}
-                >
-                    {p.n}
-                </span>
-            ))}
-        </div>
-    )
-}
-
-// ── Evidence → today → proposed flow ──────────────────────────────────────────
-type RecFlow = { backed: React.ReactNode; today: React.ReactNode; proposed: React.ReactNode }
-
-function FlowSteps({ steps, phone, label, maxWidth }: { steps: { k: string; v: React.ReactNode; strong?: boolean }[]; phone: boolean; label: string; maxWidth?: number }) {
-    return (
-        <ol
-            aria-label={label}
-            style={{
-                listStyle: "none", margin: 0, padding: 0, maxWidth,
-                display: "grid",
-                gridTemplateColumns: phone ? "1fr" : steps.map(() => "minmax(0, 1fr)").join(" 28px "),
-                alignItems: "stretch",
-            }}
-        >
-            {steps.map((s, i) => (
-                <React.Fragment key={s.k}>
-                    {i > 0 && (
-                        <li aria-hidden="true" style={{ display: "flex", alignItems: "center", justifyContent: "center", height: phone ? 28 : "auto" }}>
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke={C.ink3} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: phone ? "rotate(90deg)" : "none" }}>
-                                <path d="M2 8h11M9 4l4 4-4 4" />
-                            </svg>
-                        </li>
-                    )}
-                    <li
-                        style={{
-                            ...(s.strong ? { "--pin-bg": "#fff", "--pin-fg": C.ink } as React.CSSProperties : {}),
-                            backgroundColor: s.strong ? C.ink : C.surface,
-                            border: `1px solid ${s.strong ? C.ink : C.border}`,
-                            borderRadius: 10,
-                            padding: phone ? "16px" : "18px 20px",
-                        }}
-                    >
-                        <p style={{
-                            fontFamily: INTER, fontSize: "11px", fontWeight: 500, letterSpacing: "0.08em",
-                            textTransform: "uppercase", color: s.strong ? "rgba(255,255,255,0.78)" : C.ink3, margin: "0 0 8px",
-                        }}>
-                            {s.k}
-                        </p>
-                        <div style={{ fontFamily: INTER, fontSize: "14px", lineHeight: 1.6, color: s.strong ? "#fff" : C.ink2 }}>
-                            {s.v}
-                        </div>
-                    </li>
-                </React.Fragment>
-            ))}
-        </ol>
-    )
-}
-
 // ── Recommendation accordion ───────────────────────────────────────────────────
-function RecRow({ num, title, body, img, imgW, imgH, alt, pins, flow, open, onClick, phone, wide }: {
-    num: string; title: string; body: string
-    img: string; imgW: number; imgH: number; alt: string; pins: Pin[]; flow: RecFlow
-    open: boolean; onClick: () => void; phone: boolean; wide: boolean
-}) {
-    const panelId = `rec-panel-${num}`
-    const btnId = `rec-btn-${num}`
+function RecRow({ num, title, body, detail, img, clip, open, onClick, phone }: any) {
     return (
         <div>
-            <h3 style={{ margin: 0, fontWeight: "inherit" }}>
-            <button
-                id={btnId}
-                type="button"
+            <div
                 onClick={onClick}
-                aria-expanded={open}
-                aria-controls={panelId}
                 style={{
                     display: "flex",
                     alignItems: "center",
                     gap: phone ? 14 : "28px",
                     padding: "28px 0",
                     cursor: "pointer",
-                    width: "100%",
-                    background: "none",
-                    border: 0,
-                    textAlign: "left",
-                    color: "inherit",
-                    font: "inherit",
                 }}
             >
                 <span
-                    aria-hidden="true"
                     style={{
                         fontFamily: INTER,
                         fontWeight: 200,
@@ -860,22 +724,21 @@ function RecRow({ num, title, body, img, imgW, imgH, alt, pins, flow, open, onCl
                 >
                     {num}
                 </span>
-                <span style={{ flex: 1, display: "block" }}>
-                    <span
+                <div style={{ flex: 1 }}>
+                    <p
                         style={{
-                            display: "block",
                             fontFamily: INTER,
                             fontSize: "17px",
+                            marginBottom: "5px",
                             color: C.ink,
                             margin: "0 0 5px",
                             fontWeight: 400,
                         }}
                     >
                         {title}
-                    </span>
-                    <span
+                    </p>
+                    <p
                         style={{
-                            display: "block",
                             fontFamily: INTER,
                             fontSize: "13px",
                             lineHeight: "1.65",
@@ -884,10 +747,9 @@ function RecRow({ num, title, body, img, imgW, imgH, alt, pins, flow, open, onCl
                         }}
                     >
                         {body}
-                    </span>
-                </span>
-                <span
-                    aria-hidden="true"
+                    </p>
+                </div>
+                <div
                     style={{
                         width: "36px",
                         height: "36px",
@@ -913,42 +775,58 @@ function RecRow({ num, title, body, img, imgW, imgH, alt, pins, flow, open, onCl
                     >
                         +
                     </span>
-                </span>
-            </button>
-            </h3>
-            {/* 0fr → 1fr grid rows animates to the content's real height */}
+                </div>
+            </div>
             <div
-                id={panelId}
-                role="region"
-                aria-labelledby={btnId}
                 style={{
-                    display: "grid",
-                    gridTemplateRows: open ? "1fr" : "0fr",
-                    transition: `grid-template-rows 0.55s cubic-bezier(0.22,1,0.36,1), visibility 0s linear ${open ? "0s" : "0.55s"}`,
-                    visibility: open ? "visible" : "hidden",
+                    overflow: "hidden",
+                    maxHeight: open ? "960px" : "0",
+                    transition: "max-height 0.55s cubic-bezier(0.22,1,0.36,1)",
                 }}
             >
-                <div style={{ overflow: "hidden", minHeight: 0 }}>
-                    <div
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "28px",
+                        paddingBottom: "40px",
+                        paddingLeft: phone ? "0" : "92px",
+                    }}
+                >
+                    <p
                         style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: phone ? "20px" : "28px",
-                            paddingBottom: "40px",
-                            paddingLeft: phone ? "0" : "92px",
+                            fontFamily: INTER,
+                            fontSize: "15px",
+                            lineHeight: "1.8",
+                            color: C.ink3,
+                            margin: 0,
                         }}
                     >
-                        <AnnotatedShot src={img} alt={alt} w={imgW} h={imgH} pins={pins} phone={phone} />
-                        <FlowSteps
-                            phone={!wide}
-                            label={`Recommendation ${num}: evidence, current state and proposal`}
-                            steps={[
-                                { k: "Backed by", v: flow.backed },
-                                { k: "Today", v: flow.today },
-                                { k: "Proposed", v: flow.proposed, strong: true },
-                            ]}
-                        />
-                    </div>
+                        {detail}
+                    </p>
+                    {img && (
+                        <div style={{
+                            overflow: "hidden",
+                            lineHeight: 0,
+                            height: phone ? "300px" : "460px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}>
+                            <img
+                                src={img}
+                                alt={title}
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    display: "block",
+                                    objectFit: clip ? "cover" : "contain",
+                                    objectPosition: "center",
+                                    maxWidth: "100%",
+                                }}
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
             <div
@@ -1061,17 +939,11 @@ function SideNav({ active }: { active: string }) {
 }
 
 export default function AnthropologieCaseStudy() {
-    const { phone, tablet, desktop, wide } = useResponsive()
+    const { phone, tablet, desktop } = useResponsive()
     const pad = phone ? 20 : tablet ? 40 : 80
     const activeSection = useActiveSection(SECTIONS.map(s => s.id))
 
-    const [activeRec, setActiveRec] = useState<number | null>(0)
-    const openRec = (i: number) => {
-        setActiveRec(i)
-        document.getElementById("recommendations")?.scrollIntoView({ behavior: "smooth", block: "start" })
-        // Move focus to the opened row's toggle so keyboard users land there too
-        setTimeout(() => document.getElementById(`rec-btn-0${i + 1}`)?.focus({ preventScroll: true }), 50)
-    }
+    const [activeRec, setActiveRec] = useState<number | null>(null)
     const findings = [
         {
             num: "01",
@@ -1104,40 +976,25 @@ export default function AnthropologieCaseStudy() {
             num: "01",
             title: "Reduce Friction in Micro-Interactions",
             body: "Introduce swipe-to-delete in cart to align with native mobile behavior.",
-            img: "/slides/rec1.png", imgW: 1939, imgH: 1300,
-            alt: "Anthropologie's basket, where an item is removed with Remove, Edit and Save For Later text links, beside the J.Crew and Mango bags",
-            pins: [{ n: 1, x: 31, y: 42.8 }, { n: 2, x: 63.7, y: 39.6 }, { n: 3, x: 90.8, y: 20.8 }],
-            flow: {
-                backed: <>The homepage A/B test: less clutter and faster access to products lifted engagement. Finding 02: swipe-to-delete reduces friction.</>,
-                today: <>Removing an item means tapping a small “Remove” text link <PinRef n={1} />, at a critical drop-off point.</>,
-                proposed: <>Swipe-to-delete, the native iOS gesture shoppers already know, as other retailers use (J.Crew <PinRef n={2} />, Mango <PinRef n={3} />).</>,
-            },
+            detail: "Drawing from our homepage redesign A/B test, which showed a positive lift in engagement when category content was less cluttered and products were surfaced faster, I recommended applying the same principle to micro-interactions in the cart. Past test data showed that reducing visual noise and simplifying user actions directly improved conversion, and the same logic applies here. By introducing swipe-to-delete in the cart, we align with a native iOS gesture users already know, reducing friction at a critical drop-off point. Bringing analytical data from previous tests to back new design decisions is how we move fast with confidence.",
+            img: "/slides/rec1.png",
+            clip: false,
         },
         {
             num: "02",
             title: "Unify the Customer Journey",
             body: `Expand "Order History" into "Purchase History" to include in-store and online transactions.`,
-            img: "/slides/rec2.png", imgW: 1835, imgH: 1300,
-            alt: "Anthropologie's Order History screen beside Sephora's Buy It Again list with in-store purchases and H&M's Online and In-store order tabs",
-            pins: [{ n: 1, x: 22.1, y: 17.2 }, { n: 2, x: 54, y: 51.8 }, { n: 3, x: 75.6, y: 30 }],
-            flow: {
-                backed: <>Sephora <PinRef n={2} /> and H&amp;M <PinRef n={3} /> surface in-store purchases in their apps. 74% of consumers expect seamless online-to-offline shopping.</>,
-                today: <>“Order History” <PinRef n={1} /> covers online orders.</>,
-                proposed: <>“Purchase History”: in-store and online together, linked by Anthroperks QR scan or phone number. Removes missing-receipt friction on returns.</>,
-            },
+            detail: "Triggered via Anthroperks QR scan or phone number. Sephora and H&M both surface in-store purchases in their apps. This also reduces return friction by eliminating missing receipt issues.",
+            img: "/slides/rec2.png",
+            clip: false,
         },
         {
             num: "03",
             title: "Recreate In-Store Guidance Digitally",
             body: "Develop a virtual stylist chatbot for real-time, personalized recommendations.",
-            img: "/slides/rec3.png", imgW: 1891, imgH: 1300,
-            alt: "Anthropologie's chatbot menu of order topics beside Levi's StyleBot asking about jean fit and ASOS FashionBot asking about budget",
-            pins: [{ n: 1, x: 25.9, y: 63.8 }, { n: 2, x: 63.4, y: 36.2 }, { n: 3, x: 73.8, y: 33.8 }],
-            flow: {
-                backed: <>Levi&rsquo;s StyleBot <PinRef n={2} /> and ASOS FashionBot <PinRef n={3} /> show guided chatbots increase product discovery. 45% value virtual shopping assistants.</>,
-                today: <>The chatbot <PinRef n={1} /> is limited to order support.</>,
-                proposed: <>A virtual stylist giving real-time, personalized recommendations, mirroring in-store guidance.</>,
-            },
+            detail: "Levi's StyleBot and ASOS FashionBot demonstrate how guided chatbots increase product discovery. Anthropologie's current chatbot is limited to order support. Expanding to styling advice mirrors the in-store experience.",
+            img: "/slides/rec3.png",
+            clip: false,
         },
     ]
 
@@ -1268,9 +1125,10 @@ export default function AnthropologieCaseStudy() {
                         sub="Three stats that defined the research opportunity"
                     />
                     <Body>
-                        US mobile retail sales are on track to grow nearly 4×
-                        in eight years, and customer expectations have grown
-                        just as fast.
+                        Mobile retail e-commerce in the United States has grown
+                        from $220B in 2019 to a projected $856B by 2027, a near
+                        4× increase. The expectations customers bring to these
+                        experiences have grown just as fast.
                     </Body>
                         {/* M-Commerce data card */}
                         <div
@@ -1289,25 +1147,20 @@ export default function AnthropologieCaseStudy() {
                                     backgroundColor: "#FAFAF8",
                                 }}
                             >
-                                <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "baseline", gap: "8px 16px", marginBottom: "20px" }}>
-                                    <p
-                                        style={{
-                                            fontFamily: INTER,
-                                            fontSize: "11px",
-                                            fontWeight: 500,
-                                            letterSpacing: "0.08em",
-                                            textTransform: "uppercase",
-                                            color: C.ink3,
-                                            margin: 0,
-                                        }}
-                                    >
-                                        Mobile Retail E-Commerce Sales, United
-                                        States (Billion USD)
-                                    </p>
-                                    <p style={{ fontFamily: INTER, fontSize: "13px", fontWeight: 500, color: C.ink, margin: 0 }}>
-                                        $220B → $856B · near 4×
-                                    </p>
-                                </div>
+                                <p
+                                    style={{
+                                        fontFamily: INTER,
+                                        fontSize: "11px",
+                                        fontWeight: 500,
+                                        letterSpacing: "0.08em",
+                                        textTransform: "uppercase",
+                                        color: C.muted,
+                                        marginBottom: "20px",
+                                    }}
+                                >
+                                    Mobile Retail E-Commerce Sales, United
+                                    States (Billion USD)
+                                </p>
                                 <div
                                     style={{
                                         display: "flex",
@@ -1336,7 +1189,7 @@ export default function AnthropologieCaseStudy() {
                                                 style={{
                                                     fontFamily: INTER,
                                                     fontSize: "11px",
-                                                    color: C.ink3,
+                                                    color: C.muted,
                                                     width: "38px",
                                                     flexShrink: 0,
                                                     fontVariantNumeric:
@@ -1352,7 +1205,6 @@ export default function AnthropologieCaseStudy() {
                                                     backgroundColor: C.surface2,
                                                     borderRadius: "4px",
                                                     overflow: "hidden",
-                                                    position: "relative",
                                                 }}
                                             >
                                                 <div
@@ -1368,7 +1220,7 @@ export default function AnthropologieCaseStudy() {
                                                         paddingRight: "8px",
                                                     }}
                                                 >
-                                                    {val / 856.38 > 0.3 ? (
+                                                    {val / 856.38 > 0.3 && (
                                                         <span
                                                             style={{
                                                                 fontFamily:
@@ -1381,13 +1233,8 @@ export default function AnthropologieCaseStudy() {
                                                         >
                                                             ${val}B
                                                         </span>
-                                                    ) : null}
+                                                    )}
                                                 </div>
-                                                {val / 856.38 <= 0.3 && (
-                                                    <span style={{ position: "absolute", left: `calc(${(val / 856.38) * 100}% + 8px)`, top: "50%", transform: "translateY(-50%)", fontFamily: INTER, fontSize: "10px", fontWeight: 700, color: C.ink }}>
-                                                        ${val}B
-                                                    </span>
-                                                )}
                                             </div>
                                         </div>
                                     ))}
@@ -1396,7 +1243,7 @@ export default function AnthropologieCaseStudy() {
                                     style={{
                                         fontFamily: INTER,
                                         fontSize: "10px",
-                                        color: C.ink3,
+                                        color: C.muted,
                                         marginTop: "10px",
                                     }}
                                 >
@@ -1418,21 +1265,18 @@ export default function AnthropologieCaseStudy() {
                             suffix="%"
                             label="of consumers expect seamless online-to-offline shopping"
                             bg={C.surface}
-                            rec={{ num: "02", title: "Purchase History", onOpen: () => openRec(1) }}
                         />
                         <AnimStat
                             num={66}
                             suffix="%"
                             label="say poor mobile UX negatively affects brand credibility"
                             bg={C.surface2}
-                            rec={{ num: "01", title: "Swipe-to-delete", onOpen: () => openRec(0) }}
                         />
                         <AnimStat
                             num={45}
                             suffix="%"
                             label="value virtual shopping assistants"
                             bg={C.surface3}
-                            rec={{ num: "03", title: "Virtual stylist", onOpen: () => openRec(2) }}
                         />
                     </div>
                 </FadeIn>
@@ -1762,7 +1606,6 @@ export default function AnthropologieCaseStudy() {
                             key={i}
                             {...r}
                             phone={phone}
-                            wide={wide}
                             open={activeRec === i}
                             onClick={() =>
                                 setActiveRec(activeRec === i ? null : i)
@@ -1780,25 +1623,21 @@ export default function AnthropologieCaseStudy() {
                         title="Positioning mobile as a strategic growth lever"
                         sub="Presented to Anthropologie's Director of E-Commerce"
                     />
-                    <div style={{ marginTop: 8, marginBottom: 32 }}>
-                        <FlowSteps
-                            phone={!wide}
-                            maxWidth={wide ? undefined : 560}
-                            label="How the recommendations reached the roadmap"
-                            steps={[
-                                { k: "Evidence", v: <>A/B testing results<br />Competitive benchmarking<br />Behavioral insights</> },
-                                { k: "3 recommendations", v: <>Swipe-to-delete cart<br />Purchase History<br />Virtual stylist</> },
-                                { k: "Presented to", v: <>Anthropologie&rsquo;s Director of E&#8209;Commerce</> },
-                                { k: "Outcome", v: <>Flagged for Q3 roadmap consideration</>, strong: true },
-                            ]}
-                        />
-                    </div>
                     <Body>
-                        Together they addressed immediate conversion friction
-                        and longer-term loyalty. My framing throughout: mobile
-                        optimization is a revenue decision, not a UX
-                        nice-to-have. In a channel growing toward $856B, every
-                        point of friction is measurable loss.
+                        I presented these recommendations to Anthropologie's
+                        Director of E-Commerce, backed by A/B testing results,
+                        competitive benchmarking data, and behavioral insights.
+                        The three changes I proposed addressed both immediate
+                        conversion friction and longer-term loyalty drivers.
+                    </Body>
+                    <Body>
+                        The framing I drove throughout was that mobile
+                        optimization isn't a UX nice-to-have. It's a
+                        revenue decision. In a channel growing toward $856B,
+                        every point of friction is measurable loss.
+                    </Body>
+                    <Body>
+                        Recommendations were formally presented to the Director of E-Commerce and flagged for Q3 roadmap consideration.
                     </Body>
                 </FadeIn>
 

@@ -210,33 +210,6 @@ const GAP_NOTES: Note[] = [
     { label: "Same in the full review list, with no way to translate.", box: [58.4, 62.8, 92.2, 70.2], side: "right" },
 ]
 
-// Research: what a readable review does vs. an unreadable one
-const REVIEW_USES = [
-    { t: "Validate quality", q: "Does it live up to its listing?" },
-    { t: "Learn from other shoppers", q: "How does it hold up in everyday use?" },
-    { t: "Understand fit & sizing", q: "Which size, across sizing systems?" },
-]
-
-function Lane({ title, steps, end, muted = false }: { title: string; steps: React.ReactNode[]; end: string; muted?: boolean }) {
-    const box: React.CSSProperties = { backgroundColor: "#fff", border: `1px solid ${C.border}`, borderRadius: 6, padding: "12px 16px" }
-    return (
-        <div style={{ ...MAT, padding: 20, borderRadius: 2 }}>
-            <p style={{ ...SMALL, fontWeight: 500, color: C.ink, marginBottom: 14 }}>{title}</p>
-            <ol style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 6 }}>
-                {steps.map((s, i) => (
-                    <React.Fragment key={i}>
-                        <li style={box}>{s}</li>
-                        <Arrow down />
-                    </React.Fragment>
-                ))}
-                <li style={{ ...box, borderColor: muted ? ROSE : C.ink, borderStyle: muted ? "dashed" : "solid" }}>
-                    <p style={{ fontFamily: I, fontSize: 15, fontWeight: 600, color: muted ? ROSE : C.ink, margin: 0 }}>{end}</p>
-                </li>
-            </ol>
-        </div>
-    )
-}
-
 // Design decisions: the three paths from Exploration, checked against the constraints
 const PATHS = [
     { path: "Auto-translate at load", hits: "Performance Limits", body: "Auto-translating large volumes at load would impact page speed significantly.", ok: false },
@@ -244,13 +217,19 @@ const PATHS = [
     { path: "Per review, on demand", hits: "Chosen", body: "Fits both: one review at a time, only when the shopper asks.", ok: true },
 ]
 
-// Results: each friction point from the Challenge, and what changed
-const BEFORE_AFTER = [
-    { h: "Language access", before: "Reviews were inaccessible to non-English speakers.", after: "Improved accessibility for international shoppers" },
-    { h: "Fit & quality", before: "Hard to judge fit & quality from English reviews.", after: "Increased clarity around product fit and quality" },
-    { h: "UX consistency", before: "Felt inconsistent with the rest of the app.", after: "More consistent language experience across the app" },
-    { h: "Purchase confidence", before: "Confidence during purchase decisions was reduced.", after: "Greater purchase confidence for non-English speakers" },
-]
+// Hairline-separated list rows (no cards)
+function Rows({ items, numbered = false }: { items: string[]; numbered?: boolean }) {
+    return (
+        <div>
+            {items.map((t, i) => (
+                <div key={i} style={{ display: "flex", gap: 14, alignItems: "baseline", padding: "12px 0", borderTop: `1px solid ${C.border}` }}>
+                    {numbered && <span style={{ fontFamily: I, fontSize: 11, color: C.muted, letterSpacing: "0.06em", width: 18, flexShrink: 0 }}>0{i + 1}</span>}
+                    <span style={{ ...BODY, color: C.ink2 }}>{t}</span>
+                </div>
+            ))}
+        </div>
+    )
+}
 
 // ── Artifacts (click to view larger) ────────────────────────────────────────
 
@@ -312,8 +291,8 @@ const ARTIFACTS = {
 }
 
 // ── Design decisions ────────────────────────────────────────────────────────
-// Each decision names the principles it serves; the principle wording from the
-// original page is folded into its one-line summary instead of repeated.
+// Problem = the existing constraint/principle, What I Changed = the existing
+// solution, Why = the principle it serves. Wording comes from the original page.
 
 const DECISIONS = [
     {
@@ -487,27 +466,19 @@ export default function IOSCaseStudy() {
                         <FadeIn>
                             <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1.1fr) minmax(0, 1fr)", columnGap: 56, rowGap: 28, alignItems: "center" }}>
                                 <SectionHead flush phone={phone} tag="Challenge" title="Why URBN's global scale created a localization gap"
-                                    intro="URBN runs Anthropologie, Free People, and Urban Outfitters across international markets, for millions of shoppers using the apps in their native language. The apps were built to be multilingual, but one critical surface wasn't: product reviews." />
+                                    intro="URBN operates Anthropologie, Free People, and Urban Outfitters across international markets, serving millions of shoppers who use the apps in their native language. The apps were built to be multilingual, but one critical surface wasn't: product reviews." />
                                 <img src="/slides/ios-ecosystem.webp" alt="URBN brands and their international markets" style={{ ...IMG, maxWidth: phone ? 360 : 420, justifySelf: phone ? "start" : "end" }} />
                             </div>
                         </FadeIn>
 
-                        {/* The gap: annotated evidence, then the equation as the takeaway */}
+                        {/* The gap: explanation, then the equation as the focal point, then the evidence */}
                         <FadeIn>
                             <div style={{ marginTop: sp.group }}>
                                 <SubHead title="There was a consistency gap in the global shopping experience" phone={phone} />
                                 <p style={{ ...BODY, color: C.ink3, maxWidth: MEASURE }}>
-                                    Navigation, product details, and system UI follow the shopper's chosen language. Reviews stayed English-only.
+                                    Across URBN's mobile apps, users can set their preferred language, and navigation, product details, and system UI all adapt accordingly, except for product reviews, which remained in English only.
                                 </p>
                             </div>
-                            <figure style={{ margin: 0, marginTop: phone ? 16 : 8, display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1.25fr) minmax(0, 1fr)", columnGap: 48, rowGap: 20, alignItems: "center" }}>
-                                {/* Transparent PNG with two devices; no backing container */}
-                                <AnnotatedShot src="/slides/ios-original.webp" alt="Spain Urban Outfitters app: Spanish interface, product reviews in English" notes={GAP_NOTES} maxWidth={560} />
-                                <figcaption>
-                                    <p style={{ ...SMALL, marginBottom: 12 }}>The Spain Urban Outfitters app.</p>
-                                    <NoteList notes={GAP_NOTES} />
-                                </figcaption>
-                            </figure>
                         </FadeIn>
 
                         <FadeIn>
@@ -516,6 +487,14 @@ export default function IOSCaseStudy() {
                                     English-only reviews <span style={{ color: C.muted }}>+</span> global audience <span style={{ color: C.muted }}>=</span> <span style={{ fontWeight: 600 }}>accessibility gap</span>
                                 </p>
                             </div>
+                            <figure style={{ margin: 0, marginTop: phone ? 40 : 56, display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1.25fr) minmax(0, 1fr)", columnGap: 48, rowGap: 20, alignItems: "center" }}>
+                                {/* Transparent PNG with two devices; no backing container */}
+                                <AnnotatedShot src="/slides/ios-original.webp" alt="Spain Urban Outfitters app: Spanish interface, product reviews in English" notes={GAP_NOTES} maxWidth={560} />
+                                <figcaption>
+                                    <p style={{ ...SMALL, marginBottom: 12 }}>The Spain Urban Outfitters app showing reviews in English, with no way to translate them.</p>
+                                    <NoteList notes={GAP_NOTES} />
+                                </figcaption>
+                            </figure>
                         </FadeIn>
 
                         {/* Friction points: concise items, bold heading + one line */}
@@ -546,31 +525,32 @@ export default function IOSCaseStudy() {
                     <section id="research" style={{ scrollMarginTop: 96, marginTop: sp.section }}>
                         <FadeIn>
                             <SectionHead phone={phone} tag="Research" title="Reviews are decision tools, not just content"
-                                intro="Reviews shape whether a shopper buys or bounces. They answer the questions a product page can't, but only if users can actually read them." />
+                                intro="In e-commerce, product reviews directly shape whether a shopper buys or bounces. They answer the questions a product page can't, and they only work if users can actually read them." />
                         </FadeIn>
 
-                        {/* Comparison: the same review, readable vs. not */}
+                        {/* Group 1: what reviews do */}
                         <FadeIn>
-                            <div style={{ display: "grid", gridTemplateColumns: twoCol, columnGap: 24, rowGap: 16 }}>
-                                <Lane title="Review in the shopper's language"
-                                    steps={[
-                                        <p key="r" style={{ ...SMALL, color: C.ink2 }}>Shopper reads the review</p>,
-                                        <ul key="u" style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
-                                            {REVIEW_USES.map((u) => (
-                                                <li key={u.t}>
-                                                    <p style={{ fontFamily: I, fontSize: 14, fontWeight: 600, color: C.ink, lineHeight: 1.4, margin: 0 }}>{u.t}</p>
-                                                    <p style={SMALL}>{u.q}</p>
-                                                </li>
-                                            ))}
-                                        </ul>,
-                                    ]}
-                                    end="Purchase confidence" />
-                                <Lane muted title="English-only review, non-English speaker"
-                                    steps={[
-                                        <p key="r" style={{ ...SMALL, color: C.ink2 }}>Shopper can't read the review</p>,
-                                        <p key="l" style={{ ...SMALL, color: C.ink2 }}>One of the most valuable signals for purchase confidence is lost</p>,
-                                    ]}
-                                    end="Hesitation and drop-off" />
+                            <div style={{ display: "grid", gridTemplateColumns: threeCol, columnGap: 40 }}>
+                                {[
+                                    { title: "Validate quality", body: "Reviews confirm that a product lives up to its listing, or reveal when it doesn't." },
+                                    { title: "Learn from other shoppers", body: "Reviews help shoppers understand how a product performs in everyday use, including details and drawbacks that product descriptions may miss." },
+                                    { title: "Understand fit & sizing", body: "Feedback on fit, sizing, and measurements helps shoppers decide which size to choose, especially when shopping across different sizing systems." },
+                                ].map((b) => (
+                                    <div key={b.title} style={{ borderTop: `1px solid ${C.border}`, padding: "16px 0 24px" }}>
+                                        <p style={{ fontFamily: I, fontSize: 15, fontWeight: 600, color: C.ink, lineHeight: 1.4, margin: 0, marginBottom: 6 }}>{b.title}</p>
+                                        <p style={{ ...BODY, color: C.ink3 }}>{b.body}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </FadeIn>
+
+                        {/* Group 2: the insight */}
+                        <FadeIn>
+                            <div style={{ marginTop: sp.group, paddingTop: 24, borderTop: `1px solid ${C.border}`, maxWidth: 720 }}>
+                                <Label>Key insight: accessibility gap</Label>
+                                <p style={{ fontFamily: I, fontSize: phone ? 19 : 22, fontWeight: 300, color: C.ink, lineHeight: 1.45, letterSpacing: "-0.01em", margin: 0 }}>
+                                    Without access to reviews in their language, users lose one of the most valuable signals for purchase confidence, which increases hesitation and drop-off.
+                                </p>
                             </div>
                         </FadeIn>
                     </section>
@@ -579,7 +559,7 @@ export default function IOSCaseStudy() {
                     <section id="exploration" style={{ scrollMarginTop: 96, marginTop: sp.section }}>
                         <FadeIn>
                             <SectionHead phone={phone} tag="Exploration" title="From ambiguity to architecture"
-                                intro="Before any UI, the problem was mapped: scoping the ticket, surfacing open questions, and charting every translation path. The three paths became low-fidelity concepts, critiqued with Senior Designers and Product partners to validate assumptions." />
+                                intro="Before any UI was designed, the problem was mapped: scoping the ticket, surfacing open questions, and charting every possible translation path to find the right one. The three paths became low-fidelity concepts discussed in design critiques with Senior Designers and Product partners, allowing the team to validate assumptions and refine the direction." />
                         </FadeIn>
                         <FadeIn>
                             {/* Brief and early thinking, then the paths in full, then the three refinements */}
@@ -671,26 +651,18 @@ export default function IOSCaseStudy() {
                             <SectionHead phone={phone} tag="Results" title="Closing the accessibility gap for millions of global shoppers"
                                 intro="By aligning platform capabilities with user needs, the feature strengthens trust at one of the most critical moments in the shopping journey." />
                         </FadeIn>
-                        {/* Before → after: each friction point from the Challenge and its outcome */}
                         <FadeIn>
-                            <div role="table" aria-label="Friction points before, and outcomes after the feature">
-                                {!phone && (
-                                    <div role="row" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 44px minmax(0, 1fr)", paddingBottom: 10 }}>
-                                        <span role="columnheader" style={{ ...SMALL, fontSize: 12, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" }}>Before</span>
-                                        <span aria-hidden="true" />
-                                        <span role="columnheader" style={{ ...SMALL, fontSize: 12, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" }}>After</span>
-                                    </div>
-                                )}
-                                {BEFORE_AFTER.map((r) => (
-                                    <div role="row" key={r.h} style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1fr) 44px minmax(0, 1fr)", rowGap: 6, alignItems: "center", padding: "14px 0", borderTop: `1px solid ${C.border}` }}>
-                                        <div role="cell">
-                                            <p style={{ fontFamily: I, fontSize: 14, fontWeight: 600, color: C.ink, lineHeight: 1.4, margin: 0, marginBottom: 2 }}>{r.h}</p>
-                                            <p style={SMALL}>{phone && <span style={{ fontWeight: 500 }}>Before: </span>}{r.before}</p>
-                                        </div>
-                                        {!phone && <Arrow />}
-                                        <p role="cell" style={{ ...BODY, color: C.ink }}>{phone && <span style={{ ...SMALL, fontWeight: 500 }}>After: </span>}{r.after}</p>
-                                    </div>
-                                ))}
+                            <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "minmax(0, 1.2fr) minmax(0, 1fr)", columnGap: 56, rowGap: 32, alignItems: "start" }}>
+                                <Rows numbered items={[
+                                    "Improved accessibility for international shoppers",
+                                    "Increased clarity around product fit and quality",
+                                    "More consistent language experience across the app",
+                                    "Greater purchase confidence for non-English speakers",
+                                ]} />
+                                <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 12 }}>
+                                    <BoldLabel>Live</BoldLabel>
+                                    <p style={BODY}>This feature is currently live across iPhone 15 and up for users whose app language is set to a different language than their device language.</p>
+                                </div>
                             </div>
                         </FadeIn>
                     </section>
@@ -699,7 +671,7 @@ export default function IOSCaseStudy() {
                     <section id="learnings" style={{ scrollMarginTop: 96, marginTop: sp.section }}>
                         <FadeIn>
                             <SectionHead flush phone={phone} tag="Learnings" title="Constraint-driven design is still good design"
-                                intro="This project reinforced that the best design decisions often emerge from working within limits. iOS 18-only support and the no-bulk-translation constraint weren't obstacles. They defined the user experience, and on-demand, user-triggered translation made it feel native. The constraint became the strategy." />
+                                intro="This project reinforced that the best design decisions often emerge from working within limits. iOS 18-only support and the no-bulk-translation constraint weren't obstacles. They defined the user experience. By leaning into on-demand, user-triggered translation, I delivered a solution that felt native and intentional, not bolted-on. The constraint became the strategy." />
                         </FadeIn>
                     </section>
 
