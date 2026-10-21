@@ -1716,13 +1716,13 @@ function Footer({
                     width: "100%",
                     margin: "0 auto",
                     display: "flex",
-                    alignItems: phone ? "flex-start" : "center",
-                    flexDirection: phone ? "column" : "row",
+                    alignItems: "center",
+                    flexDirection: "row", // one row on every width: logo + © left, icons right
                     justifyContent: "space-between",
-                    gap: phone ? 20 : 0,
+                    gap: phone ? 12 : 0,
                 }}
             >
-                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: phone ? 10 : 14, minWidth: 0 }}>
                     <img
                         src="https://framerusercontent.com/images/NdNFLxKwhpMzm0XHgjDRNkrRRg.png"
                         alt="OC"
@@ -1732,7 +1732,7 @@ function Footer({
                         © {new Date().getFullYear()} Omisha Chabria
                     </p>
                 </div>
-                <div style={{ display: "flex", gap: phone ? 18 : 22, alignItems: "center" }}>
+                <div style={{ display: "flex", gap: phone ? 6 : 22, alignItems: "center", flexShrink: 0 }}>
                     {[
                         { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true, icon: "/icons/linkedin.png" },
                         { label: "Email", href: "mailto:omishachabria3@gmail.com", ext: false, icon: "/icons/mail.png" },
@@ -1743,7 +1743,8 @@ function Footer({
                             target={ext ? "_blank" : "_self"}
                             rel="noreferrer"
                             aria-label={label}
-                            style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+                            // 44px tap target on phone without changing the icon size
+                            style={{ display: "flex", alignItems: "center", justifyContent: "center", minWidth: phone ? 44 : undefined, minHeight: phone ? 44 : undefined }}
                         >
                             <img
                                 src={icon}
