@@ -625,59 +625,74 @@ const FINDING_ICONS: Record<string, React.ReactNode> = {
     ),
 }
 
-// ── Finding row ────────────────────────────────────────────────────────────────
-// Editorial ruled list: number + icon, headline, takeaway, one finding per row
-// so the four read top to bottom at a glance.
-function FindingRow({ num, title, body, icon, phone, tablet }: any) {
-    const stacked = phone || tablet
+// ── Finding card ───────────────────────────────────────────────────────────────
+// Static card (no hover or click state)
+function FindingCard({ num, title, body, icon }: any) {
+    const active = false
     return (
-        <article
+        <div
             style={{
-                display: "grid",
-                gridTemplateColumns: phone ? "40px minmax(0, 1fr)" : stacked ? "56px minmax(0, 1fr)" : "48px minmax(0, 0.9fr) minmax(0, 1.1fr)",
-                columnGap: phone ? 12 : 24,
-                rowGap: 8,
-                alignItems: "baseline",
-                padding: phone ? "22px 0" : "30px 0",
-                borderTop: `1px solid ${C.border}`,
+                flex: 1,
+                borderRadius: "10px",
+                padding: "28px 22px",
+                backgroundColor: C.surface,
+                border: `1px solid ${C.border}`,
             }}
         >
-            <span style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: INTER, fontSize: 13, fontWeight: 400, letterSpacing: "0.04em", color: C.ink3, gridRow: stacked ? "span 2" : undefined }}>
-                {num}
-            </span>
-            <h3
+            <span
+                aria-hidden="true"
                 style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 10,
+                    backgroundColor: "#fff",
+                    border: `1px solid ${C.border}`,
                     display: "flex",
                     alignItems: "center",
-                    gap: 12,
-                    fontFamily: INTER,
-                    fontSize: phone ? "19px" : stacked ? "21px" : "24px",
-                    fontWeight: 300,
-                    letterSpacing: "-0.02em",
-                    color: C.ink,
-                    lineHeight: 1.25,
-                    margin: 0,
+                    justifyContent: "center",
+                    marginBottom: "16px",
                 }}
             >
-                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.ink3} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.ink} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     {FINDING_ICONS[icon]}
                 </svg>
-                {title}
-            </h3>
+            </span>
             <p
                 style={{
                     fontFamily: INTER,
-                    fontSize: phone ? "14px" : "15px",
-                    lineHeight: 1.6,
-                    color: C.ink3,
+                    fontWeight: 700,
+                    fontSize: "10px",
+                    color: active ? "rgba(255,255,255,0.3)" : C.muted,
+                    marginBottom: "8px",
+                    letterSpacing: "0.08em",
+                }}
+            >
+                {num}
+            </p>
+            <p
+                style={{
+                    fontFamily: INTER,
+                    fontSize: "15px",
+                    color: active ? "#fff" : C.ink,
+                    marginBottom: "8px",
+                    lineHeight: 1.4,
+                    fontWeight: 400,
+                }}
+            >
+                {title}
+            </p>
+            <p
+                style={{
+                    fontFamily: INTER,
+                    fontSize: "13px",
+                    lineHeight: "1.65",
+                    color: active ? "rgba(255,255,255,0.65)" : C.ink3,
                     margin: 0,
-                    paddingLeft: stacked ? 30 : 0,
-                    maxWidth: 480,
                 }}
             >
                 {body}
             </p>
-        </article>
+        </div>
     )
 }
 
@@ -1527,9 +1542,9 @@ export default function AnthropologieCaseStudy() {
                         step="05 · Findings"
                         title="What the data revealed about mobile drop-off"
                     />
-                    <div style={{ borderBottom: `1px solid ${C.border}` }}>
-                        {findings.map((f) => (
-                            <FindingRow key={f.num} {...f} phone={phone} tablet={tablet} />
+                    <div style={{ display: "grid", gridTemplateColumns: phone ? "1fr" : tablet ? "1fr 1fr" : "repeat(4, 1fr)", gap: "10px" }}>
+                        {findings.map((f, i) => (
+                            <FindingCard key={i} {...f} />
                         ))}
                     </div>
                 </FadeIn>
