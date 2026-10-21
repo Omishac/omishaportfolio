@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react"
 import SharedNav from "../../components/SharedNav"
+import { TypingBubble } from "../../components/TypingBubble"
 import { FONT_SANS, COLORS, EASE_SPRING, useReducedMotion, BracketTag } from "../../components/site"
 
 // Landing page tokens (components/site.tsx): Inter only, neutral palette.
@@ -115,11 +116,11 @@ function SectionHead({ tag, title, intro, phone }: { tag?: string; title: string
 }
 
 function Label({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
-    return <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, margin: 0, marginBottom: 8, ...style }}>{children}</p>
+    return <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: C.ink3, margin: 0, marginBottom: 8, ...style }}>{children}</p>
 }
 
 function Num({ children }: { children: React.ReactNode }) {
-    return <span style={{ fontFamily: INTER, fontSize: 11, fontWeight: 400, letterSpacing: "0.06em", color: C.muted }}>{children}</span>
+    return <span style={{ fontFamily: INTER, fontSize: 11, fontWeight: 400, letterSpacing: "0.06em", color: C.ink3 }}>{children}</span>
 }
 
 function Caption({ children }: { children: React.ReactNode }) {
@@ -225,7 +226,7 @@ function StrategyLabel({ children }: { children: React.ReactNode }) {
 }
 
 function StrategyBlock({ s, phone }: { s: typeof STRATEGIES[number]; phone: boolean }) {
-    const group = { marginTop: 28 } // same gap between Problem, What I Changed and Why
+    const group = { marginTop: 28 } // same gap between Problem, What Changed and Why
     const body: React.CSSProperties = { fontFamily: INTER, fontSize: 15, fontWeight: 400, color: C.ink2, lineHeight: 1.65, margin: 0 }
     return (
         <div style={{
@@ -245,7 +246,7 @@ function StrategyBlock({ s, phone }: { s: typeof STRATEGIES[number]; phone: bool
                 </div>
 
                 <div style={group}>
-                    <StrategyLabel>What I Changed</StrategyLabel>
+                    <StrategyLabel>What Changed</StrategyLabel>
                     <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                         {s.changes.map((c, ci) => (
                             <li key={ci} style={{ ...body, padding: "7px 0", borderTop: `1px solid ${C.border}` }}>{c}</li>
@@ -278,7 +279,7 @@ function SideNav({ active }: { active: string }) {
                         style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", textDecoration: "none" }}
                     >
                         <span aria-hidden="true" style={{ width: isActive ? 12 : 0, height: 1, backgroundColor: C.ink, transition: `width 0.3s ${EASE_SPRING}` }} />
-                        <span style={{ fontFamily: INTER, fontSize: 12, fontWeight: isActive ? 500 : 400, color: isActive ? C.ink : C.muted, transition: "color 0.3s ease" }}>
+                        <span style={{ fontFamily: INTER, fontSize: 12, fontWeight: isActive ? 500 : 400, color: isActive ? C.ink : C.ink3, transition: "color 0.3s ease" }}>
                             {label}
                         </span>
                     </a>
@@ -321,11 +322,10 @@ export default function AnthropologieProductDiscovery() {
 
                     {/* ════════ OVERVIEW ════════ */}
                     <section id="overview" style={{ scrollMarginTop: 96, paddingTop: phone ? 32 : 48 }}>
-                        <FadeIn>
-                            <div style={MAT}>
-                                <img src="/images/filter-comparison.webp" alt="Filter experience across Free People, Urban Outfitters, and Anthropologie" style={IMG} />
-                            </div>
-                        </FadeIn>
+                        {/* Header image shows straight away (no fade-in wait) and is fetched first */}
+                        <div style={MAT}>
+                            <img src="/images/filter-comparison.webp" alt="Filter experience across Free People, Urban Outfitters, and Anthropologie" width={2400} height={1200} loading="eager" decoding="async" fetchPriority="high" style={IMG} />
+                        </div>
 
                         <FadeIn delay={80}>
                             <div style={{ marginTop: phone ? 36 : 56 }}>
@@ -338,7 +338,7 @@ export default function AnthropologieProductDiscovery() {
                                 </h1>
                                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 18 }}>
                                     {["Product Design", "Design Systems", "E-Commerce"].map(tag => (
-                                        <span key={tag} style={{ fontFamily: INTER, fontSize: 11, color: C.muted, backgroundColor: "rgba(0,0,0,0.04)", borderRadius: 40, padding: "4px 10px" }}>{tag}</span>
+                                        <span key={tag} style={{ fontFamily: INTER, fontSize: 11, color: C.ink3, backgroundColor: "rgba(0,0,0,0.04)", borderRadius: 40, padding: "4px 10px" }}>{tag}</span>
                                     ))}
                                 </div>
                             </div>
@@ -355,7 +355,7 @@ export default function AnthropologieProductDiscovery() {
                                 {[
                                     { k: "Problem", v: "Shoppers struggled to track filter selections and understand pickup availability." },
                                     { k: "What I Did", v: "Redesigned selection feedback, navigation, and pickup controls to reduce uncertainty." },
-                                    { k: "Impact", v: "100% task completion in usability retesting. Launched across three brands." },
+                                    { k: "Impact", v: "100% task completion in UX Research's usability retest. Launched across three brands." },
                                 ].map(({ k, v }) => (
                                     <div key={k}>
                                         <p style={{ fontFamily: INTER, fontSize: 14, fontWeight: 600, color: C.ink, lineHeight: 1.4, margin: 0, marginBottom: 8 }}>{k}</p>
@@ -385,8 +385,8 @@ export default function AnthropologieProductDiscovery() {
                     <section id="challenge" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
                             <SectionHead phone={phone} tag="Challenge" title="The existing filtering experience"
-                                intro="Product filters play a critical role in helping shoppers navigate large product catalogs. As assortments expanded across URBN brands, we wanted to better understand how the filtering experience supported product discovery across Mobile Web and Desktop." />
-                            <p style={{ fontFamily: INTER, fontSize: phone ? 18 : 20, fontWeight: 400, color: C.ink, lineHeight: 1.45, maxWidth: 520, letterSpacing: "-0.01em", margin: 0, marginTop: phone ? -16 : -24, marginBottom: phone ? 40 : 56 }}>
+                                intro="Product filters play a critical role in helping shoppers navigate large product catalogs. As assortments expanded across URBN brands, the business wanted to better understand how the filtering experience supported product discovery across Mobile Web and Desktop." />
+                            <p style={{ fontFamily: INTER, fontSize: phone ? 18 : 20, fontWeight: 400, color: C.ink, lineHeight: 1.45, maxWidth: phone ? 520 : "none", whiteSpace: phone ? "normal" : "nowrap", letterSpacing: "-0.01em", margin: 0, marginTop: phone ? -16 : -24, marginBottom: phone ? 40 : 56 }}>
                                 Users moved between multiple screens to apply and review filters.
                             </p>
                         </FadeIn>
@@ -416,19 +416,20 @@ export default function AnthropologieProductDiscovery() {
                     {/* ════════ RESEARCH FINDINGS ════════ */}
                     <section id="research" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
-                            <SectionHead phone={phone} tag="Research Findings" title="Four patterns that shaped our direction"
-                                intro="Partnering with the UX Research team, we analyzed usability testing sessions to understand where users experienced friction throughout the filtering journey. Across participants, four recurring patterns emerged." />
+                            <SectionHead phone={phone} tag="Research Findings" title="Four patterns that shaped my design direction"
+                                intro="The UX Research team analyzed usability testing sessions to understand where users experienced friction throughout the filtering journey. The four recurring patterns they found shaped my design direction." />
                         </FadeIn>
 
                         <FadeIn delay={60}>
                             {/* Numbered list on a two-column grid, separated by hairlines */}
                             <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "repeat(2, minmax(0, 1fr))", columnGap: 56 }}>
-                                {FINDINGS.map((f) => (
+                                {FINDINGS.map((f, i) => (
                                     <div key={f.num} style={{ borderTop: `1px solid ${C.border}`, padding: phone ? "24px 0 32px" : "28px 0 44px" }}>
                                         <Num>{f.num}</Num>
                                         <h3 style={{ fontFamily: INTER, fontSize: phone ? 18 : 20, fontWeight: 400, color: C.ink, letterSpacing: "-0.01em", lineHeight: 1.3, margin: 0, marginTop: 8, marginBottom: 10 }}>{f.title}</h3>
-                                        <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, marginBottom: 14 }}>{f.desc}</p>
-                                        <p style={{ fontFamily: INTER, fontSize: 14, lineHeight: 1.55, color: C.ink2, margin: 0, paddingLeft: 12, borderLeft: `1px solid ${C.ink3}` }}>&ldquo;{f.quote}&rdquo;</p>
+                                        <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, marginBottom: 18 }}>{f.desc}</p>
+                                        {/* The participant's own words, as a chat bubble (right-hand column types in a beat later) */}
+                                        <TypingBubble text={f.quote} size="md" fit tilt={[-1.4, 1.1, 0.9, -1][i]} delay={phone ? 0 : (i % 2) * 300} />
                                     </div>
                                 ))}
                             </div>
@@ -450,8 +451,8 @@ export default function AnthropologieProductDiscovery() {
                     {/* ════════ STRATEGY ════════ */}
                     <section id="strategy" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
-                            <SectionHead phone={phone} tag="Strategy" title="Four concepts tested and refined"
-                                intro="Based on the research findings, the redesign focused on reducing uncertainty throughout the filtering experience by making interactions clearer, more predictable, and easier to navigate." />
+                            <SectionHead phone={phone} tag="Strategy" title="Four concepts I designed and refined"
+                                intro="Based on the research findings, I focused the redesign on reducing uncertainty throughout the filtering experience by making interactions clearer, more predictable, and easier to navigate." />
                         </FadeIn>
 
                         <div style={{ display: "flex", flexDirection: "column", gap: phone ? 104 : 168 }}>
@@ -467,7 +468,7 @@ export default function AnthropologieProductDiscovery() {
                     <section id="prototyping" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
                             <SectionHead phone={phone} title="Bringing the solutions together"
-                                intro="The four design improvements were combined into one interactive prototype and tested as a complete filtering experience before development." />
+                                intro="I combined the four design improvements into one interactive prototype, which the UX Research team tested as a complete filtering experience before development." />
                         </FadeIn>
 
                         <FadeIn delay={40}>
@@ -478,9 +479,9 @@ export default function AnthropologieProductDiscovery() {
                                 alignItems: "center",
                             }}>
                                 <div>
-                                    <Metric phone={phone} value={<CountUp to={45} suffix="%" />} label="Faster Prototype Creation & Testing Preparation" />
+                                    <Metric phone={phone} value={<CountUp to={45} suffix="%" />} label="Reduced Design Iteration Time" />
                                     <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, marginTop: 20, maxWidth: 440 }}>
-                                        Using Builder.io and URBN's existing design system components, I rapidly transformed concepts into a testable experience, allowing faster validation before development.
+                                        Using Builder.io and URBN's existing design system components, I turned Figma concepts into coded prototypes and checked them against the interaction requirements, so each design iteration took less time and concepts were validated before development.
                                     </p>
                                 </div>
                                 <figure style={{ margin: 0, maxWidth: phone ? 280 : undefined }}>
@@ -497,7 +498,7 @@ export default function AnthropologieProductDiscovery() {
                     <section id="validation" style={{ scrollMarginTop: 96, marginTop: phone ? 72 : 96 }}>
                         <FadeIn>
                             <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: phone ? 40 : 56 }}>
-                                <p style={{ fontFamily: INTER, fontSize: 14, color: C.muted, margin: 0, marginBottom: 12 }}>Leading to&hellip;</p>
+                                <p style={{ fontFamily: INTER, fontSize: 14, color: C.ink3, margin: 0, marginBottom: 12 }}>Leading to&hellip;</p>
                                 <Metric phone={phone} value={<CountUp to={100} suffix="%" duration={1400} />} label="Task Completion Rate" />
                             </div>
                         </FadeIn>
@@ -531,7 +532,7 @@ export default function AnthropologieProductDiscovery() {
                                         Designing the Core Pattern
                                     </h3>
                                     <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, maxWidth: 440 }}>
-                                        The component was first designed as a white-label pattern before being adapted across individual brand experiences.
+                                        I first designed the component as a white-label pattern, then adapted it to each brand's experience.
                                     </p>
                                 </div>
                                 <div style={{ ...MAT, padding: phone ? 16 : 24 }}>
@@ -548,7 +549,7 @@ export default function AnthropologieProductDiscovery() {
                                     Adapting Across Brands
                                 </h3>
                                 <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, maxWidth: MEASURE, marginBottom: 32 }}>
-                                    While the interaction remained consistent, visual treatments were adapted to align with each brand's established design language.
+                                    The interaction stayed consistent, and I adapted the visual treatment to each brand's established design language.
                                 </p>
                                 <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "repeat(3, minmax(0, 1fr))", columnGap: 24, rowGap: 28 }}>
                                     {[
@@ -575,7 +576,7 @@ export default function AnthropologieProductDiscovery() {
                                     Supporting Different States
                                 </h3>
                                 <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, maxWidth: MEASURE, marginBottom: 40 }}>
-                                    The component was designed to adapt to multiple pickup and availability scenarios while maintaining a consistent interaction model.
+                                    I designed the component to handle multiple pickup and availability scenarios with one consistent interaction model.
                                 </p>
                                 <div style={{ display: "flex", flexDirection: "column", gap: phone ? 48 : 64 }}>
                                     {[
@@ -610,7 +611,7 @@ export default function AnthropologieProductDiscovery() {
                                     Implementation Ready
                                 </h3>
                                 <p style={{ fontFamily: INTER, fontSize: 15, lineHeight: 1.65, color: C.ink3, margin: 0, maxWidth: MEASURE, marginBottom: 24 }}>
-                                    Full specifications were documented and handed off to engineering for production implementation.
+                                    I documented the full specifications and handed them off to engineering for production.
                                 </p>
                                 <div style={{ display: "grid", gridTemplateColumns: phone ? "minmax(0, 1fr)" : "repeat(2, minmax(0, 1fr))", columnGap: 56, maxWidth: 720 }}>
                                     {["States documented", "Interaction logic defined", "Copy variations documented", "Engineering handoff completed"].map((item) => (
@@ -628,7 +629,7 @@ export default function AnthropologieProductDiscovery() {
                     <section id="launch" style={{ scrollMarginTop: 96, marginTop: sectionGap }}>
                         <FadeIn>
                             <SectionHead phone={phone} tag="Launch & Reflection" title="Shipping across three brands"
-                                intro="This redesign is now live across Urban Outfitters, Free People, and Anthropologie, helping shoppers navigate large product catalogs with greater clarity and confidence." />
+                                intro={<span style={{ whiteSpace: phone ? "normal" : "nowrap" }}>Live on all three brands, helping shoppers navigate large catalogs with more confidence.</span>} />
                         </FadeIn>
 
                         <FadeIn delay={40}>

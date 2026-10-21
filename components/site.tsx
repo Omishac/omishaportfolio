@@ -8,7 +8,10 @@ import React, { useState, useEffect } from "react"
 
 // ── Tokens ──────────────────────────────────────────────────────────────────
 
-export const FONT_SANS = "Inter, system-ui, sans-serif"
+// The site's main text font. It's Zodiak (loaded from Fontshare in
+// app/layout.tsx) everywhere; the name is kept so pages don't need to change.
+// To go back to Inter: "var(--font-inter), Inter, system-ui, sans-serif".
+export const FONT_SANS = "Zodiak, 'Times New Roman', serif"
 export const FONT_SERIF = "Zodiak, 'Times New Roman', serif"
 
 export const COLORS = {
@@ -98,14 +101,15 @@ export function HoverLetters({ text }: { text: string }) {
 }
 
 // "[ tag ]" label used above section titles.
-export function BracketTag({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
+// Brackets in the site's rose accent (#A4425C) on every page; `bracketColor` overrides.
+export function BracketTag({ children, style, bracketColor = "#A4425C" }: { children: React.ReactNode; style?: React.CSSProperties; bracketColor?: string }) {
     return (
         <div style={{ display: "flex", alignItems: "center", gap: 5, ...style }}>
-            <span style={{ fontFamily: FONT_SANS, fontSize: 12, color: COLORS.muted }}>[</span>
+            <span style={{ fontFamily: FONT_SANS, fontSize: 12, color: bracketColor }}>[</span>
             <span style={{ fontFamily: FONT_SANS, fontWeight: 300, fontSize: 12, color: COLORS.ink, letterSpacing: "-0.01em" }}>
                 {children}
             </span>
-            <span style={{ fontFamily: FONT_SANS, fontSize: 12, color: COLORS.muted }}>]</span>
+            <span style={{ fontFamily: FONT_SANS, fontSize: 12, color: bracketColor }}>]</span>
         </div>
     )
 }

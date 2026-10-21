@@ -34,6 +34,8 @@ const MOTION = {
     feature: { src: "https://www.canva.com/design/DAHJZrqnmsE/6S17BE9bGV_u6BT_OdhVhA/watch?embed", title: "Kolkata Food Crawl" },
     skyline: { src: "https://www.canva.com/design/DAHFL_7oX_Y/RMm3KsCaL30KVsZ6jOuKhw/watch?embed", title: "City skyline from the road" },
     vertical: { src: "https://www.canva.com/design/DAHEvJgim7M/DtchAXWYjHURuX8Vm3Xl1A/watch?embed", title: "Vertical video edit" },
+    // Self-hosted (not Canva): WebM first, MP4 fallback; only the poster loads until play
+    nightOut: { src: "/videos/motion-night-out", poster: "/videos/motion-night-out-poster.jpg", title: "Night out edit" },
 }
 
 const PROJECTS_EMBEDS = [
@@ -46,7 +48,7 @@ const PROJECTS_EMBEDS = [
 const SECTIONS = [
     { id: "visual-design", num: "01", nav: "Visual Design", title: "Visual Design & Branding", desc: "Brand identities, posters, and creative direction." },
     { id: "photography", num: "02", title: "Photography", desc: "Personal photography: light, texture, and moment." },
-    { id: "motion", num: "03", title: "Motion", desc: "Video editing and motion design experiments." },
+    { id: "motion", num: "03", title: "Motion", desc: "Video editing and motion design experiments. The low quality is intentional: shot on a camcorder." },
     { id: "projects", num: "04", title: "Projects", desc: "Miscellaneous work made for the love of making." },
 ]
 
@@ -70,6 +72,7 @@ function useResponsive() {
     const [phone, setPhone] = useState(false)
     const [tablet, setTablet] = useState(false)
     const [large, setLarge] = useState(false)
+    const [wide, setWide] = useState(false)
     useEffect(() => {
         // clientWidth, not innerWidth: overflowing content widens the layout
         // viewport on phones, which would lock in the desktop layout.
@@ -78,12 +81,13 @@ function useResponsive() {
             setPhone(w < 768)
             setTablet(w >= 768 && w < 1024)
             setLarge(w > 1440)
+            setWide(w >= 1200)
         }
         check()
         window.addEventListener("resize", check, { passive: true })
         return () => window.removeEventListener("resize", check)
     }, [])
-    return { phone, tablet, desktop: !phone && !tablet, large }
+    return { phone, tablet, large, wide }
 }
 
 function useActiveSection(ids: string[]) {
@@ -118,7 +122,7 @@ function SideNav({ active }: { active: string }) {
                         style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", textDecoration: "none" }}
                     >
                         <span aria-hidden="true" style={{ width: isActive ? 12 : 0, height: 1, backgroundColor: C.ink, transition: `width 0.3s ${EASE_SPRING}` }} />
-                        <span style={{ fontFamily: I, fontSize: 12, fontWeight: isActive ? 500 : 400, color: isActive ? C.ink : C.muted, transition: "color 0.3s ease" }}>
+                        <span style={{ fontFamily: I, fontSize: 12, fontWeight: isActive ? 500 : 400, color: isActive ? C.ink : C.ink3, transition: "color 0.3s ease" }}>
                             {label}
                         </span>
                     </a>
@@ -141,6 +145,18 @@ function SectionHeader({ num, title, desc, phone, tablet, large }: { num: string
     )
 }
 
+function VideoFrame({ src, poster, title }: { src: string; poster: string; title: string }) {
+    return (
+        <div style={{ width: "100%", aspectRatio: "16/9", overflow: "hidden", backgroundColor: "#000" }}>
+            <video controls playsInline preload="none" poster={poster} aria-label={title}
+                style={{ width: "100%", height: "100%", display: "block", objectFit: "cover" }}>
+                <source src={`${src}.webm`} type="video/webm" />
+                <source src={`${src}.mp4`} type="video/mp4" />
+            </video>
+        </div>
+    )
+}
+
 function EmbedFrame({ src, aspect = "16/9", fill = false, title }: { src: string; aspect?: string; fill?: boolean; title?: string }) {
     return (
         <div style={{
@@ -159,7 +175,11 @@ function EmbedFrame({ src, aspect = "16/9", fill = false, title }: { src: string
 }
 
 export default function PlaygroundPage() {
-    const { phone, tablet, desktop, large } = useResponsive()
+    const { phone, tablet, large, wide } = useResponsive()
+    // The side nav takes 204px; below 1200px that squeezed the content column
+    // to ~660px (322px tiles, 181px-tall decks), so small desktops use the
+    // single-column layout with the in-page section index instead.
+    const desktop = wide
     const activeSection = useActiveSection(SECTIONS.map(s => s.id))
     // Same page padding and content width as the homepage.
     const px = phone ? 20 : tablet ? 40 : large ? 120 : 80
@@ -211,7 +231,7 @@ export default function PlaygroundPage() {
                             <a key={s.id} href={`#${s.id}`}
                                 onClick={(e) => { e.preventDefault(); document.getElementById(s.id)?.scrollIntoView({ behavior: "smooth", block: "start" }) }}
                                 style={{ display: "flex", gap: 10, alignItems: "baseline", padding: "14px 0", fontFamily: I, fontSize: 14 }}>
-                                <span style={{ fontSize: 10, color: C.muted, letterSpacing: "0.06em" }}>{s.num}</span>
+                                <span style={{ fontSize: 10, color: C.ink3, letterSpacing: "0.06em" }}>{s.num}</span>
                                 {s.title}
                             </a>
                         ))}
@@ -281,6 +301,10 @@ export default function PlaygroundPage() {
                         }}>
                             <EmbedFrame src={MOTION.vertical.src} title={MOTION.vertical.title} aspect="9/16" fill={!phone} />
                         </div>
+                        {/* Full-width row under the pair */}
+                        <div style={{ gridColumn: phone ? undefined : "1 / -1", gridRow: phone ? undefined : 3 }}>
+                            <VideoFrame src={MOTION.nightOut.src} poster={MOTION.nightOut.poster} title={MOTION.nightOut.title} />
+                        </div>
                     </div>
                 </section>
 
@@ -303,7 +327,7 @@ export default function PlaygroundPage() {
                     >
                         ← Back to work
                     </a>
-                    <p style={{ fontFamily: I, fontSize: 12, color: C.muted, margin: 0 }}>
+                    <p style={{ fontFamily: I, fontSize: 12, color: C.ink3, margin: 0 }}>
                         © {new Date().getFullYear()} Omisha Chabria
                     </p>
                 </div>

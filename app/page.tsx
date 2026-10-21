@@ -7,6 +7,8 @@ import { NavStyles, NavLink, MenuLink, NAV_LINK_GAP } from "../components/NavLin
 import { FONT_SANS, COLORS, EASE_SPRING, EASE_OUT, HOVER_COLORS, useReducedMotion, useFinePointer, HoverLetters, BracketTag } from "../components/site"
 
 const CURSOR_STYLES = `
+/* Cover videos are decorative: clicks go to the card link (Safari overlay hidden in globals.css) */
+.cover-video { pointer-events: none; }
   @keyframes hi-float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-6px); }
@@ -199,7 +201,8 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    padding: `0 ${px}px`,
+                    // A little tighter than the page padding so the logo and links sit nearer the edges
+                    padding: `0 ${Math.round(px * 0.8)}px`,
                     boxSizing: "border-box",
                     backgroundColor: scrolled || menuOpen ? "rgba(255,255,255,0.98)" : C.bg,
                     backdropFilter: scrolled || menuOpen ? "blur(20px)" : "none",
@@ -319,9 +322,10 @@ function HomeNav({ phone, tablet, large, px }: { phone: boolean; tablet: boolean
 // TAPE_OVERHANG so the tape poking above the paper stays inside the stage),
 // and the whole stage is scaled down to fit narrower viewports.
 const TAPE_OVERHANG = 33.28
+const CTA_H = 31    // CTA row height: the 30px arrow + its 1px offset
 const FLYER_W = 518
 const FLYER_H = 548 + TAPE_OVERHANG
-const FLYER_PINK = COLORS.pink
+const FLYER_PINK = "#F5A3B7"
 
 type Pt = [number, number]
 const rad = (deg: number) => (deg * Math.PI) / 180
@@ -380,15 +384,17 @@ function rotText(cx: number, cy: number, deg: number): React.CSSProperties {
 const clipPoly = (pts: Pt[]) => `polygon(${pts.map(([x, y]) => `${x.toFixed(2)}px ${y.toFixed(2)}px`).join(", ")})`
 
 const FILL: React.CSSProperties = { position: "absolute", inset: 0, display: "block" }
+// Perforation between tabs: 1.8px dashes, 1.8px gaps (matches the Figma line)
+const PERF_DASH = "repeating-linear-gradient(90deg, #E7F7FF 0 1.8px, transparent 1.8px 3.6px)"
 
 // Perforations between tabs (vertical dashed lines).
 const PERFS = [
-    { src: "/hero-flyer/perf-a.svg", l: 76.54,  t: 325.48, h: 201.256, len: 201.457, deg: -87.44 },
-    { src: "/hero-flyer/perf-b.svg", l: 149.65, t: 328.18, h: 198.55,  len: 198.753, deg: -87.41 },
-    { src: "/hero-flyer/perf-a.svg", l: 222.75, t: 330.89, h: 201.256, len: 201.457, deg: -87.44 },
-    { src: "/hero-flyer/perf-c.svg", l: 295.85, t: 330.89, h: 201.256, len: 201.458, deg: -87.43 },
-    { src: "/hero-flyer/perf-a.svg", l: 368.95, t: 333.6,  h: 201.256, len: 201.457, deg: -87.44 },
-    { src: "/hero-flyer/perf-d.svg", l: 442.05, t: 336.31, h: 201.255, len: 201.457, deg: -87.43 },
+    { l: 76.54,  t: 325.48, h: 201.256, len: 201.457, deg: -87.44 },
+    { l: 149.65, t: 328.18, h: 198.55,  len: 198.753, deg: -87.41 },
+    { l: 222.75, t: 330.89, h: 201.256, len: 201.457, deg: -87.44 },
+    { l: 295.85, t: 330.89, h: 201.256, len: 201.458, deg: -87.43 },
+    { l: 368.95, t: 333.6,  h: 201.256, len: 201.457, deg: -87.44 },
+    { l: 442.05, t: 336.31, h: 201.255, len: 201.457, deg: -87.43 },
 ]
 
 // ── Tab geometry ─────────────────────────────────────────────────────────────
@@ -417,7 +423,7 @@ const edgeTop = (edge: Edge): Pt => {
     return [edge(y), y]
 }
 
-// Figma's "Rectangle 6": white cover giving the Mobile Design tab its ragged bottom.
+// Figma's "Rectangle 6": white cover giving the second tab (Redesign) its ragged bottom.
 const MOBILE_TORN_BOTTOM = rotBoxPoints(
     { l: 76.14, t: 508.62, w: 72.999, h: 27.521 }, { w: 71.971, h: 24.281 }, 2.6,
     [[0, 0.04], [10, -0.18], [21.18, -0.2], [30, 1.2], [36.92, 2.57], [46, 4.6], [58.18, 6.33], [71.8, 8.74]],
@@ -449,12 +455,21 @@ type TabSpec = {
     flutter: number       // flutter period, s
 }
 
+// Dark rose for the flyer text; the tear-off tabs are a lighter rose
+const FLYER_INK = "#7F1D43"
+const FLYER_TAB_INK = "#B1395C"
+// Greeting label: dark rose strip with light pink lettering
+const FLYER_LABEL = "#A4425C"
+const FLYER_LABEL_TEXT = "#FFB8C4"
+// Clean sans for the flyer copy (everything but the greeting)
+const FLYER_SANS = "var(--font-inter), system-ui, sans-serif"
+
 const TABS: TabSpec[] = [
-    { label: "Redesign",         cx: 41.2,   cy: 419.83, color: "#FEEFF5", href: "/anthropologie-product-discovery", left: null, right: 0, tilt: -1.1, spin: -9,  drift: -40, flutter: 1.5 },
-    { label: "Mobile Design",    cx: 117,    cy: 420.77, color: "#FFF1F7", href: "/ios-review-accessibility", left: 0, right: 1, bottom: "mobile", tilt: 0.8, spin: 7, drift: 30, flutter: 1.8 },
-    { label: "Digital Strategy", cx: 189.21, cy: 421.64, color: "#FFF1F6", href: "/anthropologie-mcommerce", left: 1, right: 2, tilt: -0.6, spin: -12, drift: -55, flutter: 1.35 },
-    { label: "Freelancing",      cx: 337.17, cy: 431.99, color: "#FFF6F9", italic: true, href: "/playground", left: 3, right: 4, tilt: 1.2, spin: 10, drift: 45, flutter: 1.7 },
-    { label: "Say hello",        cx: 476.19, cy: 434.67, color: "#FFF1F6", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true, left: 5, right: null, bottom: "sayHello", tilt: -0.9, spin: -6, drift: -30, flutter: 1.55 },
+    { label: "Creative work",    cx: 41.2,   cy: 419.83, color: FLYER_TAB_INK, href: "/playground", left: null, right: 0, tilt: -1.1, spin: -9,  drift: -40, flutter: 1.5 },
+    { label: "Redesign",         cx: 117,    cy: 420.77, color: FLYER_TAB_INK, href: "/anthropologie-product-discovery", left: 0, right: 1, bottom: "mobile", tilt: 0.8, spin: 7, drift: 30, flutter: 1.8 },
+    { label: "Digital Strategy", cx: 189.21, cy: 421.64, color: FLYER_TAB_INK, href: "/anthropologie-mcommerce", left: 1, right: 2, tilt: -0.6, spin: -12, drift: -55, flutter: 1.35 },
+    { label: "Mobile Design",    cx: 337.17, cy: 431.99, color: FLYER_TAB_INK, href: "/ios-review-accessibility", left: 3, right: 4, tilt: 1.2, spin: 10, drift: 45, flutter: 1.7 },
+    { label: "Say hello",        cx: 476.19, cy: 434.67, color: FLYER_TAB_INK, href: "mailto:omishachabria3@gmail.com", left: 5, right: null, bottom: "sayHello", tilt: -0.9, spin: -6, drift: -30, flutter: 1.55 },
 ]
 
 // Clip polygons (stage coords) for one tab: the part above the curl hinge,
@@ -521,6 +536,27 @@ function wadGeometry(tab: TabSpec, g: ReturnType<typeof tabGeometry>) {
     return { center, from, to }
 }
 
+// The scrap left hanging above the first torn-off tab
+// (Figma's torn-edge-1 shape), cut from the paper itself so it keeps the same shade.
+function cubic(p0: Pt, p1: Pt, p2: Pt, p3: Pt, n: number): Pt[] {
+    return Array.from({ length: n }, (_, i) => {
+        const t = (i + 1) / n, u = 1 - t
+        return [
+            u * u * u * p0[0] + 3 * u * u * t * p1[0] + 3 * u * t * t * p2[0] + t * t * t * p3[0],
+            u * u * u * p0[1] + 3 * u * u * t * p1[1] + 3 * u * t * t * p2[1] + t * t * t * p3[1],
+        ]
+    })
+}
+const TORN_SCRAP_CLIP = clipPoly(rotBoxPoints(
+    { l: 232, t: 328.63, w: 71.475, h: 12.567 }, { w: 71.375, h: 12.384 }, 0.87,
+    [
+        [0.06, 0.45],
+        ...cubic([0.06, 0.45], [0.06, 0.45], [18.87, 2.78], [32.07, 9.97], 10),
+        ...cubic([32.07, 9.97], [45.27, 17.17], [70.9, 2.26], [70.9, 2.26], 10),
+        [71.36, 2.26],
+    ],
+))
+
 const TAB_GEOMETRY = TABS.map(tabGeometry)
 const WAD_GEOMETRY = TABS.map((t, i) => wadGeometry(t, TAB_GEOMETRY[i]))
 
@@ -544,13 +580,15 @@ function TabFace({ tab }: { tab: TabSpec }) {
             {[tab.left, tab.right].map((i) => {
                 if (i === null) return null
                 const p = PERFS[i]
-                return <img key={i} src={p.src} alt=""
-                    style={{ ...rotBox({ l: p.l, t: p.t, w: 9.01, h: p.h }, { w: p.len, h: 0.902 }, p.deg), display: "block" }} />
+                // Drawn with CSS, not the 0.9px-tall SVG: Safari skips images under 1px tall
+                return <span key={i} aria-hidden="true"
+                    style={{ ...rotBox({ l: p.l, t: p.t, w: 9.01, h: p.h }, { w: p.len, h: 0.902 }, p.deg), display: "block", backgroundImage: PERF_DASH }} />
             })}
             <span className="ft-label" style={{
                 ...rotText(tab.cx, tab.cy, 92.31),
-                fontSize: 15.458,
-                fontWeight: 300,
+                fontFamily: FLYER_SANS,
+                fontSize: 15,
+                fontWeight: 400,
                 fontStyle: tab.italic ? "italic" : "normal",
                 color: tab.color,
             }}>
@@ -750,6 +788,7 @@ function Hero({
     }
 
     const scale = Math.min(1, (w - px * 2) / FLYER_W)
+    const ctaGap = phone ? 52 : 78    // flyer box bottom → CTA text (Chrome's original placement)
     const padTop = phone ? 12 : 16
     const padBottom = phone ? 32 : tablet ? 24 : 16
 
@@ -768,6 +807,10 @@ function Hero({
             }}
         >
             <style dangerouslySetInnerHTML={{ __html: FLYER_TAB_STYLES }} />
+            {/* Flyer + CTA share one fixed-size box: the CTA is pinned a set distance
+                under the flyer instead of following it in the page flow, so every
+                browser puts it in the same place (Safari used to pull it up ~15px) */}
+            <div style={{ position: "relative", flexShrink: 0, width: FLYER_W * scale, height: FLYER_H * scale + ctaGap + CTA_H }}>
             {/* Outer box reserves the scaled footprint; inner stage keeps Figma coordinates */}
             <div
                 style={{
@@ -796,24 +839,26 @@ function Hero({
                         </span>
 
                         {/* Tear line above the tabs */}
-                        <img src="/hero-flyer/tear-line.svg" alt="" aria-hidden="true"
-                            style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block" }} />
+                        <span aria-hidden="true"
+                            style={{ ...rotBox({ l: 7.05, t: 322.77, w: 497.271, h: 16.274 }, { w: 497.537, h: 0.902 }, 1.87), display: "block", backgroundColor: "#C8E9FB" }} />
 
-                        <h1 style={{ ...rotText(263.2, 155.31, 2.74), fontSize: 20.585, fontWeight: 700, color: "#FFFFFF" }}>
+                        {/* Greeting printed on a dark rose label strip, paper-pink letters */}
+                        <h1 style={{ ...rotText(261.77, 162.56, 1.8), fontStyle: "italic", fontSize: 29.154, fontWeight: 400, color: FLYER_LABEL_TEXT, backgroundColor: FLYER_LABEL, padding: "5px 16px 6px" }}>
                             Hi, I&rsquo;m Omisha!
                         </h1>
 
-                        <p style={{ ...rotText(263.36, 188.33, 2.88), fontSize: 12.03, fontWeight: 500, color: "#FFFFFF" }}>
-                            product designer . digital analyst . brand storyteller.
+                        <p style={{ ...rotText(259.44, 219, 1.8), width: 380, whiteSpace: "normal", fontFamily: FLYER_SANS, fontSize: 15, fontWeight: 500, letterSpacing: "-0.005em", lineHeight: 1.4, color: FLYER_INK }}>
+                            A product designer shaping products through data and brand storytelling.
                         </p>
 
-                        <p style={{ ...rotText(256.03, 306.98, 1.89), fontSize: 10.393, fontWeight: 700, color: "#FFE2ED" }}>
+                        <p style={{ ...rotText(256.03, 306.98, 1.89), fontFamily: FLYER_SANS, fontSize: 12, fontWeight: 500, color: FLYER_INK }}>
                             Take what you need:
                         </p>
 
                         {/* Ragged edges left behind by the two tabs already torn off */}
-                        <img src="/hero-flyer/torn-edge-1.svg" alt="" aria-hidden="true"
-                            style={{ ...rotBox({ l: 232, t: 328.63, w: 71.475, h: 12.567 }, { w: 71.375, h: 12.384 }, 0.87), display: "block" }} />
+                        <span aria-hidden="true" style={{ ...FILL, clipPath: TORN_SCRAP_CLIP }}>
+                            <PaperFace />
+                        </span>
                         <img src="/hero-flyer/torn-edge-2.svg" alt="" aria-hidden="true"
                             style={{ ...rotBox({ l: 378.93, t: 325.77, w: 70.679, h: 13.136 }, { w: 70.728, h: 12.934 }, 179.1), display: "block" }} />
 
@@ -875,24 +920,29 @@ function Hero({
                 </div>
             </div>
 
-            {/* CTA */}
+            {/* CTA: the text box is trimmed to the letters (cap height to baseline) so
+                font metrics, which Safari and Chrome read differently, don't move it */}
             <div
                 style={{
+                    position: "absolute",
+                    top: FLYER_H * scale + ctaGap,
+                    left: "50%",
+                    transform: "translateX(-50%)",
                     display: "flex",
-                    alignItems: "center",
+                    alignItems: "flex-start",
                     gap: 8,
-                    marginTop: phone ? 32 : 56,
                     opacity: revealed ? 1 : 0,
                     transition: reducedMotion ? "none" : `opacity 0.5s ${EASE_OUT} 500ms`,
                 }}
             >
-                <span style={{ fontFamily: NAV_Z, fontSize: phone ? 13 : 14, color: C.ink2, whiteSpace: "nowrap" }}>
-                    Here&apos;s a closer look at what that means
+                <span style={{ display: "block", fontFamily: NAV_Z, fontSize: phone ? 13 : 14, lineHeight: "20px", color: C.ink2, whiteSpace: "nowrap", ...({ textBox: "trim-both cap alphabetic" } as React.CSSProperties) }}>
+                    Take a look at my work
                 </span>
-                <svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true" style={{ display: "block", flexShrink: 0, marginTop: 22 }}>
-                    <path d="M 8 6 C 12 6, 40 14, 40 40" stroke="#E8B4C8" strokeWidth="3" strokeLinecap="round" fill="none" />
-                    <path d="M 33 32 L 40 42 L 47 32" stroke="#E8B4C8" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                <svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true" style={{ display: "block", flexShrink: 0, marginTop: 1 }}>
+                    <path d="M 8 6 C 12 6, 40 14, 40 40" stroke={FLYER_LABEL} strokeWidth="3" strokeLinecap="round" fill="none" />
+                    <path d="M 33 32 L 40 42 L 47 32" stroke={FLYER_LABEL} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
                 </svg>
+            </div>
             </div>
         </section>
     )
@@ -940,29 +990,39 @@ type CaseStudy = {
     tags: string[]
     company: string
     desc: string
-    live?: boolean
+    shipped?: boolean
     comingSoon?: boolean   // shows the "Currently building" badge on the cover
 }
 
 // Case study grid, in display order: 2 × 2 on tablet/desktop, one column on phone.
+// The in-progress Aurevion case study sits last.
 const CARDS: CaseStudy[] = [
     {
         href: "/anthropologie-product-discovery",
-        image: "/case-studies/product-filter-cover.gif",
+        image: "/case-studies/product-filter-cover-poster.jpg",   // first frame, shown while the video loads
+        video: "/case-studies/product-filter-cover.mp4",
         title: "Product Filter Redesign",
         tags: ["Product Design", "Design Systems", "E-Commerce"],
         company: "URBN",
-        desc: "Redesigning the filter experience across four retail brands, balancing discoverability with speed for millions of shoppers.",
-        live: true,
+        desc: "Redesigning the filter experience across three retail brands, balancing discoverability with speed for millions of shoppers.",
+        shipped: true,
     },
     {
         href: "/ios-review-accessibility",
         image: "/case-studies/ios-review-cover.png",
-        title: "iOS Review Accessibility",
+        title: "Review Translation",
         tags: ["Research", "UX/UI", "iOS"],
         company: "URBN",
-        desc: "Improving how shoppers read and trust customer reviews inside the iOS app.",
-        live: true,
+        desc: "Designed on-demand review translation so shoppers can read reviews in their language and return to the original text.",
+        shipped: true,
+    },
+    {
+        href: "/anthropologie-mcommerce",
+        image: "https://framerusercontent.com/images/vE5NBaasSteSM6lORQbcDZsAU.png",
+        title: "Anthropologie Mobile Web Audit",
+        tags: ["A/B Testing", "Strategy", "iOS"],
+        company: "URBN",
+        desc: "Turned analytics and A/B test findings into three recommendations for Anthropologie's mobile web experience.",
     },
     // ── Aurevion: add the case study URL to `href` and drop `comingSoon` when it goes live ──
     {
@@ -974,14 +1034,6 @@ const CARDS: CaseStudy[] = [
         desc: "Built a visual identity and responsive website that helped an early-stage diagnostics company present its vision to investors.",
         comingSoon: true,                             // remove once the case study is live
     },
-    {
-        href: "/anthropologie-mcommerce",
-        image: "https://framerusercontent.com/images/vE5NBaasSteSM6lORQbcDZsAU.png",
-        title: "Anthropologie M-Commerce",
-        tags: ["A/B Testing", "Strategy", "iOS"],
-        company: "URBN",
-        desc: "Testing and refining the mobile shopping journey to lift conversion across the app.",
-    },
 ]
 
 function CoverCard({
@@ -991,7 +1043,7 @@ function CoverCard({
     title,
     tags,
     desc,
-    live,
+    shipped,
     comingSoon,
     titleSize,
     tilt = 0,
@@ -1007,18 +1059,49 @@ function CoverCard({
     useEffect(() => {
         if (!video || !videoContainerRef.current) return
         const v = document.createElement("video")
-        v.src = video
+        // WebM first (smaller) everywhere but Safari, which gets the H.264 MP4
+        // first: its WebM support is patchy and a stalled source shows the
+        // native play button over the cover.
+        const safari = /^((?!chrome|chromium|crios|fxios|android).)*safari/i.test(navigator.userAgent)
+        const sources: [string, string][] = safari
+            ? [["mp4", "video/mp4"], ["webm", "video/webm"]]
+            : [["webm", "video/webm"], ["mp4", "video/mp4"]]
+        for (const [ext, type] of sources) {
+            const s = document.createElement("source")
+            s.src = video.replace(/\.mp4$/, `.${ext}`)
+            s.type = type
+            v.appendChild(s)
+        }
+        v.poster = image
         v.setAttribute("autoplay", "")
         v.setAttribute("loop", "")
         v.setAttribute("muted", "")
         v.setAttribute("playsinline", "")
         v.setAttribute("preload", "auto")
         v.muted = true
+        v.className = "cover-video"
         v.style.cssText = "width:100%;height:100%;object-fit:cover;display:block;"
         videoContainerRef.current.appendChild(v)
-        v.play().catch(() => {})
-        return () => { v.pause(); v.remove() }
-    }, [video])
+        // Autoplay can be refused (iOS Low Power Mode, Safari autoplay rules):
+        // the poster then stays as a still cover (the native play button is
+        // hidden via .cover-video CSS), and we retry once it's ready, when it
+        // scrolls into view, and on the visitor's first touch or click.
+        const tryPlay = () => { if (v.paused) v.play().catch(() => {}) }
+        tryPlay()
+        v.addEventListener("canplay", tryPlay)
+        const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) tryPlay() })
+        io.observe(v)
+        const onGesture = () => tryPlay()
+        window.addEventListener("touchstart", onGesture, { passive: true })
+        window.addEventListener("pointerdown", onGesture)
+        return () => {
+            io.disconnect()
+            v.removeEventListener("canplay", tryPlay)
+            window.removeEventListener("touchstart", onGesture)
+            window.removeEventListener("pointerdown", onGesture)
+            v.pause(); v.remove()
+        }
+    }, [video, image])
 
     // Every cover sits in the same 4:3 frame (the existing covers are ~4:3
     // already) and lifts off the page like a sheet of paper on hover/focus.
@@ -1068,11 +1151,11 @@ function CoverCard({
 
     const caption = (
         <div style={{ marginTop: phone ? 14 : 18 }}>
-            {live && (
+            {shipped && (
                 <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
                     <span style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: "#6EBF8B", display: "inline-block" }} />
-                    <span style={{ fontFamily: I, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#6EBF8B" }}>
-                        Live
+                    <span style={{ fontFamily: I, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#2F7A4B" }}>
+                        Shipped
                     </span>
                 </div>
             )}
@@ -1088,24 +1171,26 @@ function CoverCard({
             </div>
             <p style={{
                 fontFamily: I,
-                fontSize: 12.5,
+                fontSize: 13,
                 lineHeight: 1.55,
-                color: C.ink3,
+                color: C.ink2,
                 margin: "5px 0 0",
                 maxWidth: 460,
             }}>
                 {desc}
             </p>
             {tags.length > 0 && (
-                <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 5, marginTop: 10 }}>
+                <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6, marginTop: 12 }}>
                     {tags.map((t, i) => (
+                        // Rose outline pills, in the flyer's label colour
                         <span key={i} style={{
-                            fontFamily: I,
-                            fontSize: 10,
-                            color: C.muted,
-                            backgroundColor: "rgba(0,0,0,0.04)",
+                            fontFamily: FLYER_SANS,
+                            fontSize: 11,
+                            fontWeight: 400,
+                            color: "#A4425C",
+                            border: "1px solid rgba(164,66,92,0.18)",
                             borderRadius: 40,
-                            padding: "3px 9px",
+                            padding: "3px 10px",
                         }}>
                             {t}
                         </span>
@@ -1214,7 +1299,7 @@ function WorkSection({
                 willChange: "transform",
             }}>
                 <SectionLabel
-                    tag="UX Strategy · Research · Digital Commerce"
+                    tag="UX · Data · Brand Strategy"
                     title="inside my work"
                     phone={phone}
                     tablet={tablet}
@@ -1331,9 +1416,51 @@ function LogoTicker({
         { top: "76%", left: "65%" },
         { top: "76%", left: "36%" },
     ]
-    const logoH = phone ? 26 : tablet ? 32 : large ? 46 : 40
+    const logoH = tablet ? 32 : large ? 46 : 40
     // Lakmé and URBN read small next to the wordmarks around them — scale them up.
     const SIZE_MULT = [1, 1, 1, 1, 1.7, 1.7]
+
+    if (phone) {
+        // Phone: a compact block instead of a full-screen stage — heading, then
+        // the logos in an even 2-column grid, each fitted to the same box so the
+        // wide wordmarks and the small marks read at a similar weight.
+        return (
+            <section ref={outerRef} style={{ width: "100%", boxSizing: "border-box", padding: `56px ${px}px 24px`, backgroundColor: C.bg }}>
+                <SectionLabel tag="Application" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
+                <div
+                    style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                        columnGap: 24,
+                        rowGap: 28,
+                        maxWidth: 320,
+                        margin: "28px auto 0",
+                    }}
+                >
+                    {LOGOS.map(({ src, alt }, i) => (
+                        // No per-logo scroll fade here: in a tight grid it just washes out whole rows
+                        <div key={alt} style={{ height: 56, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <img
+                                src={src}
+                                alt={alt}
+                                className="logo-img"
+                                style={{
+                                    maxHeight: 30 * SIZE_MULT[i],
+                                    maxWidth: "100%",
+                                    width: "auto",
+                                    height: "auto",
+                                    display: "block",
+                                    animation: reducedMotion
+                                        ? "none"
+                                        : `illust-float ${5.5 + (i % 3) * 0.6}s ease-in-out infinite ${i * 0.35}s`,
+                                }}
+                            />
+                        </div>
+                    ))}
+                </div>
+            </section>
+        )
+    }
 
     return (
         <section
@@ -1355,98 +1482,52 @@ function LogoTicker({
                     willChange: "transform",
                 }}
             >
-                {phone ? (
-                    // Scattering six logos across a phone-width viewport reads as
-                    // clutter, not a composition — keep the simple centered cluster.
-                    <div
-                        style={{
-                            position: "absolute",
-                            top: "50%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
-                            width: `calc(100% - ${px * 2}px)`,
-                        }}
-                    >
+                <>
+                    <div style={{ position: "absolute", top: "54%", left: "50%", transform: "translate(-50%, -50%)" }}>
                         <SectionLabel tag="Application" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
+                    </div>
+                    {LOGOS.map(({ src, alt }, i) => (
+                        // Positioning transform lives on this wrapper, not the img — the
+                        // img's own transform gets overwritten each frame by the
+                        // illust-float keyframes, which would otherwise fight the centering.
+                        // The scroll-in/out fade+scale (no translate, so it doesn't fight
+                        // either transform) lives on the middle wrapper, which is also what
+                        // its own scroll position is measured from.
                         <div
+                            key={alt}
                             style={{
-                                display: "flex",
-                                flexWrap: "wrap",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                columnGap: 28,
-                                rowGap: 22,
-                                width: "100%",
-                                marginTop: 16,
+                                position: "absolute",
+                                top: SCATTER[i].top,
+                                left: SCATTER[i].left,
+                                transform: "translate(-50%, -50%)",
                             }}
                         >
-                            {LOGOS.map(({ src, alt }, i) => (
-                                <div key={alt} ref={(el) => { logoRefs.current[i] = el }} style={logoScrollStyle(i)}>
-                                    <img
-                                        src={src}
-                                        alt={alt}
-                                        className="logo-img"
-                                        style={{
-                                            height: logoH,
-                                            width: "auto",
-                                            display: "block",
-                                            animation: reducedMotion
-                                                ? "none"
-                                                : `illust-float ${5.5 + (i % 3) * 0.6}s ease-in-out infinite ${i * 0.35}s`,
-                                        }}
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                ) : (
-                    <>
-                        <div style={{ position: "absolute", top: "54%", left: "50%", transform: "translate(-50%, -50%)" }}>
-                            <SectionLabel tag="Application" title="Industry Experience" phone={phone} tablet={tablet} large={large} />
-                        </div>
-                        {LOGOS.map(({ src, alt }, i) => (
-                            // Positioning transform lives on this wrapper, not the img — the
-                            // img's own transform gets overwritten each frame by the
-                            // illust-float keyframes, which would otherwise fight the centering.
-                            // The scroll-in/out fade+scale (no translate, so it doesn't fight
-                            // either transform) lives on the middle wrapper, which is also what
-                            // its own scroll position is measured from.
-                            <div
-                                key={alt}
-                                style={{
-                                    position: "absolute",
-                                    top: SCATTER[i].top,
-                                    left: SCATTER[i].left,
-                                    transform: "translate(-50%, -50%)",
-                                }}
-                            >
-                                <div ref={(el) => { logoRefs.current[i] = el }} style={logoScrollStyle(i)}>
-                                    <img
-                                        src={src}
-                                        alt={alt}
-                                        className="logo-img"
-                                        style={{
-                                            height: logoH * SIZE_MULT[i],
-                                            width: "auto",
-                                            display: "block",
-                                            animation: reducedMotion
-                                                ? "none"
-                                                : `illust-float ${5.5 + (i % 3) * 0.6}s ease-in-out infinite ${i * 0.35}s`,
-                                        }}
-                                    />
-                                </div>
+                            <div ref={(el) => { logoRefs.current[i] = el }} style={logoScrollStyle(i)}>
+                                <img
+                                    src={src}
+                                    alt={alt}
+                                    className="logo-img"
+                                    style={{
+                                        height: logoH * SIZE_MULT[i],
+                                        width: "auto",
+                                        display: "block",
+                                        animation: reducedMotion
+                                            ? "none"
+                                            : `illust-float ${5.5 + (i % 3) * 0.6}s ease-in-out infinite ${i * 0.35}s`,
+                                    }}
+                                />
                             </div>
-                        ))}
-                    </>
-                )}
+                        </div>
+                    ))}
+                </>
             </div>
         </section>
     )
 }
 
 const SKILLS = [
-    { num: "01", title: "Data Analytics & AI", sub: "Google Analytics · Excel · Confluence · LLMs · Prompt Engineering" },
-    { num: "02", title: "User Experience Design", sub: "Research · UX/UI · Design Systems" },
+    { num: "01", title: "User Experience Design", sub: "Research · UX/UI · Design Systems" },
+    { num: "02", title: "Data Analytics & AI", sub: "Google Analytics · Excel · Confluence · LLMs · Prompt Engineering" },
     { num: "03", title: "Digital Marketing", sub: "Research · Strategy · A/B Testing" },
     { num: "04", title: "Branding & Content Creation", sub: "Brand kits · Photography · Video Content" },
 ]
@@ -1491,7 +1572,7 @@ function SkillRow({ num, title, sub, phone, tablet, revealDelay }: { num: string
             }}
         >
             <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                <span style={{ fontFamily: I, fontSize: 10, color: C.muted, letterSpacing: "0.06em", width: 24, flexShrink: 0 }}>
+                <span style={{ fontFamily: I, fontSize: 10, color: C.ink3, letterSpacing: "0.06em", width: 24, flexShrink: 0 }}>
                     {num}
                 </span>
                 <span
@@ -1509,7 +1590,7 @@ function SkillRow({ num, title, sub, phone, tablet, revealDelay }: { num: string
             </div>
             <div style={{ display: "flex", flexWrap: "wrap" as const, paddingLeft: isColumn ? 40 : 0, justifyContent: isColumn ? "flex-start" : "flex-end" }}>
                 {sub.split("·").map((s, i) => (
-                    <span key={i} style={{ fontFamily: I, fontSize: phone ? 11 : 12, color: C.muted }}>
+                    <span key={i} style={{ fontFamily: I, fontSize: phone ? 11 : 12, color: C.ink3 }}>
                         {i > 0 && <span style={{ margin: "0 5px", opacity: 0.3 }}>·</span>}
                         {s.trim()}
                     </span>
@@ -1545,7 +1626,7 @@ function SkillsSection({
     maxW: number
     sp: ReturnType<typeof useBP>["sp"]
 }) {
-    const sectionPad = phone ? 64 : tablet ? 80 : large ? 120 : 100
+    const sectionPad = phone ? 40 : tablet ? 80 : large ? 120 : 100
     const sectionRef = useRef<HTMLElement>(null)
     const [skillsY, setSkillsY] = useState(0)
     const reducedMotion = useReducedMotion()
@@ -1635,23 +1716,23 @@ function Footer({
                     width: "100%",
                     margin: "0 auto",
                     display: "flex",
-                    alignItems: phone ? "flex-start" : "center",
-                    flexDirection: phone ? "column" : "row",
+                    alignItems: "center",
+                    flexDirection: "row", // one row on every width: logo + © left, icons right
                     justifyContent: "space-between",
-                    gap: phone ? 20 : 0,
+                    gap: phone ? 12 : 0,
                 }}
             >
-                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: phone ? 10 : 14, minWidth: 0 }}>
                     <img
                         src="https://framerusercontent.com/images/NdNFLxKwhpMzm0XHgjDRNkrRRg.png"
                         alt="OC"
                         style={{ width: logoW, objectFit: "contain", display: "block", flexShrink: 0 }}
                     />
-                    <p style={{ fontFamily: I, fontSize: 12, color: C.muted, margin: 0, whiteSpace: "nowrap" as const }}>
+                    <p style={{ fontFamily: I, fontSize: 12, color: C.ink3, margin: 0, whiteSpace: "nowrap" as const }}>
                         © {new Date().getFullYear()} Omisha Chabria
                     </p>
                 </div>
-                <div style={{ display: "flex", gap: phone ? 18 : 22, alignItems: "center" }}>
+                <div style={{ display: "flex", gap: phone ? 6 : 22, alignItems: "center", flexShrink: 0 }}>
                     {[
                         { label: "LinkedIn", href: "https://www.linkedin.com/in/omisha-chabria-27379b226", ext: true, icon: "/icons/linkedin.png" },
                         { label: "Email", href: "mailto:omishachabria3@gmail.com", ext: false, icon: "/icons/mail.png" },
@@ -1662,7 +1743,8 @@ function Footer({
                             target={ext ? "_blank" : "_self"}
                             rel="noreferrer"
                             aria-label={label}
-                            style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+                            // 44px tap target on phone without changing the icon size
+                            style={{ display: "flex", alignItems: "center", justifyContent: "center", minWidth: phone ? 44 : undefined, minHeight: phone ? 44 : undefined }}
                         >
                             <img
                                 src={icon}
@@ -1873,7 +1955,7 @@ function TravelDashboard() {
 
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <KeychainIcon />
-                <span style={{ fontFamily: I, fontSize: 11, color: C.muted }}>
+                <span style={{ fontFamily: I, fontSize: 11, color: C.ink3 }}>
                     collecting keychains &amp; beli ratings
                 </span>
             </div>
@@ -1916,7 +1998,7 @@ function FolderModalContent({ id }: { id: string }) {
     if (id === "songs") {
         // Spotify integration is pending API credentials — see prior
         // conversation. Placeholder until that's wired up.
-        return <p style={{ fontFamily: I, fontSize: 13, color: C.muted, margin: 0 }}>Coming soon.</p>
+        return <p style={{ fontFamily: I, fontSize: 13, color: C.ink3, margin: 0 }}>Coming soon.</p>
     }
 
     if (id === "travel") return <TravelDashboard />
@@ -2141,7 +2223,7 @@ type TossWorld = {
     openL: number; openR: number; rimL: number; rimR: number; rimY: number; sinkY: number
     bodyL: number; bodyR: number; canCx: number
 }
-type TossState = { x: number; y: number; vx: number; vy: number; angle: number; inside: boolean; t: number; done: null | "scored" | "missed" }
+type TossState = { x: number; y: number; vx: number; vy: number; angle: number; inside: boolean; landed: boolean; rimHits: number; t: number; done: null | "scored" | "missed" }
 
 const TOSS_DT = 1 / 120
 
@@ -2153,7 +2235,9 @@ function tossStep(s: TossState, w: TossWorld) {
     s.vy += w.g * TOSS_DT
     s.x += s.vx * TOSS_DT
     s.y += s.vy * TOSS_DT
-    s.angle += (s.vx * TOSS_DT * 180) / (Math.PI * w.r)
+    // Full rolling spin on the floor; a lazy tumble in the air (rolling-rate
+    // spin mid-flight read as the ball whirling)
+    s.angle += ((s.vx * TOSS_DT * 180) / (Math.PI * w.r)) * (s.landed ? 1 : 0.2)
 
     if (s.inside) {
         s.x = Math.min(Math.max(s.x, w.openL + w.r * 0.2), w.openR - w.r * 0.2)
@@ -2169,10 +2253,17 @@ function tossStep(s: TossState, w: TossWorld) {
             return
         }
         if (s.x > w.rimL - w.r * 0.6 && s.x < w.rimR + w.r * 0.6) {
-            // Clipped the rim: pop up and away from the can
+            // Rattled around the rim long enough: let it drop in rather than jitter
+            if (++s.rimHits > 3) { s.inside = true; s.vx *= 0.25; return }
+            // Clipped the rim: pop up and away from the can, toward whichever
+            // side has room to fall (on phones the can sits flush with the right
+            // edge, and bouncing into the wall trapped the ball on the rim)
+            let dir = s.x < w.canCx ? -1 : 1
+            const room = dir < 0 ? w.rimL - w.r * 0.6 > w.r * 2 : w.rimR + w.r * 0.6 < w.W - w.r * 2
+            if (!room) dir = -dir
             s.y = w.rimY - 0.5
             s.vy = -Math.abs(s.vy) * 0.35
-            s.vx = (s.x < w.canCx ? -1 : 1) * Math.max(Math.abs(s.vx) * 0.5, 70)
+            s.vx = dir * Math.max(Math.abs(s.vx) * 0.5, 70)
         }
     }
     // Side of the can
@@ -2183,15 +2274,30 @@ function tossStep(s: TossState, w: TossWorld) {
     // Edges of the play area
     if (s.x < w.r) { s.x = w.r; s.vx = Math.abs(s.vx) * 0.4 }
     if (s.x > w.W - w.r) { s.x = w.W - w.r; s.vx = -Math.abs(s.vx) * 0.4 }
-    // Floor: a low bounce, then roll to a stop
+    // Floor: once it lands outside the can it's a miss (the caller says so
+    // straight away); a low bounce, then a short roll to a stop
     if (s.y >= w.floorY) {
         s.y = w.floorY
-        if (s.vy > 140) { s.vy = -s.vy * 0.32; s.vx *= 0.7 }
-        else { s.vy = 0; s.vx *= 1 - 3.2 * TOSS_DT }
-        if (s.vy === 0 && Math.abs(s.vx) < 8) s.done = "missed"
+        s.landed = true
+        if (s.vy > 140) { s.vy = -s.vy * 0.32; s.vx *= 0.6 }
+        else { s.vy = 0; s.vx *= 1 - 9 * TOSS_DT }
+        if (s.vy === 0 && Math.abs(s.vx) < 12) s.done = "missed"
     }
     if (s.t > 6) s.done = "missed"
 }
+
+// Pull → launch direction. Any backward pull throws: the angle is kept between
+// 20° and 75° above horizontal, so pulling straight back (or a little up) still
+// lobs the ball instead of silently doing nothing.
+const MIN_LAUNCH = (20 * Math.PI) / 180
+const MAX_LAUNCH = (75 * Math.PI) / 180
+function launchVector(pull: Vec, power: number): Vec {
+    const len = Math.hypot(pull.x, pull.y)
+    const a = Math.min(MAX_LAUNCH, Math.max(MIN_LAUNCH, Math.atan2(-pull.y, Math.max(pull.x, 0.001))))
+    return { x: Math.cos(a) * len * power, y: -Math.sin(a) * len * power }
+}
+// A real throw: pulled far enough, and not toward the can.
+const isThrow = (pull: Vec) => Math.hypot(pull.x, pull.y) >= 16 && pull.x > -8
 
 const shortThought = (t: string) => (t.length > 34 ? `${t.slice(0, 32).trimEnd()}…` : t)
 
@@ -2270,19 +2376,24 @@ function FooterGame({
     const footerOpacity = useTransform(p, range(0, 0.6, 1, 0.85))
     // A soft shadow where the page "opens", strongest mid-reveal.
     const seamOpacity = useTransform(p, (v) => (v < 0.3 ? range(0, 0.3, 0, 1)(v) : range(0.3, 0.85, 1, 0)(v)))
-    // Game comes forward from below and settles flat; identity from p = 0.88.
-    const stageZ = useTransform(p, range(0.1, 0.88, -220, 0))
-    const stageY = useTransform(p, range(0.1, 0.88, 90, 0))
-    const stageTilt = useTransform(p, range(0.1, 0.88, 16, 0))
-    const stageOpacity = useTransform(p, range(0.05, 0.6, 0, 1))
+    // Game comes forward from below and settles flat; identity from p = 0.75,
+    // well before the very bottom of the page (see playable below).
+    const stageZ = useTransform(p, range(0.1, 0.75, -220, 0))
+    const stageY = useTransform(p, range(0.1, 0.75, 90, 0))
+    const stageTilt = useTransform(p, range(0.1, 0.75, 16, 0))
+    const stageOpacity = useTransform(p, range(0.05, 0.5, 0, 1))
     const fadeIn = useTransform(p, range(0.2, 0.8, 0, 1)) // reduced motion: fade only
 
-    // Playable only once the reveal has fully settled, so a throw is never
+    // Playable once the reveal has settled (p >= 0.75), so a throw is never
     // measured against a moving stage and scrolling past can't grab the ball.
+    // Not tied to the very bottom of the page: on phones a scroll often stops a
+    // little short, and tapping brings back the browser toolbars, which shrinks
+    // the viewport and pulls p down by ~0.05. Hysteresis (off below 0.6) keeps
+    // that from switching the game off mid-play.
     const [playable, setPlayable] = useState(false)
     const playableRef = useRef(false)
     const updatePlayable = (v: number) => {
-        const next = v >= 0.96
+        const next = playableRef.current ? v >= 0.6 : v >= 0.75
         if (next === playableRef.current) return
         playableRef.current = next
         setPlayable(next)
@@ -2364,7 +2475,7 @@ function FooterGame({
     }, [phase])
 
     const throwBall = (world: TossWorld, start: Vec, rest: Vec, v: Vec) => {
-        const s: TossState = { x: start.x, y: start.y, vx: v.x, vy: v.y, angle: 0, inside: false, t: 0, done: null }
+        const s: TossState = { x: start.x, y: start.y, vx: v.x, vy: v.y, angle: 0, inside: false, landed: false, rimHits: 0, t: 0, done: null }
         const finish = (outcome: "scored" | "missed") => {
             setBall(s.x - rest.x, s.y - rest.y, s.angle, s.inside)
             if (outcome === "scored" && ballRef.current) ballRef.current.style.visibility = "hidden"
@@ -2376,6 +2487,7 @@ function FooterGame({
             return
         }
         setPhase("flying")
+        let announced = false
         let last = performance.now()
         let acc = 0
         const frame = (now: number) => {
@@ -2384,6 +2496,8 @@ function FooterGame({
             while (acc >= TOSS_DT && !s.done) { tossStep(s, world); acc -= TOSS_DT }
             setBall(s.x - rest.x, s.y - rest.y, s.angle, s.inside)
             if (s.done) { finish(s.done); return }
+            // Say "So close." the moment it lands, not after it rolls to a stop
+            if (s.landed && !s.inside && !announced) { announced = true; setPhase("missed") }
             raf.current = requestAnimationFrame(frame)
         }
         raf.current = requestAnimationFrame(frame)
@@ -2414,7 +2528,7 @@ function FooterGame({
 
     // ── Pull back and release ──
     const predict = (world: TossWorld, start: Vec, v: Vec) => {
-        const s: TossState = { x: start.x, y: start.y, vx: v.x, vy: v.y, angle: 0, inside: false, t: 0, done: null }
+        const s: TossState = { x: start.x, y: start.y, vx: v.x, vy: v.y, angle: 0, inside: false, landed: false, rimHits: 0, t: 0, done: null }
         const dots: Vec[] = []
         for (let i = 1; i <= 42 && !s.done; i++) {
             tossStep(s, world)
@@ -2452,7 +2566,7 @@ function FooterGame({
         const off = { x: -px_ * 0.22, y: Math.min(0, -py * 0.22) }
         setBall(off.x, off.y)
         const start = { x: d.rest.x + off.x, y: d.rest.y + off.y }
-        setAim({ from: start, pull: { x: start.x - px_ * 0.6, y: start.y - py * 0.6 }, dots: len > 12 ? predict(d.world, start, { x: px_ * d.power, y: py * d.power }) : [] })
+        setAim({ from: start, pull: { x: start.x - px_ * 0.6, y: start.y - py * 0.6 }, dots: isThrow(d.pull) ? predict(d.world, start, launchVector(d.pull, d.power)) : [] })
     }
 
     const endDrag = (e: React.PointerEvent<HTMLDivElement>, cancelled: boolean) => {
@@ -2461,11 +2575,10 @@ function FooterGame({
         drag.current = null
         delete e.currentTarget.dataset.dragging
         setAim(null)
-        // Only a real pull (back and down, launching up toward the can) throws;
-        // a stray swipe or scroll-like gesture on the ball just puts it back.
-        if (cancelled || Math.hypot(d.pull.x, d.pull.y) < 16 || d.pull.x < 8 || d.pull.y > -4) { setBall(0, 0); setPhase("ready"); return }
+        // Any backward pull throws; a tiny nudge or a pull toward the can puts it back.
+        if (cancelled || !isThrow(d.pull)) { setBall(0, 0); setPhase("ready"); return }
         const off = { x: -d.pull.x * 0.22, y: Math.min(0, -d.pull.y * 0.22) }
-        throwBall(d.world, { x: d.rest.x + off.x, y: d.rest.y + off.y }, d.rest, { x: d.pull.x * d.power, y: d.pull.y * d.power })
+        throwBall(d.world, { x: d.rest.x + off.x, y: d.rest.y + off.y }, d.rest, launchVector(d.pull, d.power))
     }
 
     // ── Keyboard / no-drag throw: a clean shot at the can ──
@@ -2573,6 +2686,8 @@ function FooterGame({
                         onPointerMove={onPointerMove}
                         onPointerUp={(e) => endDrag(e, false)}
                         onPointerCancel={(e) => endDrag(e, true)}
+                        // If the browser takes the gesture over mid-pull, reset instead of sticking in "aiming"
+                        onLostPointerCapture={(e) => endDrag(e, true)}
                         style={{
                             position: "absolute",
                             left: pileW * (phone ? 0.84 : 0.86),
@@ -2725,7 +2840,7 @@ export default function ResponsiveHome() {
                     alignItems: "center",
                 }}
             >
-                <style>{CURSOR_STYLES}</style>
+                <style dangerouslySetInnerHTML={{ __html: CURSOR_STYLES }} />
                 <HomeNav phone={phone} tablet={tablet} large={large} px={px} />
                 <Hero phone={phone} tablet={tablet} px={px} w={w} />
                 <WorkSection phone={phone} tablet={tablet} large={large} px={px} maxW={maxW} sp={sp} />

@@ -9,7 +9,8 @@
 import { FONT_SANS as I, COLORS, EASE_OUT } from "./site"
 
 const INK = COLORS.ink
-const NAV_PINK = COLORS.pink
+// Rose from the homepage flyer label
+const NAV_PINK = "#A4425C"
 
 export const NAV_LINK_GAP = 19.5
 export const NAV_LINK_SIZE = 12.872
