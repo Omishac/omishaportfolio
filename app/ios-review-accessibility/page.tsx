@@ -445,7 +445,7 @@ export default function IOSCaseStudy() {
                                 {[
                                     { k: "Problem", v: "Shoppers could set their app language, but product reviews stayed in English only, so non-English speakers lost one of the most valuable signals for purchase confidence." },
                                     { k: "What I Did", v: "Designed an on-demand translation feature using Apple's Translation API, letting shoppers translate any review and switch back to the original." },
-                                    { k: "Impact", v: "Live on iPhone 15 and up for shoppers whose app language differs from their device language." },
+                                    { k: "Impact", v: "Live on iPhone 15 and later running iOS 18 or higher, for shoppers whose app language differs from their device language." },
                                 ].map(({ k, v }) => (
                                     <div key={k}>
                                         <BoldLabel>{k}</BoldLabel>
@@ -671,7 +671,7 @@ export default function IOSCaseStudy() {
                                 ]} />
                                 <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 12 }}>
                                     <BoldLabel>Live</BoldLabel>
-                                    <p style={BODY}>This feature is currently live across iPhone 15 and up for users whose app language is set to a different language than their device language.</p>
+                                    <p style={BODY}>This feature is currently live on iPhone 15 and later running iOS 18 or higher, for users whose app language is set to a different language than their device language.</p>
                                 </div>
                             </div>
                         </FadeIn>
